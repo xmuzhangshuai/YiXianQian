@@ -22,7 +22,6 @@ import android.telephony.SmsMessage;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -444,6 +443,13 @@ public class RegAuthCodeFragment extends BaseV4Fragment {
 						userPreference.setHuanXinPassword(huanxinaPassword);
 						userPreference.setUserLogin(true);
 						//						userPreference.setU_password("");//清除密码
+
+						//更新环信昵称
+						if (EMChatManager.getInstance().updateCurrentUserNick(userPreference.getName())) {
+							LogTool.i("RegAuthCodeFragment", "更新环信昵称成功");
+						} else {
+							LogTool.e("RegAuthCodeFragment", "更新环信昵称失败");
+						}
 						dialog.dismiss();
 
 						Intent intent = new Intent(getActivity(), HeadImageActivity.class);

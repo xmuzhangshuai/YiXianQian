@@ -15,6 +15,7 @@ import com.yixianqian.R;
 import com.yixianqian.base.BaseApplication;
 import com.yixianqian.base.BaseV4Fragment;
 import com.yixianqian.config.Constants;
+import com.yixianqian.config.Constants.UserStateType;
 import com.yixianqian.customewidget.MyAlertDialog;
 import com.yixianqian.utils.UserPreference;
 
@@ -29,8 +30,8 @@ public class RegGenderFragment extends BaseV4Fragment implements OnCheckedChange
 	/*************Views************/
 	private View rootView;// 根View
 
-	private RadioButton mSingleView;//单身
-	private RadioButton mLoveView;//恋爱
+//	private RadioButton mSingleView;//单身
+//	private RadioButton mLoveView;//恋爱
 	private RadioButton mMale;//男
 	private RadioButton mFemale;//女
 	private TextView topNavigation;//导航栏文字
@@ -65,8 +66,8 @@ public class RegGenderFragment extends BaseV4Fragment implements OnCheckedChange
 	@Override
 	protected void findViewById() {
 		// TODO Auto-generated method stub
-		mSingleView = (RadioButton) rootView.findViewById(R.id.single);
-		mLoveView = (RadioButton) rootView.findViewById(R.id.love);
+//		mSingleView = (RadioButton) rootView.findViewById(R.id.single);
+//		mLoveView = (RadioButton) rootView.findViewById(R.id.love);
 		mMale = (RadioButton) rootView.findViewById(R.id.male);
 		mFemale = (RadioButton) rootView.findViewById(R.id.female);
 
@@ -78,7 +79,7 @@ public class RegGenderFragment extends BaseV4Fragment implements OnCheckedChange
 	@Override
 	protected void initView() {
 		// TODO Auto-generated method stub
-		topNavigation.setText("状态");
+		topNavigation.setText("性别");
 		rightImageButton.setEnabled(false);
 		leftImageButton.setOnClickListener(new OnClickListener() {
 			@Override
@@ -95,8 +96,8 @@ public class RegGenderFragment extends BaseV4Fragment implements OnCheckedChange
 				next();
 			}
 		});
-		mSingleView.setOnCheckedChangeListener(this);
-		mLoveView.setOnCheckedChangeListener(this);
+//		mSingleView.setOnCheckedChangeListener(this);
+//		mLoveView.setOnCheckedChangeListener(this);
 		mMale.setOnCheckedChangeListener(this);
 		mFemale.setOnCheckedChangeListener(this);
 	}
@@ -137,14 +138,14 @@ public class RegGenderFragment extends BaseV4Fragment implements OnCheckedChange
 		boolean cancel = false;
 
 		//检查是否选择状态
-		if (!mSingleView.isChecked() && !mLoveView.isChecked()) {
-			cancel = true;
-			rightImageButton.setEnabled(false);
-		} else if (mSingleView.isChecked()) {
-			userPreference.setU_stateid(4);
-		} else if (mLoveView.isChecked()) {
-			userPreference.setU_stateid(2);
-		}
+//		if (!mSingleView.isChecked() && !mLoveView.isChecked()) {
+//			cancel = true;
+//			rightImageButton.setEnabled(false);
+//		} else if (mSingleView.isChecked()) {
+//			userPreference.setU_stateid(4);
+//		} else if (mLoveView.isChecked()) {
+//			userPreference.setU_stateid(2);
+//		}
 
 		//检查是否选性别
 		if (!mMale.isChecked() && !mFemale.isChecked()) {
@@ -159,6 +160,7 @@ public class RegGenderFragment extends BaseV4Fragment implements OnCheckedChange
 		if (!cancel) {
 			// 没有错误
 			rightImageButton.setEnabled(true);
+			userPreference.setU_stateid(UserStateType.SINGLE);
 		}
 	}
 

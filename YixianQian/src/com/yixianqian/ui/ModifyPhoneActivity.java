@@ -18,6 +18,7 @@ import com.yixianqian.base.BaseActivity;
 import com.yixianqian.config.DefaultKeys;
 import com.yixianqian.table.UserTable;
 import com.yixianqian.utils.AsyncHttpClientTool;
+import com.yixianqian.utils.CommonTools;
 import com.yixianqian.utils.LogTool;
 import com.yixianqian.utils.ToastTool;
 
@@ -77,7 +78,7 @@ public class ModifyPhoneActivity extends BaseActivity implements OnClickListener
 			mPhoneView.setError(getString(R.string.error_field_required));
 			focusView = mPhoneView;
 			cancel = true;
-		} else if (mPhone.length() != 11) {
+		} else if (!CommonTools.isMobileNO(mPhone)) {
 			mPhoneView.setError(getString(R.string.error_phone));
 			focusView = mPhoneView;
 			cancel = true;
@@ -145,7 +146,7 @@ public class ModifyPhoneActivity extends BaseActivity implements OnClickListener
 					overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
 					finish();
 				} else if (response.endsWith("-1")) {
-					ToastTool.showShort(ModifyPhoneActivity.this, "服务器错误");
+					ToastTool.showShort(ModifyPhoneActivity.this, "服务器异常，请稍后再试");
 				} else if (response.endsWith("1")) {
 					ToastTool.showShort(ModifyPhoneActivity.this, "手机号码为空");
 				} else {

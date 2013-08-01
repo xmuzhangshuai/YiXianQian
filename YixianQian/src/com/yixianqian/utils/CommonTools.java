@@ -95,15 +95,23 @@ public class CommonTools {
 	}
 
 	/**
-	 * 判断手机号码
-	 */
+	* 判断手机号码
+	*/
 	public static boolean isMobileNO(String mobiles) {
-
-		Pattern pattern = Pattern.compile("^((13[0-9])|(15[^4,\\D])|(18[0,5-9]))\\d{8}$");
+		Pattern pattern = Pattern.compile("^((13[0-9])|(15[^4,\\D])|(18[0,5-9])|(17[0-9]))\\d{8}$");
 		Matcher matcher = pattern.matcher(mobiles);
-
 		return matcher.matches();
+	}
 
+	/**
+	 * 验证密码是否符合要求
+	 * 以字母开头，长度在6~18之间，只能包含字符、数字和下划线
+	 * @return
+	 */
+	public static boolean isPassValid(String pass) {
+		Pattern pattern = Pattern.compile("^[0-9a-zA-Z]{6,18}$");
+		Matcher matcher = pattern.matcher(pass);
+		return matcher.matches();
 	}
 
 	/**

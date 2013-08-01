@@ -19,6 +19,7 @@ import com.yixianqian.base.BaseActivity;
 import com.yixianqian.base.BaseApplication;
 import com.yixianqian.table.UserTable;
 import com.yixianqian.utils.AsyncHttpClientTool;
+import com.yixianqian.utils.CommonTools;
 import com.yixianqian.utils.FriendPreference;
 import com.yixianqian.utils.MD5For32;
 import com.yixianqian.utils.ToastTool;
@@ -94,8 +95,8 @@ public class ModifyPassActivity extends BaseActivity implements OnClickListener 
 			mOldPassView.setError(getString(R.string.error_field_required));
 			focusView = mOldPassView;
 			cancel = true;
-		} else if (oldPass.length() < 6) {
-			mOldPassView.setError(getString(R.string.error_invalid_password));
+		} else if (!CommonTools.isPassValid(oldPass)) {
+			mOldPassView.setError(getString(R.string.error_pattern_password));
 			focusView = mOldPassView;
 			cancel = true;
 		}
@@ -105,8 +106,8 @@ public class ModifyPassActivity extends BaseActivity implements OnClickListener 
 			mNewPassView.setError(getString(R.string.error_field_required));
 			focusView = mNewPassView;
 			cancel = true;
-		} else if (newPass.length() < 6) {
-			mNewPassView.setError(getString(R.string.error_invalid_password));
+		} else if (!CommonTools.isPassValid(newPass)) {
+			mNewPassView.setError(getString(R.string.error_pattern_password));
 			focusView = mNewPassView;
 			cancel = true;
 		}

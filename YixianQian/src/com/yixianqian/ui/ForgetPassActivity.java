@@ -34,6 +34,7 @@ import com.yixianqian.config.DefaultKeys;
 import com.yixianqian.config.Constants.Config;
 import com.yixianqian.table.UserTable;
 import com.yixianqian.utils.AsyncHttpClientTool;
+import com.yixianqian.utils.CommonTools;
 import com.yixianqian.utils.LogTool;
 import com.yixianqian.utils.SIMCardInfo;
 import com.yixianqian.utils.ToastTool;
@@ -245,7 +246,7 @@ public class ForgetPassActivity extends BaseActivity implements OnClickListener 
 			mPhoneView.setError(getString(R.string.error_field_required));
 			focusView = mPhoneView;
 			cancel = true;
-		} else if (mPhone.length() != 11) {
+		} else if (!CommonTools.isMobileNO(mPhone)) {
 			mPhoneView.setError(getString(R.string.error_phone));
 			focusView = mPhoneView;
 			cancel = true;

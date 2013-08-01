@@ -20,6 +20,7 @@ import com.yixianqian.R;
 import com.yixianqian.base.BaseActivity;
 import com.yixianqian.table.UserTable;
 import com.yixianqian.utils.AsyncHttpClientTool;
+import com.yixianqian.utils.CommonTools;
 import com.yixianqian.utils.ToastTool;
 
 /**
@@ -125,7 +126,7 @@ public class AddLoverActivity extends BaseActivity implements OnClickListener {
 			mPhoneView.setError(getString(R.string.error_field_required));
 			focusView = mPhoneView;
 			cancel = true;
-		} else if (mPhone.length() != 11) {
+		} else if (!CommonTools.isMobileNO(mPhone)) {
 			mPhoneView.setError(getString(R.string.error_phone));
 			focusView = mPhoneView;
 			cancel = true;

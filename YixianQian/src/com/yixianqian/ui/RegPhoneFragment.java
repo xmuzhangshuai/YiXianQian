@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.apache.http.Header;
 
+import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
@@ -26,6 +27,7 @@ import com.yixianqian.base.BaseV4Fragment;
 import com.yixianqian.config.DefaultKeys;
 import com.yixianqian.table.UserTable;
 import com.yixianqian.utils.AsyncHttpClientTool;
+import com.yixianqian.utils.CommonTools;
 import com.yixianqian.utils.HttpUtil;
 import com.yixianqian.utils.LogTool;
 import com.yixianqian.utils.MD5For32;
@@ -161,12 +163,19 @@ public class RegPhoneFragment extends BaseV4Fragment {
 		boolean cancel = false;
 		View focusView = null;
 
+		//检查昵称
+		if (TextUtils.isEmpty(mName)) {
+			mNameView.setError(getString(R.string.error_field_required));
+			focusView = mNameView;
+			cancel = true;
+		}
+
 		// 检查手机号
-		if (TextUtils.isEmpty(mPhone)) {
+		else if (TextUtils.isEmpty(mPhone)) {
 			mPhoneView.setError(getString(R.string.error_field_required));
 			focusView = mPhoneView;
 			cancel = true;
-		} else if (mPhone.length() != 11) {
+		} else if (!CommonTools.isMobileNO(mPhone)) {
 			mPhoneView.setError(getString(R.string.error_phone));
 			focusView = mPhoneView;
 			cancel = true;
@@ -177,8 +186,8 @@ public class RegPhoneFragment extends BaseV4Fragment {
 			mPasswordView.setError(getString(R.string.error_field_required));
 			focusView = mPasswordView;
 			cancel = true;
-		} else if (mPassword.length() < 6) {
-			mPasswordView.setError(getString(R.string.error_invalid_password));
+		} else if (!CommonTools.isPassValid(mPassword)) {
+			mPasswordView.setError(getString(R.string.error_pattern_password));
 			focusView = mPasswordView;
 			cancel = true;
 		}
@@ -191,13 +200,6 @@ public class RegPhoneFragment extends BaseV4Fragment {
 		} else if (!mConformPass.equals(mPassword)) {
 			mConformPassView.setError(getString(R.string.error_field_conform_pass));
 			focusView = mConformPassView;
-			cancel = true;
-		}
-
-		//检查昵称
-		if (TextUtils.isEmpty(mName)) {
-			mNameView.setError(getString(R.string.error_field_required));
-			focusView = mNameView;
 			cancel = true;
 		}
 
@@ -230,10 +232,15 @@ public class RegPhoneFragment extends BaseV4Fragment {
 		RequestParams params = new RequestParams();
 		params.put(UserTable.U_TEL, mPhone);
 		TextHttpResponseHandler responseHandler = new TextHttpResponseHandler() {
+			ProgressDialog dialog = new ProgressDialog(getActivity());
+
 			@Override
 			public void onStart() {
 				// TODO Auto-generated method stub
 				super.onStart();
+				dialog.setMessage("正在验证，请稍后...");
+				dialog.setCancelable(false);
+				dialog.show();
 			}
 
 			@Override
@@ -255,7 +262,7 @@ public class RegPhoneFragment extends BaseV4Fragment {
 					ToastTool.showShort(RegPhoneFragment.this.getActivity(), "验证码已发送");
 
 				} else if (response.endsWith("-1")) {
-					ToastTool.showShort(RegPhoneFragment.this.getActivity(), "服务器错误");
+					ToastTool.showLong(RegPhoneFragment.this.getActivity(), "服务器出现异常，请稍后再试");
 				} else if (response.endsWith("1")) {
 					ToastTool.showShort(RegPhoneFragment.this.getActivity(), "手机号码为空");
 				} else {
@@ -274,6 +281,7 @@ public class RegPhoneFragment extends BaseV4Fragment {
 			public void onFinish() {
 				// TODO Auto-generated method stub
 				super.onFinish();
+				dialog.dismiss();
 			}
 		};
 		AsyncHttpClientTool.post("getmessage", params, responseHandler);

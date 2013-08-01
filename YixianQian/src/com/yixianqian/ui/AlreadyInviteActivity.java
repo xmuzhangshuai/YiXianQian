@@ -25,6 +25,7 @@ import com.yixianqian.jsonobject.JsonUser;
 import com.yixianqian.table.LoveRequestTable;
 import com.yixianqian.table.UserTable;
 import com.yixianqian.utils.AsyncHttpClientTool;
+import com.yixianqian.utils.CommonTools;
 import com.yixianqian.utils.FastJsonTool;
 import com.yixianqian.utils.FriendPreference;
 import com.yixianqian.utils.LogTool;
@@ -109,7 +110,7 @@ public class AlreadyInviteActivity extends BaseActivity {
 			mPhoneView.setError(getString(R.string.error_field_required));
 			focusView = mPhoneView;
 			cancel = true;
-		} else if (mPhone.length() != 11) {
+		} else if (!CommonTools.isMobileNO(mPhone)) {
 			mPhoneView.setError(getString(R.string.error_phone));
 			focusView = mPhoneView;
 			cancel = true;
@@ -133,6 +134,8 @@ public class AlreadyInviteActivity extends BaseActivity {
 					// TODO Auto-generated method stub
 					if (response.equals("0")) {
 						ToastTool.showLong(AlreadyInviteActivity.this, "您没有被邀请！");
+					} else if (response.equals("-1")) {
+						ToastTool.showLong(AlreadyInviteActivity.this, "没有查找到该用户！");
 					} else {
 						JsonUser jsonUser = FastJsonTool.getObject(response, JsonUser.class);
 						saveLoverInfo(jsonUser);

@@ -16,7 +16,6 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.yixianqian.R;
 import com.yixianqian.base.BaseApplication;
@@ -28,6 +27,7 @@ import com.yixianqian.db.SchoolDbService;
 import com.yixianqian.entities.City;
 import com.yixianqian.entities.Province;
 import com.yixianqian.entities.School;
+import com.yixianqian.utils.ToastTool;
 import com.yixianqian.utils.UserPreference;
 
 /**
@@ -144,14 +144,20 @@ public class RegSchoolFragment extends BaseV4Fragment {
 				schoolList = new ArrayList<School>();
 				schoolNameList = new ArrayList<String>();
 				schoolList = SchoolDbService.getInstance(getActivity()).getSchoolListByCity(cityList.get(position));
+				int currentPostion = 0;
 
 				if (schoolList != null) {
-					for (School school : schoolList) {
-						schoolNameList.add(school.getSchoolName());
+					for (int i = 0; i < schoolList.size(); i++) {
+						schoolNameList.add(schoolList.get(i).getSchoolName());
+						if (currentSchool != null && currentSchool.getId() != null
+								&& currentSchool.getId().intValue() == schoolList.get(i).getId().intValue()) {
+							currentPostion = i;
+						}
 					}
 					ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
 							android.R.layout.simple_spinner_dropdown_item, schoolNameList);
 					mSchoolView.setAdapter(adapter);
+					mSchoolView.setSelection(currentPostion, true);
 				}
 			}
 
@@ -207,13 +213,22 @@ public class RegSchoolFragment extends BaseV4Fragment {
 		provinceList = new ArrayList<Province>();
 		provinceNameList = new ArrayList<String>();
 		provinceList = ProvinceDbService.getInstance(getActivity()).provinceDao.loadAll();
+		int PID = userPreference.getU_provinceid();
+
 		if (provinceList != null) {
 			for (int i = 0; i < provinceList.size(); i++) {
 				provinceNameList.add(provinceList.get(i).getProvinceName());
-				if (provinceList.get(i).getProvinceName().contains(mProvince)
-						|| mProvince.contains(provinceList.get(i).getProvinceName())) {
-					currentProvince = provinceList.get(i);
-					currentPostion = i;
+				if (PID > -1) {
+					if (provinceList.get(i).getProvinceID().intValue() == PID) {
+						currentProvince = provinceList.get(i);
+						currentPostion = i;
+					}
+				} else {
+					if (provinceList.get(i).getProvinceName().contains(mProvince)
+							|| mProvince.contains(provinceList.get(i).getProvinceName())) {
+						currentProvince = provinceList.get(i);
+						currentPostion = i;
+					}
 				}
 			}
 		}
@@ -234,9 +249,18 @@ public class RegSchoolFragment extends BaseV4Fragment {
 			if (cityList != null) {
 				for (int i = 0; i < cityList.size(); i++) {
 					cityNameList.add(cityList.get(i).getCityName());
-					if (cityList.get(i).getCityName().contains(mCity) || mCity.contains(cityList.get(i).getCityName())) {
-						currentCity = cityList.get(i);
-						currentPostion = i;
+					//如果已经有保存
+					if (userPreference.getU_cityid() > -1) {
+						if (cityList.get(i).getCityID().intValue() == userPreference.getU_cityid()) {
+							currentCity = cityList.get(i);
+							currentPostion = i;
+						}
+					} else {
+						if (cityList.get(i).getCityName().contains(mCity)
+								|| mCity.contains(cityList.get(i).getCityName())) {
+							currentCity = cityList.get(i);
+							currentPostion = i;
+						}
 					}
 				}
 				ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
@@ -245,7 +269,6 @@ public class RegSchoolFragment extends BaseV4Fragment {
 				mCityView.setSelection(currentPostion, true);
 			}
 		}
-
 	}
 
 	/**
@@ -258,18 +281,18 @@ public class RegSchoolFragment extends BaseV4Fragment {
 		//检查是否选择省
 		if (mProvinceView.getSelectedItem().toString().length() == 0) {
 			cancel = true;
-			Toast.makeText(getActivity(), "请选择省", 1).show();
+			ToastTool.showShort(getActivity(), "请选择省");
 		}
 
 		//检查是否选城市
-		if (mCityView.getSelectedItem().toString().length() == 0) {
+		else if (mCityView.getSelectedItem().toString().length() == 0) {
 			cancel = true;
-			Toast.makeText(getActivity(), "请选择所在城市", 1).show();
+			ToastTool.showShort(getActivity(), "请选择所在城市");
 		}
 		//检查是否选学校
-		if (mSchoolView.getSelectedItem().toString().length() == 0) {
+		else if (mSchoolView.getSelectedItem().toString().length() == 0) {
 			cancel = true;
-			Toast.makeText(getActivity(), "请选择所在学校", 1).show();
+			ToastTool.showShort(getActivity(), "请选择所在学校");
 		}
 
 		if (!cancel) {

@@ -29,6 +29,7 @@ import com.yixianqian.entities.Conversation;
 import com.yixianqian.jsonobject.JsonUser;
 import com.yixianqian.server.ServerUtil;
 import com.yixianqian.table.UserTable;
+import com.yixianqian.utils.CommonTools;
 import com.yixianqian.utils.FastJsonTool;
 import com.yixianqian.utils.FriendPreference;
 import com.yixianqian.utils.HttpUtil;
@@ -156,18 +157,18 @@ public class LoginActivity extends BaseActivity {
 			mPasswordView.setError(getString(R.string.error_field_required));
 			focusView = mPasswordView;
 			cancel = true;
-		} else if (!isPasswordValid(password)) {
-			mPasswordView.setError(getString(R.string.error_invalid_password));
+		} else if (!CommonTools.isPassValid(password)) {
+			mPasswordView.setError(getString(R.string.error_pattern_password));
 			focusView = mPasswordView;
 			cancel = true;
 		}
 
 		// Check for a valid email address.
-		if (TextUtils.isEmpty(phone)) {
+		else if (TextUtils.isEmpty(phone)) {
 			mPhoneView.setError(getString(R.string.error_field_required));
 			focusView = mPhoneView;
 			cancel = true;
-		} else if (!isEmailValid(phone)) {
+		} else if (!CommonTools.isMobileNO(phone)) {
 			mPhoneView.setError(getString(R.string.error_invalid_phone));
 			focusView = mPhoneView;
 			cancel = true;
@@ -184,16 +185,6 @@ public class LoginActivity extends BaseActivity {
 			mAuthTask = new UserLoginTask(phone, MD5For32.GetMD5Code(password));
 			mAuthTask.execute((Void) null);
 		}
-	}
-
-	private boolean isEmailValid(String email) {
-		// TODO: Replace this with your own logic
-		return email.length() == 11;
-	}
-
-	private boolean isPasswordValid(String password) {
-		// TODO: Replace this with your own logic
-		return password.length() > 5;
 	}
 
 	/**
@@ -237,6 +228,12 @@ public class LoginActivity extends BaseActivity {
 					@Override
 					public void onSuccess() {
 						userPreference.setUserLogin(true);
+						//更新环信昵称
+						if (EMChatManager.getInstance().updateCurrentUserNick(userPreference.getName())) {
+							LogTool.i("LoginActivity", "更新环信昵称");
+						} else {
+							LogTool.e("LoginActivity", "更新环信昵称失败");
+						}
 						runOnUiThread(new Runnable() {
 							public void run() {
 								ServerUtil.getInstance(LoginActivity.this).getTodayRecommend(LoginActivity.this, true);

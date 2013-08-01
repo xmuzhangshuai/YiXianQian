@@ -13,11 +13,13 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.Window;
 
 import com.easemob.chat.ConnectionListener;
@@ -38,7 +40,6 @@ import com.yixianqian.R;
 import com.yixianqian.base.BaseApplication;
 import com.yixianqian.base.BaseFragmentActivity;
 import com.yixianqian.config.Constants;
-import com.yixianqian.customewidget.MyAlertDialog;
 import com.yixianqian.db.ConversationDbService;
 import com.yixianqian.db.FlipperDbService;
 import com.yixianqian.entities.Conversation;
@@ -48,6 +49,7 @@ import com.yixianqian.jsonobject.JsonUser;
 import com.yixianqian.table.FlipperRequestTable;
 import com.yixianqian.table.UserTable;
 import com.yixianqian.utils.AsyncHttpClientTool;
+import com.yixianqian.utils.CommonTools;
 import com.yixianqian.utils.FastJsonTool;
 import com.yixianqian.utils.FriendPreference;
 import com.yixianqian.utils.HttpUtil;
@@ -81,6 +83,7 @@ public class MainActivity extends BaseFragmentActivity {
 	private JsonUser jsonUser;
 	private ConversationDbService conversationDbService;
 	FlipperDbService flipperDbService;
+	boolean isExit;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -169,33 +172,37 @@ public class MainActivity extends BaseFragmentActivity {
 			showConflictDialog();
 	}
 
+	/**
+	 * 按两次返回键退出
+	 */
 	@Override
-	public void onBackPressed() {
-		// TODO Auto-generated method stub
-		final MyAlertDialog myAlertDialog = new MyAlertDialog(this);
-		myAlertDialog.setTitle("提示");
-		myAlertDialog.setMessage("是否退出一线牵客户端？");
-		View.OnClickListener comfirm = new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				myAlertDialog.dismiss();
-				close();
-			}
-		};
-		View.OnClickListener cancle = new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				myAlertDialog.dismiss();
-			}
-		};
-		myAlertDialog.setPositiveButton("确定", comfirm);
-		myAlertDialog.setNegativeButton("取消", cancle);
-		myAlertDialog.show();
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (keyCode == KeyEvent.KEYCODE_BACK) {
+			exit();
+			return false;
+		} else {
+			return super.onKeyDown(keyCode, event);
+		}
 	}
+
+	public void exit() {
+		if (!isExit) {
+			isExit = true;
+			CommonTools.showShortToast(MainActivity.this, "再按一次退出程序");
+			mHandler.sendEmptyMessageDelayed(0, 2000);
+		} else {
+			close();
+		}
+	}
+
+	Handler mHandler = new Handler() {
+		@Override
+		public void handleMessage(Message msg) {
+			// TODO Auto-generated method stub   
+			super.handleMessage(msg);
+			isExit = false;
+		}
+	};
 
 	@Override
 	protected void onDestroy() {

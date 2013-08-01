@@ -99,9 +99,11 @@ public class GuideActivity extends BaseActivity {
 				if (NetworkUtils.isNetworkAvailable(GuideActivity.this)) {//如果网络可用
 					if (userPreference.getLoveRequest()) {//如果请求了添加情侣，则直接跳转到等待页面
 						startActivity(new Intent(GuideActivity.this, WaitActivity.class));
-					} else if (userPreference.getU_stateid() == 2 && friendPreference.getF_id() == -1) {//如果是情侣状态，但是还没有添加情侣
-						startActivity(new Intent(GuideActivity.this, AddLoverActivity.class));
-					} else {
+					} 
+//					else if (userPreference.getU_stateid() == 2 && friendPreference.getF_id() == -1) {//如果是情侣状态，但是还没有添加情侣
+//						startActivity(new Intent(GuideActivity.this, AddLoverActivity.class));
+//					}
+					else {
 						setContentView(R.layout.activity_guide);
 						findViewById();
 						initView();

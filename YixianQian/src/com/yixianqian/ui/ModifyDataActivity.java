@@ -35,6 +35,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.easemob.chat.EMChatManager;
 import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.TextHttpResponseHandler;
 import com.yixianqian.R;
@@ -47,6 +48,7 @@ import com.yixianqian.utils.AsyncHttpClientImageSound;
 import com.yixianqian.utils.AsyncHttpClientTool;
 import com.yixianqian.utils.DateTimeTools;
 import com.yixianqian.utils.ImageTools;
+import com.yixianqian.utils.LogTool;
 import com.yixianqian.utils.ToastTool;
 import com.yixianqian.utils.UserPreference;
 
@@ -554,29 +556,6 @@ public class ModifyDataActivity extends BaseFragmentActivity implements OnClickL
 			// 如果错误，则提示错误
 			focusView.requestFocus();
 		} else {
-			//真名有变化
-			if (realNameChanged) {
-				RequestParams params = new RequestParams();
-				params.put(UserTable.U_ID, userPreference.getU_id());
-				params.put(UserTable.U_REALNAME, realname);
-				TextHttpResponseHandler responseHandler = new TextHttpResponseHandler("utf-8") {
-
-					@Override
-					public void onSuccess(int arg0, Header[] arg1, String arg2) {
-						// TODO Auto-generated method stub
-						if (arg0 == 200) {
-							userPreference.setU_realname(realname);
-						}
-					}
-
-					@Override
-					public void onFailure(int arg0, Header[] arg1, String arg2, Throwable arg3) {
-						// TODO Auto-generated method stub
-
-					}
-				};
-				AsyncHttpClientTool.post("updateuserrealname", params, responseHandler);
-			}
 			//昵称有变化
 			if (nickNameChanged) {
 				RequestParams params = new RequestParams();
@@ -589,6 +568,13 @@ public class ModifyDataActivity extends BaseFragmentActivity implements OnClickL
 						// TODO Auto-generated method stub
 						if (arg0 == 200) {
 							userPreference.setU_nickname(nickname);
+							LogTool.e(userPreference.getName());
+							//更新环信昵称
+							if (EMChatManager.getInstance().updateCurrentUserNick(userPreference.getName())) {
+								LogTool.i("ModifyDataActivity", "更新环信昵称成功");
+							} else {
+								LogTool.e("ModifyDataActivity", "更新环信昵称失败");
+							}
 						}
 					}
 
@@ -599,6 +585,38 @@ public class ModifyDataActivity extends BaseFragmentActivity implements OnClickL
 				};
 				AsyncHttpClientTool.post("updateusernickname", params, responseHandler);
 			}
+
+			//真名有变化
+			if (realNameChanged) {
+				RequestParams params = new RequestParams();
+				params.put(UserTable.U_ID, userPreference.getU_id());
+				params.put(UserTable.U_REALNAME, realname);
+				TextHttpResponseHandler responseHandler = new TextHttpResponseHandler("utf-8") {
+
+					@Override
+					public void onSuccess(int arg0, Header[] arg1, String arg2) {
+						// TODO Auto-generated method stub
+						if (arg0 == 200) {
+							userPreference.setU_realname(realname);
+							LogTool.e(userPreference.getName());
+							//更新环信昵称
+							if (EMChatManager.getInstance().updateCurrentUserNick(userPreference.getName())) {
+								LogTool.i("ModifyDataActivity", "更新环信昵称成功");
+							} else {
+								LogTool.e("ModifyDataActivity", "更新环信昵称失败");
+							}
+						}
+					}
+
+					@Override
+					public void onFailure(int arg0, Header[] arg1, String arg2, Throwable arg3) {
+						// TODO Auto-generated method stub
+
+					}
+				};
+				AsyncHttpClientTool.post("updateuserrealname", params, responseHandler);
+			}
+
 			//邮箱有变化
 			if (emailNameChanged) {
 				RequestParams params = new RequestParams();

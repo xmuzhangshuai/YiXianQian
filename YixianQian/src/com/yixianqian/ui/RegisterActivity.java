@@ -9,6 +9,7 @@ import android.view.View.OnClickListener;
 import android.view.Window;
 
 import com.yixianqian.R;
+import com.yixianqian.base.BaseApplication;
 import com.yixianqian.base.BaseFragmentActivity;
 import com.yixianqian.customewidget.MyAlertDialog;
 
@@ -74,6 +75,7 @@ public class RegisterActivity extends BaseFragmentActivity {
 				// TODO Auto-generated method stub
 				dialog.dismiss();
 				finish();
+				BaseApplication.getInstance().getUserPreference().clear();
 			}
 		};
 		View.OnClickListener cancle = new OnClickListener() {

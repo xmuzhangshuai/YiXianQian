@@ -19,6 +19,7 @@ import com.yixianqian.base.BaseActivity;
 import com.yixianqian.base.BaseApplication;
 import com.yixianqian.table.UserTable;
 import com.yixianqian.utils.AsyncHttpClientTool;
+import com.yixianqian.utils.CommonTools;
 import com.yixianqian.utils.MD5For32;
 import com.yixianqian.utils.ToastTool;
 import com.yixianqian.utils.UserPreference;
@@ -96,8 +97,8 @@ public class ResetPassActivity extends BaseActivity implements OnClickListener {
 			mNewPassView.setError(getString(R.string.error_field_required));
 			focusView = mNewPassView;
 			cancel = true;
-		} else if (newPass.length() < 6) {
-			mNewPassView.setError(getString(R.string.error_invalid_password));
+		} else if (!CommonTools.isPassValid(newPass)) {
+			mNewPassView.setError(getString(R.string.error_pattern_password));
 			focusView = mNewPassView;
 			cancel = true;
 		}
@@ -166,7 +167,7 @@ public class ResetPassActivity extends BaseActivity implements OnClickListener {
 	 */
 	private void reLogin() {
 		//设置用户不曾登录
-//		BaseApplication.getInstance().logout();
+		//		BaseApplication.getInstance().logout();
 		userPreference.clear();
 		Intent intent = new Intent(ResetPassActivity.this, LoginActivity.class);
 		startActivity(intent);
