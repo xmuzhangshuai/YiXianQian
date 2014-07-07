@@ -23,8 +23,6 @@ import android.view.WindowManager;
 public class DensityUtil {
 	private static DisplayMetrics dm;
 	private static WindowManager wm;
-	private static int ScreenWidth;// 屏幕宽度
-	private static int ScreenHeight;// 屏幕高度
 
 	/**
 	 * 根据手机的分辨率从 dp 的单位 转成为 px(像素)
@@ -56,8 +54,7 @@ public class DensityUtil {
 		dm = new DisplayMetrics();
 		wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
 		wm.getDefaultDisplay().getMetrics(dm);
-		ScreenWidth = dm.widthPixels;// 屏幕宽度
-		return ScreenWidth;
+		return dm.widthPixels;// 屏幕宽度
 	}
 
 	/**
@@ -67,15 +64,14 @@ public class DensityUtil {
 		dm = new DisplayMetrics();
 		wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
 		wm.getDefaultDisplay().getMetrics(dm);
-		ScreenHeight = dm.heightPixels;// 屏幕高度
-		return ScreenHeight;
+		return dm.heightPixels;// 屏幕高度
 	}
 
 	/**
 	 * 获取手机屏幕宽度值，单位dp
 	 */
 	public static int getScreenWidthforDP(Context context) {
-		ScreenWidth = getScreenWidthforPX(context);
+		int ScreenWidth = getScreenWidthforPX(context);
 		ScreenWidth = DensityUtil.px2dip(context, ScreenWidth);
 		return ScreenWidth;
 	}
@@ -84,7 +80,7 @@ public class DensityUtil {
 	 * 获取手机屏幕高度值，单位dp
 	 */
 	public static int getScreenHeightforDP(Context context) {
-		ScreenHeight = getScreenHeightforPX(context);
+		int ScreenHeight = getScreenHeightforPX(context);
 		ScreenHeight = DensityUtil.px2dip(context, ScreenHeight);
 		return ScreenHeight;
 	}

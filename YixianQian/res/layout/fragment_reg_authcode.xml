@@ -2,33 +2,39 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/system_back"
-    android:gravity="center_horizontal"
-    android:orientation="vertical"
-    android:padding="@dimen/day_recommend_dot_space"
-    tools:context="com.yixianqian.ui.AuthCodeActivity" >
+    android:orientation="vertical" >
 
-    <EditText
-        android:id="@+id/autncode"
-        android:layout_width="fill_parent"
-        android:layout_height="@dimen/register_height"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/shape_radius"
-        android:hint="输入5位手机验证码"
-        android:inputType="none"
-        android:maxLines="1"
-        android:paddingLeft="@dimen/personal_timecapsule_padding"
-        android:textColorHint="@color/system_gray"
-        android:textSize="@dimen/day_recommend_user_font" />
-
-    <Button
-        android:id="@+id/again_authcode"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/register_height"
-        android:layout_marginTop="@dimen/register_height"
-        android:background="@drawable/sel_auth_code_again_bg"
-        android:text="重新获取验证码"
-        android:textColor="@color/white"
-        android:textSize="@dimen/day_recommend_user_font" />
+        android:layout_height="match_parent"
+        android:background="@color/system_back"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:padding="@dimen/day_recommend_dot_space"
+        tools:context="com.yixianqian.ui.AuthCodeActivity" >
+
+        <EditText
+            android:id="@+id/autncode"
+            android:layout_width="fill_parent"
+            android:layout_height="@dimen/register_height"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/shape_radius"
+            android:hint="输入5位手机验证码"
+            android:inputType="none"
+            android:maxLines="1"
+            android:paddingLeft="@dimen/personal_timecapsule_padding"
+            android:textColorHint="@color/system_gray"
+            android:textSize="@dimen/day_recommend_user_font" />
+
+        <Button
+            android:id="@+id/again_authcode"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/register_height"
+            android:layout_marginTop="@dimen/register_height"
+            android:background="@drawable/sel_auth_code_again_bg"
+            android:text="重新获取验证码"
+            android:textColor="@drawable/sel_enable_font_color"
+            android:textSize="@dimen/day_recommend_user_font" />
+    </LinearLayout>
 
 </LinearLayout>

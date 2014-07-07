@@ -96,6 +96,12 @@
         <activity android:name=".ui.RecommendHelpActivity" >
         </activity>
 
+        <!-- 上传头像页面 -->
+        <activity
+            android:name="com.yixianqian.ui.HeadImageActivity"
+            android:label="@string/title_activity_head_image" >
+        </activity>
+
         <!-- 百度定位 -->
         <service
             android:name="com.baidu.location.f"

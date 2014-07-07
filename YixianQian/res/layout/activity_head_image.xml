@@ -1,0 +1,65 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context="${relativePackage}.${activityClass}" >
+
+    <include
+        layout="@layout/top_navigation2"
+        android:focusable="true" />
+
+    <LinearLayout
+        android:id="@+id/gethead_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/get_image_btn_top"
+        android:background="@drawable/sel_get_head_bg"
+        android:orientation="vertical" >
+
+        <ImageView
+            android:id="@+id/camera_image"
+            android:layout_width="@dimen/register_height"
+            android:layout_height="@dimen/register_height"
+            android:layout_margin="@dimen/get_image_btn_padding"
+            android:src="@drawable/sel_get_head" />
+
+        <ImageView
+            android:id="@+id/headimage"
+            android:layout_width="@dimen/headiamge_height"
+            android:layout_height="@dimen/headiamge_height"
+            android:layout_gravity="center"
+            android:visibility="gone" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/headimage_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/gethead_btn"
+        android:layout_alignRight="@+id/gethead_btn"
+        android:layout_below="@+id/gethead_btn"
+        android:layout_marginTop="@dimen/day_recommend_help_padding"
+        android:text="请上传一张真实头像"
+        android:textSize="@dimen/day_recommend_user_font"
+        android:textStyle="bold" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/headimage_info"
+        android:layout_alignRight="@+id/gethead_btn"
+        android:layout_below="@+id/headimage_info"
+        android:layout_marginTop="@dimen/personal_timecapsule_padding"
+        android:text="如果您是单身，我们将审核您的头像是否真实，进行牵线搭桥服务。"
+        android:textSize="@dimen/register_font_size" />
+
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/headimage_info"
+        android:layout_centerHorizontal="true" />
+
+</RelativeLayout>

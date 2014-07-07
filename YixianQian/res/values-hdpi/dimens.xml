@@ -27,4 +27,8 @@
     <!-- 注册 -->
     <dimen name="register_height">50dp</dimen>
     <dimen name="register_font_size">12sp</dimen>
+    <dimen name="get_image_btn_top">100dp</dimen>
+    <dimen name="get_image_btn_padding">60dp</dimen>
+    <dimen name="headiamge_height">250dp</dimen>
+
 </resources>

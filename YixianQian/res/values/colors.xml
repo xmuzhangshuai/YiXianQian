@@ -11,9 +11,13 @@
     <color name="dark_gray">#666666</color> <!-- 系统灰色 -->
     <color name="white">#ffffff</color>
     <color name="black">#000000</color>
+    <color name="unenable">#999999</color>
+    <color name="unenable_font">#dbdbdb</color>
 
     <!-- 登录或注册页面 -->
     <color name="logorreg_btn_pressed">#48D1CC</color>
+    <color name="get_headimage_bg">#f2f2f0</color>
+    <color name="get_headimage_bg_pressed">#33cccc</color>
 
     <!-- 主页面 -->
     <color name="home_btn_bg">#333333</color>

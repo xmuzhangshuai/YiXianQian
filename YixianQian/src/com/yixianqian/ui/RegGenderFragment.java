@@ -1,19 +1,18 @@
 package com.yixianqian.ui;
 
-import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.RadioButton;
-import android.widget.RadioGroup;
+import android.widget.TextView;
 
 import com.yixianqian.R;
 import com.yixianqian.base.BaseV4Fragment;
-import com.yixianqian.interfaces.OnCompeletedListener;
-import com.yixianqian.interfaces.OnUserInfoChangedListener;
 
 /**
  * 类名称：RegGenderFragment
@@ -22,35 +21,20 @@ import com.yixianqian.interfaces.OnUserInfoChangedListener;
  * 创建时间：2014年7月6日 下午7:28:49
  *
  */
-public class RegGenderFragment extends BaseV4Fragment implements OnCheckedChangeListener {
+public class RegGenderFragment extends BaseV4Fragment implements OnCheckedChangeListener{
 	/*************Views************/
 	private View rootView;// 根View
 
-//	private RadioGroup userStateGroup;
-//	private RadioGroup genderGroup;
 	private RadioButton mSingleView;//单身
 	private RadioButton mLoveView;//恋爱
 	private RadioButton mMale;//男
 	private RadioButton mFemale;//女
+	private TextView topNavigation;//导航栏文字
+	private View leftImageButton;//导航栏左侧按钮
+	private View rightImageButton;//导航栏右侧按钮
 
-	private OnCompeletedListener mOnCompeletedListener;
-	private OnUserInfoChangedListener mOnuserInfoChangedListener;
-
-	/**
-	 * 实现OnCompeletedListener接口，用于自动进入下一页
-	 */
-	@Override
-	public void onAttach(Activity activity) {
-		// TODO Auto-generated method stub
-		super.onAttach(activity);
-		try {
-			mOnCompeletedListener = (OnCompeletedListener) activity;
-			mOnuserInfoChangedListener = (OnUserInfoChangedListener) activity;
-		} catch (Exception e) {
-			// TODO: handle exception
-			throw new ClassCastException(activity.toString() + " 必须实现OnCompeletedListener接口");
-		}
-	}
+	private boolean mIsSingle;
+	private String gender;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -68,20 +52,44 @@ public class RegGenderFragment extends BaseV4Fragment implements OnCheckedChange
 	}
 
 	@Override
+	public void onPause() {
+		// TODO Auto-generated method stub
+		super.onPause();
+	}
+
+	@Override
 	protected void findViewById() {
 		// TODO Auto-generated method stub
 		mSingleView = (RadioButton) rootView.findViewById(R.id.single);
 		mLoveView = (RadioButton) rootView.findViewById(R.id.love);
-//		userStateGroup = (RadioGroup) rootView.findViewById(R.id.user_state_radiogroup);
-//		genderGroup = (RadioGroup) rootView.findViewById(R.id.user_gender_radiogroup);
 		mMale = (RadioButton) rootView.findViewById(R.id.male);
 		mFemale = (RadioButton) rootView.findViewById(R.id.female);
 
+		topNavigation = (TextView) getActivity().findViewById(R.id.nav_text);
+		leftImageButton = (View) getActivity().findViewById(R.id.left_btn_bg);
+		rightImageButton = (View) getActivity().findViewById(R.id.right_btn_bg);
 	}
 
 	@Override
 	protected void initView() {
 		// TODO Auto-generated method stub
+		topNavigation.setText("状态");
+		rightImageButton.setEnabled(false);
+		leftImageButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				getActivity().finish();
+			}
+		});
+		rightImageButton.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				next();
+			}
+		});
 		mSingleView.setOnCheckedChangeListener(this);
 		mLoveView.setOnCheckedChangeListener(this);
 		mMale.setOnCheckedChangeListener(this);
@@ -89,35 +97,48 @@ public class RegGenderFragment extends BaseV4Fragment implements OnCheckedChange
 	}
 
 	/**
-	 * 实现回调接口
+	 * 检查是否都已选
 	 */
-	@Override
-	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-		// TODO Auto-generated method stub
-		switch (buttonView.getId()) {
-		case R.id.single:
-			if (isChecked)
-				mOnuserInfoChangedListener.onStateChanged(true);
-			break;
-		case R.id.love:
-			if (isChecked)
-				mOnuserInfoChangedListener.onStateChanged(false);
-			break;
-		case R.id.male:
-			if (isChecked)
-				mOnuserInfoChangedListener.onGenderChanged("男");
-			break;
-		case R.id.female:
-			if (isChecked)
-				mOnuserInfoChangedListener.onGenderChanged("女");
-			break;
-		default:
-			break;
+	private void attemptGender() {
+
+		boolean cancel = false;
+
+		//检查是否选择状态
+		if (!mSingleView.isChecked() && !mLoveView.isChecked()) {
+			cancel = true;
+			rightImageButton.setEnabled(false);
+			//			Toast.makeText(getActivity(), getString(R.string.choose_state_error), 1).show();
 		}
 
-		if ((mSingleView.isChecked() || mLoveView.isChecked()) && (mMale.isChecked() || mFemale.isChecked())) {
-			mOnCompeletedListener.onCompeleted(1);
+		//检查是否选性别
+		if (!mMale.isChecked() && !mFemale.isChecked()) {
+			cancel = true;
+			rightImageButton.setEnabled(false);
+			//			Toast.makeText(getActivity(), getString(R.string.choose_gender_error), 1).show();
+		}
+
+		if (!cancel) {
+			// 没有错误
+			rightImageButton.setEnabled(true);
 		}
 	}
 
+	/**
+	 * 下一步
+	 */
+	private void next() {
+		RegSchoolFragment regSchoolFragment = new RegSchoolFragment();
+		FragmentTransaction transaction = getFragmentManager().beginTransaction();
+		transaction.setCustomAnimations(R.anim.push_left_in, R.anim.push_left_out, R.anim.push_right_in,
+				R.anim.push_right_out);
+		transaction.replace(R.id.fragment_container, regSchoolFragment);
+//		transaction.addToBackStack(null);
+		transaction.commit();
+	}
+
+	@Override
+	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+		// TODO Auto-generated method stub
+		attemptGender();
+	}
 }

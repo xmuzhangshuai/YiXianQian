@@ -15,11 +15,6 @@
     <string name="recommend_help4">为了确保真心，您只能对其中1个人心动。</string>
     <string name="recommend_help5">如果您对某一位怦然心动，我们将给Ta推送一条爱情验证消息。</string>
     <string name="recommend_help6">除非ta也对您“怦然心动”，否则，你们无法取得联系。</string>
-    <string name="error_phone">手机号码格式不对</string>
-    <string name="province">省份</string>
-    <string name="city">城市</string>
-    <string name="school">学校</string>
+    <string name="title_activity_head_image">HeadImageActivity</string>
 
-    <!-- 注册 -->
-    <string name="choose_gender_tip">请问您现在的状态是？</string>
-</resources>
+</resources>
