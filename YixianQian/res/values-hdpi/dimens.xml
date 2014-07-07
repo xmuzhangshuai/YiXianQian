@@ -1,0 +1,30 @@
+<resources>
+
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="day_recommend_font_info">14sp</dimen>
+    <dimen name="day_recommend_info_space">2dp</dimen>
+    <dimen name="day_recommend_padding">30dp</dimen>
+    <dimen name="day_recommend_user_font">16sp</dimen>
+    <dimen name="day_recommend_viewpager_height">300dp</dimen>
+    <dimen name="day_recommend_viewpager_margin_top">10dp</dimen>
+    <dimen name="day_recommend_viewpager_padding_top">3dp</dimen>
+    <dimen name="day_recommend_next_btn">40dp</dimen>
+    <dimen name="day_recommend_dot_space">8dp</dimen>
+    <dimen name="day_recommend_dot_margin_top">25dp</dimen>
+    <dimen name="day_recommend_help">30dp</dimen>
+    <dimen name="day_recommend_help_padding">22dp</dimen>
+    <dimen name="day_recommend_help_font">15sp</dimen>
+    <dimen name="day_recommend_help_font_space">7dp</dimen>
+    <!-- 个人中心 -->
+    <dimen name="personal_timecapsule_padding">12dp</dimen>
+    <dimen name="personal_photo_margin">80dp</dimen>
+    <dimen name="personal_photo_size">70dp</dimen>
+    <dimen name="home_indicator">45dp</dimen>
+    <dimen name="login_register">40dp</dimen>
+
+    <!-- 注册 -->
+    <dimen name="register_height">50dp</dimen>
+    <dimen name="register_font_size">12sp</dimen>
+</resources>

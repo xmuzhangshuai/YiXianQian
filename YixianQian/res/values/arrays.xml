@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="pref_textsize_entries">
+        <item>大</item>
+        <item>中</item>
+        <item>小</item>
+    </string-array>
+    <string-array name="pref_textsize_values">
+        <item>big</item>
+        <item>middle</item>
+        <item>small</item>
+    </string-array>
+
+    <!-- 错题重放、我的收藏页面弹出菜单选项 -->
+    <string-array name="menu_options_array">
+        <item>厦门大学</item>
+        <item>集美大学</item>
+        <item>厦门大学教庚学院</item>
+    </string-array>
+
+</resources>

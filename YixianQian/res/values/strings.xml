@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">一线牵</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="title_activity_login_or_register">LoginOrRegisterActivity</string>
+    <string name="title_activity_guide_pager">GuidePagerActivity</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_auth_code">AuthCodeActivity</string>
+    <string name="title_activity_day_recommend">DayRecommendActivity</string>
+    <string name="day_recommend">一线牵每天为你创造4次相遇的机会，您可以点击“怦然心动”或者“跳过”。每天只能对一个人心动。</string>
+    <string name="recommend_help1">一线牵致力于为在校大学生寻找自己的另一半，在这里可以记录生活中最难忘的点点滴滴。</string>
+    <string name="recommend_help2">如果您是单身，一线牵 将扮演一个牵线搭桥的月老角色。</string>
+    <string name="recommend_help3">每天为您创造4次与ta相遇的机会，您可以选择“怦然心动”或“跳过”。</string>
+    <string name="recommend_help4">为了确保真心，您只能对其中1个人心动。</string>
+    <string name="recommend_help5">如果您对某一位怦然心动，我们将给Ta推送一条爱情验证消息。</string>
+    <string name="recommend_help6">除非ta也对您“怦然心动”，否则，你们无法取得联系。</string>
+    <string name="error_phone">手机号码格式不对</string>
+    <string name="province">省份</string>
+    <string name="city">城市</string>
+    <string name="school">学校</string>
+
+    <!-- 注册 -->
+    <string name="choose_gender_tip">请问您现在的状态是？</string>
+</resources>

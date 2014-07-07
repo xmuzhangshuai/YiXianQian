@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="system_male">#33CCCC</color> <!-- 男生系统颜色 -->
+    <color name="system_male_dark">#2FBABA</color> <!-- 男生系统颜色深色 -->
+    <color name="system_male_dark_more">#008B8B</color> <!-- 男生系统颜色深色 -->
+
+    <color name="system_back">#F2F2F0</color> <!-- 系统背景色 -->
+    <color name="system_personal_back">#F6F8FC</color> <!-- 个人中心背景色 -->
+    <color name="system_gray">#CCCCCC</color> <!-- 系统灰色 -->
+    <color name="dark_gray">#666666</color> <!-- 系统灰色 -->
+    <color name="white">#ffffff</color>
+    <color name="black">#000000</color>
+
+    <!-- 登录或注册页面 -->
+    <color name="logorreg_btn_pressed">#48D1CC</color>
+
+    <!-- 主页面 -->
+    <color name="home_btn_bg">#333333</color>
+    <color name="home_btn_bg_pressed">#262626</color>
+
+</resources>

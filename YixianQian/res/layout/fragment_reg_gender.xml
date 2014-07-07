@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/system_back"
+    android:orientation="vertical"
+    android:padding="@dimen/day_recommend_dot_space" >
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="@string/choose_gender_tip"
+        android:textColor="@color/dark_gray"
+        android:textSize="@dimen/day_recommend_user_font" />
+
+    <RadioGroup
+        android:id="@+id/user_state_radiogroup"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/register_height"
+        android:layout_marginTop="@dimen/day_recommend_dot_margin_top"
+        android:background="@drawable/shape_radius"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/personal_timecapsule_padding" >
+
+        <RadioButton
+            android:id="@+id/single"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="单身"
+            android:textColor="@color/system_gray"
+            android:textSize="@dimen/day_recommend_user_font" />
+
+        <RadioButton
+            android:id="@+id/love"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/personal_photo_margin"
+            android:text="恋爱"
+            android:textColor="@color/system_gray"
+            android:textSize="@dimen/day_recommend_user_font" />
+    </RadioGroup>
+
+    <RadioGroup
+        android:id="@+id/user_gender_radiogroup"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/register_height"
+        android:layout_marginTop="@dimen/day_recommend_dot_margin_top"
+        android:background="@drawable/shape_radius"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/personal_timecapsule_padding" >
+
+        <RadioButton
+            android:id="@+id/male"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="男生"
+            android:textColor="@color/system_gray"
+            android:textSize="@dimen/day_recommend_user_font" />
+
+        <RadioButton
+            android:id="@+id/female"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/personal_photo_margin"
+            android:text="女生"
+            android:textColor="@color/system_gray"
+            android:textSize="@dimen/day_recommend_user_font" />
+    </RadioGroup>
+
+</LinearLayout>

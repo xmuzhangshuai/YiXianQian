@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:isScrollContainer="true"
+    android:orientation="vertical"
+    android:paddingLeft="@dimen/day_recommend_help_padding"
+    android:paddingRight="@dimen/day_recommend_help_padding"
+    android:paddingTop="@dimen/day_recommend_padding" >
+
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:src="@drawable/yixianqian" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/system_gray" />
+
+    <TextView
+        android:id="@+id/recommend_help1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp"
+        android:lineSpacingExtra="4dp"
+        android:text="@string/recommend_help1"
+        android:textSize="@dimen/day_recommend_help_font" />
+
+    <TextView
+        android:id="@+id/recommend_help2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/day_recommend_help_font_space"
+        android:lineSpacingExtra="4dp"
+        android:text="@string/recommend_help2"
+        android:textSize="@dimen/day_recommend_help_font" />
+
+    <TextView
+        android:id="@+id/recommend_help3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/day_recommend_help_font_space"
+        android:lineSpacingExtra="4dp"
+        android:text="@string/recommend_help3"
+        android:textSize="@dimen/day_recommend_help_font" />
+
+    <TextView
+        android:id="@+id/recommend_help4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/day_recommend_help_font_space"
+        android:lineSpacingExtra="4dp"
+        android:text="@string/recommend_help4"
+        android:textSize="@dimen/day_recommend_help_font" />
+
+    <TextView
+        android:id="@+id/recommend_help5"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/day_recommend_help_font_space"
+        android:lineSpacingExtra="4dp"
+        android:text="@string/recommend_help5"
+        android:textSize="@dimen/day_recommend_help_font" />
+
+    <TextView
+        android:id="@+id/recommend_help6"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/day_recommend_help_font_space"
+        android:lineSpacingExtra="4dp"
+        android:text="@string/recommend_help6"
+        android:textSize="@dimen/day_recommend_help_font" />
+
+</LinearLayout>

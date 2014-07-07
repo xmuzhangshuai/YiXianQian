@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:orientation="horizontal"
+    android:paddingBottom="@dimen/day_recommend_dot_space"
+    android:paddingTop="@dimen/day_recommend_dot_space" >
+
+    <ImageView
+        android:id="@+id/leftimage"
+        android:layout_width="@dimen/day_recommend_help_padding"
+        android:layout_height="@dimen/day_recommend_help_padding" />
+
+    <TextView
+        android:id="@+id/item_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/day_recommend_viewpager_padding_top"
+        android:text="编辑资料"
+        android:textSize="@dimen/day_recommend_user_font" />
+
+    <ImageView
+        android:id="@+id/rightimage"
+        android:layout_width="@dimen/day_recommend_help_padding"
+        android:layout_height="@dimen/day_recommend_help_padding"
+        android:layout_marginLeft="@dimen/day_recommend_viewpager_padding_top" />
+
+</LinearLayout>
