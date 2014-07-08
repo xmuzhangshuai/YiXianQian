@@ -6,6 +6,9 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LinearInterpolator;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -30,6 +33,10 @@ public class PersonalFragment extends BaseV4Fragment {
 	private View right_btn_bg;
 	private ImageView photo;//拍照按钮
 	private ImageView tape;//录音
+	private View tapeView;//旋转磁带
+	private ImageView progressImage1;
+	private ImageView progressImage2;
+	private int count = 0;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -50,6 +57,9 @@ public class PersonalFragment extends BaseV4Fragment {
 		photo = (ImageView) rootView.findViewById(R.id.photo);
 		tape = (ImageView) rootView.findViewById(R.id.tape);
 		topNavText = (TextView) rootView.findViewById(R.id.nav_text);
+		progressImage1 = (ImageView) rootView.findViewById(R.id.progressimage1);
+		progressImage2 = (ImageView) rootView.findViewById(R.id.progressimage2);
+		tapeView = (View) rootView.findViewById(R.id.tape_view);
 	}
 
 	@Override
@@ -76,7 +86,7 @@ public class PersonalFragment extends BaseV4Fragment {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				
+
 			}
 		});
 
@@ -86,7 +96,7 @@ public class PersonalFragment extends BaseV4Fragment {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-
+				shutRecordingTape();
 			}
 		});
 
@@ -96,7 +106,12 @@ public class PersonalFragment extends BaseV4Fragment {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-
+				if (count % 2 == 0) {
+					showRecordingTape();
+				} else {
+					shutRecordingTape();
+				}
+				count++;
 			}
 		});
 	}
@@ -119,5 +134,30 @@ public class PersonalFragment extends BaseV4Fragment {
 		// Create and show the dialog.
 		PersonalDialogFragment newFragment = PersonalDialogFragment.newInstance();
 		newFragment.show(ft, "dialog");
+	}
+
+	/**
+	 * 显示正在旋转的磁带
+	 */
+	private void showRecordingTape() {
+		tapeView.setVisibility(View.VISIBLE);
+
+		final Animation operatingAnim = AnimationUtils.loadAnimation(getActivity(), R.anim.record);
+		operatingAnim.setInterpolator(new LinearInterpolator());
+
+		if (operatingAnim != null) {
+			progressImage1.startAnimation(operatingAnim);
+			progressImage2.startAnimation(operatingAnim);
+
+		}
+	}
+
+	/**
+	 * 关闭正在旋转的磁带
+	 */
+	private void shutRecordingTape() {
+		tapeView.setVisibility(View.GONE);
+		progressImage1.clearAnimation();
+		progressImage2.clearAnimation();
 	}
 }

@@ -3,6 +3,7 @@ package com.yixianqian.ui;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -88,6 +89,10 @@ public class RegAuthCodeFragment extends BaseV4Fragment {
 				// TODO Auto-generated method stub
 				if (vertifyAuthCode()) {
 					Toast.makeText(getActivity(), "恭喜您，注册成功！", 1).show();
+					Intent intent = new Intent(getActivity(), HeadImageActivity.class);
+					startActivity(intent);
+					getActivity().overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+					getActivity().finish();
 				}
 			}
 		});
@@ -158,7 +163,7 @@ public class RegAuthCodeFragment extends BaseV4Fragment {
 	 * 验证验证码
 	 * @return
 	 */
-	private boolean vertifyAuthCode(){
+	private boolean vertifyAuthCode() {
 		return true;
 	}
 }

@@ -39,7 +39,6 @@
                 android:id="@+id/province"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/register_height"
-                android:entries="@array/menu_options_array"
                 android:paddingLeft="@dimen/day_recommend_help_padding"
                 android:prompt="@string/province" />
         </LinearLayout>
@@ -62,7 +61,6 @@
                 android:id="@+id/city"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/register_height"
-                android:entries="@array/menu_options_array"
                 android:paddingLeft="@dimen/day_recommend_help_padding"
                 android:prompt="@string/city" />
         </LinearLayout>
@@ -85,7 +83,6 @@
                 android:id="@+id/school"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/register_height"
-                android:entries="@array/menu_options_array"
                 android:paddingLeft="@dimen/day_recommend_help_padding"
                 android:prompt="@string/school" />
         </LinearLayout>

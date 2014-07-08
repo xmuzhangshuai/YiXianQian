@@ -20,9 +20,11 @@
             android:layout_marginTop="20dp"
             android:background="@drawable/shape_radius"
             android:hint="输入5位手机验证码"
-            android:inputType="none"
+            android:inputType="number"
+            android:maxLength="5"
             android:maxLines="1"
             android:paddingLeft="@dimen/personal_timecapsule_padding"
+            android:singleLine="true"
             android:textColorHint="@color/system_gray"
             android:textSize="@dimen/day_recommend_user_font" />
 

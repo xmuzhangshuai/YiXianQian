@@ -96,7 +96,10 @@ public class HeadImageActivity extends BaseActivity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-
+				Intent intent = new Intent(HeadImageActivity.this, MainActivity.class);
+				startActivity(intent);
+				overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+				finish();
 			}
 		});
 	}
@@ -255,17 +258,17 @@ public class HeadImageActivity extends BaseActivity {
 	 * 上传头像
 	 */
 	public void uploadImage(String filePath) {
-//		UserService userService = UserService.getInstance(getActivity());
-//		String uploadHost = HttpUtil.BASE_URL + "UploadServlet";
-//		RequestParams params = new RequestParams();
-//		User user = userService.getCurrentUser();
-//		if (user != null) {
-//			params.addBodyParameter("mail", user.getMail());
-//			params.addBodyParameter("pass", user.getPassword());
-//		}
-//
-//		params.addBodyParameter(filePath.replace("/", ""), new File(filePath));
-//		uploadMethod(params, uploadHost);
+		//		UserService userService = UserService.getInstance(getActivity());
+		//		String uploadHost = HttpUtil.BASE_URL + "UploadServlet";
+		//		RequestParams params = new RequestParams();
+		//		User user = userService.getCurrentUser();
+		//		if (user != null) {
+		//			params.addBodyParameter("mail", user.getMail());
+		//			params.addBodyParameter("pass", user.getPassword());
+		//		}
+		//
+		//		params.addBodyParameter(filePath.replace("/", ""), new File(filePath));
+		//		uploadMethod(params, uploadHost);
 	}
 
 	/**
@@ -274,36 +277,36 @@ public class HeadImageActivity extends BaseActivity {
 	 * @param params
 	 * @param uploadHost
 	 */
-//	public void uploadMethod(final RequestParams params, final String uploadHost) {
-//		HttpUtils http = new HttpUtils();
-//		http.send(HttpMethod.POST, uploadHost, params, new RequestCallBack<String>() {
-//			@Override
-//			public void onStart() {
-//				Toast.makeText(getActivity(), "开始上传...", 1).show();
-//			}
-//
-//			@Override
-//			public void onLoading(long total, long current, boolean isUploading) {
-//				if (isUploading) {
-//					System.out.println("upload: " + current + "/" + total);
-//				} else {
-//					System.out.println("reply: " + current + "/" + total);
-//				}
-//			}
-//
-//			@Override
-//			public void onSuccess(ResponseInfo<String> responseInfo) {
-//				Toast.makeText(getActivity(), "头像上传成功！", 1).show();
-//				// 重新更新用户内容
-//				new GetUserTask().execute();
-//
-//			}
-//
-//			@Override
-//			public void onFailure(HttpException error, String msg) {
-//				Toast.makeText(getActivity(), "头像上传失败！" + msg, 1).show();
-//			}
-//		});
-//	}
+	//	public void uploadMethod(final RequestParams params, final String uploadHost) {
+	//		HttpUtils http = new HttpUtils();
+	//		http.send(HttpMethod.POST, uploadHost, params, new RequestCallBack<String>() {
+	//			@Override
+	//			public void onStart() {
+	//				Toast.makeText(getActivity(), "开始上传...", 1).show();
+	//			}
+	//
+	//			@Override
+	//			public void onLoading(long total, long current, boolean isUploading) {
+	//				if (isUploading) {
+	//					System.out.println("upload: " + current + "/" + total);
+	//				} else {
+	//					System.out.println("reply: " + current + "/" + total);
+	//				}
+	//			}
+	//
+	//			@Override
+	//			public void onSuccess(ResponseInfo<String> responseInfo) {
+	//				Toast.makeText(getActivity(), "头像上传成功！", 1).show();
+	//				// 重新更新用户内容
+	//				new GetUserTask().execute();
+	//
+	//			}
+	//
+	//			@Override
+	//			public void onFailure(HttpException error, String msg) {
+	//				Toast.makeText(getActivity(), "头像上传失败！" + msg, 1).show();
+	//			}
+	//		});
+	//	}
 
 }

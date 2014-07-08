@@ -3,6 +3,8 @@
 
     <string name="app_name">一线牵</string>
     <string name="hello_world">Hello world!</string>
+    <string name="version_info">一线牵\n\nVersion 1.0.0</string>
+    
     <string name="title_activity_login_or_register">LoginOrRegisterActivity</string>
     <string name="title_activity_guide_pager">GuidePagerActivity</string>
     <string name="title_activity_main">MainActivity</string>

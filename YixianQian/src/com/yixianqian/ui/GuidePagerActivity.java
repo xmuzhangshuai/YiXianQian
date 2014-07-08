@@ -1,12 +1,9 @@
 package com.yixianqian.ui;
 
-import com.yixianqian.R;
-import com.yixianqian.R.layout;
-
 import android.app.Activity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+
+import com.yixianqian.R;
 
 public class GuidePagerActivity extends Activity {
 
