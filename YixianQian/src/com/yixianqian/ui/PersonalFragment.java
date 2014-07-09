@@ -96,7 +96,6 @@ public class PersonalFragment extends BaseV4Fragment {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				shutRecordingTape();
 			}
 		});
 
@@ -141,6 +140,7 @@ public class PersonalFragment extends BaseV4Fragment {
 	 */
 	private void showRecordingTape() {
 		tapeView.setVisibility(View.VISIBLE);
+		tape.setImageResource(R.drawable.sel_tape_btn_recording);
 
 		final Animation operatingAnim = AnimationUtils.loadAnimation(getActivity(), R.anim.record);
 		operatingAnim.setInterpolator(new LinearInterpolator());
@@ -157,6 +157,7 @@ public class PersonalFragment extends BaseV4Fragment {
 	 */
 	private void shutRecordingTape() {
 		tapeView.setVisibility(View.GONE);
+		tape.setImageResource(R.drawable.sel_tabp_btn);
 		progressImage1.clearAnimation();
 		progressImage2.clearAnimation();
 	}

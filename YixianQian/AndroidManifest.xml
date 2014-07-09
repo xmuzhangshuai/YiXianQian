@@ -106,8 +106,14 @@
 
         <!-- 上传头像页面 -->
         <activity
-            android:name="com.yixianqian.ui.HeadImageActivity"
+            android:name=".ui.HeadImageActivity"
             android:label="@string/title_activity_head_image" >
+        </activity>
+
+        <!-- 时间胶囊页面 -->
+        <activity
+            android:name="com.yixianqian.ui.TimeCapsuleActivity"
+            android:label="@string/title_activity_time_capsule" >
         </activity>
 
         <!-- 百度定位 -->

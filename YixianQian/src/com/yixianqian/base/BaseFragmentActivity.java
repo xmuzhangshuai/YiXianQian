@@ -1,19 +1,13 @@
 package com.yixianqian.base;
 
-
-import com.yixianqian.R;
-
 import android.annotation.SuppressLint;
-import android.app.ActionBar;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.widget.Toast;
-
 
 /**   
 *    
@@ -41,7 +35,7 @@ public abstract class BaseFragmentActivity extends FragmentActivity {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		AppManager.getInstance().addActivity(this);
-//		PushAgent.getInstance(this).onAppStart();
+		//		PushAgent.getInstance(this).onAppStart();
 	}
 
 	@Override
@@ -54,14 +48,14 @@ public abstract class BaseFragmentActivity extends FragmentActivity {
 	protected void onPause() {
 		// TODO Auto-generated method stub
 		super.onPause();
-//		MobclickAgent.onPause(this);
+		//		MobclickAgent.onPause(this);
 	}
 
 	@Override
 	protected void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
-//		MobclickAgent.onResume(this);
+		//		MobclickAgent.onResume(this);
 	}
 
 	@Override
@@ -81,25 +75,6 @@ public abstract class BaseFragmentActivity extends FragmentActivity {
 		// TODO Auto-generated method stub
 		super.onStop();
 	}
-
-	/**
-	 * 设置ActionBar样式
-	 */
-//	@Override
-//	public ActionBar getActionBar() {
-//		// TODO Auto-generated method stub
-//		ActionBar actionBar = super.getActionBar();
-//		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-//			// Show the Up button in the action bar.
-//			actionBar.setDisplayHomeAsUpEnabled(true);
-//		}
-//
-//		// actionBar.setBackgroundDrawable(getResources().getDrawable(R.drawable.title_bar));
-//		// actionBar.setStackedBackgroundDrawable(getResources().getDrawable(R.drawable.actionbar_stacked_bg));
-//		// actionBar.setSplitBackgroundDrawable(getResources().getDrawable(R.drawable.title_bar));
-//		actionBar.setBackgroundDrawable(getResources().getDrawable(R.color.system_male));
-//		return actionBar;
-//	}
 
 	/**
 	 * 绑定控件id

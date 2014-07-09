@@ -33,7 +33,7 @@ public class MainActivity extends BaseFragmentActivity {
 	protected void initView() {
 		// TODO Auto-generated method stub
 
-		mTabHost.setup(this, getSupportFragmentManager(), android.R.id.tabcontent);
+		mTabHost.setup(this, getSupportFragmentManager(), R.id.realtabcontent);
 
 		// 添加tab名称和图标
 		indicator = getLayoutInflater().inflate(R.layout.home_indicator, null);

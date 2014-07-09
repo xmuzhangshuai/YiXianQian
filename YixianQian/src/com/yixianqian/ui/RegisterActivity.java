@@ -99,8 +99,8 @@ public class RegisterActivity extends BaseFragmentActivity {
 		// TODO Auto-generated method stub
 		if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			builder.setIcon(R.drawable.icon_warning).setTitle("温馨提示").setMessage("注册过程中退出，信息将不能保存。是否继续退出？")
-					.setPositiveButton("是", backListener).setNegativeButton("否", backListener).show();
+			builder.setTitle("温馨提示").setMessage("注册过程中退出，信息将不能保存。是否继续退出？").setPositiveButton("是", backListener)
+					.setNegativeButton("否", backListener).show();
 		}
 		return super.onKeyDown(keyCode, event);
 	}

@@ -4,7 +4,6 @@
     <string name="app_name">一线牵</string>
     <string name="hello_world">Hello world!</string>
     <string name="version_info">一线牵\n\nVersion 1.0.0</string>
-    
     <string name="title_activity_login_or_register">LoginOrRegisterActivity</string>
     <string name="title_activity_guide_pager">GuidePagerActivity</string>
     <string name="title_activity_main">MainActivity</string>
@@ -18,5 +17,7 @@
     <string name="recommend_help5">如果您对某一位怦然心动，我们将给Ta推送一条爱情验证消息。</string>
     <string name="recommend_help6">除非ta也对您“怦然心动”，否则，你们无法取得联系。</string>
     <string name="title_activity_head_image">HeadImageActivity</string>
+    <string name="title_activity_time_capsule">TimeCapsuleActivity</string>
+    <string name="action_settings">Settings</string>
 
 </resources>
