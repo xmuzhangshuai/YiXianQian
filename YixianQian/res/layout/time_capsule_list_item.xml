@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:id="@+id/test"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/time_capsule20"
+        android:background="@drawable/shape_time_capsule_list"
+        android:orientation="vertical" >
+
+        <ImageView
+            android:id="@+id/item_image"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/personal_timecapsule_padding"
+            android:paddingLeft="@dimen/personal_timecapsule_padding"
+            android:paddingRight="@dimen/personal_timecapsule_padding"
+            android:paddingTop="@dimen/personal_timecapsule_padding" >
+
+            <ImageView
+                android:id="@+id/play"
+                android:layout_width="@dimen/day_recommend_help_padding"
+                android:layout_height="@dimen/day_recommend_help_padding"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/play" />
+
+            <TextView
+                android:id="@+id/timespan"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:text="9s"
+                android:textColor="@color/system_blue"
+                android:textSize="@dimen/day_recommend_user_font" />
+
+            <TextView
+                android:id="@+id/time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:text="2014-7-9 12:04"
+                android:textColor="@color/unenable"
+                android:textSize="@dimen/day_recommend_help_font" />
+        </RelativeLayout>
+    </LinearLayout>
+
+</LinearLayout>

@@ -9,6 +9,7 @@
     <color name="system_personal_back">#F6F8FC</color> <!-- 个人中心背景色 -->
     <color name="system_gray">#CCCCCC</color> <!-- 系统灰色 -->
     <color name="dark_gray">#666666</color> <!-- 系统灰色 -->
+    <color name="system_blue">#0099CC</color> <!-- 系统蓝色 -->
     <color name="white">#ffffff</color>
     <color name="black">#000000</color>
     <color name="unenable">#999999</color>

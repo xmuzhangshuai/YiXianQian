@@ -1,8 +1,22 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/container"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.yixianqian.ui.TimeCapsuleActivity"
-    tools:ignore="MergeRootFrame" />
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/white"
+    android:orientation="vertical" >
 
+    <include
+        layout="@layout/top_navigation2"
+        android:focusable="true" />
+
+    <com.handmark.pulltorefresh.library.PullToRefreshListView
+        android:id="@+id/timecapsule_list"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:cacheColorHint="@color/white"
+        android:divider="@color/white"
+        android:drawSelectorOnTop="false"
+        android:fastScrollEnabled="false"
+        android:scrollbars="none"
+        android:smoothScrollbar="true" />
+
+</LinearLayout>

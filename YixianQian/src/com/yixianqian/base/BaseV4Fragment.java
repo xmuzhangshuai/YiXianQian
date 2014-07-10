@@ -1,5 +1,7 @@
 package com.yixianqian.base;
 
+import com.nostra13.universalimageloader.core.ImageLoader;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -22,6 +24,7 @@ import android.view.ViewGroup;
 */
 public abstract class BaseV4Fragment extends Fragment {
 	public static final String TAG = BaseV4Fragment.class.getSimpleName();
+	protected ImageLoader imageLoader = ImageLoader.getInstance();
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {

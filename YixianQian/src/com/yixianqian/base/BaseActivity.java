@@ -1,17 +1,15 @@
 package com.yixianqian.base;
 
-import com.yixianqian.R;
-
 import android.annotation.SuppressLint;
-import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.widget.Toast;
+
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 /**
  * 
@@ -24,7 +22,7 @@ import android.widget.Toast;
  * 
  */
 public abstract class BaseActivity extends Activity {
-	// protected ImageLoader imageLoader = ImageLoader.getInstance();
+	protected ImageLoader imageLoader = ImageLoader.getInstance();
 	public static final String TAG = BaseActivity.class.getSimpleName();
 
 	protected Handler mHandler = null;
@@ -78,21 +76,21 @@ public abstract class BaseActivity extends Activity {
 	/**
 	 * 设置ActionBar样式
 	 */
-//	@Override
-//	public ActionBar getActionBar() {
-//		// TODO Auto-generated method stub
-//		ActionBar actionBar = super.getActionBar();
-//		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-//			// Show the Up button in the action bar.
-////			actionBar.setDisplayHomeAsUpEnabled(true);
-//		}
-//
-//		// actionBar.setBackgroundDrawable(getResources().getDrawable(R.drawable.title_bar));
-//		// actionBar.setStackedBackgroundDrawable(getResources().getDrawable(R.drawable.actionbar_stacked_bg));
-//		// actionBar.setSplitBackgroundDrawable(getResources().getDrawable(R.drawable.title_bar));
-//		actionBar.setBackgroundDrawable(getResources().getDrawable(R.color.system_male));
-//		return actionBar;
-//	}
+	//	@Override
+	//	public ActionBar getActionBar() {
+	//		// TODO Auto-generated method stub
+	//		ActionBar actionBar = super.getActionBar();
+	//		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+	//			// Show the Up button in the action bar.
+	////			actionBar.setDisplayHomeAsUpEnabled(true);
+	//		}
+	//
+	//		// actionBar.setBackgroundDrawable(getResources().getDrawable(R.drawable.title_bar));
+	//		// actionBar.setStackedBackgroundDrawable(getResources().getDrawable(R.drawable.actionbar_stacked_bg));
+	//		// actionBar.setSplitBackgroundDrawable(getResources().getDrawable(R.drawable.title_bar));
+	//		actionBar.setBackgroundDrawable(getResources().getDrawable(R.color.system_male));
+	//		return actionBar;
+	//	}
 
 	/**
 	 * 绑定控件id

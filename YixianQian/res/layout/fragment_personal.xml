@@ -20,12 +20,11 @@
 
             <ImageView
                 android:id="@+id/head_image"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
+                android:layout_width="@dimen/get_image_btn_padding"
+                android:layout_height="@dimen/get_image_btn_padding"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="20dp"
-                android:src="@drawable/testheadimage" />
+                android:layout_marginLeft="20dp" />
 
             <TextView
                 android:id="@+id/name"

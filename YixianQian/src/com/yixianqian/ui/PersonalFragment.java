@@ -1,5 +1,11 @@
 package com.yixianqian.ui;
 
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -13,8 +19,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
+import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 import com.yixianqian.R;
 import com.yixianqian.base.BaseV4Fragment;
+import com.yixianqian.utils.ImageLoaderTool;
 
 /**
  * 类名称：PersonalFragment
@@ -36,6 +46,7 @@ public class PersonalFragment extends BaseV4Fragment {
 	private View tapeView;//旋转磁带
 	private ImageView progressImage1;
 	private ImageView progressImage2;
+	private ImageView headImageView;
 	private int count = 0;
 
 	@Override
@@ -60,6 +71,7 @@ public class PersonalFragment extends BaseV4Fragment {
 		progressImage1 = (ImageView) rootView.findViewById(R.id.progressimage1);
 		progressImage2 = (ImageView) rootView.findViewById(R.id.progressimage2);
 		tapeView = (View) rootView.findViewById(R.id.tape_view);
+		headImageView = (ImageView) rootView.findViewById(R.id.head_image);
 	}
 
 	@Override
@@ -69,6 +81,10 @@ public class PersonalFragment extends BaseV4Fragment {
 		topNavRightBtn.setImageResource(R.drawable.ic_action_overflow);
 		right_btn_bg.setBackgroundResource(R.drawable.sel_topnav_btn_bg);
 		topNavText.setText("个人信息");
+
+		//设置头像
+		imageLoader.displayImage("http://99touxiang.com/public/upload/nvsheng/18/04-072110_356.jpg", headImageView,
+				ImageLoaderTool.getHeadImageOptions(10));
 
 		//导航条右侧按钮
 		right_btn_bg.setOnClickListener(new OnClickListener() {
@@ -86,7 +102,8 @@ public class PersonalFragment extends BaseV4Fragment {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-
+				getActivity().startActivity(new Intent(getActivity(), TimeCapsuleActivity.class));
+				getActivity().overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
 			}
 		});
 
@@ -161,4 +178,5 @@ public class PersonalFragment extends BaseV4Fragment {
 		progressImage1.clearAnimation();
 		progressImage2.clearAnimation();
 	}
+
 }

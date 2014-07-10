@@ -1,4 +1,4 @@
-package com.yixianqian.interfaces;
+package com.yixianqian.Listener;
 
 public interface OnUserInfoChangedListener {
 	public void onGenderChanged(String gender);

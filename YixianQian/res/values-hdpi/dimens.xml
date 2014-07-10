@@ -25,6 +25,7 @@
     <dimen name="login_register">40dp</dimen>
     <dimen name="tape_margin">150dp</dimen>
     <dimen name="tape_margin_top">140dp</dimen>
+     <dimen name="time_capsule20">16dp</dimen>
 
     <!-- 注册 -->
     <dimen name="register_height">50dp</dimen>
