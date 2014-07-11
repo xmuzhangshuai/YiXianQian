@@ -12,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.yixianqian.R;
+import com.yixianqian.config.DefaultKeys;
 
 /**   
 *    
@@ -60,15 +61,15 @@ public class CommonTools {
 	}
 
 	/**
-	 * 返回用户省市
+	 * 返回用户省
 	 * @param context
 	 * @return
 	 */
-	public static String getLocation(Context context) {
+	public static String getMyProvince(Context context) {
 		String location = "";//省市
 
 		SharedPreferences locationPreferences = context.getSharedPreferences("location", Context.MODE_PRIVATE);
-//		location = locationPreferences.getString(DefaultKeys.PREF_LOCATION, "北京市");
+		location = locationPreferences.getString(DefaultKeys.USER_PROVINCE, "北京市");
 		return location;
 	}
 
@@ -77,10 +78,22 @@ public class CommonTools {
 	 * @param context
 	 * @return
 	 */
-	public static String getDetailLocation(Context context) {
+	public static String getMyDetailLocation(Context context) {
 		String location = "";
 		SharedPreferences locationPreferences = context.getSharedPreferences("location", Context.MODE_PRIVATE);
-//		location = locationPreferences.getString(DefaultKeys.PREF_DETAIL_LOCATION, "北京市");
+		location = locationPreferences.getString(DefaultKeys.USER_DETAIL_LOCATION, "北京市");
+		return location;
+	}
+
+	/**
+	 * 返回用户详细地址
+	 * @param context
+	 * @return
+	 */
+	public static String getMyCity(Context context) {
+		String location = "";
+		SharedPreferences locationPreferences = context.getSharedPreferences("location", Context.MODE_PRIVATE);
+		location = locationPreferences.getString(DefaultKeys.USER_CITY, "北京市");
 		return location;
 	}
 
