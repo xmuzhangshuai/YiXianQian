@@ -50,6 +50,9 @@ public class TimeCapsuleActivity extends AbsListViewBaseActivity {
 	private TextView name;//我的姓名
 	private ImageView headImage2;//情侣的头像
 	private TextView name2;//情侣的姓名
+	private ImageView topNavLeftBtn;//导航条左边按钮
+	private ImageView topNavRightBtn;//导航条右边按钮
+	private TextView topNavText;//导航条文字
 
 	// 提醒用户网络状况有异常
 	private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
@@ -87,11 +90,24 @@ public class TimeCapsuleActivity extends AbsListViewBaseActivity {
 		headImage2 = (ImageView) headView.findViewById(R.id.female_headimage);
 		name = (TextView) headView.findViewById(R.id.male_name);
 		name2 = (TextView) headView.findViewById(R.id.female_name);
+		topNavLeftBtn = (ImageView) findViewById(R.id.nav_left_btn);
+		topNavRightBtn = (ImageView) findViewById(R.id.nav_right_btn);
+		topNavText = (TextView) findViewById(R.id.nav_text);
 	}
 
 	@Override
 	protected void initView() {
 		// TODO Auto-generated method stub
+		topNavText.setText("时间胶囊");
+		topNavLeftBtn.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				finish();
+			}
+		});
+		
 		//设置头像
 		imageLoader.displayImage("http://99touxiang.com/public/upload/nvsheng/18/04-072110_356.jpg", headImage,
 				ImageLoaderTool.getHeadImageOptions(10));

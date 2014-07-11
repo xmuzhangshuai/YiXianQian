@@ -1,12 +1,15 @@
 package com.yixianqian.ui;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTabHost;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.Window;
 
 import com.yixianqian.R;
 import com.yixianqian.base.BaseFragmentActivity;
+import com.yixianqian.customewidget.MyAlertDialog;
 
 public class MainActivity extends BaseFragmentActivity {
 	private FragmentTabHost mTabHost;
@@ -41,6 +44,34 @@ public class MainActivity extends BaseFragmentActivity {
 
 		indicator = getLayoutInflater().inflate(R.layout.personal_indicator, null);
 		mTabHost.addTab(mTabHost.newTabSpec("personal").setIndicator(indicator), PersonalFragment.class, null);
+
+	}
+
+	@Override
+	public void onBackPressed() {
+		// TODO Auto-generated method stub
+		final MyAlertDialog myAlertDialog = new MyAlertDialog(this);
+		myAlertDialog.setTitle("提示");
+		myAlertDialog.setMessage("是否退出一线牵客户端？");
+		View.OnClickListener comfirm = new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				close();
+			}
+		};
+		View.OnClickListener cancle = new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				myAlertDialog.dismiss();
+			}
+		};
+		myAlertDialog.setPositiveButton("确定", comfirm);
+		myAlertDialog.setNegativeButton("取消", cancle);
+		myAlertDialog.show();
 
 	}
 

@@ -12,10 +12,13 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.KeyEvent;
+import android.view.View;
 import android.view.Window;
+import android.view.View.OnClickListener;
 
 import com.yixianqian.R;
 import com.yixianqian.base.BaseFragmentActivity;
+import com.yixianqian.customewidget.MyAlertDialog;
 import com.yixianqian.utils.NetworkUtils;
 
 /**
@@ -98,26 +101,31 @@ public class RegisterActivity extends BaseFragmentActivity {
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		// TODO Auto-generated method stub
 		if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
-			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			builder.setTitle("温馨提示").setMessage("注册过程中退出，信息将不能保存。是否继续退出？").setPositiveButton("是", backListener)
-					.setNegativeButton("否", backListener).show();
+			final MyAlertDialog dialog = new MyAlertDialog(RegisterActivity.this);
+			dialog.setTitle("提示");
+			dialog.setMessage("注册过程中退出，信息将不能保存。是否继续退出？");
+			View.OnClickListener comfirm = new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+					finish();
+				}
+			};
+			View.OnClickListener cancle = new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+					dialog.dismiss();
+				}
+			};
+			dialog.setPositiveButton("确定", comfirm);
+			dialog.setNegativeButton("取消", cancle);
+			dialog.show();
+
 		}
 		return super.onKeyDown(keyCode, event);
 	}
-
-	/**监听对话框里面的button点击事件*/
-	DialogInterface.OnClickListener backListener = new DialogInterface.OnClickListener() {
-		public void onClick(DialogInterface dialog, int which) {
-			switch (which) {
-			case AlertDialog.BUTTON_POSITIVE:// "确认"按钮退出程序
-				finish();
-				break;
-			case AlertDialog.BUTTON_NEGATIVE:// "取消"第二个按钮取消对话框
-				break;
-			default:
-				break;
-			}
-		}
-	};
 
 }

@@ -1,9 +1,14 @@
 package com.yixianqian.base;
 
+import java.text.AttributedCharacterIterator.Attribute;
+
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
@@ -30,18 +35,39 @@ public abstract class BaseFragmentActivity extends FragmentActivity {
 	public static final String TAG = BaseFragmentActivity.class.getSimpleName();
 	protected Handler mHandler = null;
 
+	// 写一个广播的内部类，当收到动作时，结束activity  
+	private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			close();
+		}
+	};
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		AppManager.getInstance().addActivity(this);
 		//		PushAgent.getInstance(this).onAppStart();
+		   // 在onCreate中注册广播  
+        IntentFilter filter = new IntentFilter();  
+        filter.addAction("close");  
+        registerReceiver(this.broadcastReceiver, filter); // 注册  
 	}
-
+	/** 
+     * 关闭 
+     */  
+    public void close() {  
+        Intent intent = new Intent();  
+        intent.setAction("close"); // 说明动作  
+        sendBroadcast(intent);// 该函数用于发送广播  
+        finish();  
+    } 
 	@Override
 	protected void onDestroy() {
 		// TODO Auto-generated method stub
 		super.onDestroy();
+		 unregisterReceiver(broadcastReceiver);// 在onDestroy注销广播。  
 	}
 
 	@Override

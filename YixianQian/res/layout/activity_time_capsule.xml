@@ -5,7 +5,7 @@
     android:orientation="vertical" >
 
     <include
-        layout="@layout/top_navigation2"
+        layout="@layout/time_capsule_topnav"
         android:focusable="true" />
 
     <com.handmark.pulltorefresh.library.PullToRefreshListView
