@@ -25,7 +25,6 @@
     <dimen name="login_register">50dp</dimen>
     <dimen name="tape_margin">200dp</dimen>
     <dimen name="tape_margin_top">160dp</dimen>
-    
     <dimen name="time_capsule20">20dp</dimen>
 
     <!-- 注册 -->
@@ -35,5 +34,6 @@
     <dimen name="get_image_btn_padding">80dp</dimen>
     <dimen name="headiamge_height">300dp</dimen>
 
-    
+    <!-- 时间胶囊 -->
+    <dimen name="time_capsule_220">220dp</dimen>
 </resources>

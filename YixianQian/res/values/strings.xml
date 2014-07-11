@@ -19,5 +19,6 @@
     <string name="title_activity_head_image">HeadImageActivity</string>
     <string name="title_activity_time_capsule">TimeCapsuleActivity</string>
     <string name="action_settings">Settings</string>
+    <string name="title_activity_publish_time_cap">PublishTimeCapActivity</string>
 
 </resources>

@@ -33,5 +33,7 @@
     <dimen name="get_image_btn_top">120dp</dimen>
     <dimen name="get_image_btn_padding">80dp</dimen>
     <dimen name="headiamge_height">300dp</dimen>
+    <!-- 时间胶囊 -->
+    <dimen name="time_capsule_220">220dp</dimen>
 
 </resources>

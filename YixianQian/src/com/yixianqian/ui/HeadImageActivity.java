@@ -168,12 +168,12 @@ public class HeadImageActivity extends BaseActivity {
 	 */
 	protected void doTakePhoto() {
 		try {
-			File uploadFileDir = new File(Environment.getExternalStorageDirectory(), "/upload");
+			File uploadFileDir = new File(Environment.getExternalStorageDirectory(), "/yixianqian");
 			Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 			if (!uploadFileDir.exists()) {
 				uploadFileDir.mkdirs();
 			}
-			picFile = new File(uploadFileDir, "upload.jpeg");
+			picFile = new File(uploadFileDir, "yixianqian.jpeg");
 			if (!picFile.exists()) {
 				picFile.createNewFile();
 			}
@@ -213,12 +213,13 @@ public class HeadImageActivity extends BaseActivity {
 	 */
 	public Intent getCropImageIntent() {
 		Intent intent = new Intent(Intent.ACTION_GET_CONTENT, null);
+//		Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
 		intent.setType("image/*");
 		intent.putExtra("crop", "true");
 		intent.putExtra("aspectX", 1);
 		intent.putExtra("aspectY", 1);
-		intent.putExtra("outputX", 1000);
-		intent.putExtra("outputY", 1000);
+		intent.putExtra("outputX", 800);
+		intent.putExtra("outputY", 800);
 		intent.putExtra("noFaceDetection", true);
 		intent.putExtra("scale", true);
 		intent.putExtra("return-data", false);
@@ -233,8 +234,8 @@ public class HeadImageActivity extends BaseActivity {
 		intent.putExtra("crop", "true");
 		intent.putExtra("aspectX", 1);
 		intent.putExtra("aspectY", 1);
-		intent.putExtra("outputX", 1000);
-		intent.putExtra("outputY", 1000);
+		intent.putExtra("outputX", 800);
+		intent.putExtra("outputY", 800);
 		intent.putExtra("scale", true);
 		intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
 		intent.putExtra("return-data", false);

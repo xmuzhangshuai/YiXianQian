@@ -13,4 +13,7 @@ public class DefaultKeys {
 	public static final String USER_PROVINCE = "province";// 用户省份
 	public static final String USER_CITY = "city";// 用户省份
 	public static final String USER_DETAIL_LOCATION = "detailLocation";// 用户精确位置
+
+	/***************照片地址*****************/
+	public static final String PHOTO_URI = "photo_uri";//照片地址
 }

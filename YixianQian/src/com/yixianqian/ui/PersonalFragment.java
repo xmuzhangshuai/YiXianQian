@@ -1,29 +1,34 @@
 package com.yixianqian.ui;
 
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
+import java.io.File;
+import java.io.IOException;
 
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.ActivityNotFoundException;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
-import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
-import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 import com.yixianqian.R;
 import com.yixianqian.base.BaseV4Fragment;
+import com.yixianqian.config.DefaultKeys;
 import com.yixianqian.utils.ImageLoaderTool;
 
 /**
@@ -48,6 +53,8 @@ public class PersonalFragment extends BaseV4Fragment {
 	private ImageView progressImage2;
 	private ImageView headImageView;
 	private int count = 0;
+	private Uri takePhotoUri;
+	private String takePhotoPath;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -113,6 +120,7 @@ public class PersonalFragment extends BaseV4Fragment {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
+				showPicturePicker(getActivity());
 			}
 		});
 
@@ -150,6 +158,109 @@ public class PersonalFragment extends BaseV4Fragment {
 		// Create and show the dialog.
 		PersonalDialogFragment newFragment = PersonalDialogFragment.newInstance();
 		newFragment.show(ft, "dialog");
+	}
+
+	/**
+	* 显示对话框，从拍照和相册选择图片来源
+	* 
+	* @param context
+	* @param isCrop
+	*/
+	public void showPicturePicker(Context context) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(context);
+		builder.setTitle("图片来源");
+		builder.setItems(new String[] { "拍照", "相册" }, new DialogInterface.OnClickListener() {
+
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				switch (which) {
+				case 0:
+					String status = Environment.getExternalStorageState();
+					if (status.equals(Environment.MEDIA_MOUNTED)) {// 判断是否有SD卡
+						takePhoto();// 用户点击了从照相机获取
+					}
+					break;
+				case 1:
+					choosePhoto();// 从相册中去获取
+					break;
+
+				default:
+					break;
+				}
+			}
+		});
+		builder.create().show();
+	}
+
+	/**
+	 * 从相册选择图片
+	 */
+	private void choosePhoto() {
+		Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+		startActivityForResult(intent, 2);
+	}
+
+	/**
+	 * 拍照
+	 */
+	private void takePhoto() {
+		try {
+			File uploadFileDir = new File(Environment.getExternalStorageDirectory(), "/yixianqian");
+			Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+			if (!uploadFileDir.exists()) {
+				uploadFileDir.mkdirs();
+			}
+			File picFile = new File(uploadFileDir, "yixianqian.jpeg");
+
+			if (!picFile.exists()) {
+				picFile.createNewFile();
+			}
+
+			takePhotoPath = picFile.getAbsolutePath();
+			takePhotoUri = Uri.fromFile(picFile);
+			cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, takePhotoUri);
+			startActivityForResult(cameraIntent, 1);
+		} catch (ActivityNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		// TODO Auto-generated method stub
+		super.onActivityResult(requestCode, resultCode, data);
+		if (resultCode != Activity.RESULT_OK)
+			return;
+		Intent intent;
+
+		switch (requestCode) {
+		case 1://拍照
+			intent = new Intent(getActivity(), PublishTimeCapActivity.class);
+			intent.putExtra(DefaultKeys.PHOTO_URI, takePhotoPath);
+			startActivity(intent);
+			break;
+		case 2://从相册选择
+			try {
+				Uri selectedImage = data.getData();
+				String[] filePathColumn = { MediaStore.Images.Media.DATA };
+				Cursor cursor = getActivity().getContentResolver().query(selectedImage, filePathColumn, null, null,
+						null);
+				cursor.moveToFirst();
+				int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+				String picturePath = cursor.getString(columnIndex);
+				cursor.close();
+
+				intent = new Intent(getActivity(), PublishTimeCapActivity.class);
+				intent.putExtra(DefaultKeys.PHOTO_URI, picturePath);
+				startActivity(intent);
+			} catch (Exception e) {
+				// TODO: handle exception   
+				e.printStackTrace();
+			}
+			break;
+		}
 	}
 
 	/**
