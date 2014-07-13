@@ -1,9 +1,13 @@
 package com.yixianqian.ui;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -21,6 +25,9 @@ import android.widget.Toast;
 import com.yixianqian.R;
 import com.yixianqian.base.BaseV4Fragment;
 import com.yixianqian.config.DefaultSetting;
+import com.yixianqian.table.UserTable;
+import com.yixianqian.utils.HttpUtil;
+import com.yixianqian.utils.SharePreferenceUtil;
 
 /**
  * 类名称：AuthCodeActivity
@@ -39,11 +46,18 @@ public class RegAuthCodeFragment extends BaseV4Fragment {
 	private Button authCodeButton;
 	private EditText authCode;
 	private Timer timer;
+	private SharePreferenceUtil sharePreferenceUtil;
+
+	/**
+	 * 用户注册异步任务
+	 */
+	private UserRegisterTask mRegisterTask = null;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
+		sharePreferenceUtil = new SharePreferenceUtil(getActivity(), SharePreferenceUtil.USER_SHAREPREFERENCE);
 	}
 
 	@Override
@@ -88,11 +102,10 @@ public class RegAuthCodeFragment extends BaseV4Fragment {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				if (vertifyAuthCode()) {
-					Toast.makeText(getActivity(), "恭喜您，注册成功！", 1).show();
-					Intent intent = new Intent(getActivity(), HeadImageActivity.class);
-					startActivity(intent);
-					getActivity().overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
-					getActivity().finish();
+
+					mRegisterTask = new UserRegisterTask();
+					mRegisterTask.execute((Void) null);
+
 				}
 			}
 		});
@@ -166,4 +179,83 @@ public class RegAuthCodeFragment extends BaseV4Fragment {
 	private boolean vertifyAuthCode() {
 		return true;
 	}
+
+	/**   
+	*    
+	* 项目名称：YiXianQian   
+	* 类名称：UserRegisterTask   
+	* 类描述：   异步任务注册
+	* 创建人：张帅  
+	* 创建时间：2014-4-3 下午3:34:13   
+	* 修改人：张帅   
+	* 修改时间：2014-4-3 下午3:34:13   
+	* 修改备注：   
+	* @version    
+	*    
+	*/
+	public class UserRegisterTask extends AsyncTask<Void, Void, Integer> {
+		ProgressDialog dialog;
+
+		@Override
+		protected void onPreExecute() {
+			// TODO Auto-generated method stub
+			super.onPreExecute();
+			dialog = new ProgressDialog(getActivity());
+			dialog.setMessage("请稍后");
+			dialog.setCancelable(false);
+			dialog.show();
+		}
+
+		@Override
+		protected Integer doInBackground(Void... params) {
+			// TODO Auto-generated method stub
+			try {
+				String url = "adduser";
+				Map<String, String> map = new HashMap<String, String>();
+				map.put(UserTable.U_TEL, sharePreferenceUtil.getU_tel());
+				map.put(UserTable.U_PASSWORD, sharePreferenceUtil.getU_password());
+				map.put(UserTable.U_STATEID, String.valueOf(sharePreferenceUtil.getU_stateid()));
+				map.put(UserTable.U_GENDER, sharePreferenceUtil.getU_gender());
+				map.put(UserTable.U_SCHOOLID, String.valueOf(sharePreferenceUtil.getU_schoolid()));
+				map.put(UserTable.U_CITYID, String.valueOf(sharePreferenceUtil.getU_cityid()));
+				map.put(UserTable.U_PROVINCEID, String.valueOf(sharePreferenceUtil.getU_provinceid()));
+				map.put(UserTable.U_ADDRESS, sharePreferenceUtil.getU_address());
+
+				// 注册
+				String result = HttpUtil.postRequest(url, map);
+				if (result != null) {
+					return Integer.parseInt(result.trim());
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				return -1;
+			}
+			return -1;
+		}
+
+		@Override
+		protected void onPostExecute(Integer result) {
+			mRegisterTask = null;
+			dialog.dismiss();
+
+			if (result > -1) {
+				Toast.makeText(getActivity(), "恭喜您注册成功！", 1).show();
+				sharePreferenceUtil.setU_id(result);
+				System.out.println(result);
+				Intent intent = new Intent(getActivity(), HeadImageActivity.class);
+				startActivity(intent);
+				getActivity().overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+				getActivity().finish();
+			} else {
+				Toast.makeText(getActivity(), "注册失败", 1).show();
+			}
+		}
+
+		@Override
+		protected void onCancelled() {
+			mRegisterTask = null;
+			dialog.dismiss();
+		}
+	}
+
 }

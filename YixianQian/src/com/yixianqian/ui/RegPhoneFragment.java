@@ -1,9 +1,14 @@
 package com.yixianqian.ui;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -14,7 +19,11 @@ import android.widget.Toast;
 
 import com.yixianqian.R;
 import com.yixianqian.base.BaseV4Fragment;
+import com.yixianqian.config.DefaultKeys;
+import com.yixianqian.table.UserTable;
+import com.yixianqian.utils.HttpUtil;
 import com.yixianqian.utils.SIMCardInfo;
+import com.yixianqian.utils.SharePreferenceUtil;
 
 /**
  * 类名称：RegPhoneFragment
@@ -32,20 +41,21 @@ public class RegPhoneFragment extends BaseV4Fragment {
 	private EditText mPhoneView;//手机号
 	private EditText mPasswordView;//密码
 	private EditText mConformPassView;//确认密码
+	private SharePreferenceUtil sharePreferenceUtil;
 
 	private String mPhone;
 	private String mPassword;
 	private String mConformPass;
+	private boolean phoneAvailable;//手机号是否可用
 
-	/**
-	 * 用户注册异步任务
-	 */
-	private UserRegisterTask mRegisterTask = null;
+	private CheckPhoneTask mCheckPhoneTask = null;//检查电话号码
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		rootView = inflater.inflate(R.layout.fragment_reg_phone, container, false);
+		sharePreferenceUtil = new SharePreferenceUtil(getActivity(), SharePreferenceUtil.USER_SHAREPREFERENCE);
+
 		findViewById();// 初始化views
 		initView();
 		return rootView;
@@ -68,6 +78,12 @@ public class RegPhoneFragment extends BaseV4Fragment {
 		//显示用户手机号
 		SIMCardInfo siminfo = new SIMCardInfo(getActivity());
 		mPhoneView.setText(siminfo.getNativePhoneNumber());
+		mPhone = mPhoneView.getText().toString();
+		if ((!mPhone.isEmpty()) && mPhone.length() == 11) {
+			//检查手机号是否被注册
+			mCheckPhoneTask = new CheckPhoneTask();
+			mCheckPhoneTask.execute();
+		}
 
 		topNavigation.setText("账户");
 		leftImageButton.setOnClickListener(new OnClickListener() {
@@ -86,16 +102,39 @@ public class RegPhoneFragment extends BaseV4Fragment {
 				attepmtAccount();
 			}
 		});
+
+		mPhoneView.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+				mPhone = mPhoneView.getText().toString();
+				if ((!mPhone.isEmpty()) && mPhone.length() == 11) {
+					//检查手机号是否被注册
+					mCheckPhoneTask = new CheckPhoneTask();
+					mCheckPhoneTask.execute();
+				}
+			}
+		});
+
 	}
 
 	/**
 	 * 验证输入
 	 */
 	private void attepmtAccount() {
-		if (mRegisterTask != null) {
-			return;
-		}
-
 		// 重置错误
 		mPasswordView.setError(null);
 		mPhoneView.setError(null);
@@ -105,7 +144,6 @@ public class RegPhoneFragment extends BaseV4Fragment {
 		mPassword = mPasswordView.getText().toString();
 		mPhone = mPhoneView.getText().toString();
 		mConformPass = mConformPassView.getText().toString();
-
 		boolean cancel = false;
 		View focusView = null;
 
@@ -142,89 +180,76 @@ public class RegPhoneFragment extends BaseV4Fragment {
 			cancel = true;
 		}
 
+		else if (!phoneAvailable) {
+			mPhoneView.setError("该手机号已被注册！");
+			focusView = mPhoneView;
+			cancel = true;
+		}
+
 		if (cancel) {
 			// 如果错误，则提示错误
 			focusView.requestFocus();
 		} else {
 			// 没有错误，则注册
-			mRegisterTask = new UserRegisterTask();
-			mRegisterTask.execute((Void) null);
+			sharePreferenceUtil.setU_tel(mPhone);
+			sharePreferenceUtil.setU_password(mPassword);
 
 			RegAuthCodeFragment fragment = new RegAuthCodeFragment();
 			FragmentTransaction transaction = getFragmentManager().beginTransaction();
 			transaction.setCustomAnimations(R.anim.push_left_in, R.anim.push_left_out, R.anim.push_right_in,
 					R.anim.push_right_out);
 			transaction.replace(R.id.fragment_container, fragment);
-//			transaction.addToBackStack(null);
 			transaction.commit();
 			Toast.makeText(getActivity(), "验证码已发送", 1).show();
 		}
 	}
 
-	/**   
-	*    
-	* 项目名称：YiXianQian   
-	* 类名称：UserRegisterTask   
-	* 类描述：   异步任务注册
-	* 创建人：张帅  
-	* 创建时间：2014-4-3 下午3:34:13   
-	* 修改人：张帅   
-	* 修改时间：2014-4-3 下午3:34:13   
-	* 修改备注：   
-	* @version    
-	*    
-	*/
-	public class UserRegisterTask extends AsyncTask<Void, Void, Boolean> {
+	/**
+	 * 
+	 * 类名称：CheckPhoneTask
+	 * 类描述：检查手机号是否已经被注册
+	 * 创建人： 张帅
+	 * 创建时间：2014年7月13日 上午11:25:31
+	 *
+	 */
+	public class CheckPhoneTask extends AsyncTask<Void, Void, Boolean> {
+		@Override
+		protected void onPreExecute() {
+			// TODO Auto-generated method stub
+			super.onPreExecute();
+			phoneAvailable = false;
+		}
 
 		@Override
 		protected Boolean doInBackground(Void... params) {
 			// TODO Auto-generated method stub
 			try {
-				//				 Simulate network access.
-				//								UserService userService = UserService.getInstance(getActivity());
-				//				
-				//								String url = "RegistServlet";
-				//								Map<String, String> map = new HashMap<String, String>();
-				//								map.put("mail", mEmail);
-				//								map.put("pass", mPassword);
-				//								map.put("phone", mPhone);
-				//				
-				//								// 注册
-				//								String jsonString = HttpUtil.postRequest(url, map);
-				//								JUser net = FastJsonTool.getObject(jsonString, JUser.class);
-				//								User local = userService.NetUserToUser(net);
-				//								local.setCurrent(true);
-				//								String location = locationPreferences.getString(DefaultKeys.PREF_DETAIL_LOCATION, "北京市");
-				//								local.setArea(location);
-				//								userService.saveUser(local);
-				//				
-				//								userService.updateUserToNet();
+				String url = "existtel";
+				Map<String, String> map = new HashMap<String, String>();
+				map.put(UserTable.U_TEL, mPhoneView.getText().toString());
 
+				String result = HttpUtil.postRequest(url, map);
+				if (result.equals(DefaultKeys.TEL_OK)) {
+					return true;
+				}
 			} catch (Exception e) {
 				e.printStackTrace();
 				return false;
 			}
-			return true;
+			return false;
 		}
 
 		@Override
-		protected void onPostExecute(final Boolean success) {
-			//			mRegisterTask = null;
-			//			showProgress(false);
-			//
-			//			if (success) {
-			//				Toast.makeText(getActivity(), "恭喜您注册成功！请尽快完善个人资料...", 2000).show();
-			//				getActivity().finish();
-			//			} else {
-			//				Toast.makeText(getActivity(), "注册失败", 1).show();
-			//			}
+		protected void onPostExecute(Boolean result) {
+			// TODO Auto-generated method stub
+			mCheckPhoneTask = null;
+			phoneAvailable = result;
 		}
 
 		@Override
 		protected void onCancelled() {
-			//			mRegisterTask = null;
-			//			showProgress(false);
+			mCheckPhoneTask = null;
 		}
-	}
 
+	}
 }

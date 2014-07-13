@@ -20,43 +20,6 @@ public class Generator {
 	}
 
 	private static void addData(Schema schema) {
-//		/****添加省份*******/
-//		Entity provinceEntity = schema.addEntity("P_province");
-//		provinceEntity.addIdProperty();
-//		provinceEntity.addLongProperty("P_provinceID");
-//		provinceEntity.addStringProperty("P_Name");
-//
-//		/****添加城市*******/
-//		Entity cityEntity = schema.addEntity("C_city");
-//		cityEntity.addIdProperty();
-//		cityEntity.addLongProperty("C_cityID");
-//		cityEntity.addStringProperty("C_Name");
-//		//省份外键
-//		Property city_province_id = cityEntity.addLongProperty("P_id").notNull().getProperty();
-//		cityEntity.addToOne(provinceEntity, city_province_id);
-//		ToMany provinceToCity = provinceEntity.addToMany(cityEntity, city_province_id);
-//		provinceToCity.setName("cityList");
-//
-//		/****添加主管部门*******/
-//		Entity cometentEntity = schema.addEntity("C_cometent");
-//		cometentEntity.addIdProperty();
-//		cometentEntity.addStringProperty("C_name");
-//
-//		/****添加学校*******/
-//		Entity schoolEntity = schema.addEntity("S_school");
-//		schoolEntity.addIdProperty();
-//		schoolEntity.addStringProperty("S_name");
-//		schoolEntity.addStringProperty("S_info");
-//		//主管部门外键
-//		Property school_cometent_idProperty = schoolEntity.addLongProperty("S_cometentid").notNull().getProperty();
-//		schoolEntity.addToOne(cometentEntity, school_cometent_idProperty);
-//		ToMany cometentToSchool = cometentEntity.addToMany(schoolEntity, school_cometent_idProperty);
-//		cometentToSchool.setName("schoolList");
-//		//城市外键
-//		Property school_city_id = schoolEntity.addLongProperty("S_cityd").notNull().getProperty();
-//		schoolEntity.addToOne(cityEntity, school_city_id);
-//		ToMany cityToSchool = cityEntity.addToMany(schoolEntity, school_city_id);
-//		cityToSchool.setName("schoolList");
 		/****添加省份*******/
 		Entity provinceEntity = schema.addEntity("Province");
 		provinceEntity.addIdProperty();
@@ -94,6 +57,17 @@ public class Generator {
 		schoolEntity.addToOne(cityEntity, school_city_id);
 		ToMany cityToSchool = cityEntity.addToMany(schoolEntity, school_city_id);
 		cityToSchool.setName("schoolList");
+
+		/******用户状态*****/
+		Entity userStateEntity = schema.addEntity("UserState");
+		userStateEntity.addIdProperty();
+		userStateEntity.addStringProperty("userStateName");
+
+		/******用户职业*****/
+		Entity vocationEntity = schema.addEntity("Vocation");
+		vocationEntity.addIdProperty();
+		vocationEntity.addStringProperty("vocationName");
+
 	}
 
 }

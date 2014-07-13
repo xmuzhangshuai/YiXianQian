@@ -27,6 +27,7 @@ import com.yixianqian.db.SchoolDbService;
 import com.yixianqian.entities.City;
 import com.yixianqian.entities.Province;
 import com.yixianqian.entities.School;
+import com.yixianqian.utils.SharePreferenceUtil;
 
 /**
  * 类名称：RegSchoolFragment
@@ -46,9 +47,10 @@ public class RegSchoolFragment extends BaseV4Fragment {
 	private Spinner mSchoolView;//学校
 
 	public SharedPreferences locationPreferences;// 记录用户位置
+	private SharePreferenceUtil sharePreferenceUtil;
 	private String mProvince = "";
 	private String mCity = "";
-	private String mSchool = "";
+	//	private String mSchool = "";
 	private Province currentProvince;
 	private City currentCity;
 	private School currentSchool;
@@ -64,6 +66,7 @@ public class RegSchoolFragment extends BaseV4Fragment {
 	public void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
+		sharePreferenceUtil = new SharePreferenceUtil(getActivity(), SharePreferenceUtil.USER_SHAREPREFERENCE);
 
 		//获取用户位置
 		locationPreferences = getActivity().getSharedPreferences("location", Context.MODE_PRIVATE);
@@ -262,7 +265,6 @@ public class RegSchoolFragment extends BaseV4Fragment {
 			cancel = true;
 			Toast.makeText(getActivity(), "请选择所在城市", 1).show();
 		}
-
 		//检查是否选学校
 		if (mSchoolView.getSelectedItem().toString().length() == 0) {
 			cancel = true;
@@ -271,6 +273,11 @@ public class RegSchoolFragment extends BaseV4Fragment {
 
 		if (!cancel) {
 			// 没有错误
+			sharePreferenceUtil.setU_provinceid(currentProvince.getProvinceID().intValue());
+			sharePreferenceUtil.setU_cityid(currentCity.getCityID().intValue());
+			sharePreferenceUtil.setU_schoolid(currentSchool.getId().intValue());
+			sharePreferenceUtil.setU_address(locationPreferences.getString(DefaultKeys.USER_DETAIL_LOCATION, ""));
+
 			RegPhoneFragment phoneFragment = new RegPhoneFragment();
 			FragmentTransaction transaction = getFragmentManager().beginTransaction();
 			transaction.setCustomAnimations(R.anim.push_left_in, R.anim.push_left_out, R.anim.push_right_in,

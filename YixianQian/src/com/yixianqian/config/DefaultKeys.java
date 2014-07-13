@@ -16,4 +16,9 @@ public class DefaultKeys {
 
 	/***************ÕÕÆ¬µØÖ·*****************/
 	public static final String PHOTO_URI = "photo_uri";//ÕÕÆ¬µØÖ·
+	
+	/*************ÍøÂç×´Ì¬******************/
+	public static final String TEL_OK ="ok";
+	public static final String TEL_FAIL ="fail";
+
 }

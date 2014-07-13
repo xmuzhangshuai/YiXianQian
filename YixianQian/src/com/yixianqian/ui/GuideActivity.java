@@ -19,6 +19,7 @@ import com.yixianqian.R;
 import com.yixianqian.base.BaseActivity;
 import com.yixianqian.config.DefaultKeys;
 import com.yixianqian.db.CopyDataBase;
+import com.yixianqian.utils.SharePreferenceUtil;
 
 /**
  * 类名称：GuideActivity
@@ -34,13 +35,14 @@ import com.yixianqian.db.CopyDataBase;
  *
  */
 public class GuideActivity extends BaseActivity {
-	public static SharedPreferences countPreferences;// 记录软件使用次数
+//	public static SharedPreferences countPreferences;// 记录软件使用次数
 	private ImageView loadingImage;
 
 	public LocationClient mLocationClient = null;
 	public BDLocationListener myListener = new MyLocationListener();
 	public SharedPreferences locationPreferences;// 记录用户位置
 	SharedPreferences.Editor locationEditor;
+	private SharePreferenceUtil sharePreferenceUtil;
 	private String province;//省份
 	private String city;//城市
 	private String detailLocation;//详细地址
@@ -51,9 +53,9 @@ public class GuideActivity extends BaseActivity {
 		setContentView(R.layout.activity_guide);
 
 		// 获取启动的次数
-		countPreferences = getSharedPreferences("start_count", 0);
-		int count = countPreferences.getInt("count", 0);
-		SharedPreferences.Editor localEditor = countPreferences.edit();
+		sharePreferenceUtil = new SharePreferenceUtil(this, SharePreferenceUtil.USE_COUNT);
+		int count = sharePreferenceUtil.getUseCount();
+//		SharedPreferences.Editor localEditor = countPreferences.edit();
 
 		//获取定位
 		initLocation();
@@ -63,8 +65,12 @@ public class GuideActivity extends BaseActivity {
 
 			// 第一次运行拷贝数据库文件
 			new initDataBase().execute();
-			localEditor.putInt("count", ++count);// 次数加1
-			localEditor.commit();
+			
+//			ProvinceDbService provinceDbService =ProvinceDbService.getInstance(this);
+//			List<Province> provinces = provinceDbService.provinceDao.loadAll();
+			
+			sharePreferenceUtil.setUseCount(++count);;// 次数加1
+//			localEditor.commit();
 		} else {// 如果不是第一次使用,则不启动向导页面，显示欢迎页面。
 			if (false) {//如果是已经登陆过
 				setContentView(R.layout.activity_guide);
@@ -75,8 +81,9 @@ public class GuideActivity extends BaseActivity {
 				startActivity(new Intent(GuideActivity.this, LoginOrRegisterActivity.class));
 				finish();
 			}
-			localEditor.putInt("count", ++count);
-			localEditor.commit();
+			sharePreferenceUtil.setUseCount(++count);;// 次数加1
+//			localEditor.putInt("count", ++count);
+//			localEditor.commit();
 		}
 	}
 

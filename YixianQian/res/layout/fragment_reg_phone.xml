@@ -23,7 +23,10 @@
             android:maxLines="1"
             android:paddingLeft="@dimen/personal_timecapsule_padding"
             android:textColorHint="@color/system_gray"
-            android:textSize="@dimen/day_recommend_user_font" />
+            android:textSize="@dimen/day_recommend_user_font" >
+
+            <requestFocus />
+        </EditText>
 
         <TextView
             android:layout_width="wrap_content"

@@ -20,9 +20,19 @@ import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.lidroid.xutils.HttpUtils;
+import com.lidroid.xutils.exception.HttpException;
+import com.lidroid.xutils.http.RequestParams;
+import com.lidroid.xutils.http.ResponseInfo;
+import com.lidroid.xutils.http.callback.RequestCallBack;
+import com.lidroid.xutils.http.client.HttpRequest.HttpMethod;
 import com.yixianqian.R;
 import com.yixianqian.base.BaseActivity;
+import com.yixianqian.table.UserTable;
+import com.yixianqian.utils.HttpUtil;
+import com.yixianqian.utils.SharePreferenceUtil;
 
 /**
  * 类名称：HeadImageActivity
@@ -38,8 +48,9 @@ public class HeadImageActivity extends BaseActivity {
 	private View leftImageButton;//导航栏左侧按钮
 	private View rightImageButton;//导航栏右侧按钮
 	private ImageView headImage;// 头像
-	private Bitmap headBitmap;// 头像
+	//	private Bitmap headBitmap;// 头像
 	private ImageView camera_image;//相机图标
+	private SharePreferenceUtil sharePreferenceUtil;
 
 	private File picFile;
 	private Uri photoUri;
@@ -52,6 +63,7 @@ public class HeadImageActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_head_image);
+		sharePreferenceUtil = new SharePreferenceUtil(this, SharePreferenceUtil.USER_SHAREPREFERENCE);
 
 		findViewById();
 		initView();
@@ -159,6 +171,7 @@ public class HeadImageActivity extends BaseActivity {
 				e.printStackTrace();
 			}
 			break;
+
 		}
 	}
 
@@ -192,28 +205,28 @@ public class HeadImageActivity extends BaseActivity {
 	 */
 	protected void doCropPhoto() {
 		try {
-			File pictureFileDir = new File(Environment.getExternalStorageDirectory(), "/upload");
+			File pictureFileDir = new File(Environment.getExternalStorageDirectory(), "/yixianqian");
 			if (!pictureFileDir.exists()) {
 				pictureFileDir.mkdirs();
 			}
-			picFile = new File(pictureFileDir, "upload.jpeg");
+			picFile = new File(pictureFileDir, "yixianqian.jpeg");
 			if (!picFile.exists()) {
 				picFile.createNewFile();
 			}
 			photoUri = Uri.fromFile(picFile);
 			final Intent intent = getCropImageIntent();
 			startActivityForResult(intent, activity_result_cropimage_with_data);
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
 	/**
-	 * Constructs an intent for image cropping. 调用图片剪辑程序
+	 *  调用图片剪辑程序
 	 */
 	public Intent getCropImageIntent() {
 		Intent intent = new Intent(Intent.ACTION_GET_CONTENT, null);
-//		Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
 		intent.setType("image/*");
 		intent.putExtra("crop", "true");
 		intent.putExtra("aspectX", 1);
@@ -222,6 +235,7 @@ public class HeadImageActivity extends BaseActivity {
 		intent.putExtra("outputY", 800);
 		intent.putExtra("noFaceDetection", true);
 		intent.putExtra("scale", true);
+		intent.putExtra("scaleUpIfNeeded", true);
 		intent.putExtra("return-data", false);
 		intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
 		intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
@@ -237,6 +251,7 @@ public class HeadImageActivity extends BaseActivity {
 		intent.putExtra("outputX", 800);
 		intent.putExtra("outputY", 800);
 		intent.putExtra("scale", true);
+		intent.putExtra("scaleUpIfNeeded", true);
 		intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
 		intent.putExtra("return-data", false);
 		intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
@@ -259,17 +274,14 @@ public class HeadImageActivity extends BaseActivity {
 	 * 上传头像
 	 */
 	public void uploadImage(String filePath) {
-		//		UserService userService = UserService.getInstance(getActivity());
-		//		String uploadHost = HttpUtil.BASE_URL + "UploadServlet";
-		//		RequestParams params = new RequestParams();
-		//		User user = userService.getCurrentUser();
-		//		if (user != null) {
-		//			params.addBodyParameter("mail", user.getMail());
-		//			params.addBodyParameter("pass", user.getPassword());
-		//		}
-		//
-		//		params.addBodyParameter(filePath.replace("/", ""), new File(filePath));
-		//		uploadMethod(params, uploadHost);
+		String uploadHost = HttpUtil.BASE_URL + "UploadServlet";
+		RequestParams params = new RequestParams();
+		int userId = sharePreferenceUtil.getU_id();
+		if (userId > -1) {
+			params.addBodyParameter(UserTable.U_ID, String.valueOf(userId));
+		}
+		params.addBodyParameter(filePath.replace("/", ""), new File(filePath));
+		uploadMethod(params, uploadHost);
 	}
 
 	/**
@@ -278,36 +290,35 @@ public class HeadImageActivity extends BaseActivity {
 	 * @param params
 	 * @param uploadHost
 	 */
-	//	public void uploadMethod(final RequestParams params, final String uploadHost) {
-	//		HttpUtils http = new HttpUtils();
-	//		http.send(HttpMethod.POST, uploadHost, params, new RequestCallBack<String>() {
-	//			@Override
-	//			public void onStart() {
-	//				Toast.makeText(getActivity(), "开始上传...", 1).show();
-	//			}
-	//
-	//			@Override
-	//			public void onLoading(long total, long current, boolean isUploading) {
-	//				if (isUploading) {
-	//					System.out.println("upload: " + current + "/" + total);
-	//				} else {
-	//					System.out.println("reply: " + current + "/" + total);
-	//				}
-	//			}
-	//
-	//			@Override
-	//			public void onSuccess(ResponseInfo<String> responseInfo) {
-	//				Toast.makeText(getActivity(), "头像上传成功！", 1).show();
-	//				// 重新更新用户内容
-	//				new GetUserTask().execute();
-	//
-	//			}
-	//
-	//			@Override
-	//			public void onFailure(HttpException error, String msg) {
-	//				Toast.makeText(getActivity(), "头像上传失败！" + msg, 1).show();
-	//			}
-	//		});
-	//	}
+	public void uploadMethod(final RequestParams params, final String uploadHost) {
+		HttpUtils http = new HttpUtils();
+		http.send(HttpMethod.POST, uploadHost, params, new RequestCallBack<String>() {
+			@Override
+			public void onStart() {
+				Toast.makeText(HeadImageActivity.this, "开始上传...", 1).show();
+			}
+
+			@Override
+			public void onLoading(long total, long current, boolean isUploading) {
+				if (isUploading) {
+					System.out.println("upload: " + current + "/" + total);
+				} else {
+					System.out.println("reply: " + current + "/" + total);
+				}
+			}
+
+			@Override
+			public void onSuccess(ResponseInfo<String> responseInfo) {
+				Toast.makeText(HeadImageActivity.this, "头像上传成功！", 1).show();
+				// 重新更新用户内容
+				//				new GetUserTask().execute();
+			}
+
+			@Override
+			public void onFailure(HttpException error, String msg) {
+				Toast.makeText(HeadImageActivity.this, "头像上传失败！" + msg, 1).show();
+			}
+		});
+	}
 
 }

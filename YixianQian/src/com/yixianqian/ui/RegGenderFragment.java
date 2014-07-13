@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.yixianqian.R;
 import com.yixianqian.base.BaseV4Fragment;
+import com.yixianqian.utils.SharePreferenceUtil;
 
 /**
  * 类名称：RegGenderFragment
@@ -21,7 +22,7 @@ import com.yixianqian.base.BaseV4Fragment;
  * 创建时间：2014年7月6日 下午7:28:49
  *
  */
-public class RegGenderFragment extends BaseV4Fragment implements OnCheckedChangeListener{
+public class RegGenderFragment extends BaseV4Fragment implements OnCheckedChangeListener {
 	/*************Views************/
 	private View rootView;// 根View
 
@@ -35,11 +36,14 @@ public class RegGenderFragment extends BaseV4Fragment implements OnCheckedChange
 
 	private boolean mIsSingle;
 	private String gender;
+	private SharePreferenceUtil sharePreferenceUtil;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		rootView = inflater.inflate(R.layout.fragment_reg_gender, container, false);
+
+		sharePreferenceUtil = new SharePreferenceUtil(getActivity(), SharePreferenceUtil.USER_SHAREPREFERENCE);
 		findViewById();// 初始化views
 		initView();
 		return rootView;
@@ -107,14 +111,20 @@ public class RegGenderFragment extends BaseV4Fragment implements OnCheckedChange
 		if (!mSingleView.isChecked() && !mLoveView.isChecked()) {
 			cancel = true;
 			rightImageButton.setEnabled(false);
-			//			Toast.makeText(getActivity(), getString(R.string.choose_state_error), 1).show();
+		} else if (mSingleView.isChecked()) {
+			sharePreferenceUtil.setU_stateid(4);
+		} else if (mLoveView.isChecked()) {
+			sharePreferenceUtil.setU_stateid(2);
 		}
 
 		//检查是否选性别
 		if (!mMale.isChecked() && !mFemale.isChecked()) {
 			cancel = true;
 			rightImageButton.setEnabled(false);
-			//			Toast.makeText(getActivity(), getString(R.string.choose_gender_error), 1).show();
+		} else if (mMale.isChecked()) {
+			sharePreferenceUtil.setU_gender("男");
+		} else if (mFemale.isChecked()) {
+			sharePreferenceUtil.setU_gender("女");
 		}
 
 		if (!cancel) {
@@ -132,7 +142,7 @@ public class RegGenderFragment extends BaseV4Fragment implements OnCheckedChange
 		transaction.setCustomAnimations(R.anim.push_left_in, R.anim.push_left_out, R.anim.push_right_in,
 				R.anim.push_right_out);
 		transaction.replace(R.id.fragment_container, regSchoolFragment);
-//		transaction.addToBackStack(null);
+		//		transaction.addToBackStack(null);
 		transaction.commit();
 	}
 
