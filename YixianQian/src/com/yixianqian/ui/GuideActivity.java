@@ -35,9 +35,7 @@ import com.yixianqian.utils.SharePreferenceUtil;
  *
  */
 public class GuideActivity extends BaseActivity {
-//	public static SharedPreferences countPreferences;// 记录软件使用次数
 	private ImageView loadingImage;
-
 	public LocationClient mLocationClient = null;
 	public BDLocationListener myListener = new MyLocationListener();
 	public SharedPreferences locationPreferences;// 记录用户位置
@@ -55,22 +53,16 @@ public class GuideActivity extends BaseActivity {
 		// 获取启动的次数
 		sharePreferenceUtil = new SharePreferenceUtil(this, SharePreferenceUtil.USE_COUNT);
 		int count = sharePreferenceUtil.getUseCount();
-//		SharedPreferences.Editor localEditor = countPreferences.edit();
 
 		//获取定位
 		initLocation();
 
 		if (count == 0) {// 如果是第一次登陆，则启动向导页面
 			startActivity(new Intent(GuideActivity.this, GuidePagerActivity.class));
-
 			// 第一次运行拷贝数据库文件
 			new initDataBase().execute();
-			
-//			ProvinceDbService provinceDbService =ProvinceDbService.getInstance(this);
-//			List<Province> provinces = provinceDbService.provinceDao.loadAll();
-			
-			sharePreferenceUtil.setUseCount(++count);;// 次数加1
-//			localEditor.commit();
+			sharePreferenceUtil.setUseCount(++count);// 次数加1
+			finish();
 		} else {// 如果不是第一次使用,则不启动向导页面，显示欢迎页面。
 			if (false) {//如果是已经登陆过
 				setContentView(R.layout.activity_guide);
@@ -81,9 +73,7 @@ public class GuideActivity extends BaseActivity {
 				startActivity(new Intent(GuideActivity.this, LoginOrRegisterActivity.class));
 				finish();
 			}
-			sharePreferenceUtil.setUseCount(++count);;// 次数加1
-//			localEditor.putInt("count", ++count);
-//			localEditor.commit();
+			sharePreferenceUtil.setUseCount(++count);// 次数加1
 		}
 	}
 

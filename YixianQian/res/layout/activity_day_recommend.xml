@@ -37,13 +37,14 @@
 
     <CheckBox
         android:id="@+id/choose_love"
-        android:button="@drawable/sel_love_radiobutton"
-        android:background="@color/system_male"
         android:layout_width="@dimen/day_recommend_next_btn"
         android:layout_height="@dimen/day_recommend_next_btn"
         android:layout_alignLeft="@+id/user_slide_page"
         android:layout_below="@+id/user_slide_page"
-        android:layout_marginTop="10dp" />
+        android:layout_marginTop="10dp"
+        android:button="@null"
+        android:background="@drawable/sel_love_radiobutton"
+        android:gravity="center" />
 
     <ImageView
         android:id="@+id/next_btn"

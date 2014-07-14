@@ -58,7 +58,7 @@ public class LoginOrRegisterActivity extends BaseActivity {
 				//				Intent intent = new Intent(LoginOrRegisterActivity.this, MainActivity.class);
 				Intent intent = new Intent(LoginOrRegisterActivity.this, RegisterActivity.class);
 //				Intent intent = new Intent(LoginOrRegisterActivity.this, HeadImageActivity.class);
-				//				Intent intent = new Intent(LoginOrRegisterActivity.this, RecommendHelpActivity.class);
+//								Intent intent = new Intent(LoginOrRegisterActivity.this, DayRecommendActivity.class);
 				startActivity(intent);
 				overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
 			}

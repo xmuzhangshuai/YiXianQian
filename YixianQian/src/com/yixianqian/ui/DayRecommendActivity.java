@@ -69,6 +69,7 @@ public class DayRecommendActivity extends BaseFragmentActivity {
 		recommendPageViews = new ArrayList<View>();
 		imageCircleViews = new ImageView[DefaultSetting.RECOMMEND_COUNT];
 
+		//设置圆点
 		for (int i = 0; i < DefaultSetting.RECOMMEND_COUNT; i++) {
 			recommendPageViews.add(getLayoutInflater().inflate(R.layout.recommend_user_pager, null));
 			ImageView dot = new ImageView(DayRecommendActivity.this);
@@ -126,9 +127,22 @@ public class DayRecommendActivity extends BaseFragmentActivity {
 			return null;
 		}
 
+		@Override
+		protected void onPostExecute(Void result) {
+			// TODO Auto-generated method stub
+			super.onPostExecute(result);
+		}
+
 	}
 
-	// 滑动推荐用户数据适配器
+	/**
+	 * 
+	 * 类名称：SlideAdapter
+	 * 类描述：滑动推荐用户数据适配器
+	 * 创建人： 张帅
+	 * 创建时间：2014年7月14日 下午2:41:29
+	 *
+	 */
 	private class SlideAdapter extends PagerAdapter {
 		@Override
 		public int getCount() {
@@ -156,7 +170,6 @@ public class DayRecommendActivity extends BaseFragmentActivity {
 		public Object instantiateItem(View arg0, int arg1) {
 			// TODO Auto-generated method stub  
 			((ViewPager) arg0).addView(recommendPageViews.get(arg1));
-
 			return recommendPageViews.get(arg1);
 		}
 
@@ -185,7 +198,14 @@ public class DayRecommendActivity extends BaseFragmentActivity {
 		}
 	}
 
-	// 滑动页面更改事件监听器
+	/**
+	 * 
+	 * 类名称：PageChangeListener
+	 * 类描述：滑动页面更改事件监听器
+	 * 创建人： 张帅
+	 * 创建时间：2014年7月14日 下午2:41:18
+	 *
+	 */
 	private class PageChangeListener implements OnPageChangeListener {
 		@Override
 		public void onPageScrollStateChanged(int arg0) {

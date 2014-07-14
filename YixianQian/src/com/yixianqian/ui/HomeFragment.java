@@ -1,17 +1,13 @@
 package com.yixianqian.ui;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
-import android.widget.Button;
+import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.LinearLayout.LayoutParams;
 
 import com.yixianqian.R;
 import com.yixianqian.base.BaseV4Fragment;
@@ -55,9 +51,25 @@ public class HomeFragment extends BaseV4Fragment {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-
+				showDialog();
 			}
 		});
+	}
+
+	/**
+	 * ≤Àµ•œ‘ æ
+	 */
+	void showDialog() {
+		FragmentTransaction ft = getFragmentManager().beginTransaction();
+		Fragment fragment = getFragmentManager().findFragmentByTag("dialog");
+		if (fragment != null) {
+			ft.remove(fragment);
+		}
+		ft.addToBackStack(null);
+
+		// Create and show the dialog.
+		HomeDialogFragment newFragment = HomeDialogFragment.newInstance();
+		newFragment.show(ft, "dialog");
 	}
 
 }

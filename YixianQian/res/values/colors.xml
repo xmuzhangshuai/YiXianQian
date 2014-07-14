@@ -2,6 +2,7 @@
 <resources>
 
     <color name="system_male">#33CCCC</color> <!-- 男生系统颜色 -->
+    <color name="system_female">#FF3366</color> <!-- 女生系统颜色 -->
     <color name="system_male_dark">#2FBABA</color> <!-- 男生系统颜色深色 -->
     <color name="system_male_dark_more">#008B8B</color> <!-- 男生系统颜色深色 -->
 
@@ -16,6 +17,7 @@
     <color name="top_nav_blue_dark">#4F94CD</color>
     <color name="white">#ffffff</color>
     <color name="black">#000000</color>
+    <color name="red">#ff0000</color>
     <color name="unenable">#999999</color>
     <color name="unenable_font">#dbdbdb</color>
 

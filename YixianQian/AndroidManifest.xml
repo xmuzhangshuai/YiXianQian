@@ -132,9 +132,15 @@
 
         <!-- 发布记录页面 -->
         <activity
-            android:name="com.yixianqian.ui.PublishTimeCapActivity"
+            android:name=".ui.PublishTimeCapActivity"
             android:label="@string/title_activity_publish_time_cap"
             android:screenOrientation="portrait" >
+        </activity>
+
+        <!-- 爱情验证页面 -->
+        <activity
+            android:name="com.yixianqian.ui.LoveVertifyActivity"
+            android:label="@string/title_activity_love_vertify" >
         </activity>
 
         <!-- 百度定位 -->
