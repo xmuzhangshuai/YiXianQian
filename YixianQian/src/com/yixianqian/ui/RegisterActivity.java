@@ -107,6 +107,7 @@ public class RegisterActivity extends BaseFragmentActivity {
 				@Override
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
+					dialog.dismiss();
 					finish();
 				}
 			};
@@ -121,7 +122,6 @@ public class RegisterActivity extends BaseFragmentActivity {
 			dialog.setPositiveButton("确定", comfirm);
 			dialog.setNegativeButton("取消", cancle);
 			dialog.show();
-
 		}
 		return super.onKeyDown(keyCode, event);
 	}

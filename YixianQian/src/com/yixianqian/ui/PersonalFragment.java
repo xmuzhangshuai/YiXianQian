@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -29,7 +30,6 @@ import android.widget.TextView;
 import com.yixianqian.R;
 import com.yixianqian.base.BaseV4Fragment;
 import com.yixianqian.config.DefaultKeys;
-import com.yixianqian.customewidget.MyRecorder;
 import com.yixianqian.utils.ImageLoaderTool;
 
 /**
@@ -57,7 +57,10 @@ public class PersonalFragment extends BaseV4Fragment {
 	private Uri takePhotoUri;
 	private String takePhotoPath;
 
-	MyRecorder myRecorder;
+	File soundFileDir;//文件目录
+	File soundFile;//录音文件
+	String soundName = "audio";//文件名称
+	MediaRecorder mRecorder;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -92,7 +95,7 @@ public class PersonalFragment extends BaseV4Fragment {
 		topNavRightBtn.setImageResource(R.drawable.ic_action_overflow);
 		right_btn_bg.setBackgroundResource(R.drawable.sel_topnav_btn_bg);
 		topNavText.setText("个人信息");
-		myRecorder = new MyRecorder("audio");
+		initRecorder();
 
 		//设置头像
 		imageLoader.displayImage("http://99touxiang.com/public/upload/nvsheng/18/04-072110_356.jpg", headImageView,
@@ -137,15 +140,26 @@ public class PersonalFragment extends BaseV4Fragment {
 				// TODO Auto-generated method stub
 				if (count % 2 == 0) {
 					showRecordingTape();
-					myRecorder.beginRecord();
+					try {
+						mRecorder.prepare();
+					} catch (IllegalStateException | IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					mRecorder.start();
 				} else {
 					shutRecordingTape();
-					myRecorder.stopRecord();
-
+					mRecorder.stop();
+					mRecorder.release();
+					mRecorder = null;
+					String path = null;
+					if (soundFile != null && soundFile.exists()) {
+						path = soundFile.getAbsolutePath();
+					}
 					//跳转到PublishTimeCapActivity页面
 					Intent intent = new Intent(getActivity(), PublishTimeCapActivity.class);
 					intent.putExtra("type", "audio");
-					intent.putExtra(DefaultKeys.PHOTO_URI, myRecorder.getPath());
+					intent.putExtra(DefaultKeys.PHOTO_URI, path);
 					startActivity(intent);
 				}
 				count++;
@@ -158,6 +172,37 @@ public class PersonalFragment extends BaseV4Fragment {
 		// TODO Auto-generated method stub
 
 		super.onDestroy();
+	}
+
+	/**
+	 * 初始化录音
+	 */
+	void initRecorder() {
+		try {
+			soundFileDir = new File(Environment.getExternalStorageDirectory(), "/yixianqian/audio");
+			if (!soundFileDir.exists()) {
+				soundFileDir.mkdirs();
+			}
+
+			soundFile = new File(soundFileDir, soundName + ".amr");
+			if (!soundFile.exists()) {
+				soundFile.createNewFile();
+			}
+
+			mRecorder = new MediaRecorder();
+			//设置录音来源
+			mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+
+			//设置录音的输出格式
+			mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+
+			//设置声音编码格式
+			mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+
+			mRecorder.setOutputFile(soundFile.getAbsolutePath());
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
 	}
 
 	/**

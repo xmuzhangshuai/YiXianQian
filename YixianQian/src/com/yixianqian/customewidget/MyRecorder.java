@@ -66,6 +66,13 @@ public class MyRecorder {
 		if (soundFile != null && soundFile.exists()) {
 			if (mRecorder != null) {
 				mRecorder.stop();
+			}
+		}
+	}
+
+	public void releaseRecord() {
+		if (soundFile != null && soundFile.exists()) {
+			if (mRecorder != null) {
 				mRecorder.release();
 				mRecorder = null;
 			}

@@ -14,6 +14,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
+import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -30,7 +31,6 @@ import android.widget.TextView;
 import com.yixianqian.R;
 import com.yixianqian.base.BaseActivity;
 import com.yixianqian.config.DefaultKeys;
-import com.yixianqian.customewidget.MyRecorder;
 import com.yixianqian.utils.ImageTools;
 
 public class PublishTimeCapActivity extends BaseActivity {
@@ -45,12 +45,17 @@ public class PublishTimeCapActivity extends BaseActivity {
 	private View nullImage;
 	private ImageView play;
 	private TextView tip;
-	private View record_view;
+	private View record_view;//录音
+	private TextView recordTime;//音频时间
 	private View right_btn_bg;
 	private int count = 0;
 	private String type;//类型，用于判断先拍照还是先录音
 	private String audioPath;
-	private MyRecorder myRecorder;
+	//	private MyRecorder myRecorder;
+	File soundFileDir;//文件目录
+	File soundFile;//录音文件
+	String soundName = "audio";//文件名称
+	MediaRecorder mRecorder;
 	private MediaPlayer mPlayer;
 	private int playCount = 0;
 
@@ -60,13 +65,12 @@ public class PublishTimeCapActivity extends BaseActivity {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_publish_time_cap);
 		mPlayer = new MediaPlayer();
-		myRecorder = new MyRecorder("audio");
+		initRecorder();
 
 		type = getIntent().getStringExtra("type");
 		if (type.equals("audio")) {
 			//获取音频地址
 			audioPath = getIntent().getStringExtra(DefaultKeys.PHOTO_URI);
-
 		} else if (type.equals("picture")) {
 			//获取图片地址
 			photoUri = getIntent().getStringExtra(DefaultKeys.PHOTO_URI);
@@ -90,6 +94,7 @@ public class PublishTimeCapActivity extends BaseActivity {
 		record_view = (View) findViewById(R.id.record_view);
 		nullImage = (View) findViewById(R.id.gethead_btn);
 		play = (ImageView) findViewById(R.id.play);
+		recordTime = (TextView) findViewById(R.id.timespan);
 	}
 
 	@Override
@@ -110,11 +115,21 @@ public class PublishTimeCapActivity extends BaseActivity {
 					// TODO Auto-generated method stub
 					if (count % 2 == 0) {
 						showRecordingTape();
-						myRecorder.beginRecord();
+						try {
+							initRecorder();
+							mRecorder.prepare();
+						} catch (IllegalStateException | IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						mRecorder.start();
 					} else {
 						shutRecordingTape();
-						myRecorder.stopRecord();
-						audioPath = myRecorder.getPath();
+						mRecorder.stop();
+						mRecorder.release();
+						if (soundFile != null && soundFile.exists()) {
+							audioPath = soundFile.getAbsolutePath();
+						}
 						showRecord();
 					}
 					count++;
@@ -125,7 +140,7 @@ public class PublishTimeCapActivity extends BaseActivity {
 		/****************如果是已经录音********************/
 		else if (type.equals("audio")) {
 			capsuleImage.setVisibility(View.GONE);
-			record_view.setVisibility(View.VISIBLE);
+			showRecord();
 			tape.setImageResource(R.drawable.sel_photo_btn);
 			nullImage.setVisibility(View.VISIBLE);
 			tip.setText("添加一张图片");
@@ -205,6 +220,37 @@ public class PublishTimeCapActivity extends BaseActivity {
 	}
 
 	/**
+	 * 初始化录音
+	 */
+	void initRecorder() {
+		try {
+			soundFileDir = new File(Environment.getExternalStorageDirectory(), "/yixianqian/audio");
+			if (!soundFileDir.exists()) {
+				soundFileDir.mkdirs();
+			}
+
+			soundFile = new File(soundFileDir, soundName + ".amr");
+			if (!soundFile.exists()) {
+				soundFile.createNewFile();
+			}
+
+			mRecorder = new MediaRecorder();
+			//设置录音来源
+			mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+
+			//设置录音的输出格式
+			mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+
+			//设置声音编码格式
+			mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+
+			mRecorder.setOutputFile(soundFile.getAbsolutePath());
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+	}
+
+	/**
 	 * 显示图片
 	 */
 	public void showPicture() {
@@ -232,6 +278,11 @@ public class PublishTimeCapActivity extends BaseActivity {
 	 */
 	public void showRecord() {
 		record_view.setVisibility(View.VISIBLE);
+		MediaPlayer mediaPlayer = MediaPlayer.create(PublishTimeCapActivity.this, Uri.parse(audioPath));
+		int length = mediaPlayer.getDuration() / 1000;
+		mediaPlayer.release();
+		mediaPlayer = null;
+		recordTime.setText(length + "\"");
 	}
 
 	/**

@@ -58,6 +58,7 @@ public class MainActivity extends BaseFragmentActivity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
+				myAlertDialog.dismiss();
 				close();
 			}
 		};
