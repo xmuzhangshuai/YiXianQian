@@ -205,7 +205,7 @@ public class HeadImageActivity extends BaseActivity {
 	 */
 	protected void doCropPhoto() {
 		try {
-			File pictureFileDir = new File(Environment.getExternalStorageDirectory(), "/yixianqian");
+			File pictureFileDir = new File(Environment.getExternalStorageDirectory(), "/yixianqian/image");
 			if (!pictureFileDir.exists()) {
 				pictureFileDir.mkdirs();
 			}

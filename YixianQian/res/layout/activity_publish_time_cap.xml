@@ -1,44 +1,98 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:background="@color/white" >
 
     <include
         layout="@layout/publish_capsule_topnav"
         android:focusable="true" />
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/login_register"
-        android:padding="@dimen/time_capsule20" >
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/time_capsule20"
+        android:paddingRight="@dimen/time_capsule20"
+        android:paddingTop="@dimen/register_height" >
 
         <ImageView
             android:id="@+id/capsule_image"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/headiamge_height"
+            android:layout_height="@dimen/time_capsule_220"
             android:scaleType="fitCenter"
-            android:src="@drawable/logorreg_bg" />
+            android:src="@drawable/logorreg_bg"
+            android:visibility="gone" />
+
+        <LinearLayout
+            android:id="@+id/gethead_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/sel_get_head_bg"
+            android:orientation="vertical"
+            android:visibility="gone" >
+
+            <ImageView
+                android:id="@+id/camera_image"
+                android:layout_width="@dimen/register_height"
+                android:layout_height="@dimen/register_height"
+                android:layout_margin="@dimen/get_image_btn_padding"
+                android:src="@drawable/sel_get_head" />
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/record_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/day_recommend_help_padding"
+            android:background="@drawable/sel_paly_record"
+            android:padding="@dimen/personal_timecapsule_padding"
+            android:visibility="invisible" >
+
+            <ImageView
+                android:id="@+id/play"
+                android:layout_width="@dimen/day_recommend_help_padding"
+                android:layout_height="@dimen/day_recommend_help_padding"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/play" />
+
+            <TextView
+                android:id="@+id/timespan"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:text="9s"
+                android:textColor="@color/system_blue"
+                android:textSize="@dimen/day_recommend_user_font" />
+
+            <TextView
+                android:id="@+id/time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:text="2014-7-9 12:04"
+                android:textColor="@color/unenable"
+                android:textSize="@dimen/day_recommend_help_font" />
+        </RelativeLayout>
 
         <ImageView
             android:id="@+id/tape"
             android:layout_width="@dimen/personal_photo_size"
             android:layout_height="@dimen/personal_photo_size"
-            android:layout_above="@+id/add_record"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="@dimen/time_capsule20"
+            android:layout_marginTop="@dimen/home_indicator"
             android:src="@drawable/sel_tabp_btn" />
 
         <TextView
             android:id="@+id/add_record"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="@dimen/time_capsule20"
-            android:text="添加一段录音"
+            android:layout_marginTop="@dimen/personal_timecapsule_padding"
             android:textColor="@color/unenable"
             android:textSize="@dimen/day_recommend_user_font" />
-    </RelativeLayout>
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/tape_view"

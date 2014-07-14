@@ -29,6 +29,7 @@ import android.widget.TextView;
 import com.yixianqian.R;
 import com.yixianqian.base.BaseV4Fragment;
 import com.yixianqian.config.DefaultKeys;
+import com.yixianqian.customewidget.MyRecorder;
 import com.yixianqian.utils.ImageLoaderTool;
 
 /**
@@ -56,10 +57,13 @@ public class PersonalFragment extends BaseV4Fragment {
 	private Uri takePhotoUri;
 	private String takePhotoPath;
 
+	MyRecorder myRecorder;
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		rootView = inflater.inflate(R.layout.fragment_personal, container, false);
+
 		findViewById();// 初始化views
 		initView();
 		return rootView;
@@ -88,6 +92,7 @@ public class PersonalFragment extends BaseV4Fragment {
 		topNavRightBtn.setImageResource(R.drawable.ic_action_overflow);
 		right_btn_bg.setBackgroundResource(R.drawable.sel_topnav_btn_bg);
 		topNavText.setText("个人信息");
+		myRecorder = new MyRecorder("audio");
 
 		//设置头像
 		imageLoader.displayImage("http://99touxiang.com/public/upload/nvsheng/18/04-072110_356.jpg", headImageView,
@@ -132,12 +137,27 @@ public class PersonalFragment extends BaseV4Fragment {
 				// TODO Auto-generated method stub
 				if (count % 2 == 0) {
 					showRecordingTape();
+					myRecorder.beginRecord();
 				} else {
 					shutRecordingTape();
+					myRecorder.stopRecord();
+
+					//跳转到PublishTimeCapActivity页面
+					Intent intent = new Intent(getActivity(), PublishTimeCapActivity.class);
+					intent.putExtra("type", "audio");
+					intent.putExtra(DefaultKeys.PHOTO_URI, myRecorder.getPath());
+					startActivity(intent);
 				}
 				count++;
 			}
 		});
+	}
+
+	@Override
+	public void onDestroy() {
+		// TODO Auto-generated method stub
+
+		super.onDestroy();
 	}
 
 	/**
@@ -205,7 +225,7 @@ public class PersonalFragment extends BaseV4Fragment {
 	 */
 	private void takePhoto() {
 		try {
-			File uploadFileDir = new File(Environment.getExternalStorageDirectory(), "/yixianqian");
+			File uploadFileDir = new File(Environment.getExternalStorageDirectory(), "/yixianqian/image");
 			Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 			if (!uploadFileDir.exists()) {
 				uploadFileDir.mkdirs();
@@ -252,7 +272,9 @@ public class PersonalFragment extends BaseV4Fragment {
 				String picturePath = cursor.getString(columnIndex);
 				cursor.close();
 
+				//跳转到PublishTimeCapActivity页面
 				intent = new Intent(getActivity(), PublishTimeCapActivity.class);
+				intent.putExtra("type", "picture");
 				intent.putExtra(DefaultKeys.PHOTO_URI, picturePath);
 				startActivity(intent);
 			} catch (Exception e) {
