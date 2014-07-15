@@ -1,6 +1,7 @@
 package com.yixianqian.ui;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -16,11 +17,15 @@ import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.yixianqian.R;
 import com.yixianqian.base.BaseFragmentActivity;
-import com.yixianqian.config.DefaultSetting;
+import com.yixianqian.db.TodayRecommendDbService;
+import com.yixianqian.entities.TodayRecommend;
 import com.yixianqian.utils.DensityUtil;
+import com.yixianqian.utils.ImageLoaderTool;
+import com.yixianqian.utils.ImageTools;
 
 /**
  * 类名称：DayRecommendActivity
@@ -37,7 +42,8 @@ public class DayRecommendActivity extends BaseFragmentActivity {
 	private ImageView next_btn;
 
 	//滑动推荐用户集合
-	private ArrayList<View> recommendPageViews = null;
+	//	private ArrayList<View> recommendPageViews = null;
+	private List<TodayRecommend> todayRecommendList;
 
 	// 包含圆点图片的View
 	private ViewGroup imageCircleView = null;
@@ -49,9 +55,22 @@ public class DayRecommendActivity extends BaseFragmentActivity {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_day_recommend);
+		todayRecommendList = new ArrayList<TodayRecommend>();
+		todayRecommendList = TodayRecommendDbService.getInstance(this).getTodayRecommendList();
 
 		findViewById();
 		initView();
+
+		//		TodayRecommendDbService todayRecommendDbService = TodayRecommendDbService.getInstance(this);
+		//		List<TodayRecommend> todayRecommends = todayRecommendDbService.getTodayRecommendList();
+		//		if (todayRecommends != null) {
+		//			System.out.println(todayRecommends.size());
+		//			for (TodayRecommend todayRecommend : todayRecommends) {
+		//				System.out.println(todayRecommend.getUserAvatar());
+		//			}
+		//		} else {
+		//			System.out.println("为空");
+		//		}
 	}
 
 	@Override
@@ -66,12 +85,12 @@ public class DayRecommendActivity extends BaseFragmentActivity {
 	@Override
 	protected void initView() {
 		// TODO Auto-generated method stub
-		recommendPageViews = new ArrayList<View>();
-		imageCircleViews = new ImageView[DefaultSetting.RECOMMEND_COUNT];
+		//		recommendPageViews = new ArrayList<View>();
+		imageCircleViews = new ImageView[todayRecommendList.size()];
 
 		//设置圆点
-		for (int i = 0; i < DefaultSetting.RECOMMEND_COUNT; i++) {
-			recommendPageViews.add(getLayoutInflater().inflate(R.layout.recommend_user_pager, null));
+		for (int i = 0; i < todayRecommendList.size(); i++) {
+			//			recommendPageViews.add(getLayoutInflater().inflate(R.layout.recommend_user_pager, null));
 			ImageView dot = new ImageView(DayRecommendActivity.this);
 			dot.setLayoutParams(new LayoutParams(DensityUtil.dip2px(DayRecommendActivity.this, 15), DensityUtil.dip2px(
 					DayRecommendActivity.this, 15)));
@@ -144,14 +163,21 @@ public class DayRecommendActivity extends BaseFragmentActivity {
 	 *
 	 */
 	private class SlideAdapter extends PagerAdapter {
-		@Override
-		public int getCount() {
-			return recommendPageViews.size();
+		private class ViewHolder {
+			public TextView name;
+			public ImageView headimage;
+			public TextView age;
+			public TextView school;
 		}
 
 		@Override
-		public boolean isViewFromObject(View arg0, Object arg1) {
-			return arg0 == arg1;
+		public int getCount() {
+			return todayRecommendList.size();
+		}
+
+		@Override
+		public boolean isViewFromObject(View view, Object object) {
+			return view == object;
 		}
 
 		@Override
@@ -161,16 +187,31 @@ public class DayRecommendActivity extends BaseFragmentActivity {
 		}
 
 		@Override
-		public void destroyItem(View arg0, int arg1, Object arg2) {
+		public void destroyItem(ViewGroup container, int position, Object object) {
 			// TODO Auto-generated method stub  
-			((ViewPager) arg0).removeView(recommendPageViews.get(arg1));
+			container.removeView((View) object);
 		}
 
 		@Override
-		public Object instantiateItem(View arg0, int arg1) {
+		public Object instantiateItem(ViewGroup container, int position) {
 			// TODO Auto-generated method stub  
-			((ViewPager) arg0).addView(recommendPageViews.get(arg1));
-			return recommendPageViews.get(arg1);
+			final ViewHolder holder;
+
+			View view = getLayoutInflater().inflate(R.layout.recommend_user_pager, null);
+			holder = new ViewHolder();
+			holder.name = (TextView) view.findViewById(R.id.name);
+			holder.age = (TextView) view.findViewById(R.id.age);
+			holder.school = (TextView) view.findViewById(R.id.school);
+			holder.headimage = (ImageView) view.findViewById(R.id.headimage);
+
+			holder.name.setText(todayRecommendList.get(position).getUserName());
+			holder.age.setText("" + todayRecommendList.get(position).getUserAge());
+			holder.school.setText(todayRecommendList.get(position).getSchool().getSchoolName());
+			imageLoader.displayImage(todayRecommendList.get(position).getUserAvatar(), holder.headimage,
+					ImageLoaderTool.getHeadImageOptions());
+
+			container.addView(view);
+			return view;
 		}
 
 		@Override
@@ -186,13 +227,13 @@ public class DayRecommendActivity extends BaseFragmentActivity {
 		}
 
 		@Override
-		public void startUpdate(View arg0) {
+		public void startUpdate(ViewGroup container) {
 			// TODO Auto-generated method stub  
 
 		}
 
 		@Override
-		public void finishUpdate(View arg0) {
+		public void finishUpdate(ViewGroup container) {
 			// TODO Auto-generated method stub  
 
 		}
@@ -208,25 +249,23 @@ public class DayRecommendActivity extends BaseFragmentActivity {
 	 */
 	private class PageChangeListener implements OnPageChangeListener {
 		@Override
-		public void onPageScrollStateChanged(int arg0) {
+		public void onPageScrollStateChanged(int state) {
 			// TODO Auto-generated method stub  
 
 		}
 
 		@Override
-		public void onPageScrolled(int arg0, float arg1, int arg2) {
+		public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 			// TODO Auto-generated method stub  
 
 		}
 
 		@Override
-		public void onPageSelected(int index) {
-			pageIndex = index;
-
+		public void onPageSelected(int position) {
+			pageIndex = position;
 			for (int i = 0; i < imageCircleViews.length; i++) {
-				imageCircleViews[index].setBackgroundResource(R.drawable.dot_selected);
-
-				if (index != i) {
+				imageCircleViews[position].setBackgroundResource(R.drawable.dot_selected);
+				if (position != i) {
 					imageCircleViews[i].setBackgroundResource(R.drawable.dot);
 				}
 			}

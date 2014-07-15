@@ -1,5 +1,7 @@
 package com.yixianqian.ui;
 
+import org.apache.http.Header;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -15,10 +17,14 @@ import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.baidu.location.LocationClientOption.LocationMode;
+import com.loopj.android.http.RequestParams;
+import com.loopj.android.http.TextHttpResponseHandler;
 import com.yixianqian.R;
 import com.yixianqian.base.BaseActivity;
 import com.yixianqian.config.DefaultKeys;
 import com.yixianqian.db.CopyDataBase;
+import com.yixianqian.table.UserTable;
+import com.yixianqian.utils.DateTimeTools;
 import com.yixianqian.utils.SharePreferenceUtil;
 
 /**
@@ -62,15 +68,16 @@ public class GuideActivity extends BaseActivity {
 			// 第一次运行拷贝数据库文件
 			new initDataBase().execute();
 			sharePreferenceUtil.setUseCount(++count);// 次数加1
-			finish();
+			//			finish();不定位
 		} else {// 如果不是第一次使用,则不启动向导页面，显示欢迎页面。
 			if (sharePreferenceUtil.getUserLogin()) {//如果是已经登陆过
 				setContentView(R.layout.activity_guide);
 				findViewById();
 				initView();
+				getTodayRecommend();
 			} else {//如果用户没有登录过或者已经注销
 				startActivity(new Intent(GuideActivity.this, LoginOrRegisterActivity.class));
-				finish();
+				//				finish();不定位
 			}
 			sharePreferenceUtil.setUseCount(++count);// 次数加1
 		}
@@ -124,8 +131,40 @@ public class GuideActivity extends BaseActivity {
 
 	@Override
 	public void onDestroy() {
-		stopListener();// 停止监听
+		//		stopListener();// 停止监听
 		super.onDestroy();
+	}
+
+	/**
+	 * 获取今日推荐
+	 */
+	private void getTodayRecommend() {
+		//如果没有推荐过
+		if (!sharePreferenceUtil.getTodayRecommend().equals(DateTimeTools.getCurrentDateForString())) {
+			RequestParams params = new RequestParams();
+			params.put(UserTable.U_ID, sharePreferenceUtil.getU_id());
+			TextHttpResponseHandler responseHandler = new TextHttpResponseHandler("utf-8") {
+
+				@Override
+				public void onSuccess(int statusCode, Header[] headers, String response) {
+					// TODO Auto-generated method stub
+					if (statusCode == 200) {
+
+					}
+				}
+
+				@Override
+				public void onFailure(int statusCode, Header[] headers, String errorResponse, Throwable e) {
+					// TODO Auto-generated method stub
+
+				}
+			};
+			//			AsyncHttpClientTool.post(this, "", params, responseHandler);
+			sharePreferenceUtil.setTodayRecommend(DateTimeTools.getCurrentDateForString());
+		} else {
+
+		}
+
 	}
 
 	/**

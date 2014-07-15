@@ -1,7 +1,5 @@
 package com.yixianqian.base;
 
-import java.text.AttributedCharacterIterator.Attribute;
-
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -13,6 +11,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.widget.Toast;
+
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 /**   
 *    
@@ -32,6 +32,7 @@ import android.widget.Toast;
 *    
 */
 public abstract class BaseFragmentActivity extends FragmentActivity {
+	protected ImageLoader imageLoader = ImageLoader.getInstance();
 	public static final String TAG = BaseFragmentActivity.class.getSimpleName();
 	protected Handler mHandler = null;
 
@@ -49,25 +50,27 @@ public abstract class BaseFragmentActivity extends FragmentActivity {
 		super.onCreate(savedInstanceState);
 		AppManager.getInstance().addActivity(this);
 		//		PushAgent.getInstance(this).onAppStart();
-		   // 在onCreate中注册广播  
-        IntentFilter filter = new IntentFilter();  
-        filter.addAction("close");  
-        registerReceiver(this.broadcastReceiver, filter); // 注册  
+		// 在onCreate中注册广播  
+		IntentFilter filter = new IntentFilter();
+		filter.addAction("close");
+		registerReceiver(this.broadcastReceiver, filter); // 注册  
 	}
+
 	/** 
-     * 关闭 
-     */  
-    public void close() {  
-        Intent intent = new Intent();  
-        intent.setAction("close"); // 说明动作  
-        sendBroadcast(intent);// 该函数用于发送广播  
-        finish();  
-    } 
+	 * 关闭 
+	 */
+	public void close() {
+		Intent intent = new Intent();
+		intent.setAction("close"); // 说明动作  
+		sendBroadcast(intent);// 该函数用于发送广播  
+		finish();
+	}
+
 	@Override
 	protected void onDestroy() {
 		// TODO Auto-generated method stub
 		super.onDestroy();
-		 unregisterReceiver(broadcastReceiver);// 在onDestroy注销广播。  
+		unregisterReceiver(broadcastReceiver);// 在onDestroy注销广播。  
 	}
 
 	@Override

@@ -48,15 +48,15 @@ public class Generator {
 		schoolEntity.addStringProperty("schoolName");
 		schoolEntity.addStringProperty("schoolInfo");
 		//主管部门外键
-				Property school_cometent_idProperty = schoolEntity.addLongProperty("cometentID").notNull().getProperty();
-				schoolEntity.addToOne(cometentEntity, school_cometent_idProperty);
-				ToMany cometentToSchool = cometentEntity.addToMany(schoolEntity, school_cometent_idProperty);
-				cometentToSchool.setName("schoolList");
-				//城市外键
-				Property school_city_id = schoolEntity.addLongProperty("cityID").notNull().getProperty();
-				schoolEntity.addToOne(cityEntity, school_city_id);
-				ToMany cityToSchool = cityEntity.addToMany(schoolEntity, school_city_id);
-				cityToSchool.setName("schoolList");
+		Property school_cometent_idProperty = schoolEntity.addLongProperty("cometentID").notNull().getProperty();
+		schoolEntity.addToOne(cometentEntity, school_cometent_idProperty);
+		ToMany cometentToSchool = cometentEntity.addToMany(schoolEntity, school_cometent_idProperty);
+		cometentToSchool.setName("schoolList");
+		//城市外键
+		Property school_city_id = schoolEntity.addLongProperty("cityID").notNull().getProperty();
+		schoolEntity.addToOne(cityEntity, school_city_id);
+		ToMany cityToSchool = cityEntity.addToMany(schoolEntity, school_city_id);
+		cityToSchool.setName("schoolList");
 
 		/******用户状态*****/
 		Entity userStateEntity = schema.addEntity("UserState");
@@ -68,6 +68,19 @@ public class Generator {
 		vocationEntity.addIdProperty();
 		vocationEntity.addStringProperty("vocationName");
 
+		/******每日推荐*****/
+		Entity todayRecommendEntity = schema.addEntity("TodayRecommend");
+		todayRecommendEntity.addIdProperty().autoincrement();
+		todayRecommendEntity.addIntProperty("userID");
+		todayRecommendEntity.addStringProperty("userName");
+		todayRecommendEntity.addStringProperty("userAvatar");
+		todayRecommendEntity.addIntProperty("userAge");
+		todayRecommendEntity.addStringProperty("date");
+		//学校外键
+		Property todayRecommend_school = todayRecommendEntity.addLongProperty("schoolID").notNull().getProperty();
+		todayRecommendEntity.addToOne(schoolEntity, todayRecommend_school);
+		ToMany schoolToTodayRecommend = schoolEntity.addToMany(todayRecommendEntity, todayRecommend_school);
+		schoolToTodayRecommend.setName("recommendList");
 	}
 
 }

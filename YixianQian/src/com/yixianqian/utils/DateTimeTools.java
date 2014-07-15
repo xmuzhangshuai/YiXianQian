@@ -1,6 +1,8 @@
 package com.yixianqian.utils;
 
 import android.annotation.SuppressLint;
+
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -23,18 +25,42 @@ import java.util.Map;
 public class DateTimeTools {
 	@SuppressLint("SimpleDateFormat")
 	static SimpleDateFormat formatter = new SimpleDateFormat("yyyy年MM月dd日   HH:mm:ss");
+	static DateFormat formatter2 = SimpleDateFormat.getDateInstance();
 
 	public DateTimeTools() {
 		// TODO Auto-generated constructor stub
+
 	}
 
 	/**
 	 * 返回当前系统时间
 	 * @return Date格式
 	 */
-	public static Date getCurrentDate() {
+	public static Date getCurrentDateTime() {
 		Date curDate = new Date(System.currentTimeMillis());// 获取当前时间
 		return curDate;
+	}
+
+	/**
+	 * 返回当前系统时间
+	 * @return String格式
+	 */
+	public static String getCurrentDateTimeForString() {
+		Date curDate = new Date(System.currentTimeMillis());// 获取当前时间
+		return formatter.format(curDate);
+	}
+
+	/**
+	 * 获取当前日期
+	 * @return
+	 */
+	public static Date getCurrentDate() {
+		Date date = new Date();
+		return date;
+	}
+
+	public static String getCurrentDateForString() {
+		return formatter2.format(getCurrentDate());
 	}
 
 	/**
@@ -45,7 +71,7 @@ public class DateTimeTools {
 	public static String getInterval(Date date) {
 		String intervalString = "";
 		// 获取时间差
-		Map<String, Integer> interval = DateTimeTools.compareTo(DateTimeTools.getCurrentDate(), date);
+		Map<String, Integer> interval = DateTimeTools.compareTo(DateTimeTools.getCurrentDateTime(), date);
 		// 根据时间先后设置人性化时间提醒
 		if (interval.get("year") >= 1) {
 			intervalString = interval.get("year") + "年前";
@@ -61,15 +87,6 @@ public class DateTimeTools {
 			intervalString = "刚刚";
 		}
 		return intervalString;
-	}
-
-	/**
-	 * 返回当前系统时间
-	 * @return String格式
-	 */
-	public static String getCurrentDateForString() {
-		Date curDate = new Date(System.currentTimeMillis());// 获取当前时间
-		return formatter.format(curDate);
 	}
 
 	/**

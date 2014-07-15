@@ -68,4 +68,5 @@ public class ImageLoaderTool {
 				.build(); // 创建配置过得DisplayImageOption对象
 		return options;
 	}
+
 }
