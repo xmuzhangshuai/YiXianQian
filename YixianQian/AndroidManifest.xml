@@ -131,8 +131,14 @@
 
         <!-- 爱情验证页面 -->
         <activity
-            android:name="com.yixianqian.ui.LoveVertifyActivity"
+            android:name=".ui.LoveVertifyActivity"
             android:label="@string/title_activity_love_vertify" >
+        </activity>
+
+        <!-- 测试页面 -->
+        <activity
+            android:name="com.yixianqian.test.TestActivity"
+            android:label="@string/title_activity_test" >
         </activity>
 
         <!-- 百度定位 -->

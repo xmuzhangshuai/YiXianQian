@@ -64,11 +64,10 @@ public class GuideActivity extends BaseActivity {
 			sharePreferenceUtil.setUseCount(++count);// 次数加1
 			finish();
 		} else {// 如果不是第一次使用,则不启动向导页面，显示欢迎页面。
-			if (false) {//如果是已经登陆过
+			if (sharePreferenceUtil.getUserLogin()) {//如果是已经登陆过
 				setContentView(R.layout.activity_guide);
 				findViewById();
 				initView();
-				finish();
 			} else {//如果用户没有登录过或者已经注销
 				startActivity(new Intent(GuideActivity.this, LoginOrRegisterActivity.class));
 				finish();
@@ -186,18 +185,11 @@ public class GuideActivity extends BaseActivity {
 	 *
 	 */
 	public class initDataBase extends AsyncTask<Void, Void, Void> {
-
 		@Override
 		protected Void doInBackground(Void... params) {
 			// TODO Auto-generated method stub
 			new CopyDataBase(GuideActivity.this).copyDataBase();// 拷贝数据库
 			return null;
 		}
-
-		@Override
-		protected void onPostExecute(Void result) {
-			// TODO Auto-generated method stub
-		}
 	}
-
 }

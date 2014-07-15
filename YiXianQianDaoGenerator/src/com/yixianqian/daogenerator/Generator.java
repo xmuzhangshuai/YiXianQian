@@ -48,15 +48,15 @@ public class Generator {
 		schoolEntity.addStringProperty("schoolName");
 		schoolEntity.addStringProperty("schoolInfo");
 		//主管部门外键
-		Property school_cometent_idProperty = schoolEntity.addLongProperty("cometentID").notNull().getProperty();
-		schoolEntity.addToOne(cometentEntity, school_cometent_idProperty);
-		ToMany cometentToSchool = cometentEntity.addToMany(schoolEntity, school_cometent_idProperty);
-		cometentToSchool.setName("schoolList");
-		//城市外键
-		Property school_city_id = schoolEntity.addLongProperty("cityID").notNull().getProperty();
-		schoolEntity.addToOne(cityEntity, school_city_id);
-		ToMany cityToSchool = cityEntity.addToMany(schoolEntity, school_city_id);
-		cityToSchool.setName("schoolList");
+				Property school_cometent_idProperty = schoolEntity.addLongProperty("cometentID").notNull().getProperty();
+				schoolEntity.addToOne(cometentEntity, school_cometent_idProperty);
+				ToMany cometentToSchool = cometentEntity.addToMany(schoolEntity, school_cometent_idProperty);
+				cometentToSchool.setName("schoolList");
+				//城市外键
+				Property school_city_id = schoolEntity.addLongProperty("cityID").notNull().getProperty();
+				schoolEntity.addToOne(cityEntity, school_city_id);
+				ToMany cityToSchool = cityEntity.addToMany(schoolEntity, school_city_id);
+				cityToSchool.setName("schoolList");
 
 		/******用户状态*****/
 		Entity userStateEntity = schema.addEntity("UserState");

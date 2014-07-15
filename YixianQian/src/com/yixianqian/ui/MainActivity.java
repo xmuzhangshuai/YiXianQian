@@ -1,6 +1,5 @@
 package com.yixianqian.ui;
 
-import android.app.AlertDialog;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTabHost;
 import android.view.View;

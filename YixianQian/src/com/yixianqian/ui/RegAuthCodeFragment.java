@@ -241,7 +241,8 @@ public class RegAuthCodeFragment extends BaseV4Fragment {
 			if (result > -1) {
 				Toast.makeText(getActivity(), "¹§Ï²Äú×¢²á³É¹¦£¡", 1).show();
 				sharePreferenceUtil.setU_id(result);
-				System.out.println(result);
+				sharePreferenceUtil.setUserLogin(true);
+				
 				Intent intent = new Intent(getActivity(), HeadImageActivity.class);
 				startActivity(intent);
 				getActivity().overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);

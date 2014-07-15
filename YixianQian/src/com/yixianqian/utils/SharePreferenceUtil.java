@@ -17,11 +17,22 @@ public class SharePreferenceUtil {
 	private SharedPreferences sp;
 	private SharedPreferences.Editor editor;
 	public static final String USER_SHAREPREFERENCE = "userSharePreference";//用户SharePreference
-	public static final String USE_COUNT = "connt";// 记录软件使用次数
+	public static final String USE_COUNT = "count";// 记录软件使用次数
+	public static final String TODAY_RECOMMEND = "today_recommend";//记录今天是否已经推荐过
 
 	public SharePreferenceUtil(Context context, String file) {
 		sp = context.getSharedPreferences(file, Context.MODE_PRIVATE);
 		editor = sp.edit();
+	}
+
+	//记录今天是否已经推荐过
+	public void setTodayRecommend(String todayString) {
+		editor.putString("today", todayString);
+		editor.commit();
+	}
+
+	public String getTodayRecommend() {
+		return sp.getString("today", "");
 	}
 
 	//记录软件使用次数
@@ -32,6 +43,16 @@ public class SharePreferenceUtil {
 
 	public int getUseCount() {
 		return sp.getInt("count", 0);
+	}
+
+	//记录用户是否登录
+	public void setUserLogin(boolean login) {
+		editor.putBoolean("login", login);
+		editor.commit();
+	}
+
+	public boolean getUserLogin() {
+		return sp.getBoolean("login", false);
 	}
 
 	//用户ID
@@ -263,14 +284,5 @@ public class SharePreferenceUtil {
 		editor.putInt(UserTable.U_SALARY, (int) u_salary);
 		editor.commit();
 	}
-
-	//	public int getU_amount() {
-	//		return u_amount;
-	//	}
-	//
-	//	public void setU_amount(int u_amount) {
-	//		editor.putInt(UserTable.U_AGE, u_age);
-	//		editor.commit();
-	//	}
 
 }
