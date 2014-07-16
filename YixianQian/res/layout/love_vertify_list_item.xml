@@ -36,8 +36,7 @@
                 android:layout_width="@dimen/get_image_btn_padding"
                 android:layout_height="@dimen/get_image_btn_padding"
                 android:layout_alignParentLeft="true"
-                android:layout_centerVertical="true"
-                android:src="@drawable/default_hedad_iamge" />
+                android:layout_centerVertical="true" />
 
             <TextView
                 android:id="@+id/name"

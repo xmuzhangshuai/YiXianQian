@@ -47,7 +47,6 @@ public class HeadImageActivity extends BaseActivity {
 	private View leftImageButton;//导航栏左侧按钮
 	private View rightImageButton;//导航栏右侧按钮
 	private ImageView headImage;// 头像
-	//	private Bitmap headBitmap;// 头像
 	private ImageView camera_image;//相机图标
 	private SharePreferenceUtil sharePreferenceUtil;
 
@@ -276,7 +275,8 @@ public class HeadImageActivity extends BaseActivity {
 	 */
 	public void uploadImage(String filePath) {
 		RequestParams params = new RequestParams();
-		int userId = sharePreferenceUtil.getU_id();
+//		int userId = sharePreferenceUtil.getU_id();
+		int userId = 8;
 		if (userId > -1) {
 			params.put(UserTable.U_ID, String.valueOf(userId));
 			try {
@@ -300,9 +300,7 @@ public class HeadImageActivity extends BaseActivity {
 					ToastTool.showShort(HeadImageActivity.this, "头像上传失败！" + errorResponse);
 				}
 			};
-			AsyncHttpClientImageSound.post(HeadImageActivity.this, "", params, responseHandler);
-			AsyncHttpClient httpClient = new AsyncHttpClient();
-			httpClient.post(HeadImageActivity.this, AsyncHttpClientImageSound.HEADIMAGE_URL, params, responseHandler);
+			AsyncHttpClientImageSound.post(HeadImageActivity.this, AsyncHttpClientImageSound.HEADIMAGE_URL, params, responseHandler);
 		}
 	}
 }

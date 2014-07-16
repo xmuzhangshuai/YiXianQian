@@ -6,10 +6,20 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 
+import com.baidu.android.pushservice.PushConstants;
+import com.baidu.android.pushservice.PushManager;
 import com.yixianqian.R;
 import com.yixianqian.base.BaseFragmentActivity;
+import com.yixianqian.config.Constants;
 import com.yixianqian.customewidget.MyAlertDialog;
 
+/**
+ * 类名称：MainActivity
+ * 类描述：主页面，包括两个Fragment，一个是聊天的Fragment，一个是个人中心的Fragment
+ * 创建人： 张帅
+ * 创建时间：2014年7月16日 下午3:25:58
+ *
+ */
 public class MainActivity extends BaseFragmentActivity {
 	private FragmentTabHost mTabHost;
 	private View indicator = null;
@@ -19,6 +29,13 @@ public class MainActivity extends BaseFragmentActivity {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_main);
+
+		//开启百度推送服务
+		PushManager.startWork(MainActivity.this, PushConstants.LOGIN_TYPE_API_KEY, Constants.Config.API_KEY);
+		// 基于地理位置推送，可以打开支持地理位置的推送的开关
+		PushManager.enableLbs(getApplicationContext());
+		//设置标签
+		PushManager.setTags(this, Constants.getTags());
 
 		findViewById();
 		initView();
@@ -76,9 +93,32 @@ public class MainActivity extends BaseFragmentActivity {
 	}
 
 	@Override
+	protected void onStart() {
+		// TODO Auto-generated method stub
+		PushManager.activityStarted(this);
+		super.onStart();
+	}
+
+	@Override
+	protected void onStop() {
+		// TODO Auto-generated method stub
+		PushManager.activityStoped(this);
+		super.onStop();
+	}
+
+	@Override
 	protected void onDestroy() {
 		// TODO Auto-generated method stub
 		super.onDestroy();
 		mTabHost = null;
+	}
+
+	/**
+	 * 初始化通知样式
+	 */
+	private void initNotification() {
+		// Push: 设置自定义的通知样式，具体API介绍见用户手册，如果想使用系统默认的可以不加这段代码
+		// 请在通知推送界面中，高级设置->通知栏样式->自定义样式，选中并且填写值：1，
+		// 与下方代码中 PushManager.setNotificationBuilder(this, 1, cBuilder)中的第二个参数对应
 	}
 }

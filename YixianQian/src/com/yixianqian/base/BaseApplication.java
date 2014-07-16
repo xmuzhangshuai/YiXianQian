@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Build;
 import android.os.StrictMode;
 
+import com.baidu.frontia.FrontiaApplication;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -41,8 +42,10 @@ public class BaseApplication extends Application {
 			StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectAll().penaltyDeath().build());
 		}
 		super.onCreate();
-
 		initImageLoader(getApplicationContext());
+		
+		//使用百度push接口
+		FrontiaApplication.initFrontiaApplication(getApplicationContext());
 
 		if (myApplication == null)
 			myApplication = this;
