@@ -19,8 +19,9 @@ public class PushMessageReceiver extends FrontiaPushMessageReceiver {
 	*/
 	@Override
 	public void onBind(Context context, int errorCode, String appid, String userId, String channelId, String requestId) {
-//		String responseString = "onBind errorCode=" + errorCode + " appid=" + appid + " userId=" + userId
-//				+ " channelId=" + channelId + " requestId=" + requestId;
+		String responseString = "onBind errorCode=" + errorCode + " appid=" + appid + " userId=" + userId
+				+ " channelId=" + channelId + " requestId=" + requestId;
+		Log.d(TAG, responseString);
 	}
 
 	/**

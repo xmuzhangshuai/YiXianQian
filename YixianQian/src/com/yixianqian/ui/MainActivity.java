@@ -39,7 +39,6 @@ public class MainActivity extends BaseFragmentActivity {
 
 		findViewById();
 		initView();
-
 	}
 
 	@Override
@@ -51,16 +50,13 @@ public class MainActivity extends BaseFragmentActivity {
 	@Override
 	protected void initView() {
 		// TODO Auto-generated method stub
-
 		mTabHost.setup(this, getSupportFragmentManager(), R.id.realtabcontent);
 
 		// 添加tab名称和图标
 		indicator = getLayoutInflater().inflate(R.layout.home_indicator, null);
 		mTabHost.addTab(mTabHost.newTabSpec("home").setIndicator(indicator), HomeFragment.class, null);
-
 		indicator = getLayoutInflater().inflate(R.layout.personal_indicator, null);
 		mTabHost.addTab(mTabHost.newTabSpec("personal").setIndicator(indicator), PersonalFragment.class, null);
-
 	}
 
 	@Override

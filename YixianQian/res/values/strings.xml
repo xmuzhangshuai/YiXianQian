@@ -22,5 +22,12 @@
     <string name="title_activity_publish_time_cap">PublishTimeCapActivity</string>
     <string name="title_activity_love_vertify">LoveVertifyActivity</string>
     <string name="title_activity_test">TestActivity</string>
+    <string name="xlistview_header_hint_normal">下拉刷新</string>
+    <string name="xlistview_header_hint_ready">释放立即刷新</string>
+    <string name="xlistview_header_hint_loading">正在刷新...</string>
+    <string name="xlistview_header_last_time">上次更新：</string>
+    <string name="xlistview_footer_hint_normal">查看更多</string>
+    <string name="xlistview_footer_hint_ready">松开载入更多</string>
+    <string name="no_chat">暂时没有新消息</string>
 
 </resources>
