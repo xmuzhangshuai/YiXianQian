@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+import org.apache.http.Header;
+
 import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
@@ -20,19 +22,16 @@ import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.lidroid.xutils.HttpUtils;
-import com.lidroid.xutils.exception.HttpException;
-import com.lidroid.xutils.http.RequestParams;
-import com.lidroid.xutils.http.ResponseInfo;
-import com.lidroid.xutils.http.callback.RequestCallBack;
-import com.lidroid.xutils.http.client.HttpRequest.HttpMethod;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.RequestParams;
+import com.loopj.android.http.TextHttpResponseHandler;
 import com.yixianqian.R;
 import com.yixianqian.base.BaseActivity;
 import com.yixianqian.table.UserTable;
-import com.yixianqian.utils.HttpUtil;
+import com.yixianqian.utils.AsyncHttpClientImageSound;
 import com.yixianqian.utils.SharePreferenceUtil;
+import com.yixianqian.utils.ToastTool;
 
 /**
  * 类名称：HeadImageActivity
@@ -108,6 +107,7 @@ public class HeadImageActivity extends BaseActivity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
+				uploadImage(photoUri.getPath());
 				Intent intent = new Intent(HeadImageActivity.this, MainActivity.class);
 				startActivity(intent);
 				overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
@@ -272,53 +272,37 @@ public class HeadImageActivity extends BaseActivity {
 
 	/**
 	 * 上传头像
+	 * @param filePath
 	 */
 	public void uploadImage(String filePath) {
-		String uploadHost = HttpUtil.BASE_URL + "UploadServlet";
 		RequestParams params = new RequestParams();
 		int userId = sharePreferenceUtil.getU_id();
 		if (userId > -1) {
-			params.addBodyParameter(UserTable.U_ID, String.valueOf(userId));
-		}
-		params.addBodyParameter(filePath.replace("/", ""), new File(filePath));
-		uploadMethod(params, uploadHost);
-	}
-
-	/**
-	 * 上传文件
-	 * 
-	 * @param params
-	 * @param uploadHost
-	 */
-	public void uploadMethod(final RequestParams params, final String uploadHost) {
-		HttpUtils http = new HttpUtils();
-		http.send(HttpMethod.POST, uploadHost, params, new RequestCallBack<String>() {
-			@Override
-			public void onStart() {
-				Toast.makeText(HeadImageActivity.this, "开始上传...", 1).show();
+			params.put(UserTable.U_ID, String.valueOf(userId));
+			try {
+				params.put(filePath.replace("/", ""), picFile);
+			} catch (FileNotFoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
 			}
-
-			@Override
-			public void onLoading(long total, long current, boolean isUploading) {
-				if (isUploading) {
-					System.out.println("upload: " + current + "/" + total);
-				} else {
-					System.out.println("reply: " + current + "/" + total);
+			TextHttpResponseHandler responseHandler = new TextHttpResponseHandler() {
+				@Override
+				public void onSuccess(int statusCode, Header[] headers, String response) {
+					// TODO Auto-generated method stub
+					if (statusCode == 200) {
+						ToastTool.showLong(HeadImageActivity.this, "头像上传成功！请等待审核");
+					}
 				}
-			}
 
-			@Override
-			public void onSuccess(ResponseInfo<String> responseInfo) {
-				Toast.makeText(HeadImageActivity.this, "头像上传成功！", 1).show();
-				// 重新更新用户内容
-				//				new GetUserTask().execute();
-			}
-
-			@Override
-			public void onFailure(HttpException error, String msg) {
-				Toast.makeText(HeadImageActivity.this, "头像上传失败！" + msg, 1).show();
-			}
-		});
+				@Override
+				public void onFailure(int statusCode, Header[] headers, String errorResponse, Throwable e) {
+					// TODO Auto-generated method stub
+					ToastTool.showShort(HeadImageActivity.this, "头像上传失败！" + errorResponse);
+				}
+			};
+			AsyncHttpClientImageSound.post(HeadImageActivity.this, "", params, responseHandler);
+			AsyncHttpClient httpClient = new AsyncHttpClient();
+			httpClient.post(HeadImageActivity.this, AsyncHttpClientImageSound.HEADIMAGE_URL, params, responseHandler);
+		}
 	}
-
 }
