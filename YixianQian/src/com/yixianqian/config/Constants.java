@@ -1,9 +1,12 @@
 package com.yixianqian.config;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Constants {
+
 	/**
 	 ******************************************* 参数设置信息结束 ******************************************
 	 */
@@ -30,4 +33,5 @@ public class Constants {
 		tList.add(Tags.FEMALE);
 		return tList;
 	}
+
 }

@@ -20,6 +20,7 @@
     <color name="red">#ff0000</color>
     <color name="unenable">#999999</color>
     <color name="unenable_font">#dbdbdb</color>
+    <color name="thirty_transparent_black">#4d000000</color>
 
     <!-- 登录或注册页面 -->
     <color name="logorreg_btn_pressed">#48D1CC</color>
