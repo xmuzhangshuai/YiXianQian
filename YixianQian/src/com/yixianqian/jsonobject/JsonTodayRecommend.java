@@ -12,17 +12,14 @@ public class JsonTodayRecommend {
 	private String userName;
 	private String userAvatar;
 	private Integer userAge;
-	private String date;
 	private Integer schoolID;
 
-	public JsonTodayRecommend(Integer userID, String userName, String userAvatar, Integer userAge, String date,
-			Integer schoolID) {
+	public JsonTodayRecommend(Integer userID, String userName, String userAvatar, Integer userAge, Integer schoolID) {
 		super();
 		this.userID = userID;
 		this.userName = userName;
 		this.userAvatar = userAvatar;
 		this.userAge = userAge;
-		this.date = date;
 		this.schoolID = schoolID;
 	}
 
@@ -56,14 +53,6 @@ public class JsonTodayRecommend {
 
 	public void setUserAge(Integer userAge) {
 		this.userAge = userAge;
-	}
-
-	public String getDate() {
-		return date;
-	}
-
-	public void setDate(String date) {
-		this.date = date;
 	}
 
 	public Integer getSchoolID() {

@@ -12,20 +12,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
 
-        <com.yixianqian.swipelistview.SwipeListView
-            xmlns:swipe="http://schemas.android.com/apk/res-auto"
+        <ListView
             android:id="@+id/recent_listview"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:divider="@null"
-            android:scrollbars="none"
-            swipe:swipeActionLeft="reveal"
-            swipe:swipeBackView="@+id/back"
-            swipe:swipeCloseAllItemsWhenMoveList="true"
-            swipe:swipeFrontView="@+id/front"
-            swipe:swipeMode="left"
-            swipe:swipeOffsetLeft="200dip"
-            swipe:swipeOpenOnLongPress="false" />
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="none" >
+        </ListView>
 
         <TextView
             android:id="@+id/empty"

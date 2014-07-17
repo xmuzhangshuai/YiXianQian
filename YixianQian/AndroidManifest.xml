@@ -138,6 +138,16 @@
             android:label="@string/title_activity_love_vertify" >
         </activity>
 
+        <!-- 聊天页面 -->
+        <activity
+            android:name=".ui.ChatActivity"
+            android:alwaysRetainTaskState="true"
+            android:configChanges="locale|keyboardHidden|orientation"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustResize" >
+        </activity>
+
         <!-- 测试页面 -->
         <activity
             android:name="com.yixianqian.test.TestActivity"

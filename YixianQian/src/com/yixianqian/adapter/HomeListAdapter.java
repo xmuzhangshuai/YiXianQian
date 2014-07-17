@@ -3,7 +3,6 @@ package com.yixianqian.adapter;
 import java.util.LinkedList;
 
 import com.yixianqian.R;
-import com.yixianqian.swipelistview.SwipeListView;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -13,18 +12,19 @@ import android.view.View.OnClickListener;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.TextView.BufferType;
 
 public class HomeListAdapter extends BaseAdapter {
 	private LayoutInflater mInflater;
 	//	private LinkedList<RecentItem> mData;
-	private SwipeListView mListView;
+	private ListView mListView;
 	//	private MessageDB mMessageDB;
 	//	private RecentDB mRecentDB;
 	private Context mContext;
 
-	public HomeListAdapter(Context context, SwipeListView listview) {
+	public HomeListAdapter(Context context, ListView listview) {
 		this.mContext = context;
 		this.mInflater = LayoutInflater.from(context);
 		this.mListView = listview;
@@ -59,17 +59,7 @@ public class HomeListAdapter extends BaseAdapter {
 		TextView numTV = (TextView) convertView.findViewById(R.id.unreadmsg);
 		TextView timeTV = (TextView) convertView.findViewById(R.id.recent_list_item_time);
 		ImageView headIV = (ImageView) convertView.findViewById(R.id.icon);
-		Button deleteBtn = (Button) convertView.findViewById(R.id.recent_del_btn);
 
-		deleteBtn.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				notifyDataSetChanged();
-				if (mListView != null)
-					mListView.closeOpenedItems();
-			}
-		});
 		return convertView;
 	}
 

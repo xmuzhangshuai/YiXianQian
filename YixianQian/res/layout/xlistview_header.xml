@@ -2,7 +2,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/coversation_bg"
     android:gravity="bottom" >
 
     <RelativeLayout
@@ -47,8 +46,8 @@
                 android:id="@+id/xlistview_header_hint_textview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/white"
-                android:text="@string/xlistview_header_hint_normal" />
+                android:text="@string/xlistview_header_hint_normal"
+                android:textColor="@color/white" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -58,8 +57,8 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/white"
                     android:text="@string/xlistview_header_last_time"
+                    android:textColor="@color/white"
                     android:textSize="12sp" />
 
                 <TextView
