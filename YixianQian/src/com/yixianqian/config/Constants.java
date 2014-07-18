@@ -34,4 +34,14 @@ public class Constants {
 		return tList;
 	}
 
+	public static class MessageType {
+		// Text
+		public static final int MESSAGE_TYPE_TEXT = 1;
+		// image
+		public static final int MESSAGE_TYPE_IMG = 2;
+		// sound
+		public static final int MESSAGE_TYPE_SOUND = 3;
+		// file
+		public static final int MESSAGE_TYPE_FILE = 4;
+	}
 }

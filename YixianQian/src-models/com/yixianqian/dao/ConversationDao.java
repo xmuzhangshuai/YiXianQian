@@ -23,7 +23,7 @@ public class ConversationDao extends AbstractDao<Conversation, Long> {
      * Can be used for QueryBuilder and for referencing column names.
     */
     public static class Properties {
-        public final static Property Id = new Property(0, long.class, "id", true, "_id");
+        public final static Property Id = new Property(0, Long.class, "id", true, "_id");
         public final static Property UserID = new Property(1, Long.class, "userID", false, "USER_ID");
         public final static Property Name = new Property(2, String.class, "name", false, "NAME");
         public final static Property SmallAvatar = new Property(3, String.class, "smallAvatar", false, "SMALL_AVATAR");
@@ -48,7 +48,7 @@ public class ConversationDao extends AbstractDao<Conversation, Long> {
     public static void createTable(SQLiteDatabase db, boolean ifNotExists) {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "'CONVERSATION' (" + //
-                "'_id' INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL ," + // 0: id
+                "'_id' INTEGER PRIMARY KEY AUTOINCREMENT ," + // 0: id
                 "'USER_ID' INTEGER," + // 1: userID
                 "'NAME' TEXT," + // 2: name
                 "'SMALL_AVATAR' TEXT," + // 3: smallAvatar
@@ -67,7 +67,11 @@ public class ConversationDao extends AbstractDao<Conversation, Long> {
     @Override
     protected void bindValues(SQLiteStatement stmt, Conversation entity) {
         stmt.clearBindings();
-        stmt.bindLong(1, entity.getId());
+ 
+        Long id = entity.getId();
+        if (id != null) {
+            stmt.bindLong(1, id);
+        }
  
         Long userID = entity.getUserID();
         if (userID != null) {
@@ -109,14 +113,14 @@ public class ConversationDao extends AbstractDao<Conversation, Long> {
     /** @inheritdoc */
     @Override
     public Long readKey(Cursor cursor, int offset) {
-        return cursor.getLong(offset + 0);
+        return cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0);
     }    
 
     /** @inheritdoc */
     @Override
     public Conversation readEntity(Cursor cursor, int offset) {
         Conversation entity = new Conversation( //
-            cursor.getLong(offset + 0), // id
+            cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
             cursor.isNull(offset + 1) ? null : cursor.getLong(offset + 1), // userID
             cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // name
             cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // smallAvatar
@@ -130,7 +134,7 @@ public class ConversationDao extends AbstractDao<Conversation, Long> {
     /** @inheritdoc */
     @Override
     public void readEntity(Cursor cursor, Conversation entity, int offset) {
-        entity.setId(cursor.getLong(offset + 0));
+        entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
         entity.setUserID(cursor.isNull(offset + 1) ? null : cursor.getLong(offset + 1));
         entity.setName(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
         entity.setSmallAvatar(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));

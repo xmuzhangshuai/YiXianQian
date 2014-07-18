@@ -12,7 +12,7 @@ import com.yixianqian.utils.SharePreferenceUtil;
  * 创建时间：2014年7月17日 下午4:01:14
  *
  */
-public class JSONMessage implements Serializable {
+public class JsonMessage implements Serializable {
 
 	/**
 	 * 
@@ -25,7 +25,7 @@ public class JSONMessage implements Serializable {
 	private String messageContent;
 	private String tag;
 
-	public JSONMessage(long time_samp, String message, String tag) {
+	public JsonMessage(long time_samp, String message, String tag) {
 		super();
 		SharePreferenceUtil util = BaseApplication.getInstance().getSpUtil();
 		this.userID = util.getU_id();

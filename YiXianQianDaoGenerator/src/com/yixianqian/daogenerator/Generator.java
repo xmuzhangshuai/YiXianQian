@@ -84,7 +84,7 @@ public class Generator {
 
 		/******对话*****/
 		Entity conversationEntity = schema.addEntity("Conversation");
-		conversationEntity.addIdProperty().notNull().autoincrement();
+		conversationEntity.addIdProperty().autoincrement();
 		conversationEntity.addLongProperty("userID");
 		conversationEntity.addStringProperty("name");
 		conversationEntity.addStringProperty("smallAvatar");
@@ -94,7 +94,7 @@ public class Generator {
 
 		/******消息元数据*****/
 		Entity messageItemEntity = schema.addEntity("MessageItem");
-		messageItemEntity.addIdProperty().notNull().autoincrement();
+		messageItemEntity.addIdProperty().autoincrement();
 		messageItemEntity.addIntProperty("messageType");
 		messageItemEntity.addStringProperty("msgContent");
 		messageItemEntity.addLongProperty("time");

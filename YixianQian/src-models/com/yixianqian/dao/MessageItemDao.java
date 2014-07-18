@@ -30,7 +30,7 @@ public class MessageItemDao extends AbstractDao<MessageItem, Long> {
      * Can be used for QueryBuilder and for referencing column names.
     */
     public static class Properties {
-        public final static Property Id = new Property(0, long.class, "id", true, "_id");
+        public final static Property Id = new Property(0, Long.class, "id", true, "_id");
         public final static Property MessageType = new Property(1, Integer.class, "messageType", false, "MESSAGE_TYPE");
         public final static Property MsgContent = new Property(2, String.class, "msgContent", false, "MSG_CONTENT");
         public final static Property Time = new Property(3, Long.class, "time", false, "TIME");
@@ -57,7 +57,7 @@ public class MessageItemDao extends AbstractDao<MessageItem, Long> {
     public static void createTable(SQLiteDatabase db, boolean ifNotExists) {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "'MESSAGE_ITEM' (" + //
-                "'_id' INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL ," + // 0: id
+                "'_id' INTEGER PRIMARY KEY AUTOINCREMENT ," + // 0: id
                 "'MESSAGE_TYPE' INTEGER," + // 1: messageType
                 "'MSG_CONTENT' TEXT," + // 2: msgContent
                 "'TIME' INTEGER," + // 3: time
@@ -77,7 +77,11 @@ public class MessageItemDao extends AbstractDao<MessageItem, Long> {
     @Override
     protected void bindValues(SQLiteStatement stmt, MessageItem entity) {
         stmt.clearBindings();
-        stmt.bindLong(1, entity.getId());
+ 
+        Long id = entity.getId();
+        if (id != null) {
+            stmt.bindLong(1, id);
+        }
  
         Integer messageType = entity.getMessageType();
         if (messageType != null) {
@@ -120,14 +124,14 @@ public class MessageItemDao extends AbstractDao<MessageItem, Long> {
     /** @inheritdoc */
     @Override
     public Long readKey(Cursor cursor, int offset) {
-        return cursor.getLong(offset + 0);
+        return cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0);
     }    
 
     /** @inheritdoc */
     @Override
     public MessageItem readEntity(Cursor cursor, int offset) {
         MessageItem entity = new MessageItem( //
-            cursor.getLong(offset + 0), // id
+            cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
             cursor.isNull(offset + 1) ? null : cursor.getInt(offset + 1), // messageType
             cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // msgContent
             cursor.isNull(offset + 3) ? null : cursor.getLong(offset + 3), // time
@@ -142,7 +146,7 @@ public class MessageItemDao extends AbstractDao<MessageItem, Long> {
     /** @inheritdoc */
     @Override
     public void readEntity(Cursor cursor, MessageItem entity, int offset) {
-        entity.setId(cursor.getLong(offset + 0));
+        entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
         entity.setMessageType(cursor.isNull(offset + 1) ? null : cursor.getInt(offset + 1));
         entity.setMsgContent(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
         entity.setTime(cursor.isNull(offset + 3) ? null : cursor.getLong(offset + 3));

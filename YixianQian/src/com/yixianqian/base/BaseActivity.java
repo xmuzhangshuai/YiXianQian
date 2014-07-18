@@ -1,7 +1,5 @@
 package com.yixianqian.base;
 
-import java.text.AttributedCharacterIterator.Attribute;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
@@ -18,10 +16,15 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 
 /**
  * 
- * 项目名称：ExamHelper 类名称：BaseActivity 类描述： 自定义的继承了Activity的抽象基类，create时添加到了栈内。
+ * 项目名称：Yixianqian
+ * 类名称：BaseActivity 
+ *  类描述： 自定义的继承了Activity的抽象基类，create时添加到了栈内。
  * 定义了项目ActionBar的基本样式 自定义了findViewById()、initView()两个抽象方法，子类中必须覆盖实现，确保代码规范
  * 自定义了几个快捷打开Activity的方法 自定义了ShowDialog方法，在Activity加载完成之前可显示 创建人：张帅
- * 创建时间：2014-1-5 上午10:17:18 修改人：张帅 修改时间：2014-1-5 上午10:17:18 修改备注：
+ * 创建时间：2014-1-5 上午10:17:18 
+ * 修改人：张帅 
+ * 修改时间：2014-1-5 上午10:17:18 
+ * 修改备注：
  * 
  * @version
  * 
@@ -46,7 +49,7 @@ public abstract class BaseActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		AppManager.getInstance().addActivity(this);
 		// PushAgent.getInstance(this).onAppStart();
-		
+
 		// 在onCreate中注册广播  
 		IntentFilter filter = new IntentFilter();
 		filter.addAction("close");

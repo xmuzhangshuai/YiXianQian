@@ -7,12 +7,17 @@ import java.util.Set;
 import com.yixianqian.R;
 import com.yixianqian.adapter.FaceAdapter;
 import com.yixianqian.adapter.FacePageAdeapter;
+import com.yixianqian.adapter.MessageAdapter;
 import com.yixianqian.base.BaseActivity;
 import com.yixianqian.base.BaseApplication;
+import com.yixianqian.config.Constants;
 import com.yixianqian.config.DefaultSetting;
 import com.yixianqian.customewidget.CirclePageIndicator;
 import com.yixianqian.customewidget.JazzyViewPager;
 import com.yixianqian.customewidget.JazzyViewPager.TransitionEffect;
+import com.yixianqian.db.ConversationDbService;
+import com.yixianqian.db.MessageItemDbService;
+import com.yixianqian.entities.MessageItem;
 import com.yixianqian.xlistview.MsgListView;
 import com.yixianqian.xlistview.MsgListView.IXListViewListener;
 
@@ -22,13 +27,14 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.text.Editable;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextWatcher;
 import android.text.style.ImageSpan;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -67,6 +73,17 @@ public class ChatActivity extends BaseActivity implements OnTouchListener, IXLis
 	private int currentPage = 0;//当前表情页
 	private List<String> keys;
 	private BaseApplication baseApplication;
+	private long conversationID;//对话ID
+	private MessageAdapter adapter;//消息适配器
+	private ConversationDbService conversationDbService;
+	private MessageItemDbService messageItemDbService;
+	private static int MsgPagerNum;//消息页数
+
+	private Handler handler = new Handler() {
+		public void handleMessage(Message msg) {
+
+		};
+	};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -74,9 +91,11 @@ public class ChatActivity extends BaseActivity implements OnTouchListener, IXLis
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.chat_main);
 
+		conversationID = getIntent().getLongExtra("conversationID", (long) -1);
+
 		findViewById();
-		initView();
 		initData();
+		initView();
 		initFacePage();
 	}
 
@@ -118,8 +137,8 @@ public class ChatActivity extends BaseActivity implements OnTouchListener, IXLis
 		mMsgListView.setOnTouchListener(this);
 		mMsgListView.setPullLoadEnable(false);
 		mMsgListView.setXListViewListener(this);
-		//		mMsgListView.setAdapter(adapter);
-		//		mMsgListView.setSelection(adapter.getCount() - 1);
+		mMsgListView.setAdapter(adapter);
+		mMsgListView.setSelection(adapter.getCount() - 1);
 		topNavLeftBtn.setOnClickListener(this);
 
 		msgEt.setOnKeyListener(new OnKeyListener() {
@@ -171,6 +190,20 @@ public class ChatActivity extends BaseActivity implements OnTouchListener, IXLis
 		Set<String> keySet = baseApplication.getFaceMap().keySet();
 		keys = new ArrayList<String>();
 		keys.addAll(keySet);
+		MsgPagerNum = 0;
+		conversationDbService = ConversationDbService.getInstance(ChatActivity.this);
+		messageItemDbService = MessageItemDbService.getInstance(ChatActivity.this);
+		adapter = new MessageAdapter(this, initMsgData(), conversationDbService.conversationDao.load(conversationID));
+	}
+
+	/**
+	 * 加载消息历史，从数据库中读出
+	 */
+	private List<MessageItem> initMsgData() {
+		List<MessageItem> msgList = new ArrayList<MessageItem>();
+		ConversationDbService conversationDbService = ConversationDbService.getInstance(ChatActivity.this);
+		msgList = conversationDbService.getMsgItemListByConId(conversationID);
+		return msgList;
 	}
 
 	/**
@@ -333,12 +366,12 @@ public class ChatActivity extends BaseActivity implements OnTouchListener, IXLis
 	@Override
 	public void onRefresh() {
 		// TODO Auto-generated method stub
-		//		MsgPagerNum++;
-		//		List<MessageItem> msgList = initMsgData();
-		//		int position = adapter.getCount();
-		//		adapter.setMessageList(msgList);
-		//		mMsgListView.stopRefresh();
-		//		mMsgListView.setSelection(adapter.getCount() - position - 1);
+		MsgPagerNum++;
+		List<MessageItem> msgList = initMsgData();
+		int position = adapter.getCount();
+		adapter.setMessageList(msgList);
+		mMsgListView.stopRefresh();
+		mMsgListView.setSelection(adapter.getCount() - position - 1);
 	}
 
 	@Override
@@ -368,18 +401,18 @@ public class ChatActivity extends BaseActivity implements OnTouchListener, IXLis
 			break;
 		case R.id.send_btn:// 发送消息
 			String msg = msgEt.getText().toString();
-			//			MessageItem item = new MessageItem(MessageItem.MESSAGE_TYPE_TEXT, mSpUtil.getNick(),
-			//					System.currentTimeMillis(), msg, mSpUtil.getHeadIcon(), false, 0);
-			//			adapter.upDateMsg(item);
-			//			mMsgListView.setSelection(adapter.getCount() - 1);
-			//			mMsgDB.saveMsg(mFromUser.getUserId(), item);
-			//			msgEt.setText("");
+			MessageItem item = new MessageItem(null, Constants.MessageType.MESSAGE_TYPE_TEXT, msg,
+					System.currentTimeMillis(), true, false, false, conversationID);
+			adapter.upDateMsg(item);
+			mMsgListView.setSelection(adapter.getCount() - 1);
+			messageItemDbService.messageItemDao.insert(item);
+			msgEt.setText("");
 			//			com.way.bean.Message msgItem = new com.way.bean.Message(System.currentTimeMillis(), msg, "");
 			//			new SendMsgAsyncTask(mGson.toJson(msgItem), mFromUser.getUserId()).send();
 			//			RecentItem recentItem = new RecentItem(mFromUser.getUserId(), mFromUser.getHeadIcon(), mFromUser.getNick(),
 			//					msg, 0, System.currentTimeMillis());
 			//			mRecentDB.saveRecent(recentItem);
-			//			break;
+			break;
 		case R.id.nav_left_btn:
 			finish();
 			break;

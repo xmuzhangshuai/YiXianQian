@@ -74,6 +74,7 @@ public class HomeFragment extends BaseV4Fragment {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				// TODO Auto-generated method stub
 				Intent toChatIntent = new Intent(getActivity(), ChatActivity.class);
+				toChatIntent.putExtra("conversationID", (long)1);
 				startActivity(toChatIntent);
 				getActivity().overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
 			}

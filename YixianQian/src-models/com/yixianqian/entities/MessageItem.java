@@ -15,7 +15,7 @@ import com.yixianqian.dao.MessageItemDao;
  */
 public class MessageItem {
 
-    private long id;
+    private Long id;
     private Integer messageType;
     private String msgContent;
     private Long time;
@@ -40,11 +40,11 @@ public class MessageItem {
     public MessageItem() {
     }
 
-    public MessageItem(long id) {
+    public MessageItem(Long id) {
         this.id = id;
     }
 
-    public MessageItem(long id, Integer messageType, String msgContent, Long time, Boolean sendState, Boolean isCome, Boolean isNew, long conversationID) {
+    public MessageItem(Long id, Integer messageType, String msgContent, Long time, Boolean sendState, Boolean isCome, Boolean isNew, long conversationID) {
         this.id = id;
         this.messageType = messageType;
         this.msgContent = msgContent;
@@ -61,11 +61,11 @@ public class MessageItem {
         myDao = daoSession != null ? daoSession.getMessageItemDao() : null;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

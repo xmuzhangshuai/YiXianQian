@@ -12,6 +12,7 @@
     <color name="dark_gray">#666666</color> <!-- 系统灰色 -->
     <color name="system_blue">#0099CC</color> <!-- 系统蓝色 -->
     <color name="alert_dialog_blue">#0476F0</color> <!-- 对话框字体颜色 -->
+    <color name="semi_transparent_w">#7fffffff</color>
     <color name="top_nav_black">#333333</color>
     <color name="top_nav_blue">#5EA0D3</color>
     <color name="top_nav_blue_dark">#4F94CD</color>

@@ -16,7 +16,7 @@ import com.yixianqian.dao.MessageItemDao;
  */
 public class Conversation {
 
-    private long id;
+    private Long id;
     private Long userID;
     private String name;
     private String smallAvatar;
@@ -38,11 +38,11 @@ public class Conversation {
     public Conversation() {
     }
 
-    public Conversation(long id) {
+    public Conversation(Long id) {
         this.id = id;
     }
 
-    public Conversation(long id, Long userID, String name, String smallAvatar, String lastMessage, Integer newNum, Long time) {
+    public Conversation(Long id, Long userID, String name, String smallAvatar, String lastMessage, Integer newNum, Long time) {
         this.id = id;
         this.userID = userID;
         this.name = name;
@@ -58,11 +58,11 @@ public class Conversation {
         myDao = daoSession != null ? daoSession.getConversationDao() : null;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
