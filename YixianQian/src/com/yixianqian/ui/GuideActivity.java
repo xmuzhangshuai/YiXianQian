@@ -23,6 +23,7 @@ import com.yixianqian.R;
 import com.yixianqian.base.BaseActivity;
 import com.yixianqian.config.DefaultKeys;
 import com.yixianqian.db.CopyDataBase;
+import com.yixianqian.db.SchoolDbService;
 import com.yixianqian.table.UserTable;
 import com.yixianqian.utils.DateTimeTools;
 import com.yixianqian.utils.SharePreferenceUtil;
@@ -67,6 +68,8 @@ public class GuideActivity extends BaseActivity {
 			startActivity(new Intent(GuideActivity.this, GuidePagerActivity.class));
 			// 第一次运行拷贝数据库文件
 			new initDataBase().execute();
+//			SchoolDbService schoolDbService = SchoolDbService.getInstance(this);
+//			schoolDbService.schoolDao.loadAll();
 			sharePreferenceUtil.setUseCount(++count);// 次数加1
 			//			finish();不定位
 		} else {// 如果不是第一次使用,则不启动向导页面，显示欢迎页面。

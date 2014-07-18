@@ -18,6 +18,7 @@ import com.yixianqian.config.Constants.Config;
 import com.yixianqian.dao.DaoMaster;
 import com.yixianqian.dao.DaoMaster.OpenHelper;
 import com.yixianqian.dao.DaoSession;
+import com.yixianqian.utils.SharePreferenceUtil;
 
 /**   
  *    
@@ -37,6 +38,8 @@ public class BaseApplication extends Application {
 	private static DaoMaster daoMaster;
 	private static DaoSession daoSession;
 	private Map<String, Integer> mFaceMap = new LinkedHashMap<String, Integer>();
+	private SharePreferenceUtil mSpUtil;
+	public static final String SP_FILE_NAME = "push_msg_sp";
 
 	public synchronized static BaseApplication getInstance() {
 		return myApplication;
@@ -59,6 +62,12 @@ public class BaseApplication extends Application {
 
 		if (myApplication == null)
 			myApplication = this;
+	}
+
+	public synchronized SharePreferenceUtil getSpUtil() {
+		if (mSpUtil == null)
+			mSpUtil = new SharePreferenceUtil(this, SP_FILE_NAME);
+		return mSpUtil;
 	}
 
 	/** 

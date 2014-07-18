@@ -36,23 +36,23 @@ public class SharePreferenceUtil {
 	}
 
 	//记录软件使用次数
+	public int getUseCount() {
+		return sp.getInt("count", 0);
+	}
+
 	public void setUseCount(int count) {
 		editor.putInt("count", count);
 		editor.commit();
 	}
 
-	public int getUseCount() {
-		return sp.getInt("count", 0);
+	//记录用户是否登录
+	public boolean getUserLogin() {
+		return sp.getBoolean("login", false);
 	}
 
-	//记录用户是否登录
 	public void setUserLogin(boolean login) {
 		editor.putBoolean("login", login);
 		editor.commit();
-	}
-
-	public boolean getUserLogin() {
-		return sp.getBoolean("login", false);
 	}
 
 	//用户ID
@@ -62,6 +62,26 @@ public class SharePreferenceUtil {
 
 	public void setU_id(int u_id) {
 		editor.putInt(UserTable.U_ID, u_id);
+		editor.commit();
+	}
+
+	//百度推送userID
+	public String getBpush_UserID() {
+		return sp.getString(UserTable.U_BPUSH_USER_ID, "");
+	}
+
+	public void setBpush_UserID(String u_id) {
+		editor.putString(UserTable.U_BPUSH_USER_ID, u_id);
+		editor.commit();
+	}
+
+	//百度推送ChannelID
+	public String getBpush_ChannelID() {
+		return sp.getString(UserTable.U_BPUSH_CHANNEL_ID, "");
+	}
+
+	public void setBpush_ChannelID(String u_id) {
+		editor.putString(UserTable.U_BPUSH_CHANNEL_ID, u_id);
 		editor.commit();
 	}
 

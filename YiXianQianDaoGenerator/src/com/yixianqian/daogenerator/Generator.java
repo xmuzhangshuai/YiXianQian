@@ -81,6 +81,31 @@ public class Generator {
 		todayRecommendEntity.addToOne(schoolEntity, todayRecommend_school);
 		ToMany schoolToTodayRecommend = schoolEntity.addToMany(todayRecommendEntity, todayRecommend_school);
 		schoolToTodayRecommend.setName("recommendList");
+
+		/******对话*****/
+		Entity conversationEntity = schema.addEntity("Conversation");
+		conversationEntity.addIdProperty().notNull().autoincrement();
+		conversationEntity.addLongProperty("userID");
+		conversationEntity.addStringProperty("name");
+		conversationEntity.addStringProperty("smallAvatar");
+		conversationEntity.addStringProperty("lastMessage");
+		conversationEntity.addIntProperty("newNum");
+		conversationEntity.addLongProperty("time");
+
+		/******消息元数据*****/
+		Entity messageItemEntity = schema.addEntity("MessageItem");
+		messageItemEntity.addIdProperty().notNull().autoincrement();
+		messageItemEntity.addIntProperty("messageType");
+		messageItemEntity.addStringProperty("msgContent");
+		messageItemEntity.addLongProperty("time");
+		messageItemEntity.addBooleanProperty("sendState");
+		messageItemEntity.addBooleanProperty("isCome");
+		messageItemEntity.addBooleanProperty("isNew");
+		//对话外键
+		Property messageItem_conversation = messageItemEntity.addLongProperty("conversationID").notNull().getProperty();
+		messageItemEntity.addToOne(conversationEntity, messageItem_conversation);
+		ToMany conversationToMessageItem = conversationEntity.addToMany(messageItemEntity, messageItem_conversation);
+		conversationToMessageItem.setName("messageItemList");
 	}
 
 }
