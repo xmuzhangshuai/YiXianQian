@@ -48,7 +48,6 @@ public class HeadImageActivity extends BaseActivity {
 	private View rightImageButton;//导航栏右侧按钮
 	private ImageView headImage;// 头像
 	private ImageView camera_image;//相机图标
-	private SharePreferenceUtil sharePreferenceUtil;
 
 	private File picFile;
 	private Uri photoUri;
@@ -61,7 +60,6 @@ public class HeadImageActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_head_image);
-		sharePreferenceUtil = new SharePreferenceUtil(this, SharePreferenceUtil.USER_SHAREPREFERENCE);
 
 		findViewById();
 		initView();
@@ -275,7 +273,7 @@ public class HeadImageActivity extends BaseActivity {
 	 */
 	public void uploadImage(String filePath) {
 		RequestParams params = new RequestParams();
-//		int userId = sharePreferenceUtil.getU_id();
+		//		int userId = sharePreferenceUtil.getU_id();
 		int userId = 8;
 		if (userId > -1) {
 			params.put(UserTable.U_ID, String.valueOf(userId));
@@ -300,7 +298,8 @@ public class HeadImageActivity extends BaseActivity {
 					ToastTool.showShort(HeadImageActivity.this, "头像上传失败！" + errorResponse);
 				}
 			};
-			AsyncHttpClientImageSound.post(HeadImageActivity.this, AsyncHttpClientImageSound.HEADIMAGE_URL, params, responseHandler);
+			AsyncHttpClientImageSound.post(HeadImageActivity.this, AsyncHttpClientImageSound.HEADIMAGE_URL, params,
+					responseHandler);
 		}
 	}
 }

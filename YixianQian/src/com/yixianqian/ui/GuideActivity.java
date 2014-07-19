@@ -21,12 +21,13 @@ import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.TextHttpResponseHandler;
 import com.yixianqian.R;
 import com.yixianqian.base.BaseActivity;
+import com.yixianqian.base.BaseApplication;
 import com.yixianqian.config.DefaultKeys;
 import com.yixianqian.db.CopyDataBase;
-import com.yixianqian.db.SchoolDbService;
 import com.yixianqian.table.UserTable;
 import com.yixianqian.utils.DateTimeTools;
 import com.yixianqian.utils.SharePreferenceUtil;
+import com.yixianqian.utils.UserPreference;
 
 /**
  * 类名称：GuideActivity
@@ -48,6 +49,7 @@ public class GuideActivity extends BaseActivity {
 	public SharedPreferences locationPreferences;// 记录用户位置
 	SharedPreferences.Editor locationEditor;
 	private SharePreferenceUtil sharePreferenceUtil;
+	private UserPreference userPreference;
 	private String province;//省份
 	private String city;//城市
 	private String detailLocation;//详细地址
@@ -60,6 +62,7 @@ public class GuideActivity extends BaseActivity {
 		// 获取启动的次数
 		sharePreferenceUtil = new SharePreferenceUtil(this, SharePreferenceUtil.USE_COUNT);
 		int count = sharePreferenceUtil.getUseCount();
+		userPreference = BaseApplication.getInstance().getUserPreference();
 
 		//获取定位
 		initLocation();
@@ -68,12 +71,12 @@ public class GuideActivity extends BaseActivity {
 			startActivity(new Intent(GuideActivity.this, GuidePagerActivity.class));
 			// 第一次运行拷贝数据库文件
 			new initDataBase().execute();
-//			SchoolDbService schoolDbService = SchoolDbService.getInstance(this);
-//			schoolDbService.schoolDao.loadAll();
+			//			SchoolDbService schoolDbService = SchoolDbService.getInstance(this);
+			//			schoolDbService.schoolDao.loadAll();
 			sharePreferenceUtil.setUseCount(++count);// 次数加1
 			//			finish();不定位
 		} else {// 如果不是第一次使用,则不启动向导页面，显示欢迎页面。
-			if (sharePreferenceUtil.getUserLogin()) {//如果是已经登陆过
+			if (userPreference.getUserLogin()) {//如果是已经登陆过
 				setContentView(R.layout.activity_guide);
 				findViewById();
 				initView();
@@ -145,7 +148,7 @@ public class GuideActivity extends BaseActivity {
 		//如果没有推荐过
 		if (!sharePreferenceUtil.getTodayRecommend().equals(DateTimeTools.getCurrentDateForString())) {
 			RequestParams params = new RequestParams();
-			params.put(UserTable.U_ID, sharePreferenceUtil.getU_id());
+			params.put(UserTable.U_ID, userPreference.getU_id());
 			TextHttpResponseHandler responseHandler = new TextHttpResponseHandler("utf-8") {
 
 				@Override

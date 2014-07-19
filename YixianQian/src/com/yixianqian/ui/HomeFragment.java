@@ -13,9 +13,15 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.baidu.location.f;
 import com.yixianqian.R;
 import com.yixianqian.adapter.HomeListAdapter;
+import com.yixianqian.base.BaseApplication;
 import com.yixianqian.base.BaseV4Fragment;
+import com.yixianqian.db.ConversationDbService;
+import com.yixianqian.entities.Conversation;
+import com.yixianqian.utils.FriendPreference;
 
 /**
  * 类名称：HomeFragment 类描述：主页 创建人： 张帅 创建时间：2014年7月4日 下午5:18:18
@@ -29,13 +35,17 @@ public class HomeFragment extends BaseV4Fragment {
 	private ListView mHomeListView;
 	private TextView mEmpty;
 	private HomeListAdapter mAdapter;
+	private FriendPreference friendPreference;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		rootView = inflater.inflate(R.layout.fragment_home, container, false);
+		friendPreference = BaseApplication.getInstance().getFriendPreference();
 		findViewById();// 初始化views
 		initView();
+
+		initFriend();
 
 		mAdapter = new HomeListAdapter(getActivity(), mHomeListView);
 		mHomeListView.setAdapter(mAdapter);
@@ -74,11 +84,28 @@ public class HomeFragment extends BaseV4Fragment {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				// TODO Auto-generated method stub
 				Intent toChatIntent = new Intent(getActivity(), ChatActivity.class);
-				toChatIntent.putExtra("conversationID", (long)1);
+				toChatIntent.putExtra("conversationID", (long) 1);
 				startActivity(toChatIntent);
 				getActivity().overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
 			}
 		});
+	}
+
+	private void initFriend() {
+
+		//		friendPreference.setBpush_ChannelID("4457033861276219312");
+		//		friendPreference.setBpush_UserID("986694129147131648");
+		//		friendPreference.setAppID("3076853");
+		friendPreference.setBpush_ChannelID("3979551606421135105");
+		friendPreference.setBpush_UserID("607397228778822055");
+		friendPreference.setAppID("3076853");
+		friendPreference.setF_nickname("思恭");
+		friendPreference.setF_large_avatar("http://99touxiang.com/public/upload/nansheng/83/06-032643_657.jpg");
+		friendPreference.setF_small_avatar("http://99touxiang.com/public/upload/nansheng/83/06-032643_657.jpg");
+		ConversationDbService conversationDbService = ConversationDbService.getInstance(getActivity());
+		Conversation conversation = new Conversation(null, new Long(1), "思恭", friendPreference.getF_small_avatar(),
+				"啦啦啦", 3, System.currentTimeMillis());
+		conversationDbService.conversationDao.insert(conversation);
 	}
 
 	/**

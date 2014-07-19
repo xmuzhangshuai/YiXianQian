@@ -3,7 +3,7 @@ package com.yixianqian.jsonobject;
 import java.io.Serializable;
 
 import com.yixianqian.base.BaseApplication;
-import com.yixianqian.utils.SharePreferenceUtil;
+import com.yixianqian.utils.UserPreference;
 
 /**
  * ¿‡√˚≥∆£∫JSONMessage
@@ -27,7 +27,7 @@ public class JsonMessage implements Serializable {
 
 	public JsonMessage(long time_samp, String message, String tag) {
 		super();
-		SharePreferenceUtil util = BaseApplication.getInstance().getSpUtil();
+		UserPreference util = BaseApplication.getInstance().getUserPreference();
 		this.userID = util.getU_id();
 		this.bpushUserID = util.getBpush_UserID();
 		this.bphshChannelID = util.getBpush_ChannelID();

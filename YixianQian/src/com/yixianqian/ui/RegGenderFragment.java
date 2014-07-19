@@ -12,8 +12,9 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.yixianqian.R;
+import com.yixianqian.base.BaseApplication;
 import com.yixianqian.base.BaseV4Fragment;
-import com.yixianqian.utils.SharePreferenceUtil;
+import com.yixianqian.utils.UserPreference;
 
 /**
  * 类名称：RegGenderFragment
@@ -36,14 +37,14 @@ public class RegGenderFragment extends BaseV4Fragment implements OnCheckedChange
 
 	private boolean mIsSingle;
 	private String gender;
-	private SharePreferenceUtil sharePreferenceUtil;
+	private UserPreference userPreference;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		rootView = inflater.inflate(R.layout.fragment_reg_gender, container, false);
-
-		sharePreferenceUtil = new SharePreferenceUtil(getActivity(), SharePreferenceUtil.USER_SHAREPREFERENCE);
+		userPreference = BaseApplication.getInstance().getUserPreference();
+		
 		findViewById();// 初始化views
 		initView();
 		return rootView;
@@ -112,9 +113,9 @@ public class RegGenderFragment extends BaseV4Fragment implements OnCheckedChange
 			cancel = true;
 			rightImageButton.setEnabled(false);
 		} else if (mSingleView.isChecked()) {
-			sharePreferenceUtil.setU_stateid(4);
+			userPreference.setU_stateid(4);
 		} else if (mLoveView.isChecked()) {
-			sharePreferenceUtil.setU_stateid(2);
+			userPreference.setU_stateid(2);
 		}
 
 		//检查是否选性别
@@ -122,9 +123,9 @@ public class RegGenderFragment extends BaseV4Fragment implements OnCheckedChange
 			cancel = true;
 			rightImageButton.setEnabled(false);
 		} else if (mMale.isChecked()) {
-			sharePreferenceUtil.setU_gender("男");
+			userPreference.setU_gender("男");
 		} else if (mFemale.isChecked()) {
-			sharePreferenceUtil.setU_gender("女");
+			userPreference.setU_gender("女");
 		}
 
 		if (!cancel) {

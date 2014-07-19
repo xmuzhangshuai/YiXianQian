@@ -18,12 +18,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.yixianqian.R;
+import com.yixianqian.base.BaseApplication;
 import com.yixianqian.base.BaseV4Fragment;
 import com.yixianqian.config.DefaultKeys;
 import com.yixianqian.table.UserTable;
 import com.yixianqian.utils.HttpUtil;
 import com.yixianqian.utils.SIMCardInfo;
-import com.yixianqian.utils.SharePreferenceUtil;
+import com.yixianqian.utils.UserPreference;
 
 /**
  * 类名称：RegPhoneFragment
@@ -41,7 +42,7 @@ public class RegPhoneFragment extends BaseV4Fragment {
 	private EditText mPhoneView;//手机号
 	private EditText mPasswordView;//密码
 	private EditText mConformPassView;//确认密码
-	private SharePreferenceUtil sharePreferenceUtil;
+	private UserPreference userPreference;
 
 	private String mPhone;
 	private String mPassword;
@@ -54,7 +55,7 @@ public class RegPhoneFragment extends BaseV4Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		rootView = inflater.inflate(R.layout.fragment_reg_phone, container, false);
-		sharePreferenceUtil = new SharePreferenceUtil(getActivity(), SharePreferenceUtil.USER_SHAREPREFERENCE);
+		userPreference = BaseApplication.getInstance().getUserPreference();
 
 		findViewById();// 初始化views
 		initView();
@@ -191,8 +192,8 @@ public class RegPhoneFragment extends BaseV4Fragment {
 			focusView.requestFocus();
 		} else {
 			// 没有错误，则注册
-			sharePreferenceUtil.setU_tel(mPhone);
-			sharePreferenceUtil.setU_password(mPassword);
+			userPreference.setU_tel(mPhone);
+			userPreference.setU_password(mPassword);
 
 			RegAuthCodeFragment fragment = new RegAuthCodeFragment();
 			FragmentTransaction transaction = getFragmentManager().beginTransaction();

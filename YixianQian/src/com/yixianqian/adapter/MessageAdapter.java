@@ -26,7 +26,7 @@ import com.yixianqian.entities.Conversation;
 import com.yixianqian.entities.MessageItem;
 import com.yixianqian.utils.DateTimeTools;
 import com.yixianqian.utils.ImageLoaderTool;
-import com.yixianqian.utils.SharePreferenceUtil;
+import com.yixianqian.utils.UserPreference;
 
 /**
  * ¿‡√˚≥∆£∫MessageAdapter
@@ -41,7 +41,7 @@ public class MessageAdapter extends BaseAdapter {
 	private Context mContext;
 	private LayoutInflater mInflater;
 	private List<MessageItem> mMsgList;
-	private SharePreferenceUtil mSpUtil;
+	private UserPreference userPreference;
 	private ImageLoader imageLoader;
 	private Conversation conversation;
 
@@ -50,7 +50,7 @@ public class MessageAdapter extends BaseAdapter {
 		this.mContext = context;
 		mMsgList = msgList;
 		mInflater = LayoutInflater.from(context);
-		mSpUtil = BaseApplication.getInstance().getSpUtil();
+		userPreference = BaseApplication.getInstance().getUserPreference();
 		imageLoader = ImageLoader.getInstance();
 		this.conversation = conversation;
 	}
@@ -122,7 +122,8 @@ public class MessageAdapter extends BaseAdapter {
 						ImageLoaderTool.getHeadImageOptions(10));
 			}
 		} else {
-			imageLoader.displayImage(mSpUtil.getU_small_avatar(), holder.head, ImageLoaderTool.getHeadImageOptions(10));
+			imageLoader.displayImage(userPreference.getU_small_avatar(), holder.head,
+					ImageLoaderTool.getHeadImageOptions(10));
 		}
 
 		holder.msg.setText(convertNormalStringToSpannableString(item.getMsgContent()), BufferType.SPANNABLE);

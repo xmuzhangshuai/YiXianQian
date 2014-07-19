@@ -1,9 +1,7 @@
 package com.yixianqian.config;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 public class Constants {
 
@@ -13,6 +11,10 @@ public class Constants {
 
 	public static class Config {
 		public static final boolean DEVELOPER_MODE = false;
+
+	}
+
+	public static class BaiduPushConfig {
 		public final static String API_KEY = "bcB8dCkZh0GVtMTdpyTTabj3";
 		public final static String SECRIT_KEY = "y75ge4lbEEGth1nwbTveiGr7yHARKnm2";
 	}

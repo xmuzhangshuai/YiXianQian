@@ -4,7 +4,9 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import android.app.Application;
+import android.app.NotificationManager;
 import android.content.Context;
+import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.StrictMode;
 
@@ -14,11 +16,14 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.yixianqian.R;
+import com.yixianqian.baidupush.BaiduPush;
+import com.yixianqian.config.Constants;
 import com.yixianqian.config.Constants.Config;
 import com.yixianqian.dao.DaoMaster;
 import com.yixianqian.dao.DaoMaster.OpenHelper;
 import com.yixianqian.dao.DaoSession;
-import com.yixianqian.utils.SharePreferenceUtil;
+import com.yixianqian.utils.FriendPreference;
+import com.yixianqian.utils.UserPreference;
 
 /**   
  *    
@@ -38,8 +43,11 @@ public class BaseApplication extends Application {
 	private static DaoMaster daoMaster;
 	private static DaoSession daoSession;
 	private Map<String, Integer> mFaceMap = new LinkedHashMap<String, Integer>();
-	private SharePreferenceUtil mSpUtil;
-	public static final String SP_FILE_NAME = "push_msg_sp";
+	private FriendPreference friendSharePreference;
+	private UserPreference userPreference;
+	private MediaPlayer messagePlayer;
+	private BaiduPush mBaiduPushServer;
+	private NotificationManager mNotificationManager;
 
 	public synchronized static BaseApplication getInstance() {
 		return myApplication;
@@ -56,6 +64,7 @@ public class BaseApplication extends Application {
 		super.onCreate();
 		initImageLoader(getApplicationContext());
 		initFaceMap();
+		initDate();
 
 		//使用百度push接口
 		FrontiaApplication.initFrontiaApplication(getApplicationContext());
@@ -64,10 +73,49 @@ public class BaseApplication extends Application {
 			myApplication = this;
 	}
 
-	public synchronized SharePreferenceUtil getSpUtil() {
-		if (mSpUtil == null)
-			mSpUtil = new SharePreferenceUtil(this, SP_FILE_NAME);
-		return mSpUtil;
+	private void initDate() {
+		mBaiduPushServer = new BaiduPush(BaiduPush.HTTP_METHOD_POST, Constants.BaiduPushConfig.SECRIT_KEY,
+				Constants.BaiduPushConfig.API_KEY);
+		friendSharePreference = new FriendPreference(this);
+		userPreference = new UserPreference(this);
+		messagePlayer = MediaPlayer.create(this, R.raw.office);
+		mNotificationManager = (NotificationManager) getSystemService(android.content.Context.NOTIFICATION_SERVICE);
+	}
+
+	public NotificationManager getNotificationManager() {
+		if (mNotificationManager == null)
+			mNotificationManager = (NotificationManager) getSystemService(android.content.Context.NOTIFICATION_SERVICE);
+		return mNotificationManager;
+	}
+
+	/**
+	 * 返回消息提示声音
+	 * @return
+	 */
+	public synchronized MediaPlayer getMessagePlayer() {
+		if (messagePlayer == null)
+			messagePlayer = MediaPlayer.create(this, R.raw.office);
+		return messagePlayer;
+	}
+
+	public synchronized FriendPreference getFriendPreference() {
+		if (friendSharePreference == null)
+			friendSharePreference = new FriendPreference(this);
+		return friendSharePreference;
+	}
+
+	public synchronized UserPreference getUserPreference() {
+		if (userPreference == null)
+			userPreference = new UserPreference(this);
+		return userPreference;
+	}
+
+	public synchronized BaiduPush getBaiduPush() {
+		if (mBaiduPushServer == null)
+			mBaiduPushServer = new BaiduPush(BaiduPush.HTTP_METHOD_POST, Constants.BaiduPushConfig.SECRIT_KEY,
+					Constants.BaiduPushConfig.API_KEY);
+		return mBaiduPushServer;
+
 	}
 
 	/** 

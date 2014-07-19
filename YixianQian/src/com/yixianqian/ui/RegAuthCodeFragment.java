@@ -23,11 +23,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.yixianqian.R;
+import com.yixianqian.base.BaseApplication;
 import com.yixianqian.base.BaseV4Fragment;
 import com.yixianqian.config.DefaultSetting;
 import com.yixianqian.table.UserTable;
 import com.yixianqian.utils.HttpUtil;
 import com.yixianqian.utils.SharePreferenceUtil;
+import com.yixianqian.utils.UserPreference;
 
 /**
  * 类名称：AuthCodeActivity
@@ -46,7 +48,7 @@ public class RegAuthCodeFragment extends BaseV4Fragment {
 	private Button authCodeButton;
 	private EditText authCode;
 	private Timer timer;
-	private SharePreferenceUtil sharePreferenceUtil;
+	private UserPreference userPreference;
 
 	/**
 	 * 用户注册异步任务
@@ -57,7 +59,7 @@ public class RegAuthCodeFragment extends BaseV4Fragment {
 	public void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		sharePreferenceUtil = new SharePreferenceUtil(getActivity(), SharePreferenceUtil.USER_SHAREPREFERENCE);
+		userPreference = BaseApplication.getInstance().getUserPreference();
 	}
 
 	@Override
@@ -212,14 +214,14 @@ public class RegAuthCodeFragment extends BaseV4Fragment {
 			try {
 				String url = "adduser";
 				Map<String, String> map = new HashMap<String, String>();
-				map.put(UserTable.U_TEL, sharePreferenceUtil.getU_tel());
-				map.put(UserTable.U_PASSWORD, sharePreferenceUtil.getU_password());
-				map.put(UserTable.U_STATEID, String.valueOf(sharePreferenceUtil.getU_stateid()));
-				map.put(UserTable.U_GENDER, sharePreferenceUtil.getU_gender());
-				map.put(UserTable.U_SCHOOLID, String.valueOf(sharePreferenceUtil.getU_schoolid()));
-				map.put(UserTable.U_CITYID, String.valueOf(sharePreferenceUtil.getU_cityid()));
-				map.put(UserTable.U_PROVINCEID, String.valueOf(sharePreferenceUtil.getU_provinceid()));
-				map.put(UserTable.U_ADDRESS, sharePreferenceUtil.getU_address());
+				map.put(UserTable.U_TEL, userPreference.getU_tel());
+				map.put(UserTable.U_PASSWORD, userPreference.getU_password());
+				map.put(UserTable.U_STATEID, String.valueOf(userPreference.getU_stateid()));
+				map.put(UserTable.U_GENDER, userPreference.getU_gender());
+				map.put(UserTable.U_SCHOOLID, String.valueOf(userPreference.getU_schoolid()));
+				map.put(UserTable.U_CITYID, String.valueOf(userPreference.getU_cityid()));
+				map.put(UserTable.U_PROVINCEID, String.valueOf(userPreference.getU_provinceid()));
+				map.put(UserTable.U_ADDRESS, userPreference.getU_address());
 
 				// 注册
 				String result = HttpUtil.postRequest(url, map);
@@ -240,9 +242,9 @@ public class RegAuthCodeFragment extends BaseV4Fragment {
 
 			if (result > -1) {
 				Toast.makeText(getActivity(), "恭喜您注册成功！", 1).show();
-				sharePreferenceUtil.setU_id(result);
-				sharePreferenceUtil.setUserLogin(true);
-				
+				userPreference.setU_id(result);
+				userPreference.setUserLogin(true);
+
 				Intent intent = new Intent(getActivity(), HeadImageActivity.class);
 				startActivity(intent);
 				getActivity().overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);

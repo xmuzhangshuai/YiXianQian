@@ -15,7 +15,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.yixianqian.R;
-import com.yixianqian.utils.SharePreferenceUtil;
+import com.yixianqian.base.BaseApplication;
+import com.yixianqian.utils.UserPreference;
 
 /**
  * 类名称：PersonalDialogFragment
@@ -28,7 +29,7 @@ public class PersonalDialogFragment extends DialogFragment implements OnItemClic
 	private View rootView;
 	private ListView menuitemListView;
 	private List<String> menuitemList;
-	private SharePreferenceUtil sharePreferenceUtil;
+	private UserPreference userPreference;
 
 	/**
 	 * 创建实例
@@ -43,7 +44,7 @@ public class PersonalDialogFragment extends DialogFragment implements OnItemClic
 	public void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		sharePreferenceUtil = new SharePreferenceUtil(getActivity(), SharePreferenceUtil.USER_SHAREPREFERENCE);
+		userPreference = BaseApplication.getInstance().getUserPreference();
 		setStyle(DialogFragment.STYLE_NO_TITLE, 0);
 	}
 
@@ -74,7 +75,7 @@ public class PersonalDialogFragment extends DialogFragment implements OnItemClic
 
 		} else if (position == 2) {
 			//设置用户不曾登录
-			sharePreferenceUtil.setUserLogin(false);
+			userPreference.setUserLogin(false);
 			Intent intent = new Intent(getActivity(),LoginOrRegisterActivity.class);
 			getActivity().startActivity(intent);
 			getActivity().finish();

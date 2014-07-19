@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.yixianqian.R;
+import com.yixianqian.base.BaseApplication;
 import com.yixianqian.base.BaseV4Fragment;
 import com.yixianqian.config.DefaultKeys;
 import com.yixianqian.db.CityDbService;
@@ -27,7 +28,7 @@ import com.yixianqian.db.SchoolDbService;
 import com.yixianqian.entities.City;
 import com.yixianqian.entities.Province;
 import com.yixianqian.entities.School;
-import com.yixianqian.utils.SharePreferenceUtil;
+import com.yixianqian.utils.UserPreference;
 
 /**
  * 类名称：RegSchoolFragment
@@ -47,10 +48,9 @@ public class RegSchoolFragment extends BaseV4Fragment {
 	private Spinner mSchoolView;//学校
 
 	public SharedPreferences locationPreferences;// 记录用户位置
-	private SharePreferenceUtil sharePreferenceUtil;
+	private UserPreference userPreference;
 	private String mProvince = "";
 	private String mCity = "";
-	//	private String mSchool = "";
 	private Province currentProvince;
 	private City currentCity;
 	private School currentSchool;
@@ -66,8 +66,8 @@ public class RegSchoolFragment extends BaseV4Fragment {
 	public void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		sharePreferenceUtil = new SharePreferenceUtil(getActivity(), SharePreferenceUtil.USER_SHAREPREFERENCE);
-
+		userPreference = BaseApplication.getInstance().getUserPreference();
+		
 		//获取用户位置
 		locationPreferences = getActivity().getSharedPreferences("location", Context.MODE_PRIVATE);
 		mProvince = locationPreferences.getString(DefaultKeys.USER_PROVINCE, "");
@@ -273,10 +273,10 @@ public class RegSchoolFragment extends BaseV4Fragment {
 
 		if (!cancel) {
 			// 没有错误
-			sharePreferenceUtil.setU_provinceid(currentProvince.getProvinceID().intValue());
-			sharePreferenceUtil.setU_cityid(currentCity.getCityID().intValue());
-			sharePreferenceUtil.setU_schoolid(currentSchool.getId().intValue());
-			sharePreferenceUtil.setU_address(locationPreferences.getString(DefaultKeys.USER_DETAIL_LOCATION, ""));
+			userPreference.setU_provinceid(currentProvince.getProvinceID().intValue());
+			userPreference.setU_cityid(currentCity.getCityID().intValue());
+			userPreference.setU_schoolid(currentSchool.getId().intValue());
+			userPreference.setU_address(locationPreferences.getString(DefaultKeys.USER_DETAIL_LOCATION, ""));
 
 			RegPhoneFragment phoneFragment = new RegPhoneFragment();
 			FragmentTransaction transaction = getFragmentManager().beginTransaction();

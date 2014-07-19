@@ -31,7 +31,7 @@ public class MainActivity extends BaseFragmentActivity {
 		setContentView(R.layout.activity_main);
 
 		//开启百度推送服务
-		PushManager.startWork(MainActivity.this, PushConstants.LOGIN_TYPE_API_KEY, Constants.Config.API_KEY);
+		PushManager.startWork(MainActivity.this, PushConstants.LOGIN_TYPE_API_KEY, Constants.BaiduPushConfig.API_KEY);
 		// 基于地理位置推送，可以打开支持地理位置的推送的开关
 		PushManager.enableLbs(getApplicationContext());
 		//设置标签

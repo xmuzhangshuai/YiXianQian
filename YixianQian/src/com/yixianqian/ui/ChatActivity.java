@@ -4,23 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import com.yixianqian.R;
-import com.yixianqian.adapter.FaceAdapter;
-import com.yixianqian.adapter.FacePageAdeapter;
-import com.yixianqian.adapter.MessageAdapter;
-import com.yixianqian.base.BaseActivity;
-import com.yixianqian.base.BaseApplication;
-import com.yixianqian.config.Constants;
-import com.yixianqian.config.DefaultSetting;
-import com.yixianqian.customewidget.CirclePageIndicator;
-import com.yixianqian.customewidget.JazzyViewPager;
-import com.yixianqian.customewidget.JazzyViewPager.TransitionEffect;
-import com.yixianqian.db.ConversationDbService;
-import com.yixianqian.db.MessageItemDbService;
-import com.yixianqian.entities.MessageItem;
-import com.yixianqian.xlistview.MsgListView;
-import com.yixianqian.xlistview.MsgListView.IXListViewListener;
-
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -39,14 +22,15 @@ import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.WindowManager;
+import android.view.View.OnClickListener;
 import android.view.View.OnKeyListener;
 import android.view.View.OnTouchListener;
-import android.view.Window;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
@@ -54,9 +38,32 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.AdapterView.OnItemClickListener;
 
-public class ChatActivity extends BaseActivity implements OnTouchListener, IXListViewListener, OnClickListener {
+import com.yixianqian.R;
+import com.yixianqian.adapter.FaceAdapter;
+import com.yixianqian.adapter.FacePageAdeapter;
+import com.yixianqian.adapter.MessageAdapter;
+import com.yixianqian.baidupush.PushMessageReceiver;
+import com.yixianqian.baidupush.PushMessageReceiver.EventHandler;
+import com.yixianqian.baidupush.SendMsgAsyncTask;
+import com.yixianqian.base.BaseActivity;
+import com.yixianqian.base.BaseApplication;
+import com.yixianqian.config.Constants;
+import com.yixianqian.config.DefaultSetting;
+import com.yixianqian.customewidget.CirclePageIndicator;
+import com.yixianqian.customewidget.JazzyViewPager;
+import com.yixianqian.customewidget.JazzyViewPager.TransitionEffect;
+import com.yixianqian.db.ConversationDbService;
+import com.yixianqian.db.MessageItemDbService;
+import com.yixianqian.entities.MessageItem;
+import com.yixianqian.jsonobject.JsonMessage;
+import com.yixianqian.utils.FastJsonTool;
+import com.yixianqian.utils.FriendPreference;
+import com.yixianqian.xlistview.MsgListView;
+import com.yixianqian.xlistview.MsgListView.IXListViewListener;
+
+public class ChatActivity extends BaseActivity implements OnTouchListener, IXListViewListener, OnClickListener,
+		EventHandler {
 	/*************VIEWS*****************/
 	private MsgListView mMsgListView;
 	private ImageView topNavLeftBtn;//导航条左边按钮
@@ -78,10 +85,27 @@ public class ChatActivity extends BaseActivity implements OnTouchListener, IXLis
 	private ConversationDbService conversationDbService;
 	private MessageItemDbService messageItemDbService;
 	private static int MsgPagerNum;//消息页数
+	private FriendPreference friendSharePreference;
+	public static final int NEW_MESSAGE = 0x001;// 收到消息
 
 	private Handler handler = new Handler() {
 		public void handleMessage(Message msg) {
+			if (msg.what == NEW_MESSAGE) {
+				JsonMessage jsonMessage = (JsonMessage) msg.obj;
+				String userId = jsonMessage.getBpushUserID();
+				//				if (!userId.equals(mFromUser.getUserId()))// 如果不是当前正在聊天对象的消息，不处理
+				//					return;
 
+				//				int headId = msgItem.getHead_id();
+				// TODO Auto-generated method stub
+				MessageItem item = new MessageItem(null, Constants.MessageType.MESSAGE_TYPE_TEXT,
+						jsonMessage.getMessageContent(), System.currentTimeMillis(), true, true, true, conversationID);
+				adapter.upDateMsg(item);
+				messageItemDbService.messageItemDao.insert(item);
+				//				RecentItem recentItem = new RecentItem(userId, headId, msgItem.getNick(), msgItem.getMessage(), 0,
+				//						System.currentTimeMillis());
+				//				mRecentDB.saveRecent(recentItem);
+			}
 		};
 	};
 
@@ -103,6 +127,7 @@ public class ChatActivity extends BaseActivity implements OnTouchListener, IXLis
 	protected void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
+		PushMessageReceiver.ehList.add(this);// 监听推送的消息
 	}
 
 	@Override
@@ -110,6 +135,7 @@ public class ChatActivity extends BaseActivity implements OnTouchListener, IXLis
 		// TODO Auto-generated method stub
 		faceLinearLayout.setVisibility(View.GONE);
 		super.onPause();
+		PushMessageReceiver.ehList.remove(this);// 移除监听
 	}
 
 	@Override
@@ -194,6 +220,7 @@ public class ChatActivity extends BaseActivity implements OnTouchListener, IXLis
 		conversationDbService = ConversationDbService.getInstance(ChatActivity.this);
 		messageItemDbService = MessageItemDbService.getInstance(ChatActivity.this);
 		adapter = new MessageAdapter(this, initMsgData(), conversationDbService.conversationDao.load(conversationID));
+		friendSharePreference = BaseApplication.getInstance().getFriendPreference();
 	}
 
 	/**
@@ -407,7 +434,9 @@ public class ChatActivity extends BaseActivity implements OnTouchListener, IXLis
 			mMsgListView.setSelection(adapter.getCount() - 1);
 			messageItemDbService.messageItemDao.insert(item);
 			msgEt.setText("");
-			//			com.way.bean.Message msgItem = new com.way.bean.Message(System.currentTimeMillis(), msg, "");
+
+			JsonMessage message = new JsonMessage(System.currentTimeMillis(), msg, "");
+			new SendMsgAsyncTask(FastJsonTool.createJsonString(message), friendSharePreference.getBpush_UserID());
 			//			new SendMsgAsyncTask(mGson.toJson(msgItem), mFromUser.getUserId()).send();
 			//			RecentItem recentItem = new RecentItem(mFromUser.getUserId(), mFromUser.getHeadIcon(), mFromUser.getNick(),
 			//					msg, 0, System.currentTimeMillis());
@@ -419,6 +448,31 @@ public class ChatActivity extends BaseActivity implements OnTouchListener, IXLis
 		default:
 			break;
 		}
+	}
+
+	@Override
+	public void onMessage(JsonMessage jsonMessage) {
+		// TODO Auto-generated method stub
+		Message handlerMsg = handler.obtainMessage(NEW_MESSAGE);
+		handlerMsg.obj = jsonMessage;
+		handler.sendMessage(handlerMsg);
+	}
+
+	@Override
+	public void onBind(String method, int errorCode, String content) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void onNotify(String title, String content) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void onNetChange(boolean isNetConnected) {
+		// TODO Auto-generated method stub
 	}
 
 }
