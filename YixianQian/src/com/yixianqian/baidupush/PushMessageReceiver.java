@@ -50,9 +50,6 @@ public class PushMessageReceiver extends FrontiaPushMessageReceiver {
 		userPreference.setBpush_ChannelID(channelId);
 		userPreference.setBpush_UserID(userId);
 		userPreference.setAppID(appid);
-		System.out.println("channelId   "+channelId);
-		System.out.println("userId   "+userId);
-		System.out.println("appid   "+appid);
 	}
 
 	/**
@@ -71,10 +68,17 @@ public class PushMessageReceiver extends FrontiaPushMessageReceiver {
 		Log.d(TAG, messageString);
 		// 自定义内容获取方式，mykey和myvalue对应透传消息推送时自定义内容中设置的键和值
 		if (customContentString != null & customContentString != "") {
-			JsonMessage jsonMessage = FastJsonTool.getObject(customContentString, JsonMessage.class);
-			if (jsonMessage != null) {
-				parseMessage(jsonMessage);
-			}
+			//			JsonMessage jsonMessage = FastJsonTool.getObject(customContentString, JsonMessage.class);
+			//			if (jsonMessage != null) {
+			//				parseMessage(jsonMessage);
+			//				System.out.println("标识"+jsonMessage);
+			//			}
+		}
+
+		System.out.println(message);
+		JsonMessage jsonMessage = FastJsonTool.getObject(message, JsonMessage.class);
+		if (jsonMessage != null) {
+			parseMessage(jsonMessage);
 		}
 	}
 
@@ -177,6 +181,4 @@ public class PushMessageReceiver extends FrontiaPushMessageReceiver {
 		//		String responseString = "onListTags errorCode=" + errorCode + " tags=" + tags;
 	}
 
-	private void parseMessage(String msg) {
-	}
 }

@@ -141,33 +141,37 @@ public class MessageAdapter extends BaseAdapter {
 	private CharSequence convertNormalStringToSpannableString(String message) {
 		// TODO Auto-generated method stub
 		String hackTxt;
-		if (message.startsWith("[") && message.endsWith("]")) {
-			hackTxt = message + " ";
-		} else {
-			hackTxt = message;
-		}
-		SpannableString value = SpannableString.valueOf(hackTxt);
+		if (message != null) {
+			if (message.startsWith("[") && message.endsWith("]")) {
+				hackTxt = message + " ";
+			} else {
+				hackTxt = message;
+			}
+			SpannableString value = SpannableString.valueOf(hackTxt);
 
-		Matcher localMatcher = EMOTION_URL.matcher(value);
-		while (localMatcher.find()) {
-			String str2 = localMatcher.group(0);
-			int k = localMatcher.start();
-			int m = localMatcher.end();
-			// k = str2.lastIndexOf("[");
-			// Log.i("way", "str2.length = "+str2.length()+", k = " + k);
-			// str2 = str2.substring(k, m);
-			if (m - k < 8) {
-				if (BaseApplication.getInstance().getFaceMap().containsKey(str2)) {
-					int face = BaseApplication.getInstance().getFaceMap().get(str2);
-					Bitmap bitmap = BitmapFactory.decodeResource(mContext.getResources(), face);
-					if (bitmap != null) {
-						ImageSpan localImageSpan = new ImageSpan(mContext, bitmap, ImageSpan.ALIGN_BASELINE);
-						value.setSpan(localImageSpan, k, m, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+			Matcher localMatcher = EMOTION_URL.matcher(value);
+			while (localMatcher.find()) {
+				String str2 = localMatcher.group(0);
+				int k = localMatcher.start();
+				int m = localMatcher.end();
+				// k = str2.lastIndexOf("[");
+				// Log.i("way", "str2.length = "+str2.length()+", k = " + k);
+				// str2 = str2.substring(k, m);
+				if (m - k < 8) {
+					if (BaseApplication.getInstance().getFaceMap().containsKey(str2)) {
+						int face = BaseApplication.getInstance().getFaceMap().get(str2);
+						Bitmap bitmap = BitmapFactory.decodeResource(mContext.getResources(), face);
+						if (bitmap != null) {
+							ImageSpan localImageSpan = new ImageSpan(mContext, bitmap, ImageSpan.ALIGN_BASELINE);
+							value.setSpan(localImageSpan, k, m, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+						}
 					}
 				}
 			}
+			return value;
 		}
-		return value;
+		return null;
+
 	}
 
 	static class ViewHolder {

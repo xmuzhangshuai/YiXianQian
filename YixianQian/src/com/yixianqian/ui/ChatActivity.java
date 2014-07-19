@@ -100,6 +100,7 @@ public class ChatActivity extends BaseActivity implements OnTouchListener, IXLis
 				// TODO Auto-generated method stub
 				MessageItem item = new MessageItem(null, Constants.MessageType.MESSAGE_TYPE_TEXT,
 						jsonMessage.getMessageContent(), System.currentTimeMillis(), true, true, true, conversationID);
+				System.out.println("ÄÚÈÝÎª" + jsonMessage.getMessageContent());
 				adapter.upDateMsg(item);
 				messageItemDbService.messageItemDao.insert(item);
 				//				RecentItem recentItem = new RecentItem(userId, headId, msgItem.getNick(), msgItem.getMessage(), 0,
@@ -436,7 +437,12 @@ public class ChatActivity extends BaseActivity implements OnTouchListener, IXLis
 			msgEt.setText("");
 
 			JsonMessage message = new JsonMessage(System.currentTimeMillis(), msg, "");
-			new SendMsgAsyncTask(FastJsonTool.createJsonString(message), friendSharePreference.getBpush_UserID());
+			new SendMsgAsyncTask(FastJsonTool.createJsonString(message), friendSharePreference.getBpush_UserID())
+					.send();
+			//			Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+			//			System.out.println(gson.toJson(message));
+			//			new SendMsgAsyncTask(gson.toJson(message), friendSharePreference.getBpush_UserID()).send();;
+
 			//			new SendMsgAsyncTask(mGson.toJson(msgItem), mFromUser.getUserId()).send();
 			//			RecentItem recentItem = new RecentItem(mFromUser.getUserId(), mFromUser.getHeadIcon(), mFromUser.getNick(),
 			//					msg, 0, System.currentTimeMillis());

@@ -25,6 +25,9 @@ public class JsonMessage implements Serializable {
 	private String messageContent;
 	private String tag;
 
+	public JsonMessage() {
+	}
+
 	public JsonMessage(long time_samp, String message, String tag) {
 		super();
 		UserPreference util = BaseApplication.getInstance().getUserPreference();
