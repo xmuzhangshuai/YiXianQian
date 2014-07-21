@@ -3,8 +3,6 @@ package com.yixianqian.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.yixianqian.table.UserTable;
-
 /**
  * 类名称：SharePreferenceUtil
  * 类描述：SharedPreferences的一个工具类，调用setParam就能保存String, Integer, Boolean, Float, Long类型的参数 
@@ -17,7 +15,6 @@ public class SharePreferenceUtil {
 	private SharedPreferences sp;
 	private SharedPreferences.Editor editor;
 	public static final String USE_COUNT = "count";// 记录软件使用次数
-//	public static final String TODAY_RECOMMEND = "today_recommend";//记录今天是否已经推荐过
 
 	public SharePreferenceUtil(Context context, String file) {
 		sp = context.getSharedPreferences(file, Context.MODE_PRIVATE);

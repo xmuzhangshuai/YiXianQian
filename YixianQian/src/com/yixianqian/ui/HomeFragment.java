@@ -92,14 +92,22 @@ public class HomeFragment extends BaseV4Fragment {
 	}
 
 	private void initFriend() {
-
-		//		friendPreference.setBpush_ChannelID("4457033861276219312");
-		//		friendPreference.setBpush_UserID("986694129147131648");
+		//’≈Àß
+		//		friendPreference.setBpush_ChannelID("4047819659846814865");
+		//		friendPreference.setBpush_UserID("938594755269115566");
 		//		friendPreference.setAppID("3076853");
-		friendPreference.setBpush_ChannelID("3979551606421135105");
-		friendPreference.setBpush_UserID("607397228778822055");
+
+		//Àºπß
+		friendPreference.setBpush_ChannelID("4457033861276219312");
+		friendPreference.setBpush_UserID("986694129147131648");
 		friendPreference.setAppID("3076853");
-		friendPreference.setF_nickname("Àºπß");
+
+		//Œ∞«ø
+		//		friendPreference.setBpush_ChannelID("3979551606421135105");
+		//		friendPreference.setBpush_UserID("607397228778822055");
+		//		friendPreference.setAppID("3076853");
+
+		friendPreference.setF_nickname("’‘ﬁ»ª∂");
 		friendPreference.setF_large_avatar("http://99touxiang.com/public/upload/nansheng/83/06-032643_657.jpg");
 		friendPreference.setF_small_avatar("http://99touxiang.com/public/upload/nansheng/83/06-032643_657.jpg");
 		ConversationDbService conversationDbService = ConversationDbService.getInstance(getActivity());

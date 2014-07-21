@@ -50,6 +50,9 @@ public class PushMessageReceiver extends FrontiaPushMessageReceiver {
 		userPreference.setBpush_ChannelID(channelId);
 		userPreference.setBpush_UserID(userId);
 		userPreference.setAppID(appid);
+		System.out.println("channelId   " + channelId);
+		System.out.println("userId   " + userId);
+		System.out.println("appid   " + appid);
 	}
 
 	/**
@@ -111,13 +114,13 @@ public class PushMessageReceiver extends FrontiaPushMessageReceiver {
 		BaseApplication application = BaseApplication.getInstance();
 
 		int icon = R.drawable.f086;
-		CharSequence tickerText = message.getUserID() + ":" + message.getMessageContent();
+		CharSequence tickerText = application.getFriendPreference().getF_nickname() + ":" + message.getMessageContent();
 		long when = System.currentTimeMillis();
 		Notification notification = new Notification(icon, tickerText, when);
 
 		notification.flags = Notification.FLAG_NO_CLEAR;
 		// 设置默认声音
-		// notification.defaults |= Notification.DEFAULT_SOUND;
+		notification.defaults |= Notification.DEFAULT_SOUND;
 		// 设定震动(需加VIBRATE权限)
 		notification.defaults |= Notification.DEFAULT_VIBRATE;
 		notification.contentView = null;

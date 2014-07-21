@@ -68,12 +68,12 @@ public class GuideActivity extends BaseActivity {
 		initLocation();
 
 		if (count == 0) {// 如果是第一次登陆，则启动向导页面
-			startActivity(new Intent(GuideActivity.this, GuidePagerActivity.class));
 			// 第一次运行拷贝数据库文件
 			new initDataBase().execute();
 			//			SchoolDbService schoolDbService = SchoolDbService.getInstance(this);
 			//			schoolDbService.schoolDao.loadAll();
 			sharePreferenceUtil.setUseCount(++count);// 次数加1
+			startActivity(new Intent(GuideActivity.this, GuidePagerActivity.class));
 			//			finish();不定位
 		} else {// 如果不是第一次使用,则不启动向导页面，显示欢迎页面。
 			if (userPreference.getUserLogin()) {//如果是已经登陆过
@@ -137,7 +137,7 @@ public class GuideActivity extends BaseActivity {
 
 	@Override
 	public void onDestroy() {
-		//		stopListener();// 停止监听
+		stopListener();// 停止监听
 		super.onDestroy();
 	}
 

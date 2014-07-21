@@ -1,44 +1,78 @@
 package com.yixianqian.test;
 
-import org.apache.http.Header;
-
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.google.zxing.WriterException;
 import com.yixianqian.R;
+import com.yixianqian.ui.CaptureActivity;
+import com.yixianqian.zxing.EncodingHandler;
 
 public class TestActivity extends Activity {
-	ImageView testImage;
+	private TextView resultTextView;
+	private EditText qrStrEditText;
+	private ImageView qrImgImageView;
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_test);
-		testImage = (ImageView) findViewById(R.id.test);
-
-		AsyncHttpClient client = new AsyncHttpClient();
-		client.get("http://e.hiphotos.baidu.com/image/pic/item/d0c8a786c9177f3e2396bf0572cf3bc79f3d5613.jpg",
-				new AsyncHttpResponseHandler() {
-
-					@Override
-					public void onFailure(int statusCode, Header[] headers, byte[] errorResponse, Throwable e) {
-						// TODO Auto-generated method stub
-
-					}
-
-					@Override
-					public void onSuccess(int statusCode, Header[] headers, byte[] response) {
-						// TODO Auto-generated method stub
-						if (statusCode == 200) {
-							Bitmap bitmap = BitmapFactory.decodeByteArray(response, 0, response.length);
-							testImage.setImageBitmap(bitmap);
+	  @Override
+	    public void onCreate(Bundle savedInstanceState) {
+	        super.onCreate(savedInstanceState);
+	        setContentView(R.layout.activity_test);
+	        
+	        resultTextView = (TextView) this.findViewById(R.id.tv_scan_result);
+	        qrStrEditText = (EditText) this.findViewById(R.id.et_qr_string);
+	        qrImgImageView = (ImageView) this.findViewById(R.id.iv_qr_image);
+	        
+	        Button scanBarCodeButton = (Button) this.findViewById(R.id.btn_scan_barcode);
+	        scanBarCodeButton.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+						
+					Intent openCameraIntent = new Intent(TestActivity.this,CaptureActivity.class);
+					startActivityForResult(openCameraIntent, 0);
+				}
+			});
+	        
+	        Button generateQRCodeButton = (Button) this.findViewById(R.id.btn_add_qrcode);
+	        generateQRCodeButton.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					try {
+						String contentString = qrStrEditText.getText().toString();
+						if (!contentString.equals("")) {
+							
+							Bitmap qrCodeBitmap = EncodingHandler.createQRCode(contentString, 350);
+							qrImgImageView.setImageBitmap(qrCodeBitmap);
+						}else {
+							Toast.makeText(TestActivity.this, "Text can not be empty", Toast.LENGTH_SHORT).show();
 						}
+						
+					} catch (WriterException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
 					}
-				});
-	}
+				}
+			});
+	    }
+
+		@Override
+		protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+			super.onActivityResult(requestCode, resultCode, data);
+		
+			if (resultCode == RESULT_OK) {
+				Bundle bundle = data.getExtras();
+				String scanResult = bundle.getString("result");
+				resultTextView.setText(scanResult);
+			}
+		}
 }

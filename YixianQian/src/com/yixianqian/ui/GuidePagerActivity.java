@@ -12,4 +12,9 @@ public class GuidePagerActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_guide_pager);
 	}
+
+	@Override
+	public void onBackPressed() {
+		// TODO Auto-generated method stub
+	}
 }
