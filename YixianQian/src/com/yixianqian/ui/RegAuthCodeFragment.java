@@ -28,7 +28,6 @@ import com.yixianqian.base.BaseV4Fragment;
 import com.yixianqian.config.DefaultSetting;
 import com.yixianqian.table.UserTable;
 import com.yixianqian.utils.HttpUtil;
-import com.yixianqian.utils.SharePreferenceUtil;
 import com.yixianqian.utils.UserPreference;
 
 /**

@@ -9,9 +9,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.animation.Animation;
-import android.view.animation.Animation.AnimationListener;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
 import com.baidu.android.pushservice.PushConstants;
@@ -78,8 +75,8 @@ public class GuideActivity extends BaseActivity {
 		PushManager.startWork(GuideActivity.this, PushConstants.LOGIN_TYPE_API_KEY, Constants.BaiduPushConfig.API_KEY);
 		// 基于地理位置推送，可以打开支持地理位置的推送的开关
 		PushManager.enableLbs(getApplicationContext());
-//		//设置标签
-//		PushManager.setTags(this, Constants.getTags());
+		//		//设置标签
+		//		PushManager.setTags(this, Constants.getTags());
 
 		//		getTodayRecommend();
 
@@ -140,42 +137,12 @@ public class GuideActivity extends BaseActivity {
 	@Override
 	protected void initView() {
 		// TODO Auto-generated method stub
-		//		Animation translate = AnimationUtils.loadAnimation(this, R.anim.splash_loading);
-		//		translate.setAnimationListener(new AnimationListener() {
-		//
-		//			@Override
-		//			public void onAnimationStart(Animation animation) {
-		//				// TODO Auto-generated method stub
-		//			}
-		//
-		//			@Override
-		//			public void onAnimationRepeat(Animation animation) {
-		//				// TODO Auto-generated method stub
-		//			}
-		//
-		//			@Override
-		//			public void onAnimationEnd(Animation animation) {
-		//				// TODO Auto-generated method stub
-		//				// 启动MainActivity，相当于Intent
-		//				openActivity(MainActivity.class);
-		//				overridePendingTransition(R.anim.splash_fade_in, R.anim.splash_fade_out);
-		//				GuideActivity.this.finish();
-		//			}
-		//		});
-		//		loadingImage.setAnimation(translate);
 	}
 
 	@Override
 	public void onDestroy() {
 		stopListener();// 停止监听
 		super.onDestroy();
-	}
-
-	/**
-	 * 初始化用户数据
-	 */
-	private void InitData() {
-
 	}
 
 	/**
@@ -196,7 +163,7 @@ public class GuideActivity extends BaseActivity {
 					if (statusCode == 200) {
 						List<TodayRecommend> todayRecommends = FastJsonTool.getObjectList(response,
 								TodayRecommend.class);
-						Intent intent = new Intent(GuideActivity.this,MainActivity.class);
+						Intent intent = new Intent(GuideActivity.this, MainActivity.class);
 						startActivity(intent);
 						overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
 					}

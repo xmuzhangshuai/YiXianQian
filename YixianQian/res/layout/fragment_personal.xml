@@ -33,7 +33,6 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="16dp"
                 android:layout_toRightOf="@+id/head_image"
-                android:text="林晓寒"
                 android:textSize="@dimen/day_recommend_user_font" />
 
             <TextView
@@ -43,7 +42,6 @@
                 android:layout_centerVertical="true"
                 android:layout_marginRight="10dp"
                 android:layout_toLeftOf="@+id/school"
-                android:text="福建"
                 android:textColor="@color/system_gray"
                 android:textSize="@dimen/day_recommend_user_font" />
 
@@ -54,7 +52,6 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="20dp"
-                android:text="厦门大学"
                 android:textColor="@color/system_gray"
                 android:textSize="@dimen/day_recommend_user_font" />
         </RelativeLayout>

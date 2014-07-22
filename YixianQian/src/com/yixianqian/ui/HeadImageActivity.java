@@ -12,6 +12,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
@@ -30,6 +31,7 @@ import com.yixianqian.base.BaseActivity;
 import com.yixianqian.base.BaseApplication;
 import com.yixianqian.table.UserTable;
 import com.yixianqian.utils.AsyncHttpClientImageSound;
+import com.yixianqian.utils.ImageTools;
 import com.yixianqian.utils.ToastTool;
 import com.yixianqian.utils.UserPreference;
 
@@ -62,7 +64,7 @@ public class HeadImageActivity extends BaseActivity {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_head_image);
 		userPreference = BaseApplication.getInstance().getUserPreference();
-		
+
 		findViewById();
 		initView();
 	}
@@ -274,12 +276,19 @@ public class HeadImageActivity extends BaseActivity {
 	 * @param filePath
 	 */
 	public void uploadImage(String filePath) {
+		final Bitmap largeAvatar = BitmapFactory.decodeFile(filePath);
+		final Bitmap smallBitmap = ImageTools.zoomBitmap(largeAvatar, largeAvatar.getWidth() / 4,
+				largeAvatar.getHeight() / 4);
+		String smallAvatarPath = Environment.getExternalStorageDirectory() + "/yixianqian/image";
+
 		RequestParams params = new RequestParams();
 		int userId = userPreference.getU_id();
 		if (userId > -1) {
 			params.put(UserTable.U_ID, String.valueOf(userId));
 			try {
-				params.put(filePath.replace("/", ""), picFile);
+				params.put("large_avatar", picFile);
+				params.put("small_avatar",
+						ImageTools.savePhotoToSDCard(smallBitmap, smallAvatarPath, "smallAvatar.jpeg",100));
 			} catch (FileNotFoundException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
@@ -290,13 +299,15 @@ public class HeadImageActivity extends BaseActivity {
 					// TODO Auto-generated method stub
 					if (statusCode == 200) {
 						ToastTool.showLong(HeadImageActivity.this, "头像上传成功！请等待审核");
+						largeAvatar.recycle();
+						smallBitmap.recycle();
 					}
 				}
 
 				@Override
 				public void onFailure(int statusCode, Header[] headers, String errorResponse, Throwable e) {
 					// TODO Auto-generated method stub
-					ToastTool.showShort(HeadImageActivity.this, "头像上传失败！" + errorResponse);
+					ToastTool.showLong(HeadImageActivity.this, "头像上传失败！" + errorResponse);
 				}
 			};
 			AsyncHttpClientImageSound.post(HeadImageActivity.this, AsyncHttpClientImageSound.HEADIMAGE_URL, params,

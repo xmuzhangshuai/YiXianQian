@@ -115,7 +115,12 @@ public class PersonalFragment extends BaseV4Fragment {
 		ProvinceDbService provinceDbService = ProvinceDbService.getInstance(getActivity());
 		SchoolDbService schoolDbService = SchoolDbService.getInstance(getActivity());
 		//设置姓名、省份、及学校
-		nameTextView.setText(userPreference.getU_nickname());
+		//优先显示真实姓名
+		String name = userPreference.getU_nickname();
+		if (userPreference.getU_realname().length() > 0) {
+			name = userPreference.getU_realname();
+		}
+		nameTextView.setText(name);
 		provinceTextView.setText(provinceDbService.getProNameById(userPreference.getU_provinceid()));
 		schoolTextView.setText(schoolDbService.schoolDao.load((long) userPreference.getU_schoolid()).getSchoolName());
 
