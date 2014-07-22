@@ -1,5 +1,8 @@
 package com.yixianqian.ui;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
@@ -20,8 +23,14 @@ import android.widget.TextView;
 
 import com.yixianqian.R;
 import com.yixianqian.base.BaseActivity;
+import com.yixianqian.base.BaseApplication;
+import com.yixianqian.jsonobject.User;
+import com.yixianqian.table.UserTable;
+import com.yixianqian.utils.FastJsonTool;
+import com.yixianqian.utils.HttpUtil;
 import com.yixianqian.utils.NetworkUtils;
 import com.yixianqian.utils.SIMCardInfo;
+import com.yixianqian.utils.UserPreference;
 
 /**
  * 类名称：LoginActivity 
@@ -32,7 +41,6 @@ import com.yixianqian.utils.SIMCardInfo;
  */
 public class LoginActivity extends BaseActivity {
 
-	private static final String[] DUMMY_CREDENTIALS = new String[] { "18650113340:e23456" };
 	/**
 	 * 用户登录异步任务
 	 */
@@ -45,6 +53,7 @@ public class LoginActivity extends BaseActivity {
 	private TextView topNavigation;//导航栏文字
 	private View leftImageButton;//导航栏左侧按钮
 	private View rightImageButton;//导航栏右侧按钮
+	private UserPreference userPreference;
 
 	// 提醒用户网络状况有异常
 	private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
@@ -62,31 +71,9 @@ public class LoginActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_login);
-
+		userPreference = BaseApplication.getInstance().getUserPreference();
 		findViewById();
 		initView();
-
-		// mPasswordView.setOnEditorActionListener(new
-		// TextView.OnEditorActionListener() {
-		// @Override
-		// public boolean onEditorAction(TextView textView, int id, KeyEvent
-		// keyEvent) {
-		// if (id == R.id.login || id == EditorInfo.IME_NULL) {
-		// attemptLogin();
-		// return true;
-		// }
-		// return false;
-		// }
-		// });
-
-		// Button mEmailSignInButton = (Button)
-		// findViewById(R.id.email_sign_in_button);
-		// mEmailSignInButton.setOnClickListener(new OnClickListener() {
-		// @Override
-		// public void onClick(View view) {
-		// attemptLogin();
-		// }
-		// });
 
 	}
 
@@ -204,7 +191,7 @@ public class LoginActivity extends BaseActivity {
 
 	private boolean isPasswordValid(String password) {
 		// TODO: Replace this with your own logic
-		return password.length() > 4;
+		return password.length() > 5;
 	}
 
 	/**
@@ -237,51 +224,72 @@ public class LoginActivity extends BaseActivity {
 	 * 类名称：UserLoginTask 类描述：异步任务登录 创建人： 张帅 创建时间：2014-7-4 上午9:30:44
 	 * 
 	 */
-	public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
+	public class UserLoginTask extends AsyncTask<Void, Void, User> {
 
-		private final String mEmail;
+		private final String mPhone;
 		private final String mPassword;
 
-		UserLoginTask(String email, String password) {
-			mEmail = email;
+		UserLoginTask(String phone, String password) {
+			mPhone = phone;
 			mPassword = password;
 		}
 
 		@Override
-		protected Boolean doInBackground(Void... params) {
+		protected User doInBackground(Void... params) {
 			// TODO: attempt authentication against a network service.
+			String url = "login";
+			Map<String, String> map = new HashMap<String, String>();
+			map.put(UserTable.U_TEL, mPhone);
+			map.put(UserTable.U_PASSWORD, mPassword);
+			map.put(UserTable.U_BPUSH_USER_ID, userPreference.getBpush_UserID());
+			map.put(UserTable.U_BPUSH_CHANNEL_ID, userPreference.getBpush_ChannelID());
 
+			String jsonString = null;
 			try {
-				// Simulate network access.
-				Thread.sleep(2000);
-			} catch (InterruptedException e) {
-				return false;
+				jsonString = HttpUtil.postRequest(url, map);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-
-			for (String credential : DUMMY_CREDENTIALS) {
-				String[] pieces = credential.split(":");
-				if (pieces[0].equals(mEmail)) {
-					// Account exists, return true if the password matches.
-					return pieces[1].equals(mPassword);
-				}
-			}
-
+			User user = FastJsonTool.getObject(jsonString, User.class);
 			// TODO: register the new account here.
-			return true;
+			return user;
 		}
 
 		@Override
-		protected void onPostExecute(final Boolean success) {
+		protected void onPostExecute(final User user) {
 			mAuthTask = null;
 			showProgress(false);
+			if (user != null) {
+				userPreference.setUserLogin(true);
+				userPreference.setU_blood_type(user.getU_blood_type());
+				userPreference.setU_cityid(user.getU_cityid());
+				userPreference.setU_constell(user.getU_constell());
+				userPreference.setU_email(user.getU_email());
+				userPreference.setU_gender(user.getU_gender());
+				userPreference.setU_age(user.getU_age());
+				userPreference.setU_height(user.getU_height());
+				userPreference.setU_id(user.getU_id());
+				userPreference.setU_introduce(user.getU_introduce());
+				userPreference.setU_large_avatar(user.getU_large_avatar());
+				userPreference.setU_nickname(user.getU_nickname());
+				userPreference.setU_password(user.getU_password());
+				userPreference.setU_provinceid(user.getU_provinceid());
+				userPreference.setU_realname(user.getU_realname());
+				userPreference.setU_salary(user.getU_salary());
+				userPreference.setU_schoolid(user.getU_schoolid());
+				userPreference.setU_small_avatar(user.getU_small_avatar());
+				userPreference.setU_stateid(user.getU_stateid());
+				userPreference.setU_tel(user.getU_tel());
+				userPreference.setU_vocationid(user.getU_vocationid());
+				userPreference.setU_weight(user.getU_weight());
 
-			if (success) {
 				Intent intent = new Intent(LoginActivity.this, MainActivity.class);
 				startActivity(intent);
 				overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
 				finish();
 			} else {
-				mPasswordView.setError(getString(R.string.error_incorrect_password));
+				mPasswordView.setError("用户名或密码错误！");
 				mPasswordView.requestFocus();
 			}
 		}

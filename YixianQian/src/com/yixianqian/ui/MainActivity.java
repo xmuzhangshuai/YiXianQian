@@ -1,17 +1,20 @@
 package com.yixianqian.ui;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.os.Bundle;
 import android.support.v4.app.FragmentTabHost;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 
-import com.baidu.android.pushservice.PushConstants;
 import com.baidu.android.pushservice.PushManager;
 import com.yixianqian.R;
+import com.yixianqian.base.BaseApplication;
 import com.yixianqian.base.BaseFragmentActivity;
-import com.yixianqian.config.Constants;
 import com.yixianqian.customewidget.MyAlertDialog;
+import com.yixianqian.utils.UserPreference;
 
 /**
  * 类名称：MainActivity
@@ -23,19 +26,19 @@ import com.yixianqian.customewidget.MyAlertDialog;
 public class MainActivity extends BaseFragmentActivity {
 	private FragmentTabHost mTabHost;
 	private View indicator = null;
+	private UserPreference userPreference;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_main);
-
-		//开启百度推送服务
-		PushManager.startWork(MainActivity.this, PushConstants.LOGIN_TYPE_API_KEY, Constants.BaiduPushConfig.API_KEY);
-		// 基于地理位置推送，可以打开支持地理位置的推送的开关
-		PushManager.enableLbs(getApplicationContext());
+		userPreference = BaseApplication.getInstance().getUserPreference();
+		
 		//设置标签
-		PushManager.setTags(this, Constants.getTags());
+		List<String> tags = new ArrayList<String>();
+		tags.add(userPreference.getU_gender());
+		PushManager.setTags(this, tags);
 
 		findViewById();
 		initView();
@@ -88,19 +91,19 @@ public class MainActivity extends BaseFragmentActivity {
 
 	}
 
-	@Override
-	protected void onStart() {
-		// TODO Auto-generated method stub
-		PushManager.activityStarted(this);
-		super.onStart();
-	}
-
-	@Override
-	protected void onStop() {
-		// TODO Auto-generated method stub
-		PushManager.activityStoped(this);
-		super.onStop();
-	}
+	//	@Override
+	//	protected void onStart() {
+	//		// TODO Auto-generated method stub
+	//		PushManager.activityStarted(this);
+	//		super.onStart();
+	//	}
+	//
+	//	@Override
+	//	protected void onStop() {
+	//		// TODO Auto-generated method stub
+	//		PushManager.activityStoped(this);
+	//		super.onStop();
+	//	}
 
 	@Override
 	protected void onDestroy() {

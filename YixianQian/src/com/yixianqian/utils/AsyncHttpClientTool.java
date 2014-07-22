@@ -7,7 +7,7 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
 public class AsyncHttpClientTool {
-	private static final String BASE_URL = "http://192.168.1.103:8080/YXQServer/";
+	private static final String BASE_URL = "http://192.168.1.107:8080/YXQServer/";
 
 	private static AsyncHttpClient client = new AsyncHttpClient();
 
@@ -27,7 +27,7 @@ public class AsyncHttpClientTool {
 		client.post(context, getAbsoluteUrl(url), params, responseHandler);
 	}
 
-	private static String getAbsoluteUrl(String relativeUrl) {
+	public static String getAbsoluteUrl(String relativeUrl) {
 		return BASE_URL + relativeUrl;
 	}
 }

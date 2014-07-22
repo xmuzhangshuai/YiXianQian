@@ -35,11 +35,19 @@ public class ProvinceDbService {
 		}
 		return instance;
 	}
-	
+
 	/**
 	 * 根据省份名称返回省份
 	 */
-	public Province getProvinceByname(String pName){
+	public Province getProvinceByname(String pName) {
 		return provinceDao.queryBuilder().where(Properties.ProvinceName.like(pName)).unique();
+	}
+
+	/**
+	 * 根据ID返回名称
+	 * @return
+	 */
+	public String getProNameById(int provinceID) {
+		return provinceDao.queryBuilder().where(Properties.ProvinceID.eq(provinceID)).unique().getProvinceName();
 	}
 }

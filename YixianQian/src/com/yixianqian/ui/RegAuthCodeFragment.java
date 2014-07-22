@@ -222,6 +222,8 @@ public class RegAuthCodeFragment extends BaseV4Fragment {
 				map.put(UserTable.U_CITYID, String.valueOf(userPreference.getU_cityid()));
 				map.put(UserTable.U_PROVINCEID, String.valueOf(userPreference.getU_provinceid()));
 				map.put(UserTable.U_ADDRESS, userPreference.getU_address());
+				map.put(UserTable.U_BPUSH_USER_ID, userPreference.getBpush_UserID());
+				map.put(UserTable.U_BPUSH_CHANNEL_ID, userPreference.getBpush_ChannelID());
 
 				// зЂВс
 				String result = HttpUtil.postRequest(url, map);

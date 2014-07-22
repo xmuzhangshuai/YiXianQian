@@ -8,7 +8,6 @@ import android.widget.Button;
 
 import com.yixianqian.R;
 import com.yixianqian.base.BaseActivity;
-import com.yixianqian.test.TestActivity;
 
 /**
  * 类名称：LoginOrRegisterActivity 类描述：注册或登录引导页面 创建人： 张帅 创建时间：2014-7-4 上午9:23:09
@@ -41,11 +40,8 @@ public class LoginOrRegisterActivity extends BaseActivity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				//				Intent intent = new Intent(LoginOrRegisterActivity.this, LoginActivity.class);
-				Intent intent = new Intent(LoginOrRegisterActivity.this, MainActivity.class);
-				//				Intent intent = new Intent(LoginOrRegisterActivity.this, HeadImageActivity.class);
+				Intent intent = new Intent(LoginOrRegisterActivity.this, LoginActivity.class);
 				startActivity(intent);
-
 				overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
 			}
 		});
@@ -55,10 +51,7 @@ public class LoginOrRegisterActivity extends BaseActivity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-//								Intent intent = new Intent(LoginOrRegisterActivity.this, RegisterActivity.class);
-//								Intent intent = new Intent(LoginOrRegisterActivity.this, HeadImageActivity.class);
-//				Intent intent = new Intent(LoginOrRegisterActivity.this, DayRecommendActivity.class);
-								Intent intent = new Intent(LoginOrRegisterActivity.this, TestActivity.class);
+				Intent intent = new Intent(LoginOrRegisterActivity.this, RegisterActivity.class);
 				startActivity(intent);
 				overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
 			}

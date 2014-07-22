@@ -8,7 +8,7 @@ import com.loopj.android.http.RequestParams;
 
 public class AsyncHttpClientImageSound {
 	public static final String HEADIMAGE_URL = "headimage";
-	public static final String BASE_URL = "http://192.168.1.105:8080/ImageSoundServer/";
+	public static final String BASE_URL = "http://192.168.1.107:8080/ImageSoundServer/";
 
 	private static AsyncHttpClient client = new AsyncHttpClient();
 

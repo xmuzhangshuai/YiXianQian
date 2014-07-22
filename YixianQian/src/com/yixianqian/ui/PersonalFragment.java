@@ -28,9 +28,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.yixianqian.R;
+import com.yixianqian.base.BaseApplication;
 import com.yixianqian.base.BaseV4Fragment;
 import com.yixianqian.config.DefaultKeys;
+import com.yixianqian.db.ProvinceDbService;
+import com.yixianqian.db.SchoolDbService;
+import com.yixianqian.utils.AsyncHttpClientTool;
 import com.yixianqian.utils.ImageLoaderTool;
+import com.yixianqian.utils.UserPreference;
 
 /**
  * 类名称：PersonalFragment
@@ -52,10 +57,14 @@ public class PersonalFragment extends BaseV4Fragment {
 	private View tapeView;//旋转磁带
 	private ImageView progressImage1;
 	private ImageView progressImage2;
-	private ImageView headImageView;
+	private ImageView headImageView;//头像
+	private TextView nameTextView;//姓名
+	private TextView provinceTextView;//省份
+	private TextView schoolTextView;//学校
 	private int count = 0;
 	private Uri takePhotoUri;
 	private String takePhotoPath;
+	private UserPreference userPreference;
 
 	File soundFileDir;//文件目录
 	File soundFile;//录音文件
@@ -66,7 +75,7 @@ public class PersonalFragment extends BaseV4Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		rootView = inflater.inflate(R.layout.fragment_personal, container, false);
-
+		userPreference = BaseApplication.getInstance().getUserPreference();
 		findViewById();// 初始化views
 		initView();
 		return rootView;
@@ -86,6 +95,9 @@ public class PersonalFragment extends BaseV4Fragment {
 		progressImage2 = (ImageView) rootView.findViewById(R.id.progressimage2);
 		tapeView = (View) rootView.findViewById(R.id.tape_view);
 		headImageView = (ImageView) rootView.findViewById(R.id.head_image);
+		nameTextView = (TextView) rootView.findViewById(R.id.name);
+		provinceTextView = (TextView) rootView.findViewById(R.id.province);
+		schoolTextView = (TextView) rootView.findViewById(R.id.school);
 	}
 
 	@Override
@@ -98,8 +110,14 @@ public class PersonalFragment extends BaseV4Fragment {
 		initRecorder();
 
 		//设置头像
-		imageLoader.displayImage("http://99touxiang.com/public/upload/nvsheng/18/04-072110_356.jpg", headImageView,
+		imageLoader.displayImage(AsyncHttpClientTool.getAbsoluteUrl(userPreference.getU_small_avatar()), headImageView,
 				ImageLoaderTool.getHeadImageOptions(10));
+		ProvinceDbService provinceDbService = ProvinceDbService.getInstance(getActivity());
+		SchoolDbService schoolDbService = SchoolDbService.getInstance(getActivity());
+		//设置姓名、省份、及学校
+		nameTextView.setText(userPreference.getU_nickname());
+		provinceTextView.setText(provinceDbService.getProNameById(userPreference.getU_provinceid()));
+		schoolTextView.setText(schoolDbService.schoolDao.load((long) userPreference.getU_schoolid()).getSchoolName());
 
 		//导航条右侧按钮
 		right_btn_bg.setOnClickListener(new OnClickListener() {

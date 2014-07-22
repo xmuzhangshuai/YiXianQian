@@ -50,9 +50,9 @@ public class PushMessageReceiver extends FrontiaPushMessageReceiver {
 		userPreference.setBpush_ChannelID(channelId);
 		userPreference.setBpush_UserID(userId);
 		userPreference.setAppID(appid);
-		System.out.println("channelId   " + channelId);
-		System.out.println("userId   " + userId);
-		System.out.println("appid   " + appid);
+//		System.out.println("channelId   " + channelId);
+//		System.out.println("userId   " + userId);
+//		System.out.println("appid   " + appid);
 	}
 
 	/**

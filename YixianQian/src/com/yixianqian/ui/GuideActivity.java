@@ -1,5 +1,7 @@
 package com.yixianqian.ui;
 
+import java.util.List;
+
 import org.apache.http.Header;
 
 import android.content.Context;
@@ -12,6 +14,8 @@ import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
+import com.baidu.android.pushservice.PushConstants;
+import com.baidu.android.pushservice.PushManager;
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
@@ -22,10 +26,14 @@ import com.loopj.android.http.TextHttpResponseHandler;
 import com.yixianqian.R;
 import com.yixianqian.base.BaseActivity;
 import com.yixianqian.base.BaseApplication;
+import com.yixianqian.config.Constants;
 import com.yixianqian.config.DefaultKeys;
 import com.yixianqian.db.CopyDataBase;
+import com.yixianqian.entities.TodayRecommend;
 import com.yixianqian.table.UserTable;
+import com.yixianqian.utils.AsyncHttpClientTool;
 import com.yixianqian.utils.DateTimeTools;
+import com.yixianqian.utils.FastJsonTool;
 import com.yixianqian.utils.SharePreferenceUtil;
 import com.yixianqian.utils.UserPreference;
 
@@ -66,6 +74,14 @@ public class GuideActivity extends BaseActivity {
 
 		//获取定位
 		initLocation();
+		//开启百度推送服务
+		PushManager.startWork(GuideActivity.this, PushConstants.LOGIN_TYPE_API_KEY, Constants.BaiduPushConfig.API_KEY);
+		// 基于地理位置推送，可以打开支持地理位置的推送的开关
+		PushManager.enableLbs(getApplicationContext());
+//		//设置标签
+//		PushManager.setTags(this, Constants.getTags());
+
+		//		getTodayRecommend();
 
 		if (count == 0) {// 如果是第一次登陆，则启动向导页面
 			// 第一次运行拷贝数据库文件
@@ -102,6 +118,20 @@ public class GuideActivity extends BaseActivity {
 	}
 
 	@Override
+	protected void onStart() {
+		// TODO Auto-generated method stub
+		//		PushManager.activityStarted(this);
+		super.onStart();
+	}
+
+	@Override
+	protected void onStop() {
+		// TODO Auto-generated method stub
+		//		PushManager.activityStoped(this);
+		super.onStop();
+	}
+
+	@Override
 	protected void findViewById() {
 		// TODO Auto-generated method stub
 		loadingImage = (ImageView) findViewById(R.id.loading_item);
@@ -110,29 +140,29 @@ public class GuideActivity extends BaseActivity {
 	@Override
 	protected void initView() {
 		// TODO Auto-generated method stub
-		Animation translate = AnimationUtils.loadAnimation(this, R.anim.splash_loading);
-		translate.setAnimationListener(new AnimationListener() {
-
-			@Override
-			public void onAnimationStart(Animation animation) {
-				// TODO Auto-generated method stub
-			}
-
-			@Override
-			public void onAnimationRepeat(Animation animation) {
-				// TODO Auto-generated method stub
-			}
-
-			@Override
-			public void onAnimationEnd(Animation animation) {
-				// TODO Auto-generated method stub
-				// 启动MainActivity，相当于Intent
-				openActivity(MainActivity.class);
-				overridePendingTransition(R.anim.splash_fade_in, R.anim.splash_fade_out);
-				GuideActivity.this.finish();
-			}
-		});
-		loadingImage.setAnimation(translate);
+		//		Animation translate = AnimationUtils.loadAnimation(this, R.anim.splash_loading);
+		//		translate.setAnimationListener(new AnimationListener() {
+		//
+		//			@Override
+		//			public void onAnimationStart(Animation animation) {
+		//				// TODO Auto-generated method stub
+		//			}
+		//
+		//			@Override
+		//			public void onAnimationRepeat(Animation animation) {
+		//				// TODO Auto-generated method stub
+		//			}
+		//
+		//			@Override
+		//			public void onAnimationEnd(Animation animation) {
+		//				// TODO Auto-generated method stub
+		//				// 启动MainActivity，相当于Intent
+		//				openActivity(MainActivity.class);
+		//				overridePendingTransition(R.anim.splash_fade_in, R.anim.splash_fade_out);
+		//				GuideActivity.this.finish();
+		//			}
+		//		});
+		//		loadingImage.setAnimation(translate);
 	}
 
 	@Override
@@ -142,20 +172,33 @@ public class GuideActivity extends BaseActivity {
 	}
 
 	/**
+	 * 初始化用户数据
+	 */
+	private void InitData() {
+
+	}
+
+	/**
 	 * 获取今日推荐
 	 */
 	private void getTodayRecommend() {
+		sharePreferenceUtil.setTodayRecommend("");
 		//如果没有推荐过
 		if (!sharePreferenceUtil.getTodayRecommend().equals(DateTimeTools.getCurrentDateForString())) {
 			RequestParams params = new RequestParams();
 			params.put(UserTable.U_ID, userPreference.getU_id());
+			//			params.put(UserTable.U_ID, 10);
 			TextHttpResponseHandler responseHandler = new TextHttpResponseHandler("utf-8") {
 
 				@Override
 				public void onSuccess(int statusCode, Header[] headers, String response) {
 					// TODO Auto-generated method stub
 					if (statusCode == 200) {
-
+						List<TodayRecommend> todayRecommends = FastJsonTool.getObjectList(response,
+								TodayRecommend.class);
+						Intent intent = new Intent(GuideActivity.this,MainActivity.class);
+						startActivity(intent);
+						overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
 					}
 				}
 
@@ -165,12 +208,9 @@ public class GuideActivity extends BaseActivity {
 
 				}
 			};
-			//			AsyncHttpClientTool.post(this, "", params, responseHandler);
+			AsyncHttpClientTool.post(this, "userpush", params, responseHandler);
 			sharePreferenceUtil.setTodayRecommend(DateTimeTools.getCurrentDateForString());
-		} else {
-
 		}
-
 	}
 
 	/**

@@ -23,15 +23,15 @@ import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.TextHttpResponseHandler;
 import com.yixianqian.R;
 import com.yixianqian.base.BaseActivity;
+import com.yixianqian.base.BaseApplication;
 import com.yixianqian.table.UserTable;
 import com.yixianqian.utils.AsyncHttpClientImageSound;
-import com.yixianqian.utils.SharePreferenceUtil;
 import com.yixianqian.utils.ToastTool;
+import com.yixianqian.utils.UserPreference;
 
 /**
  * 类名称：HeadImageActivity
@@ -48,6 +48,7 @@ public class HeadImageActivity extends BaseActivity {
 	private View rightImageButton;//导航栏右侧按钮
 	private ImageView headImage;// 头像
 	private ImageView camera_image;//相机图标
+	private UserPreference userPreference;
 
 	private File picFile;
 	private Uri photoUri;
@@ -60,7 +61,8 @@ public class HeadImageActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_head_image);
-
+		userPreference = BaseApplication.getInstance().getUserPreference();
+		
 		findViewById();
 		initView();
 	}
@@ -273,8 +275,7 @@ public class HeadImageActivity extends BaseActivity {
 	 */
 	public void uploadImage(String filePath) {
 		RequestParams params = new RequestParams();
-		//		int userId = sharePreferenceUtil.getU_id();
-		int userId = 8;
+		int userId = userPreference.getU_id();
 		if (userId > -1) {
 			params.put(UserTable.U_ID, String.valueOf(userId));
 			try {

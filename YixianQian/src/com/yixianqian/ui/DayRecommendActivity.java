@@ -25,7 +25,6 @@ import com.yixianqian.db.TodayRecommendDbService;
 import com.yixianqian.entities.TodayRecommend;
 import com.yixianqian.utils.DensityUtil;
 import com.yixianqian.utils.ImageLoaderTool;
-import com.yixianqian.utils.ImageTools;
 
 /**
  * ¿‡√˚≥∆£∫DayRecommendActivity
