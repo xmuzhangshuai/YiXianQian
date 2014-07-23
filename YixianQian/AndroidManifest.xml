@@ -45,13 +45,13 @@
     </instrumentation>
 
     <application
-        android:name=".base.BaseApplication"
+        android:name="com.yixianqian.base.BaseApplication"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".ui.GuideActivity"
+            android:name="com.yixianqian.ui.GuideActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
@@ -66,21 +66,21 @@
 
         <!-- 注册或登录页面 -->
         <activity
-            android:name=".ui.LoginOrRegisterActivity"
+            android:name="com.yixianqian.ui.LoginOrRegisterActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
         </activity>
 
         <!-- 首次安装运行页面 -->
         <activity
-            android:name=".ui.GuidePagerActivity"
+            android:name="com.yixianqian.ui.GuidePagerActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
         </activity>
 
         <!-- 登录页面 -->
         <activity
-            android:name=".ui.LoginActivity"
+            android:name="com.yixianqian.ui.LoginActivity"
             android:label="@string/title_activity_login"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateVisible" >
@@ -91,58 +91,58 @@
 
         <!-- 注册页面 -->
         <activity
-            android:name=".ui.RegisterActivity"
+            android:name="com.yixianqian.ui.RegisterActivity"
             android:screenOrientation="portrait" >
         </activity>
 
         <!-- 主页面 -->
         <activity
-            android:name=".ui.MainActivity"
+            android:name="com.yixianqian.ui.MainActivity"
             android:screenOrientation="portrait" >
         </activity>
 
         <!-- 每日推荐页面 -->
         <activity
-            android:name=".ui.DayRecommendActivity"
+            android:name="com.yixianqian.ui.DayRecommendActivity"
             android:screenOrientation="portrait" >
         </activity>
 
         <!-- 每日推荐帮助页面 -->
         <activity
-            android:name=".ui.RecommendHelpActivity"
+            android:name="com.yixianqian.ui.RecommendHelpActivity"
             android:screenOrientation="portrait" >
         </activity>
 
         <!-- 上传头像页面 -->
         <activity
-            android:name=".ui.HeadImageActivity"
+            android:name="com.yixianqian.ui.HeadImageActivity"
             android:label="@string/title_activity_head_image"
             android:screenOrientation="portrait" >
         </activity>
 
         <!-- 时间胶囊页面 -->
         <activity
-            android:name=".ui.TimeCapsuleActivity"
+            android:name="com.yixianqian.ui.TimeCapsuleActivity"
             android:label="@string/title_activity_time_capsule"
             android:screenOrientation="portrait" >
         </activity>
 
         <!-- 发布记录页面 -->
         <activity
-            android:name=".ui.PublishTimeCapActivity"
+            android:name="com.yixianqian.ui.PublishTimeCapActivity"
             android:label="@string/title_activity_publish_time_cap"
             android:screenOrientation="portrait" >
         </activity>
 
         <!-- 爱情验证页面 -->
         <activity
-            android:name=".ui.LoveVertifyActivity"
+            android:name="com.yixianqian.ui.LoveVertifyActivity"
             android:label="@string/title_activity_love_vertify" >
         </activity>
 
         <!-- 聊天页面 -->
         <activity
-            android:name=".ui.ChatActivity"
+            android:name="com.yixianqian.ui.ChatActivity"
             android:alwaysRetainTaskState="true"
             android:configChanges="locale|keyboardHidden|orientation"
             android:launchMode="singleTop"
@@ -159,9 +159,16 @@
             android:windowSoftInputMode="stateAlwaysHidden" >
         </activity>
 
+        <!-- 显示高清图片 -->
+        <activity
+            android:name="com.yixianqian.ui.ImageShowerActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
+        </activity>
+
         <!-- 测试页面 -->
         <activity
-            android:name=".test.TestActivity"
+            android:name="com.yixianqian.test.TestActivity"
             android:label="@string/title_activity_test" >
         </activity>
 
@@ -186,7 +193,7 @@
         </service>
 
         <!-- 百度推送 -->
-        <receiver android:name=".baidupush.PushMessageReceiver" >
+        <receiver android:name="com.yixianqian.baidupush.MyPushMessageReceiver" >
             <intent-filter>
 
                 <!-- 接收push消息 -->

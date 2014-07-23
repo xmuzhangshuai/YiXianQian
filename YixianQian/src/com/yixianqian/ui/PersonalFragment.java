@@ -114,6 +114,18 @@ public class PersonalFragment extends BaseV4Fragment {
 		if (!TextUtils.isEmpty(userPreference.getU_small_avatar())) {
 			imageLoader.displayImage(AsyncHttpClientImageSound.getAbsoluteUrl(userPreference.getU_small_avatar()),
 					headImageView, ImageLoaderTool.getHeadImageOptions(10));
+			//点击显示高清头像
+			headImageView.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+					Intent intent = new Intent(getActivity(), ImageShowerActivity.class);
+					intent.putExtra(ImageShowerActivity.SHOW_BIG_IMAGE,
+							AsyncHttpClientImageSound.getAbsoluteUrl(userPreference.getU_large_avatar()));
+					startActivity(intent);
+					getActivity().overridePendingTransition(R.anim.zoomin, R.anim.zoomout);
+				}
+			});
 		}
 
 		ProvinceDbService provinceDbService = ProvinceDbService.getInstance(getActivity());

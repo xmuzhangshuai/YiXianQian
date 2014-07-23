@@ -16,6 +16,7 @@ import android.widget.ListView;
 
 import com.yixianqian.R;
 import com.yixianqian.base.BaseApplication;
+import com.yixianqian.db.FlipperDbService;
 import com.yixianqian.utils.UserPreference;
 
 /**
@@ -77,6 +78,8 @@ public class PersonalDialogFragment extends DialogFragment implements OnItemClic
 			//设置用户不曾登录
 			userPreference.setUserLogin(false);
 			userPreference.clear();
+			FlipperDbService flipperDbService = FlipperDbService.getInstance(getActivity());
+			flipperDbService.flipperDao.deleteAll();
 			Intent intent = new Intent(getActivity(),LoginOrRegisterActivity.class);
 			getActivity().startActivity(intent);
 			getActivity().finish();

@@ -83,6 +83,7 @@ public class RegPhoneFragment extends BaseV4Fragment {
 		SIMCardInfo siminfo = new SIMCardInfo(getActivity());
 		mPhoneView.setText(siminfo.getNativePhoneNumber());
 		mPhone = mPhoneView.getText().toString();
+
 		if ((!mPhone.isEmpty()) && mPhone.length() == 11) {
 			//检查手机号是否被注册
 			mCheckPhoneTask = new CheckPhoneTask();
@@ -185,7 +186,7 @@ public class RegPhoneFragment extends BaseV4Fragment {
 			focusView = mConformPassView;
 			cancel = true;
 		}
-		
+
 		//检查昵称
 		if (TextUtils.isEmpty(mName)) {
 			mNameView.setError(getString(R.string.error_field_required));

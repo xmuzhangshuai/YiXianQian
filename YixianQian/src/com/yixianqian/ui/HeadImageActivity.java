@@ -28,6 +28,7 @@ import com.loopj.android.http.TextHttpResponseHandler;
 import com.yixianqian.R;
 import com.yixianqian.base.BaseActivity;
 import com.yixianqian.base.BaseApplication;
+import com.yixianqian.server.ServerUtil;
 import com.yixianqian.table.UserTable;
 import com.yixianqian.utils.AsyncHttpClientImageSound;
 import com.yixianqian.utils.ImageTools;
@@ -108,10 +109,11 @@ public class HeadImageActivity extends BaseActivity {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				uploadImage(photoUri.getPath());
-				Intent intent = new Intent(HeadImageActivity.this, MainActivity.class);
-				startActivity(intent);
-				overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
-				finish();
+				ServerUtil.getInstance(HeadImageActivity.this).getFlipperAndRecommend(HeadImageActivity.this, true);
+				//				Intent intent = new Intent(HeadImageActivity.this, MainActivity.class);
+				//				startActivity(intent);
+				//				overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+				//				finish();
 			}
 		});
 	}

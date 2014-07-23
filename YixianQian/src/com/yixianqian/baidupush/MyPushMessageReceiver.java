@@ -22,9 +22,9 @@ import com.yixianqian.ui.MainActivity;
 import com.yixianqian.utils.FastJsonTool;
 import com.yixianqian.utils.UserPreference;
 
-public class PushMessageReceiver extends FrontiaPushMessageReceiver {
+public class MyPushMessageReceiver extends FrontiaPushMessageReceiver {
 	/** TAG to Log */
-	public static final String TAG = PushMessageReceiver.class.getSimpleName();
+	public static final String TAG = MyPushMessageReceiver.class.getSimpleName();
 	public static final int NOTIFY_ID = 0x000;
 	public static int mNewNum = 0;// 通知栏新消息条目，我只是用了一个全局变量，
 	public static final String RESPONSE = "response";

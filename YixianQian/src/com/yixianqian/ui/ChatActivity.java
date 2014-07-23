@@ -43,8 +43,8 @@ import com.yixianqian.R;
 import com.yixianqian.adapter.FaceAdapter;
 import com.yixianqian.adapter.FacePageAdeapter;
 import com.yixianqian.adapter.MessageAdapter;
-import com.yixianqian.baidupush.PushMessageReceiver;
-import com.yixianqian.baidupush.PushMessageReceiver.EventHandler;
+import com.yixianqian.baidupush.MyPushMessageReceiver;
+import com.yixianqian.baidupush.MyPushMessageReceiver.EventHandler;
 import com.yixianqian.baidupush.SendMsgAsyncTask;
 import com.yixianqian.base.BaseActivity;
 import com.yixianqian.base.BaseApplication;
@@ -128,7 +128,7 @@ public class ChatActivity extends BaseActivity implements OnTouchListener, IXLis
 	protected void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
-		PushMessageReceiver.ehList.add(this);// 监听推送的消息
+		MyPushMessageReceiver.ehList.add(this);// 监听推送的消息
 	}
 
 	@Override
@@ -136,7 +136,7 @@ public class ChatActivity extends BaseActivity implements OnTouchListener, IXLis
 		// TODO Auto-generated method stub
 		faceLinearLayout.setVisibility(View.GONE);
 		super.onPause();
-		PushMessageReceiver.ehList.remove(this);// 移除监听
+		MyPushMessageReceiver.ehList.remove(this);// 移除监听
 	}
 
 	@Override

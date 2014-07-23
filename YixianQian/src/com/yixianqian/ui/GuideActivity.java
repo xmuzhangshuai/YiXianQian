@@ -26,12 +26,12 @@ import com.yixianqian.config.Constants;
 import com.yixianqian.config.DefaultKeys;
 import com.yixianqian.db.CopyDataBase;
 import com.yixianqian.db.FlipperDbService;
-import com.yixianqian.db.SchoolDbService;
 import com.yixianqian.db.TodayRecommendDbService;
 import com.yixianqian.entities.Flipper;
 import com.yixianqian.entities.TodayRecommend;
 import com.yixianqian.jsonobject.JsonFlipperRequest;
 import com.yixianqian.jsonobject.JsonTodayRecommend;
+import com.yixianqian.server.ServerUtil;
 import com.yixianqian.table.UserTable;
 import com.yixianqian.utils.AsyncHttpClientTool;
 import com.yixianqian.utils.DateTimeTools;
@@ -96,7 +96,8 @@ public class GuideActivity extends BaseActivity {
 				setContentView(R.layout.activity_guide);
 				findViewById();
 				initView();
-				getFlipper();
+//				getFlipper();
+				ServerUtil.getInstance(GuideActivity.this).getFlipperAndRecommend(GuideActivity.this,false);
 			} else {//如果用户没有登录过或者已经注销
 				startActivity(new Intent(GuideActivity.this, LoginOrRegisterActivity.class));
 				//				finish();不定位
@@ -150,98 +151,98 @@ public class GuideActivity extends BaseActivity {
 	/**
 	 * 获取心动请求
 	 */
-	private void getFlipper() {
-		final FlipperDbService flipperDbService = FlipperDbService.getInstance(GuideActivity.this);
-		RequestParams params = new RequestParams();
-		params.put(UserTable.U_ID, userPreference.getU_id());
-
-		TextHttpResponseHandler responseHandler = new TextHttpResponseHandler("utf-8") {
-			@Override
-			public void onSuccess(int statusCode, Header[] headers, String response) {
-				// TODO Auto-generated method stub
-				if (statusCode == 200) {
-					List<JsonFlipperRequest> jsonFlipperRequests = FastJsonTool.getObjectList(response,
-							JsonFlipperRequest.class);
-					if (jsonFlipperRequests != null && jsonFlipperRequests.size() > 0) {
-						for (JsonFlipperRequest fRequest : jsonFlipperRequests) {
-							Flipper flipper = new Flipper(null, fRequest.getU_id(), fRequest.getU_nickname(),
-									fRequest.getU_realname(), fRequest.getU_gender(), fRequest.getU_email(),
-									fRequest.getU_large_avatar(), fRequest.getU_small_avatar(),
-									fRequest.getU_blood_type(), fRequest.getU_constell(), fRequest.getU_introduce(),
-									fRequest.getU_birthday(), fRequest.getTime(), fRequest.getU_age(),
-									fRequest.getU_vocationid(), fRequest.getU_stateid(), fRequest.getU_provinceid(),
-									fRequest.getU_schoolid(), fRequest.getU_height(), fRequest.getU_weight(),
-									fRequest.getU_image_pass(), fRequest.getU_salary(), false);
-							flipperDbService.flipperDao.insert(flipper);
-						}
-					}
-				}
-				getTodayRecommend();
-			}
-
-			@Override
-			public void onFailure(int statusCode, Header[] headers, String errorResponse, Throwable e) {
-				// TODO Auto-generated method stub
-				getTodayRecommend();
-			}
-		};
-		AsyncHttpClientTool.post(this, "getflipperrequest", params, responseHandler);
-	}
-
-	/**
-	 * 获取今日推荐
-	 */
-	private void getTodayRecommend() {
-		final TodayRecommendDbService todayRecommendDbService = TodayRecommendDbService.getInstance(GuideActivity.this);
-		sharePreferenceUtil.setTodayRecommend("");
-		todayRecommendDbService.todayRecommendDao.deleteAll();
-		//如果没有推荐过
-		if (!sharePreferenceUtil.getTodayRecommend().equals(DateTimeTools.getCurrentDateForString())) {
-			RequestParams params = new RequestParams();
-			params.put(UserTable.U_ID, userPreference.getU_id());
-			TextHttpResponseHandler responseHandler = new TextHttpResponseHandler("utf-8") {
-				Intent intent = new Intent(GuideActivity.this, DayRecommendActivity.class);
-
-				@Override
-				public void onSuccess(int statusCode, Header[] headers, String response) {
-					// TODO Auto-generated method stub
-					if (statusCode == 200) {
-						List<JsonTodayRecommend> todayRecommends = FastJsonTool.getObjectList(response,
-								JsonTodayRecommend.class);
-						if (todayRecommends != null && todayRecommends.size() > 0) {
-							for (JsonTodayRecommend jsonTodayRecommend : todayRecommends) {
-								TodayRecommend todayRecommend = new TodayRecommend(null,
-										jsonTodayRecommend.getUserID(), jsonTodayRecommend.getUserName(),
-										jsonTodayRecommend.getUserAvatar(), jsonTodayRecommend.getUserAge(),
-										DateTimeTools.getCurrentDateForString(), jsonTodayRecommend.getSchoolID());
-								todayRecommendDbService.todayRecommendDao.insert(todayRecommend);
-							}
-							startActivity(intent);
-							overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
-						} else {
-							intent = new Intent(GuideActivity.this, MainActivity.class);
-							startActivity(intent);
-							overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
-						}
-					}
-				}
-
-				@Override
-				public void onFailure(int statusCode, Header[] headers, String errorResponse, Throwable e) {
-					// TODO Auto-generated method stub
-					intent = new Intent(GuideActivity.this, MainActivity.class);
-					startActivity(intent);
-					overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
-				}
-			};
-			AsyncHttpClientTool.post(this, "userpush", params, responseHandler);
-			sharePreferenceUtil.setTodayRecommend(DateTimeTools.getCurrentDateForString());
-		} else {
-			Intent intent = new Intent(GuideActivity.this, MainActivity.class);
-			startActivity(intent);
-			overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
-		}
-	}
+//	private void getFlipper() {
+//		final FlipperDbService flipperDbService = FlipperDbService.getInstance(GuideActivity.this);
+//		RequestParams params = new RequestParams();
+//		params.put(UserTable.U_ID, userPreference.getU_id());
+//
+//		TextHttpResponseHandler responseHandler = new TextHttpResponseHandler("utf-8") {
+//			@Override
+//			public void onSuccess(int statusCode, Header[] headers, String response) {
+//				// TODO Auto-generated method stub
+//				if (statusCode == 200) {
+//					List<JsonFlipperRequest> jsonFlipperRequests = FastJsonTool.getObjectList(response,
+//							JsonFlipperRequest.class);
+//					if (jsonFlipperRequests != null && jsonFlipperRequests.size() > 0) {
+//						for (JsonFlipperRequest fRequest : jsonFlipperRequests) {
+//							Flipper flipper = new Flipper(null, fRequest.getU_id(), fRequest.getU_nickname(),
+//									fRequest.getU_realname(), fRequest.getU_gender(), fRequest.getU_email(),
+//									fRequest.getU_large_avatar(), fRequest.getU_small_avatar(),
+//									fRequest.getU_blood_type(), fRequest.getU_constell(), fRequest.getU_introduce(),
+//									fRequest.getU_birthday(), fRequest.getTime(), fRequest.getU_age(),
+//									fRequest.getU_vocationid(), fRequest.getU_stateid(), fRequest.getU_provinceid(),
+//									fRequest.getU_schoolid(), fRequest.getU_height(), fRequest.getU_weight(),
+//									fRequest.getU_image_pass(), fRequest.getU_salary(), false);
+//							flipperDbService.flipperDao.insert(flipper);
+//						}
+//					}
+//				}
+//				getTodayRecommend();
+//			}
+//
+//			@Override
+//			public void onFailure(int statusCode, Header[] headers, String errorResponse, Throwable e) {
+//				// TODO Auto-generated method stub
+//				getTodayRecommend();
+//			}
+//		};
+//		AsyncHttpClientTool.post(this, "getflipperrequest", params, responseHandler);
+//	}
+//
+//	/**
+//	 * 获取今日推荐
+//	 */
+//	private void getTodayRecommend() {
+//		final TodayRecommendDbService todayRecommendDbService = TodayRecommendDbService.getInstance(GuideActivity.this);
+////		sharePreferenceUtil.setTodayRecommend("");
+//		todayRecommendDbService.todayRecommendDao.deleteAll();
+//		//如果没有推荐过
+//		if (!sharePreferenceUtil.getTodayRecommend().equals(DateTimeTools.getCurrentDateForString())) {
+//			RequestParams params = new RequestParams();
+//			params.put(UserTable.U_ID, userPreference.getU_id());
+//			TextHttpResponseHandler responseHandler = new TextHttpResponseHandler("utf-8") {
+//				Intent intent = new Intent(GuideActivity.this, DayRecommendActivity.class);
+//
+//				@Override
+//				public void onSuccess(int statusCode, Header[] headers, String response) {
+//					// TODO Auto-generated method stub
+//					if (statusCode == 200) {
+//						List<JsonTodayRecommend> todayRecommends = FastJsonTool.getObjectList(response,
+//								JsonTodayRecommend.class);
+//						if (todayRecommends != null && todayRecommends.size() > 0) {
+//							for (JsonTodayRecommend jsonTodayRecommend : todayRecommends) {
+//								TodayRecommend todayRecommend = new TodayRecommend(null,
+//										jsonTodayRecommend.getUserID(), jsonTodayRecommend.getUserName(),
+//										jsonTodayRecommend.getUserAvatar(), jsonTodayRecommend.getUserAge(),
+//										DateTimeTools.getCurrentDateForString(), jsonTodayRecommend.getSchoolID());
+//								todayRecommendDbService.todayRecommendDao.insert(todayRecommend);
+//							}
+//							startActivity(intent);
+//							overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+//						} else {
+//							intent = new Intent(GuideActivity.this, MainActivity.class);
+//							startActivity(intent);
+//							overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+//						}
+//					}
+//				}
+//
+//				@Override
+//				public void onFailure(int statusCode, Header[] headers, String errorResponse, Throwable e) {
+//					// TODO Auto-generated method stub
+//					intent = new Intent(GuideActivity.this, MainActivity.class);
+//					startActivity(intent);
+//					overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+//				}
+//			};
+//			AsyncHttpClientTool.post(this, "userpush", params, responseHandler);
+//			sharePreferenceUtil.setTodayRecommend(DateTimeTools.getCurrentDateForString());
+//		} else {
+//			Intent intent = new Intent(GuideActivity.this, MainActivity.class);
+//			startActivity(intent);
+//			overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+//		}
+//	}
 
 	/**
 	 * 停止，减少资源消耗

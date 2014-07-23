@@ -26,6 +26,7 @@ import com.yixianqian.R;
 import com.yixianqian.base.BaseActivity;
 import com.yixianqian.base.BaseApplication;
 import com.yixianqian.jsonobject.JsonUser;
+import com.yixianqian.server.ServerUtil;
 import com.yixianqian.table.UserTable;
 import com.yixianqian.utils.FastJsonTool;
 import com.yixianqian.utils.HttpUtil;
@@ -289,11 +290,13 @@ public class LoginActivity extends BaseActivity {
 				userPreference.setU_tel(user.getU_tel());
 				userPreference.setU_vocationid(user.getU_vocationid());
 				userPreference.setU_weight(user.getU_weight());
+				
+				ServerUtil.getInstance(LoginActivity.this).getFlipperAndRecommend(LoginActivity.this,true);
 
-				Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-				startActivity(intent);
-				overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
-				finish();
+//				Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+//				startActivity(intent);
+//				overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+//				finish();
 			} else {
 				mPasswordView.setError("用户名或密码错误！");
 				mPasswordView.requestFocus();
