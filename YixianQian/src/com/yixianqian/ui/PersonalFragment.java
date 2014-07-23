@@ -17,6 +17,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -33,7 +34,7 @@ import com.yixianqian.base.BaseV4Fragment;
 import com.yixianqian.config.DefaultKeys;
 import com.yixianqian.db.ProvinceDbService;
 import com.yixianqian.db.SchoolDbService;
-import com.yixianqian.utils.AsyncHttpClientTool;
+import com.yixianqian.utils.AsyncHttpClientImageSound;
 import com.yixianqian.utils.ImageLoaderTool;
 import com.yixianqian.utils.UserPreference;
 
@@ -110,15 +111,20 @@ public class PersonalFragment extends BaseV4Fragment {
 		initRecorder();
 
 		//设置头像
-		imageLoader.displayImage(AsyncHttpClientTool.getAbsoluteUrl(userPreference.getU_small_avatar()), headImageView,
-				ImageLoaderTool.getHeadImageOptions(10));
+		if (!TextUtils.isEmpty(userPreference.getU_small_avatar())) {
+			imageLoader.displayImage(AsyncHttpClientImageSound.getAbsoluteUrl(userPreference.getU_small_avatar()),
+					headImageView, ImageLoaderTool.getHeadImageOptions(10));
+		}
+
 		ProvinceDbService provinceDbService = ProvinceDbService.getInstance(getActivity());
 		SchoolDbService schoolDbService = SchoolDbService.getInstance(getActivity());
 		//设置姓名、省份、及学校
 		//优先显示真实姓名
 		String name = userPreference.getU_nickname();
-		if (userPreference.getU_realname().length() > 0) {
-			name = userPreference.getU_realname();
+		if (userPreference.getU_realname() != null) {
+			if (userPreference.getU_realname().length() > 0) {
+				name = userPreference.getU_realname();
+			}
 		}
 		nameTextView.setText(name);
 		provinceTextView.setText(provinceDbService.getProNameById(userPreference.getU_provinceid()));

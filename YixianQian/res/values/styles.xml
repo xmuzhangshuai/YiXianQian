@@ -22,5 +22,4 @@
         <item name="android:shadowDy">-1.0</item>
         <item name="android:shadowRadius">0.2</item>
     </style>
-
 </resources>

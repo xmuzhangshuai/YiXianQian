@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.widget.ImageView;
 
 import com.baidu.android.pushservice.PushConstants;
 import com.baidu.android.pushservice.PushManager;
@@ -26,7 +25,9 @@ import com.yixianqian.base.BaseApplication;
 import com.yixianqian.config.Constants;
 import com.yixianqian.config.DefaultKeys;
 import com.yixianqian.db.CopyDataBase;
+import com.yixianqian.db.TodayRecommendDbService;
 import com.yixianqian.entities.TodayRecommend;
+import com.yixianqian.jsonobject.JsonTodayRecommend;
 import com.yixianqian.table.UserTable;
 import com.yixianqian.utils.AsyncHttpClientTool;
 import com.yixianqian.utils.DateTimeTools;
@@ -48,7 +49,7 @@ import com.yixianqian.utils.UserPreference;
  *
  */
 public class GuideActivity extends BaseActivity {
-	private ImageView loadingImage;
+//	private ImageView loadingImage;
 	public LocationClient mLocationClient = null;
 	public BDLocationListener myListener = new MyLocationListener();
 	public SharedPreferences locationPreferences;// 记录用户位置
@@ -131,7 +132,6 @@ public class GuideActivity extends BaseActivity {
 	@Override
 	protected void findViewById() {
 		// TODO Auto-generated method stub
-		loadingImage = (ImageView) findViewById(R.id.loading_item);
 	}
 
 	@Override
@@ -149,34 +149,54 @@ public class GuideActivity extends BaseActivity {
 	 * 获取今日推荐
 	 */
 	private void getTodayRecommend() {
+		final TodayRecommendDbService todayRecommendDbService = TodayRecommendDbService.getInstance(GuideActivity.this);
 		sharePreferenceUtil.setTodayRecommend("");
+		todayRecommendDbService.todayRecommendDao.deleteAll();
 		//如果没有推荐过
 		if (!sharePreferenceUtil.getTodayRecommend().equals(DateTimeTools.getCurrentDateForString())) {
 			RequestParams params = new RequestParams();
 			params.put(UserTable.U_ID, userPreference.getU_id());
-			//			params.put(UserTable.U_ID, 10);
 			TextHttpResponseHandler responseHandler = new TextHttpResponseHandler("utf-8") {
+				Intent intent = new Intent(GuideActivity.this, DayRecommendActivity.class);
 
 				@Override
 				public void onSuccess(int statusCode, Header[] headers, String response) {
 					// TODO Auto-generated method stub
 					if (statusCode == 200) {
-						List<TodayRecommend> todayRecommends = FastJsonTool.getObjectList(response,
-								TodayRecommend.class);
-						Intent intent = new Intent(GuideActivity.this, MainActivity.class);
-						startActivity(intent);
-						overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+						List<JsonTodayRecommend> todayRecommends = FastJsonTool.getObjectList(response,
+								JsonTodayRecommend.class);
+						if (todayRecommends != null && todayRecommends.size() > 0) {
+							for (JsonTodayRecommend jsonTodayRecommend : todayRecommends) {
+								TodayRecommend todayRecommend = new TodayRecommend(null,
+										jsonTodayRecommend.getUserID(), jsonTodayRecommend.getUserName(),
+										jsonTodayRecommend.getUserAvatar(), jsonTodayRecommend.getUserAge(),
+										DateTimeTools.getCurrentDateForString(), jsonTodayRecommend.getSchoolID());
+								todayRecommendDbService.todayRecommendDao.insert(todayRecommend);
+							}
+							startActivity(intent);
+							overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+						}else {
+							intent = new Intent(GuideActivity.this, MainActivity.class);
+							startActivity(intent);
+							overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+						}
 					}
 				}
 
 				@Override
 				public void onFailure(int statusCode, Header[] headers, String errorResponse, Throwable e) {
 					// TODO Auto-generated method stub
-
+					intent = new Intent(GuideActivity.this, MainActivity.class);
+					startActivity(intent);
+					overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
 				}
 			};
 			AsyncHttpClientTool.post(this, "userpush", params, responseHandler);
 			sharePreferenceUtil.setTodayRecommend(DateTimeTools.getCurrentDateForString());
+		} else {
+			Intent intent = new Intent(GuideActivity.this, MainActivity.class);
+			startActivity(intent);
+			overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
 		}
 	}
 

@@ -17,7 +17,6 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
-            android:text="AODAILE"
             android:textSize="@dimen/day_recommend_user_font" />
 
         <TextView
@@ -26,7 +25,6 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
-            android:text="21岁"
             android:textSize="@dimen/day_recommend_user_font" />
 
         <TextView
@@ -36,7 +34,6 @@
             android:layout_alignParentTop="true"
             android:layout_marginRight="16dp"
             android:layout_toLeftOf="@+id/age"
-            android:text="单身"
             android:textSize="@dimen/day_recommend_user_font" />
 
         <TextView
@@ -46,7 +43,6 @@
             android:layout_alignParentTop="true"
             android:layout_marginRight="16dp"
             android:layout_toLeftOf="@+id/state"
-            android:text="女"
             android:textSize="@dimen/day_recommend_user_font" />
     </RelativeLayout>
 

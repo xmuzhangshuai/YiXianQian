@@ -12,7 +12,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
@@ -288,7 +287,7 @@ public class HeadImageActivity extends BaseActivity {
 			try {
 				params.put("large_avatar", picFile);
 				params.put("small_avatar",
-						ImageTools.savePhotoToSDCard(smallBitmap, smallAvatarPath, "smallAvatar.jpeg",100));
+						ImageTools.savePhotoToSDCard(smallBitmap, smallAvatarPath, "smallAvatar.jpeg", 100));
 			} catch (FileNotFoundException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
@@ -301,6 +300,8 @@ public class HeadImageActivity extends BaseActivity {
 						ToastTool.showLong(HeadImageActivity.this, "头像上传成功！请等待审核");
 						largeAvatar.recycle();
 						smallBitmap.recycle();
+						//设置头像已改变
+						userPreference.setHeadImageChanged(true);
 					}
 				}
 
@@ -310,8 +311,7 @@ public class HeadImageActivity extends BaseActivity {
 					ToastTool.showLong(HeadImageActivity.this, "头像上传失败！" + errorResponse);
 				}
 			};
-			AsyncHttpClientImageSound.post(HeadImageActivity.this, AsyncHttpClientImageSound.HEADIMAGE_URL, params,
-					responseHandler);
+			AsyncHttpClientImageSound.post(AsyncHttpClientImageSound.HEADIMAGE_URL, params, responseHandler);
 		}
 	}
 }

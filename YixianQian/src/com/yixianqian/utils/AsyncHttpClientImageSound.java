@@ -5,10 +5,11 @@ import android.content.Context;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+import com.yixianqian.config.DefaultSetting;
 
 public class AsyncHttpClientImageSound {
 	public static final String HEADIMAGE_URL = "headimage";
-	public static final String BASE_URL = "http://192.168.1.107:8080/ImageSoundServer/";
+	public static final String BASE_URL = DefaultSetting.DoMainName+"ImageSoundServer/";
 
 	private static AsyncHttpClient client = new AsyncHttpClient();
 
@@ -28,7 +29,7 @@ public class AsyncHttpClientImageSound {
 		client.post(context, getAbsoluteUrl(url), params, responseHandler);
 	}
 
-	private static String getAbsoluteUrl(String relativeUrl) {
+	public static String getAbsoluteUrl(String relativeUrl) {
 		return BASE_URL + relativeUrl;
 	}
 }

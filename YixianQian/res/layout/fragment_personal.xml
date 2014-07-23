@@ -24,7 +24,8 @@
                 android:layout_height="@dimen/get_image_btn_padding"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="20dp" />
+                android:layout_marginLeft="20dp"
+                android:src="@drawable/photoconor" />
 
             <TextView
                 android:id="@+id/name"

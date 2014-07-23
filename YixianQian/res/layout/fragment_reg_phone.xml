@@ -12,26 +12,27 @@
         android:padding="@dimen/day_recommend_dot_space" >
 
         <EditText
-            android:id="@+id/phone"
+            android:id="@+id/name"
             android:layout_width="match_parent"
             android:layout_height="@dimen/register_height"
             android:layout_marginTop="20dp"
             android:background="@drawable/shape_radius"
-            android:hint="请输入手机号码"
-            android:inputType="phone"
-            android:maxLength="11"
+            android:hint="昵称"
+            android:inputType="textPersonName"
+            android:maxLength="10"
             android:maxLines="1"
             android:paddingLeft="@dimen/personal_timecapsule_padding"
             android:textColorHint="@color/system_gray"
             android:textSize="@dimen/day_recommend_user_font" >
 
-            <requestFocus />
+            <requestFocus android:layout_width="match_parent" />
+
         </EditText>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/day_recommend_help_font_space"
+            android:layout_marginTop="20dp"
             android:text="@string/register_phone_info"
             android:textColor="@color/dark_gray"
             android:textSize="@dimen/register_font_size" />
@@ -39,9 +40,29 @@
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/day_recommend_dot_margin_top"
+            android:layout_marginTop="2dp"
             android:background="@drawable/shape_radius"
             android:orientation="vertical" >
+
+            <EditText
+                android:id="@+id/phone"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/register_height"
+                android:layout_marginTop="2dp"
+                android:background="@drawable/shape_top_radius"
+                android:hint="请输入手机号码"
+                android:inputType="phone"
+                android:maxLength="11"
+                android:maxLines="1"
+                android:paddingLeft="@dimen/personal_timecapsule_padding"
+                android:textColorHint="@color/system_gray"
+                android:textSize="@dimen/day_recommend_user_font" >
+            </EditText>
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="1.0px"
+                android:background="@drawable/shape_line" />
 
             <EditText
                 android:id="@+id/password"

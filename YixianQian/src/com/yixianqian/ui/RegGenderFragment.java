@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.yixianqian.R;
 import com.yixianqian.base.BaseApplication;
 import com.yixianqian.base.BaseV4Fragment;
+import com.yixianqian.config.Constants;
 import com.yixianqian.utils.UserPreference;
 
 /**
@@ -35,8 +36,6 @@ public class RegGenderFragment extends BaseV4Fragment implements OnCheckedChange
 	private View leftImageButton;//导航栏左侧按钮
 	private View rightImageButton;//导航栏右侧按钮
 
-	private boolean mIsSingle;
-	private String gender;
 	private UserPreference userPreference;
 
 	@Override
@@ -44,7 +43,7 @@ public class RegGenderFragment extends BaseV4Fragment implements OnCheckedChange
 		// TODO Auto-generated method stub
 		rootView = inflater.inflate(R.layout.fragment_reg_gender, container, false);
 		userPreference = BaseApplication.getInstance().getUserPreference();
-		
+
 		findViewById();// 初始化views
 		initView();
 		return rootView;
@@ -105,7 +104,6 @@ public class RegGenderFragment extends BaseV4Fragment implements OnCheckedChange
 	 * 检查是否都已选
 	 */
 	private void attemptGender() {
-
 		boolean cancel = false;
 
 		//检查是否选择状态
@@ -123,9 +121,9 @@ public class RegGenderFragment extends BaseV4Fragment implements OnCheckedChange
 			cancel = true;
 			rightImageButton.setEnabled(false);
 		} else if (mMale.isChecked()) {
-			userPreference.setU_gender("男");
+			userPreference.setU_gender(Constants.Gender.MALE);
 		} else if (mFemale.isChecked()) {
-			userPreference.setU_gender("女");
+			userPreference.setU_gender(Constants.Gender.FEMALE);
 		}
 
 		if (!cancel) {
@@ -143,7 +141,6 @@ public class RegGenderFragment extends BaseV4Fragment implements OnCheckedChange
 		transaction.setCustomAnimations(R.anim.push_left_in, R.anim.push_left_out, R.anim.push_right_in,
 				R.anim.push_right_out);
 		transaction.replace(R.id.fragment_container, regSchoolFragment);
-		//		transaction.addToBackStack(null);
 		transaction.commit();
 	}
 

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.view.PagerAdapter;
@@ -15,16 +14,24 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.yixianqian.R;
+import com.yixianqian.base.BaseApplication;
 import com.yixianqian.base.BaseFragmentActivity;
+import com.yixianqian.config.Constants;
 import com.yixianqian.db.TodayRecommendDbService;
 import com.yixianqian.entities.TodayRecommend;
+import com.yixianqian.utils.AsyncHttpClientImageSound;
 import com.yixianqian.utils.DensityUtil;
 import com.yixianqian.utils.ImageLoaderTool;
+import com.yixianqian.utils.ToastTool;
+import com.yixianqian.utils.UserPreference;
 
 /**
  * 类名称：DayRecommendActivity
@@ -41,12 +48,16 @@ public class DayRecommendActivity extends BaseFragmentActivity {
 	private ImageView next_btn;
 
 	//滑动推荐用户集合
-	//	private ArrayList<View> recommendPageViews = null;
 	private List<TodayRecommend> todayRecommendList;
+	private UserPreference userPreference;
 
 	// 包含圆点图片的View
 	private ViewGroup imageCircleView = null;
 	private ImageView[] imageCircleViews = null;
+
+	//喜欢
+	private CheckBox like;
+	private int currentLike;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -56,20 +67,11 @@ public class DayRecommendActivity extends BaseFragmentActivity {
 		setContentView(R.layout.activity_day_recommend);
 		todayRecommendList = new ArrayList<TodayRecommend>();
 		todayRecommendList = TodayRecommendDbService.getInstance(this).getTodayRecommendList();
+		userPreference = BaseApplication.getInstance().getUserPreference();
 
 		findViewById();
 		initView();
 
-		//		TodayRecommendDbService todayRecommendDbService = TodayRecommendDbService.getInstance(this);
-		//		List<TodayRecommend> todayRecommends = todayRecommendDbService.getTodayRecommendList();
-		//		if (todayRecommends != null) {
-		//			System.out.println(todayRecommends.size());
-		//			for (TodayRecommend todayRecommend : todayRecommends) {
-		//				System.out.println(todayRecommend.getUserAvatar());
-		//			}
-		//		} else {
-		//			System.out.println("为空");
-		//		}
 	}
 
 	@Override
@@ -79,17 +81,16 @@ public class DayRecommendActivity extends BaseFragmentActivity {
 		recommendHelp = (ImageView) findViewById(R.id.recommend_help);
 		imageCircleView = (ViewGroup) findViewById(R.id.dot);
 		next_btn = (ImageView) findViewById(R.id.next_btn);
+		like = (CheckBox) findViewById(R.id.choose_love);
 	}
 
 	@Override
 	protected void initView() {
 		// TODO Auto-generated method stub
-		//		recommendPageViews = new ArrayList<View>();
 		imageCircleViews = new ImageView[todayRecommendList.size()];
 
 		//设置圆点
 		for (int i = 0; i < todayRecommendList.size(); i++) {
-			//			recommendPageViews.add(getLayoutInflater().inflate(R.layout.recommend_user_pager, null));
 			ImageView dot = new ImageView(DayRecommendActivity.this);
 			dot.setLayoutParams(new LayoutParams(DensityUtil.dip2px(DayRecommendActivity.this, 15), DensityUtil.dip2px(
 					DayRecommendActivity.this, 15)));
@@ -128,29 +129,21 @@ public class DayRecommendActivity extends BaseFragmentActivity {
 				viewPager.setCurrentItem(++pageIndex);
 			}
 		});
-	}
 
-	/**
-	 * 类名称：GetRecommendUserTask
-	 * 类描述：异步任务获取推荐用户数据
-	 * 创建人： 张帅
-	 * 创建时间：2014年7月4日 下午10:19:50
-	 *
-	 */
-	class GetRecommendUserTask extends AsyncTask<Void, Void, Void> {
+		like.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
-		@Override
-		protected Void doInBackground(Void... params) {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		@Override
-		protected void onPostExecute(Void result) {
-			// TODO Auto-generated method stub
-			super.onPostExecute(result);
-		}
-
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				// TODO Auto-generated method stub
+				if (isChecked) {
+					currentLike = pageIndex;
+					Intent intent = new Intent(DayRecommendActivity.this,MainActivity.class);
+					startActivity(intent);
+					overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+					ToastTool.showLong(DayRecommendActivity.this, "爱情验证已发送！");
+				}
+			}
+		});
 	}
 
 	/**
@@ -164,6 +157,7 @@ public class DayRecommendActivity extends BaseFragmentActivity {
 	private class SlideAdapter extends PagerAdapter {
 		private class ViewHolder {
 			public TextView name;
+			public TextView gender;
 			public ImageView headimage;
 			public TextView age;
 			public TextView school;
@@ -202,12 +196,24 @@ public class DayRecommendActivity extends BaseFragmentActivity {
 			holder.age = (TextView) view.findViewById(R.id.age);
 			holder.school = (TextView) view.findViewById(R.id.school);
 			holder.headimage = (ImageView) view.findViewById(R.id.headimage);
+			holder.gender = (TextView) view.findViewById(R.id.gender);
 
 			holder.name.setText(todayRecommendList.get(position).getUserName());
 			holder.age.setText("" + todayRecommendList.get(position).getUserAge());
 			holder.school.setText(todayRecommendList.get(position).getSchool().getSchoolName());
-			imageLoader.displayImage(todayRecommendList.get(position).getUserAvatar(), holder.headimage,
-					ImageLoaderTool.getHeadImageOptions());
+			if (userPreference.getU_gender().equals(Constants.Gender.MALE)) {
+				holder.gender.setText("女");
+			} else {
+				holder.gender.setText("男");
+			}
+
+			if (todayRecommendList.get(position).getUserAvatar() != null) {
+				if (todayRecommendList.get(position).getUserAvatar().length() > 0) {
+					imageLoader.displayImage(
+							AsyncHttpClientImageSound.getAbsoluteUrl(todayRecommendList.get(position).getUserAvatar()),
+							holder.headimage, ImageLoaderTool.getHeadImageOptions());
+				}
+			}
 
 			container.addView(view);
 			return view;
@@ -268,6 +274,7 @@ public class DayRecommendActivity extends BaseFragmentActivity {
 					imageCircleViews[i].setBackgroundResource(R.drawable.dot);
 				}
 			}
+			like.setChecked((currentLike == pageIndex) ? true : false);
 		}
 	}
 }

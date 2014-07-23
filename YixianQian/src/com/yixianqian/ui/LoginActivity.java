@@ -18,6 +18,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -40,7 +41,6 @@ import com.yixianqian.utils.UserPreference;
  * 
  */
 public class LoginActivity extends BaseActivity {
-
 	/**
 	 * ÓÃ»§µÇÂ¼Òì²½ÈÎÎñ
 	 */
@@ -202,6 +202,11 @@ public class LoginActivity extends BaseActivity {
 		// On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
 		// for very easy animations. If available, use these APIs to fade-in
 		// the progress spinner.
+		if (show) {
+			//Òþ²ØÈí¼üÅÌ   
+			((InputMethodManager) getSystemService(INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(LoginActivity.this
+					.getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+		}
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
 			int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
 
@@ -261,6 +266,7 @@ public class LoginActivity extends BaseActivity {
 			mAuthTask = null;
 			showProgress(false);
 			if (user != null) {
+				userPreference.clear();
 				userPreference.setUserLogin(true);
 				userPreference.setU_blood_type(user.getU_blood_type());
 				userPreference.setU_cityid(user.getU_cityid());

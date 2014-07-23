@@ -39,11 +39,13 @@ public class RegPhoneFragment extends BaseV4Fragment {
 	private TextView topNavigation;//导航栏文字
 	private View leftImageButton;//导航栏左侧按钮
 	private View rightImageButton;//导航栏右侧按钮
+	private EditText mNameView;//昵称
 	private EditText mPhoneView;//手机号
 	private EditText mPasswordView;//密码
 	private EditText mConformPassView;//确认密码
 	private UserPreference userPreference;
 
+	private String mName;
 	private String mPhone;
 	private String mPassword;
 	private String mConformPass;
@@ -71,6 +73,7 @@ public class RegPhoneFragment extends BaseV4Fragment {
 		mPhoneView = (EditText) rootView.findViewById(R.id.phone);
 		mPasswordView = (EditText) rootView.findViewById(R.id.password);
 		mConformPassView = (EditText) rootView.findViewById(R.id.conform_password);
+		mNameView = (EditText) rootView.findViewById(R.id.name);
 	}
 
 	@Override
@@ -140,8 +143,10 @@ public class RegPhoneFragment extends BaseV4Fragment {
 		mPasswordView.setError(null);
 		mPhoneView.setError(null);
 		mConformPassView.setError(null);
+		mNameView.setError(null);
 
 		// 存储用户值
+		mName = mNameView.getText().toString();
 		mPassword = mPasswordView.getText().toString();
 		mPhone = mPhoneView.getText().toString();
 		mConformPass = mConformPassView.getText().toString();
@@ -180,6 +185,13 @@ public class RegPhoneFragment extends BaseV4Fragment {
 			focusView = mConformPassView;
 			cancel = true;
 		}
+		
+		//检查昵称
+		if (TextUtils.isEmpty(mName)) {
+			mNameView.setError(getString(R.string.error_field_required));
+			focusView = mNameView;
+			cancel = true;
+		}
 
 		else if (!phoneAvailable) {
 			mPhoneView.setError("该手机号已被注册！");
@@ -194,6 +206,7 @@ public class RegPhoneFragment extends BaseV4Fragment {
 			// 没有错误，则注册
 			userPreference.setU_tel(mPhone);
 			userPreference.setU_password(mPassword);
+			userPreference.setU_nickname(mName);
 
 			RegAuthCodeFragment fragment = new RegAuthCodeFragment();
 			FragmentTransaction transaction = getFragmentManager().beginTransaction();

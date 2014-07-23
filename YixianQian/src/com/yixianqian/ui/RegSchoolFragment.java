@@ -123,6 +123,7 @@ public class RegSchoolFragment extends BaseV4Fragment {
 							android.R.layout.simple_spinner_dropdown_item, cityNameList);
 					mCityView.setAdapter(adapter);
 				}
+				currentProvince = provinceList.get(position);
 			}
 
 			@Override

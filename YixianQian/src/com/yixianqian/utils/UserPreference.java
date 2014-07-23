@@ -15,6 +15,23 @@ public class UserPreference {
 		editor = sp.edit();
 	}
 
+	/**
+	 * 清空数据
+	 */
+	public void clear() {
+		editor.clear();
+		editor.commit();
+	}
+
+	//记录是否更改头像
+	public boolean getHeadImageChanged() {
+		return sp.getBoolean("changed", false);
+	}
+
+	public void setHeadImageChanged(boolean changed) {
+		editor.putBoolean("changed", changed);
+	}
+
 	//记录用户是否登录
 	public boolean getUserLogin() {
 		return sp.getBoolean("login", false);

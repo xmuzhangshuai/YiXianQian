@@ -29,6 +29,11 @@ public class Constants {
 		public static final String FEMALE = "Å®";
 	}
 
+	public static class Gender {
+		public static final String MALE = "ÄÐ";
+		public static final String FEMALE = "Å®";
+	}
+
 	public static List<String> getTags() {
 		List<String> tList = new ArrayList<String>();
 		tList.add(Tags.MALE);

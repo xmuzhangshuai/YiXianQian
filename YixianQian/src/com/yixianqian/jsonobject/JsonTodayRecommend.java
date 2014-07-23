@@ -14,6 +14,9 @@ public class JsonTodayRecommend {
 	private Integer userAge;
 	private Integer schoolID;
 
+	public JsonTodayRecommend() {
+	}
+
 	public JsonTodayRecommend(Integer userID, String userName, String userAvatar, Integer userAge, Integer schoolID) {
 		super();
 		this.userID = userID;

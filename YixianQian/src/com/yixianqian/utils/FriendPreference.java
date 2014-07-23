@@ -22,6 +22,14 @@ public class FriendPreference {
 		editor = sp.edit();
 	}
 
+	/**
+	 * 清空数据
+	 */
+	public void clear() {
+		editor.clear();
+		editor.commit();
+	}
+
 	//用户ID
 	public int getF_id() {
 		return sp.getInt(UserTable.U_ID, -1);

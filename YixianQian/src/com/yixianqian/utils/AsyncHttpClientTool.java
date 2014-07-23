@@ -5,9 +5,10 @@ import android.content.Context;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+import com.yixianqian.config.DefaultSetting;
 
 public class AsyncHttpClientTool {
-	private static final String BASE_URL = "http://192.168.1.107:8080/YXQServer/";
+	private static final String BASE_URL = DefaultSetting.DoMainName+"YXQServer/";
 
 	private static AsyncHttpClient client = new AsyncHttpClient();
 

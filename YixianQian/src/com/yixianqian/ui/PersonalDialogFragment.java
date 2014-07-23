@@ -76,6 +76,7 @@ public class PersonalDialogFragment extends DialogFragment implements OnItemClic
 		} else if (position == 2) {
 			//设置用户不曾登录
 			userPreference.setUserLogin(false);
+			userPreference.clear();
 			Intent intent = new Intent(getActivity(),LoginOrRegisterActivity.class);
 			getActivity().startActivity(intent);
 			getActivity().finish();
