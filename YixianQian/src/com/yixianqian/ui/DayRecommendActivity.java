@@ -3,12 +3,15 @@ package com.yixianqian.ui;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.http.Header;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -21,13 +24,17 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.loopj.android.http.RequestParams;
+import com.loopj.android.http.TextHttpResponseHandler;
 import com.yixianqian.R;
 import com.yixianqian.base.BaseApplication;
 import com.yixianqian.base.BaseFragmentActivity;
 import com.yixianqian.config.Constants;
 import com.yixianqian.db.TodayRecommendDbService;
 import com.yixianqian.entities.TodayRecommend;
+import com.yixianqian.table.FlipperRequestTable;
 import com.yixianqian.utils.AsyncHttpClientImageSound;
+import com.yixianqian.utils.AsyncHttpClientTool;
 import com.yixianqian.utils.DensityUtil;
 import com.yixianqian.utils.ImageLoaderTool;
 import com.yixianqian.utils.ToastTool;
@@ -35,7 +42,7 @@ import com.yixianqian.utils.UserPreference;
 
 /**
  * 类名称：DayRecommendActivity
- * 类描述：
+ * 类描述：今日推荐页面
  * 创建人： 张帅
  * 创建时间：2014年7月4日 下午10:19:44
  *
@@ -57,7 +64,7 @@ public class DayRecommendActivity extends BaseFragmentActivity {
 
 	//喜欢
 	private CheckBox like;
-	private int currentLike;
+	private int currentLike = -1;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -130,6 +137,7 @@ public class DayRecommendActivity extends BaseFragmentActivity {
 			}
 		});
 
+		//选中喜欢的人之后异步发送验证，并跳转到主页
 		like.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
 			@Override
@@ -137,13 +145,44 @@ public class DayRecommendActivity extends BaseFragmentActivity {
 				// TODO Auto-generated method stub
 				if (isChecked) {
 					currentLike = pageIndex;
-					Intent intent = new Intent(DayRecommendActivity.this,MainActivity.class);
+					sendLoveReuest(todayRecommendList.get(currentLike).getUserID());
+					Intent intent = new Intent(DayRecommendActivity.this, MainActivity.class);
 					startActivity(intent);
 					overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
-					ToastTool.showLong(DayRecommendActivity.this, "爱情验证已发送！");
 				}
 			}
 		});
+	}
+
+	/**
+	 * 异步发送爱情验证
+	 * @param userID
+	 */
+	private void sendLoveReuest(int filpperId) {
+		if (filpperId > 0) {
+			String url = "addflipperrequest";
+			RequestParams params = new RequestParams();
+			int myUserID = userPreference.getU_id();
+			params.put(FlipperRequestTable.FR_USERID, myUserID);
+			params.put(FlipperRequestTable.FR_FLIPPERID, filpperId);
+			TextHttpResponseHandler responseHandler = new TextHttpResponseHandler() {
+
+				@Override
+				public void onFailure(int arg0, Header[] arg1, String arg2, Throwable arg3) {
+					// TODO Auto-generated method stub
+					ToastTool.showLong(DayRecommendActivity.this, arg2);
+					DayRecommendActivity.this.finish();
+				}
+
+				@Override
+				public void onSuccess(int arg0, Header[] arg1, String arg2) {
+					// TODO Auto-generated method stub
+					ToastTool.showLong(DayRecommendActivity.this, "爱情验证已发送！");
+					DayRecommendActivity.this.finish();
+				}
+			};
+			AsyncHttpClientTool.post(DayRecommendActivity.this, url, params, responseHandler);
+		}
 	}
 
 	/**
@@ -199,20 +238,20 @@ public class DayRecommendActivity extends BaseFragmentActivity {
 			holder.gender = (TextView) view.findViewById(R.id.gender);
 
 			holder.name.setText(todayRecommendList.get(position).getUserName());
-			holder.age.setText("" + todayRecommendList.get(position).getUserAge());
-			holder.school.setText(todayRecommendList.get(position).getSchool().getSchoolName());
-			if (userPreference.getU_gender().equals(Constants.Gender.MALE)) {
-				holder.gender.setText("女");
+			if (todayRecommendList.get(position).getUserAge() > 0) {
+				holder.age.setVisibility(View.VISIBLE);
+				holder.age.setText("" + todayRecommendList.get(position).getUserAge() + "岁");
 			} else {
-				holder.gender.setText("男");
+				holder.age.setVisibility(View.INVISIBLE);
 			}
 
-			if (todayRecommendList.get(position).getUserAvatar() != null) {
-				if (todayRecommendList.get(position).getUserAvatar().length() > 0) {
-					imageLoader.displayImage(
-							AsyncHttpClientImageSound.getAbsoluteUrl(todayRecommendList.get(position).getUserAvatar()),
-							holder.headimage, ImageLoaderTool.getHeadImageOptions());
-				}
+			holder.school.setText(todayRecommendList.get(position).getSchool().getSchoolName());
+			holder.gender.setText((userPreference.getU_gender().equals(Constants.Gender.MALE)) ? "女" : "男");
+
+			if (!TextUtils.isEmpty(todayRecommendList.get(position).getUserAvatar())) {
+				imageLoader.displayImage(
+						AsyncHttpClientImageSound.getAbsoluteUrl(todayRecommendList.get(position).getUserAvatar()),
+						holder.headimage, ImageLoaderTool.getHeadImageOptions());
 			}
 
 			container.addView(view);

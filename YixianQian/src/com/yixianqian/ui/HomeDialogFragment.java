@@ -16,6 +16,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.yixianqian.R;
+import com.yixianqian.db.FlipperDbService;
 
 /**
  * 类名称：HomeDialogFragment
@@ -28,6 +29,8 @@ public class HomeDialogFragment extends DialogFragment {
 	private View rootView;
 	private ListView menuitemListView;
 	private List<String> menuitemList;
+	private int flipperCount = -1;
+	FlipperDbService flipperDbService;
 
 	/**
 	 * 创建实例
@@ -44,6 +47,14 @@ public class HomeDialogFragment extends DialogFragment {
 		super.onCreate(savedInstanceState);
 
 		setStyle(DialogFragment.STYLE_NO_TITLE, 0);
+		flipperDbService = FlipperDbService.getInstance(getActivity());
+	}
+
+	@Override
+	public void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		flipperCount = flipperDbService.getFlipperCount();
 	}
 
 	@Override
@@ -53,7 +64,7 @@ public class HomeDialogFragment extends DialogFragment {
 		menuitemListView = (ListView) rootView.findViewById(R.id.dialog_listview);
 		menuitemList = new ArrayList<String>();
 
-		menuitemList.add("搜索爱情");
+		menuitemList.add("添加情侣");
 		menuitemList.add("爱情验证");
 
 		menuitemListView.setAdapter(new HomeDialogAdapter());
@@ -123,8 +134,12 @@ public class HomeDialogFragment extends DialogFragment {
 
 			//如果是爱情验证
 			if (position == 1) {
-				holder.righttext.setText("2");
-				holder.righttext.setVisibility(View.VISIBLE);
+				if (flipperCount > 0) {
+					holder.righttext.setText("" + flipperCount);
+					holder.righttext.setVisibility(View.VISIBLE);
+				} else {
+					holder.righttext.setVisibility(View.GONE);
+				}
 			} else {
 				holder.righttext.setVisibility(View.GONE);
 			}

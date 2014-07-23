@@ -1,6 +1,5 @@
 package com.yixianqian.jsonobject;
 
-
 import java.sql.Date;
 
 /**
@@ -11,7 +10,7 @@ import java.sql.Date;
 * @version V1.0
  */
 
-public class User {
+public class JsonUser {
 
 	private int u_id;
 	private String u_nickname;
@@ -41,7 +40,8 @@ public class User {
 	//用于聊天所需要的字段
 	private String u_bpush_user_id;
 	private String u_bpush_channel_id;
-	
+	//头像审核的字段
+	private int u_image_pass;
 	
 	public String getU_gender() {
 		return u_gender;
@@ -200,7 +200,14 @@ public class User {
 	public void setU_bpush_channel_id(String u_bpush_channel_id) {
 		this.u_bpush_channel_id = u_bpush_channel_id;
 	}
-	public User(int u_id, String u_nickname, String u_realname,
+	
+	public int getU_image_pass() {
+		return u_image_pass;
+	}
+	public void setU_image_pass(int u_image_pass) {
+		this.u_image_pass = u_image_pass;
+	}
+	public JsonUser(int u_id, String u_nickname, String u_realname,
 			String u_password, String u_gender, String u_tel, String u_email,
 			Date u_birthday, int u_age, String u_large_avatar,
 			String u_small_avatar, int u_vocationid, int u_stateid,
@@ -234,7 +241,7 @@ public class User {
 		this.u_amount = u_amount;
 	}
 	
-	public User(int u_id, String u_nickname, String u_realname,
+	public JsonUser(int u_id, String u_nickname, String u_realname,
 			String u_password, String u_gender, String u_tel, String u_email,
 			Date u_birthday, int u_age, String u_large_avatar,
 			String u_small_avatar, int u_vocationid, int u_stateid,
@@ -270,12 +277,12 @@ public class User {
 		this.u_bpush_user_id = u_bpush_user_id;
 		this.u_bpush_channel_id = u_bpush_channel_id;
 	}
-	public User(String u_password, String u_tel) {
+	public JsonUser(String u_password, String u_tel) {
 		super();
 		this.u_password = u_password;
 		this.u_tel = u_tel;
 	}
-	public User(String u_password, String u_gender, String u_tel,
+	public JsonUser(String u_password, String u_gender, String u_tel,
 			int u_stateid, int u_schoolid) {
 		super();
 		this.u_password = u_password;
@@ -284,7 +291,7 @@ public class User {
 		this.u_stateid = u_stateid;
 		this.u_schoolid = u_schoolid;
 	}
-	public User(String u_password, String u_gender, String u_tel,
+	public JsonUser(String u_password, String u_gender, String u_tel,
 			int u_stateid, int u_provinceid, int u_cityid, int u_schoolid,
 			String u_address) {
 		super();
@@ -297,10 +304,11 @@ public class User {
 		this.u_schoolid = u_schoolid;
 		this.u_address = u_address;
 	}
-	public User(String u_password, String u_gender, String u_tel,
+	public JsonUser(String u_nickname,String u_password, String u_gender, String u_tel,
 			int u_stateid, int u_provinceid, int u_cityid, int u_schoolid,
 			String u_address, String u_bpush_user_id, String u_bpush_channel_id) {
 		super();
+		this.u_nickname = u_nickname;
 		this.u_password = u_password;
 		this.u_gender = u_gender;
 		this.u_tel = u_tel;
@@ -312,7 +320,7 @@ public class User {
 		this.u_bpush_user_id = u_bpush_user_id;
 		this.u_bpush_channel_id = u_bpush_channel_id;
 	}
-	public User() {
+	public JsonUser() {
 		super();
 	}
 	

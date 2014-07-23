@@ -32,6 +32,16 @@ public class DateTimeTools {
 
 	}
 
+	/**
+	 * 将日期格式转化为字符串返回
+	 * @param date
+	 * @return
+	 */
+	public static String DateToString(Date date) {
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+		return format.format(date);
+	}
+
 	public static String getTime(long time) {
 		SimpleDateFormat format = new SimpleDateFormat("yy-MM-dd HH:mm");
 		return format.format(new Date(time));
@@ -123,15 +133,6 @@ public class DateTimeTools {
 			intervalString = "刚刚";
 		}
 		return intervalString;
-	}
-
-	/**
-	 * 将日期格式转化为字符串返回
-	 * @param date
-	 * @return
-	 */
-	public static String DateToString(Date date) {
-		return formatter.format(date);
 	}
 
 	/**

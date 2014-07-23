@@ -106,6 +106,33 @@ public class Generator {
 		messageItemEntity.addToOne(conversationEntity, messageItem_conversation);
 		ToMany conversationToMessageItem = conversationEntity.addToMany(messageItemEntity, messageItem_conversation);
 		conversationToMessageItem.setName("messageItemList");
+		
+		
+		/******ÐÄ¶¯ÇëÇó*****/
+		Entity flipperEntity = schema.addEntity("Flipper");
+		flipperEntity.addIdProperty().autoincrement();
+		flipperEntity.addIntProperty("userID");
+		flipperEntity.addStringProperty("nickname");
+		flipperEntity.addStringProperty("realname");
+		flipperEntity.addStringProperty("gender");
+		flipperEntity.addStringProperty("email");
+		flipperEntity.addStringProperty("largeAvatar");
+		flipperEntity.addStringProperty("samllAvatar");
+		flipperEntity.addStringProperty("bloodType");
+		flipperEntity.addStringProperty("constell");
+		flipperEntity.addStringProperty("introduce");
+		flipperEntity.addDateProperty("birthday");
+		flipperEntity.addDateProperty("time");
+		flipperEntity.addIntProperty("age");
+		flipperEntity.addIntProperty("vocationID");
+		flipperEntity.addIntProperty("stateID");
+		flipperEntity.addIntProperty("provinceID");
+		flipperEntity.addIntProperty("schoolID");
+		flipperEntity.addIntProperty("height");
+		flipperEntity.addIntProperty("weight");
+		flipperEntity.addIntProperty("imagePass");
+		flipperEntity.addDoubleProperty("salary");
+		flipperEntity.addBooleanProperty("isRead");
 	}
 
 }

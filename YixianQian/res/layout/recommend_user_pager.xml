@@ -34,6 +34,7 @@
             android:layout_alignParentTop="true"
             android:layout_marginRight="16dp"
             android:layout_toLeftOf="@+id/age"
+            android:text="单身"
             android:textSize="@dimen/day_recommend_user_font" />
 
         <TextView

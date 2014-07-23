@@ -8,7 +8,7 @@ package com.yixianqian.table;
 * @version V1.0
  */
 public class UserTable {
-
+	
 	public static final String TABLE_NAME = "u_user";
 	public static final String U_ID = "u_id";
 	public static final String U_NICKNAME = "u_nickname";
@@ -36,4 +36,5 @@ public class UserTable {
 	public static final String U_AMOUNT = "u_amount";
 	public static final String U_BPUSH_USER_ID = "u_bpush_user_id";
 	public static final String U_BPUSH_CHANNEL_ID = "u_bpush_channel_id";
+	public static final String U_IMAGE_PASS ="u_image_pass";
 }

@@ -25,7 +25,7 @@ import android.widget.TextView;
 import com.yixianqian.R;
 import com.yixianqian.base.BaseActivity;
 import com.yixianqian.base.BaseApplication;
-import com.yixianqian.jsonobject.User;
+import com.yixianqian.jsonobject.JsonUser;
 import com.yixianqian.table.UserTable;
 import com.yixianqian.utils.FastJsonTool;
 import com.yixianqian.utils.HttpUtil;
@@ -229,7 +229,7 @@ public class LoginActivity extends BaseActivity {
 	 * 类名称：UserLoginTask 类描述：异步任务登录 创建人： 张帅 创建时间：2014-7-4 上午9:30:44
 	 * 
 	 */
-	public class UserLoginTask extends AsyncTask<Void, Void, User> {
+	public class UserLoginTask extends AsyncTask<Void, Void, JsonUser> {
 
 		private final String mPhone;
 		private final String mPassword;
@@ -240,7 +240,7 @@ public class LoginActivity extends BaseActivity {
 		}
 
 		@Override
-		protected User doInBackground(Void... params) {
+		protected JsonUser doInBackground(Void... params) {
 			// TODO: attempt authentication against a network service.
 			String url = "login";
 			Map<String, String> map = new HashMap<String, String>();
@@ -256,13 +256,13 @@ public class LoginActivity extends BaseActivity {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			User user = FastJsonTool.getObject(jsonString, User.class);
+			JsonUser user = FastJsonTool.getObject(jsonString, JsonUser.class);
 			// TODO: register the new account here.
 			return user;
 		}
 
 		@Override
-		protected void onPostExecute(final User user) {
+		protected void onPostExecute(final JsonUser user) {
 			mAuthTask = null;
 			showProgress(false);
 			if (user != null) {
