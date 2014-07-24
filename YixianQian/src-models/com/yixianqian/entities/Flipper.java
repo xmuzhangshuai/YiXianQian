@@ -33,6 +33,7 @@ public class Flipper {
     private Integer imagePass;
     private Double salary;
     private Boolean isRead;
+    private String tel;
 
     // KEEP FIELDS - put your custom fields here
     // KEEP FIELDS END
@@ -44,7 +45,7 @@ public class Flipper {
         this.id = id;
     }
 
-    public Flipper(Long id, Integer userID, String nickname, String realname, String gender, String email, String largeAvatar, String samllAvatar, String bloodType, String constell, String introduce, java.util.Date birthday, java.util.Date time, Integer age, Integer vocationID, Integer stateID, Integer provinceID, Integer cityID, Integer schoolID, Integer height, Integer weight, Integer imagePass, Double salary, Boolean isRead) {
+    public Flipper(Long id, Integer userID, String nickname, String realname, String gender, String email, String largeAvatar, String samllAvatar, String bloodType, String constell, String introduce, java.util.Date birthday, java.util.Date time, Integer age, Integer vocationID, Integer stateID, Integer provinceID, Integer cityID, Integer schoolID, Integer height, Integer weight, Integer imagePass, Double salary, Boolean isRead, String tel) {
         this.id = id;
         this.userID = userID;
         this.nickname = nickname;
@@ -69,6 +70,7 @@ public class Flipper {
         this.imagePass = imagePass;
         this.salary = salary;
         this.isRead = isRead;
+        this.tel = tel;
     }
 
     public Long getId() {
@@ -261,6 +263,14 @@ public class Flipper {
 
     public void setIsRead(Boolean isRead) {
         this.isRead = isRead;
+    }
+
+    public String getTel() {
+        return tel;
+    }
+
+    public void setTel(String tel) {
+        this.tel = tel;
     }
 
     // KEEP METHODS - put your custom methods here

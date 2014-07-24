@@ -171,19 +171,25 @@
             android:name="com.yixianqian.ui.QrCodeActivity"
             android:screenOrientation="portrait" >
         </activity>
-        
-        <!-- 添加情侣-->
+
+        <!-- 添加情侣 -->
         <activity
             android:name="com.yixianqian.ui.AddLoverActivity"
             android:screenOrientation="portrait" >
         </activity>
-        
-         <!-- 添加情侣个人资料页面-->
+
+        <!-- 添加情侣个人资料页面 -->
         <activity
             android:name="com.yixianqian.ui.AddLoverInfoActivity"
             android:screenOrientation="portrait" >
         </activity>
-        
+
+        <!-- 确认聊天页面 -->
+        <activity
+            android:name="com.yixianqian.ui.VertifyToChatActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+
         <!-- 测试页面 -->
         <activity
             android:name="com.yixianqian.test.TestActivity"

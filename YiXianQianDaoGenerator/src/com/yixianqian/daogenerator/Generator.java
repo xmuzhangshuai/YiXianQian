@@ -134,6 +134,7 @@ public class Generator {
 		flipperEntity.addIntProperty("imagePass");
 		flipperEntity.addDoubleProperty("salary");
 		flipperEntity.addBooleanProperty("isRead");
+		flipperEntity.addStringProperty("tel");
 	}
 
 }

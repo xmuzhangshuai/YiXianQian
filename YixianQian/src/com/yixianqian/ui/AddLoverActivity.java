@@ -119,6 +119,9 @@ public class AddLoverActivity extends BaseActivity implements OnClickListener {
 			focusView.requestFocus();
 		} else {
 			// Ã»ÓÐ´íÎó
+			Intent intent = new Intent(AddLoverActivity.this, AddLoverInfoActivity.class);
+			intent.putExtra(AddLoverInfoActivity.LOVER_PHONE_KEY, mPhone);
+			startActivity(intent);
 		}
 	}
 

@@ -3,33 +3,45 @@ package com.yixianqian.baidupush;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.http.Header;
+
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.TaskStackBuilder;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.baidu.frontia.api.FrontiaPushMessageReceiver;
+import com.loopj.android.http.RequestParams;
+import com.loopj.android.http.TextHttpResponseHandler;
 import com.yixianqian.R;
 import com.yixianqian.base.BaseApplication;
 import com.yixianqian.config.Constants;
-import com.yixianqian.db.MessageItemDbService;
-import com.yixianqian.entities.MessageItem;
 import com.yixianqian.jsonobject.JsonMessage;
+import com.yixianqian.jsonobject.JsonUser;
+import com.yixianqian.table.UserTable;
 import com.yixianqian.ui.MainActivity;
+import com.yixianqian.ui.VertifyToChatActivity;
+import com.yixianqian.utils.AsyncHttpClientTool;
 import com.yixianqian.utils.FastJsonTool;
+import com.yixianqian.utils.FriendPreference;
 import com.yixianqian.utils.UserPreference;
 
 public class MyPushMessageReceiver extends FrontiaPushMessageReceiver {
 	/** TAG to Log */
 	public static final String TAG = MyPushMessageReceiver.class.getSimpleName();
+	public static final String MESSAGE_TYPE = "messageType";
 	public static final int NOTIFY_ID = 0x000;
 	public static int mNewNum = 0;// 通知栏新消息条目，我只是用了一个全局变量，
 	public static final String RESPONSE = "response";
 	public static ArrayList<EventHandler> ehList = new ArrayList<EventHandler>();
 	private UserPreference userPreference;
+	private FriendPreference friendPreference;
 
 	public static abstract interface EventHandler {
 		public abstract void onMessage(JsonMessage jsonMessage);
@@ -50,9 +62,9 @@ public class MyPushMessageReceiver extends FrontiaPushMessageReceiver {
 		userPreference.setBpush_ChannelID(channelId);
 		userPreference.setBpush_UserID(userId);
 		userPreference.setAppID(appid);
-//		System.out.println("channelId   " + channelId);
-//		System.out.println("userId   " + userId);
-//		System.out.println("appid   " + appid);
+		//		System.out.println("channelId   " + channelId);
+		//		System.out.println("userId   " + userId);
+		//		System.out.println("appid   " + appid);
 	}
 
 	/**
@@ -70,39 +82,177 @@ public class MyPushMessageReceiver extends FrontiaPushMessageReceiver {
 		String messageString = "透传消息 message=" + message + " customContentString=" + customContentString;
 		Log.d(TAG, messageString);
 		// 自定义内容获取方式，mykey和myvalue对应透传消息推送时自定义内容中设置的键和值
-		if (customContentString != null & customContentString != "") {
-			//			JsonMessage jsonMessage = FastJsonTool.getObject(customContentString, JsonMessage.class);
-			//			if (jsonMessage != null) {
-			//				parseMessage(jsonMessage);
-			//				System.out.println("标识"+jsonMessage);
-			//			}
-		}
+		//		if (customContentString != null & customContentString != "") {
+		//			//			JsonMessage jsonMessage = FastJsonTool.getObject(customContentString, JsonMessage.class);
+		//			//			if (jsonMessage != null) {
+		//			//				parseMessage(jsonMessage);
+		//			//				System.out.println("标识"+jsonMessage);
+		//			//			}
+		//			JSONObject customJson = null;
+		//			try {
+		//				customJson = new JSONObject(customContentString);
+		//				String myvalue = null;
+		//				if (!customJson.isNull("zhangshuai")) {
+		//					myvalue = customJson.getString("zhangshuai");
+		//					ToastTool.showShort(context, myvalue);
+		//				}else {
+		//					ToastTool.showShort(context, "为空");
+		//				}
+		//			} catch (JSONException e) {
+		//				// TODO Auto-generated catch block
+		//				e.printStackTrace();
+		//			}
+		//		}
 
-		System.out.println(message);
 		JsonMessage jsonMessage = FastJsonTool.getObject(message, JsonMessage.class);
 		if (jsonMessage != null) {
 			parseMessage(jsonMessage);
 		}
 	}
 
+	/**
+	 * 装换消息
+	 * @param msg
+	 */
 	private void parseMessage(JsonMessage msg) {
-		//如果是对话消息
+
+		//判断是否开启声音
 		SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(BaseApplication
 				.getInstance());
 		boolean messageSound = sharedPreferences.getBoolean("messageSound", true);
 		if (messageSound) {
 			BaseApplication.getInstance().getMessagePlayer().start();
 		}
-		if (ehList.size() > 0) {
-			for (EventHandler eventHandler : ehList) {
-				eventHandler.onMessage(msg);
+
+		int type = msg.getType();
+		switch (type) {
+		//普通消息
+		case Constants.MessageType.MESSAGE_TYPE_TEXT:
+
+			break;
+		//图片
+		case Constants.MessageType.MESSAGE_TYPE_IMG:
+
+			break;
+		//声音
+		case Constants.MessageType.MESSAGE_TYPE_SOUND:
+
+			break;
+		//心动请求
+		case Constants.MessageType.MESSAGE_TYPE_FLIPPER_REQUEEST:
+			
+			break;
+		//也心动
+		case Constants.MessageType.MESSAGE_TYPE_FLIPPER_TO:
+			flipperTo(msg.getMessageContent());
+			break;
+		//情侣请求
+		case Constants.MessageType.MESSAGE_TYPE_LOVER:
+
+			break;
+		//文件
+		case Constants.MessageType.MESSAGE_TYPE_FILE:
+
+			break;
+		//通知
+		case Constants.MessageType.MESSAGE_TYPE_NOTIFY:
+
+			break;
+		default:
+			break;
+		}
+
+		//		if (ehList.size() > 0) {
+		//			for (EventHandler eventHandler : ehList) {
+		//				eventHandler.onMessage(msg);
+		//			}
+		//		} else {
+		//			showNotify(msg);
+		//			MessageItem messageItem = new MessageItem(null, Constants.MessageType.MESSAGE_TYPE_TEXT,
+		//					msg.getMessageContent(), System.currentTimeMillis(), true, true, true, 1);
+		//			MessageItemDbService messageItemDbService = MessageItemDbService.getInstance(BaseApplication.getInstance());
+		//			messageItemDbService.messageItemDao.insert(messageItem);
+		//		}
+	}
+
+	/**
+	 * 处理也心动,在爱情验证页面，对某个人也心动，推送本用户ID到这个人的终端
+	 */
+	private void flipperTo(String phone) {
+		friendPreference = BaseApplication.getInstance().getFriendPreference();
+		BaseApplication application = BaseApplication.getInstance();
+
+		getLoverInfo(phone);//获取信息
+
+		String name = friendPreference.getF_nickname();
+		if (friendPreference.getF_realname() != null) {
+			if (friendPreference.getF_realname().length() > 0) {
+				name = friendPreference.getF_realname();
 			}
-		} else {
-			showNotify(msg);
-			MessageItem messageItem = new MessageItem(null, Constants.MessageType.MESSAGE_TYPE_TEXT,
-					msg.getMessageContent(), System.currentTimeMillis(), true, true, true, 1);
-			MessageItemDbService messageItemDbService = MessageItemDbService.getInstance(BaseApplication.getInstance());
-			messageItemDbService.messageItemDao.insert(messageItem);
+		}
+		//通知
+		NotificationCompat.Builder builder = new NotificationCompat.Builder(application);
+		builder.setSmallIcon(R.drawable.ic_launcher).setContentTitle(name).setContentText("对您怦然心动");
+		Intent resultIntent = new Intent(application, VertifyToChatActivity.class);
+		TaskStackBuilder stackBuilder = TaskStackBuilder.create(application);
+		stackBuilder.addParentStack(VertifyToChatActivity.class);
+		stackBuilder.addNextIntent(resultIntent);
+		PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+		builder.setContentIntent(resultPendingIntent);
+		application.getNotificationManager().notify(NOTIFY_ID, builder.build());// 通知一下
+	}
+
+	/**
+	 * 获取情侣信息
+	 */
+	private void getLoverInfo(String phone) {
+		if (!TextUtils.isEmpty(phone)) {
+			RequestParams params = new RequestParams();
+			params.put(UserTable.U_TEL, phone);
+			String url = "getuserbytel";
+			TextHttpResponseHandler responseHandler = new TextHttpResponseHandler() {
+
+				@Override
+				public void onSuccess(int statusCode, Header[] headers, String response) {
+					// TODO Auto-generated method stub
+					if (statusCode == 200) {
+						JsonUser lover = FastJsonTool.getObject(response, JsonUser.class);
+						if (lover != null) {
+							//							friendPreference.setLoverId();
+							//							friendPreference.setType(0);
+							friendPreference.setBpush_ChannelID(lover.getU_bpush_channel_id());
+							friendPreference.setBpush_UserID(lover.getU_bpush_user_id());
+							friendPreference.setF_address(lover.getU_address());
+							friendPreference.setF_age(lover.getU_age());
+							friendPreference.setF_blood_type(lover.getU_blood_type());
+							friendPreference.setF_constell(lover.getU_constell());
+							friendPreference.setF_email(lover.getU_email());
+							friendPreference.setF_gender(lover.getU_gender());
+							friendPreference.setF_height(lover.getU_height());
+							friendPreference.setF_id(lover.getU_id());
+							friendPreference.setF_introduce(lover.getU_introduce());
+							friendPreference.setF_large_avatar(lover.getU_large_avatar());
+							friendPreference.setF_nickname(lover.getU_nickname());
+							friendPreference.setF_realname(lover.getU_realname());
+							friendPreference.setF_salary(lover.getU_salary());
+							friendPreference.setF_small_avatar(lover.getU_small_avatar());
+							friendPreference.setF_stateid(lover.getU_stateid());
+							friendPreference.setF_tel(lover.getU_tel());
+							friendPreference.setF_vocationid(lover.getU_vocationid());
+							friendPreference.setF_weight(lover.getU_weight());
+							friendPreference.setU_cityid(lover.getU_cityid());
+							friendPreference.setU_provinceid(lover.getU_provinceid());
+							friendPreference.setU_schoolid(lover.getU_schoolid());
+						}
+					}
+				}
+
+				@Override
+				public void onFailure(int statusCode, Header[] headers, String errorResponse, Throwable e) {
+					// TODO Auto-generated method stub
+				}
+			};
+			AsyncHttpClientTool.post(url, params, responseHandler);
 		}
 	}
 

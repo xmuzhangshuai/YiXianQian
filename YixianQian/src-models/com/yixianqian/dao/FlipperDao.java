@@ -47,6 +47,7 @@ public class FlipperDao extends AbstractDao<Flipper, Long> {
         public final static Property ImagePass = new Property(21, Integer.class, "imagePass", false, "IMAGE_PASS");
         public final static Property Salary = new Property(22, Double.class, "salary", false, "SALARY");
         public final static Property IsRead = new Property(23, Boolean.class, "isRead", false, "IS_READ");
+        public final static Property Tel = new Property(24, String.class, "tel", false, "TEL");
     };
 
 
@@ -85,7 +86,8 @@ public class FlipperDao extends AbstractDao<Flipper, Long> {
                 "'WEIGHT' INTEGER," + // 20: weight
                 "'IMAGE_PASS' INTEGER," + // 21: imagePass
                 "'SALARY' REAL," + // 22: salary
-                "'IS_READ' INTEGER);"); // 23: isRead
+                "'IS_READ' INTEGER," + // 23: isRead
+                "'TEL' TEXT);"); // 24: tel
     }
 
     /** Drops the underlying database table. */
@@ -218,6 +220,11 @@ public class FlipperDao extends AbstractDao<Flipper, Long> {
         if (isRead != null) {
             stmt.bindLong(24, isRead ? 1l: 0l);
         }
+ 
+        String tel = entity.getTel();
+        if (tel != null) {
+            stmt.bindString(25, tel);
+        }
     }
 
     /** @inheritdoc */
@@ -253,7 +260,8 @@ public class FlipperDao extends AbstractDao<Flipper, Long> {
             cursor.isNull(offset + 20) ? null : cursor.getInt(offset + 20), // weight
             cursor.isNull(offset + 21) ? null : cursor.getInt(offset + 21), // imagePass
             cursor.isNull(offset + 22) ? null : cursor.getDouble(offset + 22), // salary
-            cursor.isNull(offset + 23) ? null : cursor.getShort(offset + 23) != 0 // isRead
+            cursor.isNull(offset + 23) ? null : cursor.getShort(offset + 23) != 0, // isRead
+            cursor.isNull(offset + 24) ? null : cursor.getString(offset + 24) // tel
         );
         return entity;
     }
@@ -285,6 +293,7 @@ public class FlipperDao extends AbstractDao<Flipper, Long> {
         entity.setImagePass(cursor.isNull(offset + 21) ? null : cursor.getInt(offset + 21));
         entity.setSalary(cursor.isNull(offset + 22) ? null : cursor.getDouble(offset + 22));
         entity.setIsRead(cursor.isNull(offset + 23) ? null : cursor.getShort(offset + 23) != 0);
+        entity.setTel(cursor.isNull(offset + 24) ? null : cursor.getString(offset + 24));
      }
     
     /** @inheritdoc */

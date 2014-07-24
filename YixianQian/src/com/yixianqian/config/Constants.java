@@ -50,5 +50,15 @@ public class Constants {
 		public static final int MESSAGE_TYPE_SOUND = 3;
 		// file
 		public static final int MESSAGE_TYPE_FILE = 4;
+		//通知
+		public static final int MESSAGE_TYPE_NOTIFY = 5;
+		//心动
+		public static final int MESSAGE_TYPE_FLIPPER_REQUEEST = 6;
+		//同意心动
+		public static final int MESSAGE_TYPE_FLIPPER_TO = 7;
+		//情侣
+		public static final int MESSAGE_TYPE_LOVER = 8;
+
 	}
+
 }

@@ -1,10 +1,5 @@
 package com.yixianqian.jsonobject;
 
-import java.io.Serializable;
-
-import com.yixianqian.base.BaseApplication;
-import com.yixianqian.utils.UserPreference;
-
 /**
  * 类名称：JSONMessage
  * 类描述：推送的一条消息
@@ -12,55 +7,27 @@ import com.yixianqian.utils.UserPreference;
  * 创建时间：2014年7月17日 下午4:01:14
  *
  */
-public class JsonMessage implements Serializable {
+public class JsonMessage {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -7802818605354691580L;
-	private int userID;
-	private String bpushUserID;
-	private String bphshChannelID;
+	//	private static final long serialVersionUID = -7802818605354691580L;
+	//	private int userID;
+	//	private String bpushUserID;
+	//	private String bphshChannelID;
 	private long timeSamp;
 	private String messageContent;
-	private String tag;
+
+	private int type;
+
+	//	private String tag;
 
 	public JsonMessage() {
 	}
 
-	public JsonMessage(long time_samp, String message, String tag) {
+	public JsonMessage(String messageContent, int type) {
 		super();
-		UserPreference util = BaseApplication.getInstance().getUserPreference();
-		this.userID = util.getU_id();
-		this.bpushUserID = util.getBpush_UserID();
-		this.bphshChannelID = util.getBpush_ChannelID();
-		this.timeSamp = time_samp;
-		this.messageContent = message;
-		this.tag = tag;
-	}
-
-	public int getUserID() {
-		return userID;
-	}
-
-	public void setUserID(int userID) {
-		this.userID = userID;
-	}
-
-	public String getBpushUserID() {
-		return bpushUserID;
-	}
-
-	public void setBpushUserID(String bpushUserID) {
-		this.bpushUserID = bpushUserID;
-	}
-
-	public String getBphshChannelID() {
-		return bphshChannelID;
-	}
-
-	public void setBphshChannelID(String bphshChannelID) {
-		this.bphshChannelID = bphshChannelID;
+		this.messageContent = messageContent;
+		this.type = type;
+		this.timeSamp = System.currentTimeMillis();
 	}
 
 	public long getTimeSamp() {
@@ -79,22 +46,23 @@ public class JsonMessage implements Serializable {
 		this.messageContent = messageContent;
 	}
 
-	public String getTag() {
-		return tag;
+	public int getType() {
+		return type;
 	}
 
-	public void setTag(String tag) {
-		this.tag = tag;
+	public void setType(int type) {
+		this.type = type;
 	}
 
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
-
-	@Override
-	public String toString() {
-		return "JSONMessage [userID=" + userID + ", bpushUserID=" + bpushUserID + ", bphshChannelID=" + bphshChannelID
-				+ ", timeSamp=" + timeSamp + ", messageContent=" + messageContent + ", tag=" + tag + "]";
-	}
+	//	public JsonMessage(long time_samp, String message, String tag) {
+	//		super();
+	//		UserPreference util = BaseApplication.getInstance().getUserPreference();
+	//		this.userID = util.getU_id();
+	//		this.bpushUserID = util.getBpush_UserID();
+	//		this.bphshChannelID = util.getBpush_ChannelID();
+	//		this.timeSamp = time_samp;
+	//		this.messageContent = message;
+	//		this.tag = tag;
+	//	}
 
 }

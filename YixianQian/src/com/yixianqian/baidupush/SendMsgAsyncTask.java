@@ -1,5 +1,7 @@
 package com.yixianqian.baidupush;
 
+import java.util.Map;
+
 import com.yixianqian.base.BaseApplication;
 import com.yixianqian.utils.NetworkUtils;
 
@@ -55,6 +57,14 @@ public class SendMsgAsyncTask {
 			mTask.cancel(true);
 	}
 
+	/**
+	 * 
+	 * 类名称：MyAsyncTask
+	 * 类描述：发送消息异步任务
+	 * 创建人： 张帅
+	 * 创建时间：2014年7月24日 下午8:34:43
+	 *
+	 */
 	class MyAsyncTask extends AsyncTask<Void, Void, String> {
 
 		@Override

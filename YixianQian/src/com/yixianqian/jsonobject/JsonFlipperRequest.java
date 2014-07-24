@@ -4,6 +4,7 @@ import java.util.Date;
 
 public class JsonFlipperRequest {
 	private int u_id;
+	private String u_tel;
 	private String u_nickname;
 	private String u_realname;
 	private String u_gender;
@@ -208,12 +209,21 @@ public class JsonFlipperRequest {
 		this.time = time;
 	}
 
-	public JsonFlipperRequest(int u_id, String u_nickname, String u_realname, String u_gender, String u_email,
-			Date u_birthday, int u_age, String u_large_avatar, String u_small_avatar, int u_vocationid, int u_stateid,
-			int u_provinceid, int u_cityid, int u_schoolid, int u_height, int u_weight, String u_blood_type,
-			String u_constell, String u_introduce, double u_salary, int u_image_pass, Date time) {
+	public String getU_tel() {
+		return u_tel;
+	}
+
+	public void setU_tel(String u_tel) {
+		this.u_tel = u_tel;
+	}
+
+	public JsonFlipperRequest(int u_id, String u_tel, String u_nickname, String u_realname, String u_gender,
+			String u_email, Date u_birthday, int u_age, String u_large_avatar, String u_small_avatar, int u_vocationid,
+			int u_stateid, int u_provinceid, int u_cityid, int u_schoolid, int u_height, int u_weight,
+			String u_blood_type, String u_constell, String u_introduce, double u_salary, int u_image_pass, Date time) {
 		super();
 		this.u_id = u_id;
+		this.u_tel = u_tel;
 		this.u_nickname = u_nickname;
 		this.u_realname = u_realname;
 		this.u_gender = u_gender;
@@ -236,5 +246,7 @@ public class JsonFlipperRequest {
 		this.u_image_pass = u_image_pass;
 		this.time = time;
 	}
+
+	
 
 }

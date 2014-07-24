@@ -23,10 +23,13 @@ import android.widget.TextView;
 import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.TextHttpResponseHandler;
 import com.yixianqian.R;
+import com.yixianqian.baidupush.SendMsgAsyncTask;
 import com.yixianqian.base.BaseActivity;
 import com.yixianqian.base.BaseApplication;
+import com.yixianqian.config.Constants;
 import com.yixianqian.db.FlipperDbService;
 import com.yixianqian.entities.Flipper;
+import com.yixianqian.jsonobject.JsonMessage;
 import com.yixianqian.table.FlipperTable;
 import com.yixianqian.table.UserTable;
 import com.yixianqian.utils.AsyncHttpClientImageSound;
@@ -226,6 +229,12 @@ public class LoveVertifyActivity extends BaseActivity {
 									friendpreference.setU_cityid(flipper.getCityID());
 									friendpreference.setU_provinceid(flipper.getProvinceID());
 									friendpreference.setU_schoolid(flipper.getSchoolID());
+
+									//通知对方
+									JsonMessage jsonMessage = new JsonMessage(flipper.getTel(),
+											Constants.MessageType.MESSAGE_TYPE_FLIPPER_TO);
+									new SendMsgAsyncTask(FastJsonTool.createJsonString(jsonMessage),
+											map.get(UserTable.U_BPUSH_USER_ID)).send();
 
 									Intent intent = new Intent(LoveVertifyActivity.this, MainActivity.class);
 									startActivity(intent);

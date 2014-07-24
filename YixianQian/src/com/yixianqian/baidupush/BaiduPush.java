@@ -410,8 +410,6 @@ public class BaiduPush {
 				.format("{'title':'%s','description':'%s','notification_builder_id':0,'notification_basic_style':7,'open_type':2,'custom_content':{'test':'test'}}",
 						title, jsonencode(message));
 
-		System.out.println(msg);
-
 		ra.put(RestApi._MESSAGES, msg);
 
 		ra.put(RestApi._MESSAGE_KEYS, MSGKEY);

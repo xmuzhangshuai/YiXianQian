@@ -85,14 +85,14 @@ public class ChatActivity extends BaseActivity implements OnTouchListener, IXLis
 	private ConversationDbService conversationDbService;
 	private MessageItemDbService messageItemDbService;
 	private static int MsgPagerNum;//消息页数
-	private FriendPreference friendSharePreference;
+	private FriendPreference friendPreference;
 	public static final int NEW_MESSAGE = 0x001;// 收到消息
 
 	private Handler handler = new Handler() {
 		public void handleMessage(Message msg) {
 			if (msg.what == NEW_MESSAGE) {
 				JsonMessage jsonMessage = (JsonMessage) msg.obj;
-				String userId = jsonMessage.getBpushUserID();
+//				String userId = jsonMessage.getBpushUserID();
 				//				if (!userId.equals(mFromUser.getUserId()))// 如果不是当前正在聊天对象的消息，不处理
 				//					return;
 
@@ -100,7 +100,6 @@ public class ChatActivity extends BaseActivity implements OnTouchListener, IXLis
 				// TODO Auto-generated method stub
 				MessageItem item = new MessageItem(null, Constants.MessageType.MESSAGE_TYPE_TEXT,
 						jsonMessage.getMessageContent(), System.currentTimeMillis(), true, true, true, conversationID);
-				System.out.println("内容为" + jsonMessage.getMessageContent());
 				adapter.upDateMsg(item);
 				messageItemDbService.messageItemDao.insert(item);
 				//				RecentItem recentItem = new RecentItem(userId, headId, msgItem.getNick(), msgItem.getMessage(), 0,
@@ -221,7 +220,7 @@ public class ChatActivity extends BaseActivity implements OnTouchListener, IXLis
 		conversationDbService = ConversationDbService.getInstance(ChatActivity.this);
 		messageItemDbService = MessageItemDbService.getInstance(ChatActivity.this);
 		adapter = new MessageAdapter(this, initMsgData(), conversationDbService.conversationDao.load(conversationID));
-		friendSharePreference = BaseApplication.getInstance().getFriendPreference();
+		friendPreference = BaseApplication.getInstance().getFriendPreference();
 	}
 
 	/**
@@ -436,9 +435,10 @@ public class ChatActivity extends BaseActivity implements OnTouchListener, IXLis
 			messageItemDbService.messageItemDao.insert(item);
 			msgEt.setText("");
 
-			JsonMessage message = new JsonMessage(System.currentTimeMillis(), msg, "");
-			new SendMsgAsyncTask(FastJsonTool.createJsonString(message), friendSharePreference.getBpush_UserID())
-					.send();
+			//			JsonMessage message = new JsonMessage(System.currentTimeMillis(), msg, "");
+			JsonMessage message = new JsonMessage(msg, Constants.MessageType.MESSAGE_TYPE_TEXT);
+			new SendMsgAsyncTask(FastJsonTool.createJsonString(message), friendPreference.getBpush_UserID()).send();
+
 			//			Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 			//			System.out.println(gson.toJson(message));
 			//			new SendMsgAsyncTask(gson.toJson(message), friendSharePreference.getBpush_UserID()).send();;
