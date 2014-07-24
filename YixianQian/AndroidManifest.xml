@@ -137,7 +137,7 @@
         <!-- 爱情验证页面 -->
         <activity
             android:name="com.yixianqian.ui.LoveVertifyActivity"
-            android:label="@string/title_activity_love_vertify" >
+            android:screenOrientation="portrait" >
         </activity>
 
         <!-- 聊天页面 -->
@@ -150,7 +150,7 @@
             android:windowSoftInputMode="stateHidden|adjustResize" >
         </activity>
 
-        <!-- 二维码页面 -->
+        <!-- 二维码扫描页面 -->
         <activity
             android:name="com.yixianqian.ui.CaptureActivity"
             android:configChanges="orientation|keyboardHidden"
@@ -166,6 +166,24 @@
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
         </activity>
 
+        <!-- 我的二维码 -->
+        <activity
+            android:name="com.yixianqian.ui.QrCodeActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        
+        <!-- 添加情侣-->
+        <activity
+            android:name="com.yixianqian.ui.AddLoverActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        
+         <!-- 添加情侣个人资料页面-->
+        <activity
+            android:name="com.yixianqian.ui.AddLoverInfoActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        
         <!-- 测试页面 -->
         <activity
             android:name="com.yixianqian.test.TestActivity"

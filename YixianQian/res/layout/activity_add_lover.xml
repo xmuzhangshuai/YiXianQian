@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <include
+        layout="@layout/top_navigation2"
+        android:focusable="true" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/system_back"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:padding="@dimen/day_recommend_dot_space" >
+
+        <EditText
+            android:id="@+id/phone"
+            android:layout_width="fill_parent"
+            android:layout_height="@dimen/register_height"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/shape_radius"
+            android:hint="输入对方手机号码"
+            android:inputType="phone"
+            android:maxLength="11"
+            android:maxLines="1"
+            android:paddingLeft="@dimen/personal_timecapsule_padding"
+            android:singleLine="true"
+            android:textColorHint="@color/system_gray"
+            android:textSize="@dimen/day_recommend_user_font" />
+
+        <Button
+            android:id="@+id/search"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/register_height"
+            android:layout_marginTop="@dimen/register_height"
+            android:background="@drawable/sel_auth_code_again_bg"
+            android:text="搜索"
+            android:textColor="@drawable/sel_enable_font_color"
+            android:textSize="@dimen/day_recommend_user_font" />
+
+        <Button
+            android:id="@+id/scan"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/register_height"
+            android:layout_marginTop="@dimen/register_height"
+            android:background="@drawable/sel_auth_code_again_bg"
+            android:text="扫一扫"
+            android:textColor="@drawable/sel_enable_font_color"
+            android:textSize="@dimen/day_recommend_user_font" />
+    </LinearLayout>
+
+</LinearLayout>

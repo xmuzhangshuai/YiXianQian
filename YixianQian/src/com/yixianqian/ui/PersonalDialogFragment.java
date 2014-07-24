@@ -57,6 +57,7 @@ public class PersonalDialogFragment extends DialogFragment implements OnItemClic
 		menuitemList = new ArrayList<String>();
 
 		menuitemList.add("编辑资料");
+		menuitemList.add("我的二维码");
 		menuitemList.add("关于");
 		menuitemList.add("注销");
 
@@ -70,19 +71,31 @@ public class PersonalDialogFragment extends DialogFragment implements OnItemClic
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 		// TODO Auto-generated method stub
-		if (position == 0) {
+		Intent intent;
+		switch (position) {
+		case 0:
 
-		} else if (position == 1) {
+			break;
+		case 1:
+			intent = new Intent(getActivity(), QrCodeActivity.class);
+			getActivity().startActivity(intent);
+			getActivity().overridePendingTransition(R.anim.zoomin, R.anim.zoomout);
+			break;
+		case 2:
 
-		} else if (position == 2) {
+			break;
+		case 3:
 			//设置用户不曾登录
 			userPreference.setUserLogin(false);
 			userPreference.clear();
 			FlipperDbService flipperDbService = FlipperDbService.getInstance(getActivity());
 			flipperDbService.flipperDao.deleteAll();
-			Intent intent = new Intent(getActivity(),LoginOrRegisterActivity.class);
+			intent = new Intent(getActivity(), LoginOrRegisterActivity.class);
 			getActivity().startActivity(intent);
 			getActivity().finish();
+			break;
+		default:
+			break;
 		}
 	}
 

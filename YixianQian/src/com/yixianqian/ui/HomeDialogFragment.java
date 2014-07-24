@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.yixianqian.R;
 import com.yixianqian.db.FlipperDbService;
+import com.yixianqian.ui.GuideActivity.initDataBase;
 
 /**
  * ¿‡√˚≥∆£∫HomeDialogFragment
@@ -73,10 +74,15 @@ public class HomeDialogFragment extends DialogFragment {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				// TODO Auto-generated method stub
+				Intent intent = null;
 				if (position == 1) {
-					Intent intent = new Intent(getActivity(), LoveVertifyActivity.class);
+					intent = new Intent(getActivity(), LoveVertifyActivity.class);
+				} else if (position == 0) {
+					intent = new Intent(getActivity(), AddLoverActivity.class);
+				}
+				if (intent != null) {
 					startActivity(intent);
-					getActivity().overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+					getActivity().overridePendingTransition(R.anim.zoomin, R.anim.zoomout);
 				}
 			}
 		});

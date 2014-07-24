@@ -186,9 +186,9 @@ public abstract class BaseActivity extends Activity {
 
 	/** 加载进度条 **/
 	@SuppressLint("ShowToast")
-	public Dialog showProgressDialog() {
+	public Dialog showProgressDialog(String msg) {
 		ProgressDialog dialog = new ProgressDialog(this);
-		dialog.setMessage("请稍候，正在努力加载...");
+		dialog.setMessage(msg);
 		dialog.show();
 		return dialog;
 	}

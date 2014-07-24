@@ -32,8 +32,6 @@ import com.yixianqian.R;
 import com.yixianqian.base.BaseApplication;
 import com.yixianqian.base.BaseV4Fragment;
 import com.yixianqian.config.DefaultKeys;
-import com.yixianqian.db.ProvinceDbService;
-import com.yixianqian.db.SchoolDbService;
 import com.yixianqian.utils.AsyncHttpClientImageSound;
 import com.yixianqian.utils.ImageLoaderTool;
 import com.yixianqian.utils.UserPreference;
@@ -128,8 +126,6 @@ public class PersonalFragment extends BaseV4Fragment {
 			});
 		}
 
-		ProvinceDbService provinceDbService = ProvinceDbService.getInstance(getActivity());
-		SchoolDbService schoolDbService = SchoolDbService.getInstance(getActivity());
 		//设置姓名、省份、及学校
 		//优先显示真实姓名
 		String name = userPreference.getU_nickname();
@@ -139,8 +135,8 @@ public class PersonalFragment extends BaseV4Fragment {
 			}
 		}
 		nameTextView.setText(name);
-		provinceTextView.setText(provinceDbService.getProNameById(userPreference.getU_provinceid()));
-		schoolTextView.setText(schoolDbService.schoolDao.load((long) userPreference.getU_schoolid()).getSchoolName());
+		provinceTextView.setText(userPreference.getProvinceName());
+		schoolTextView.setText(userPreference.getSchoolName());
 
 		//导航条右侧按钮
 		right_btn_bg.setOnClickListener(new OnClickListener() {

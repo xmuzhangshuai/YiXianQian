@@ -100,8 +100,8 @@ public class ServerUtil {
 	 */
 	public void getTodayRecommend(final Context context, final boolean isFinished) {
 		final TodayRecommendDbService todayRecommendDbService = TodayRecommendDbService.getInstance(context);
-//		sharePreferenceUtil.setTodayRecommend("");
 		todayRecommendDbService.todayRecommendDao.deleteAll();
+
 		//如果没有推荐过
 		if (!sharePreferenceUtil.getTodayRecommend().equals(DateTimeTools.getCurrentDateForString())) {
 			RequestParams params = new RequestParams();
@@ -133,6 +133,7 @@ public class ServerUtil {
 								((Activity) context).finish();
 							}
 						}
+						sharePreferenceUtil.setTodayRecommend(DateTimeTools.getCurrentDateForString());
 					}
 				}
 
@@ -148,7 +149,6 @@ public class ServerUtil {
 				}
 			};
 			AsyncHttpClientTool.post(context, "userpush", params, responseHandler);
-			sharePreferenceUtil.setTodayRecommend(DateTimeTools.getCurrentDateForString());
 		} else {
 			Intent intent = new Intent(context, MainActivity.class);
 			context.startActivity(intent);

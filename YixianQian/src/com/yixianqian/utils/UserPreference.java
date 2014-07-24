@@ -1,5 +1,12 @@
 package com.yixianqian.utils;
 
+import com.yixianqian.dao.CityDao.Properties;
+import com.yixianqian.db.CityDbService;
+import com.yixianqian.db.ProvinceDbService;
+import com.yixianqian.db.SchoolDbService;
+import com.yixianqian.entities.City;
+import com.yixianqian.entities.Province;
+import com.yixianqian.entities.School;
 import com.yixianqian.table.UserTable;
 
 import android.content.Context;
@@ -9,8 +16,10 @@ public class UserPreference {
 	private SharedPreferences sp;
 	private SharedPreferences.Editor editor;
 	public static final String USER_SHAREPREFERENCE = "userSharePreference";//ÓÃ»§SharePreference
+	private Context context;
 
 	public UserPreference(Context context) {
+		this.context = context;
 		sp = context.getSharedPreferences(USER_SHAREPREFERENCE, Context.MODE_PRIVATE);
 		editor = sp.edit();
 	}
@@ -208,7 +217,18 @@ public class UserPreference {
 	}
 
 	public void setU_provinceid(int u_provinceid) {
+		ProvinceDbService provinceDbService = ProvinceDbService.getInstance(context);
+		setPeovinceName(provinceDbService.getProNameById(u_provinceid));
 		editor.putInt(UserTable.U_PROVINCEID, u_provinceid);
+		editor.commit();
+	}
+
+	public String getProvinceName() {
+		return sp.getString("ProvinceName", "");
+	}
+
+	public void setPeovinceName(String name) {
+		editor.putString("ProvinceName", name);
 		editor.commit();
 	}
 
@@ -218,7 +238,21 @@ public class UserPreference {
 	}
 
 	public void setU_cityid(int u_cityid) {
+		CityDbService cityDbService = CityDbService.getInstance(context);
+		City city = cityDbService.cityDao.queryBuilder().where(Properties.CityID.eq(u_cityid)).unique();
+		if (city != null) {
+			setCityName(city.getCityName());
+		}
 		editor.putInt(UserTable.U_CITYID, u_cityid);
+		editor.commit();
+	}
+
+	public String getCityName() {
+		return sp.getString("cityName", "");
+	}
+
+	public void setCityName(String name) {
+		editor.putString("cityName", name);
 		editor.commit();
 	}
 
@@ -228,7 +262,19 @@ public class UserPreference {
 	}
 
 	public void setU_schoolid(int u_schoolid) {
+		SchoolDbService schoolDbService = SchoolDbService.getInstance(context);
+		School school = schoolDbService.schoolDao.load((long) u_schoolid);
+		setSchoolName(school.getSchoolName());
 		editor.putInt(UserTable.U_SCHOOLID, u_schoolid);
+		editor.commit();
+	}
+
+	public String getSchoolName() {
+		return sp.getString("schoolName", "");
+	}
+
+	public void setSchoolName(String name) {
+		editor.putString("schoolName", name);
 		editor.commit();
 	}
 

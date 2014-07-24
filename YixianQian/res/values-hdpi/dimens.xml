@@ -11,7 +11,7 @@
     <dimen name="day_recommend_viewpager_margin_top">10dp</dimen>
     <dimen name="day_recommend_viewpager_padding_top">3dp</dimen>
     <dimen name="day_recommend_next_btn">40dp</dimen>
-    <dimen name="day_recommend_dot_space">8dp</dimen>
+    <dimen name="day_recommend_dot_space">9dp</dimen>
     <dimen name="day_recommend_dot_margin_top">25dp</dimen>
     <dimen name="day_recommend_help">30dp</dimen>
     <dimen name="day_recommend_help_padding">22dp</dimen>

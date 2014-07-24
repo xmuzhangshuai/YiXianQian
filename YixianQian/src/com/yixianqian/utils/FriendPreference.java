@@ -1,5 +1,12 @@
 package com.yixianqian.utils;
 
+import com.yixianqian.dao.CityDao.Properties;
+import com.yixianqian.db.CityDbService;
+import com.yixianqian.db.ProvinceDbService;
+import com.yixianqian.db.SchoolDbService;
+import com.yixianqian.entities.City;
+import com.yixianqian.entities.School;
+import com.yixianqian.table.LoversTable;
 import com.yixianqian.table.UserTable;
 
 import android.content.Context;
@@ -16,8 +23,10 @@ public class FriendPreference {
 	private SharedPreferences sp;
 	private SharedPreferences.Editor editor;
 	public static final String FRIEND_SHAREDPREFERENCE = "FriendSharePreference";//情侣或者心动关系SharePreference
+	private Context context;
 
 	public FriendPreference(Context context) {
+		this.context = context;
 		sp = context.getSharedPreferences(FRIEND_SHAREDPREFERENCE, Context.MODE_PRIVATE);
 		editor = sp.edit();
 	}
@@ -27,6 +36,16 @@ public class FriendPreference {
 	 */
 	public void clear() {
 		editor.clear();
+		editor.commit();
+	}
+
+	//情侣ID
+	public int getLoverId() {
+		return sp.getInt(LoversTable.L_ID, -1);
+	}
+
+	public void setLoverId(int loverId) {
+		editor.putInt(LoversTable.L_ID, loverId);
 		editor.commit();
 	}
 
@@ -87,16 +106,6 @@ public class FriendPreference {
 
 	public void setF_realname(String u_realname) {
 		editor.putString(UserTable.U_REALNAME, u_realname);
-		editor.commit();
-	}
-
-	//密码
-	public String getF_password() {
-		return sp.getString(UserTable.U_PASSWORD, null);
-	}
-
-	public void setF_password(String u_password) {
-		editor.putString(UserTable.U_PASSWORD, u_password);
 		editor.commit();
 	}
 
@@ -191,32 +200,69 @@ public class FriendPreference {
 	}
 
 	//省份
-	public int getF_provinceid() {
+	public int getU_provinceid() {
 		return sp.getInt(UserTable.U_PROVINCEID, -1);
 	}
 
-	public void setF_provinceid(int u_provinceid) {
+	public void setU_provinceid(int u_provinceid) {
+		ProvinceDbService provinceDbService = ProvinceDbService.getInstance(context);
+		setPeovinceName(provinceDbService.getProNameById(u_provinceid));
 		editor.putInt(UserTable.U_PROVINCEID, u_provinceid);
 		editor.commit();
 	}
 
+	public String getProvinceName() {
+		return sp.getString("ProvinceName", "");
+	}
+
+	public void setPeovinceName(String name) {
+		editor.putString("ProvinceName", name);
+		editor.commit();
+	}
+
 	//城市
-	public int getF_cityid() {
+	public int getU_cityid() {
 		return sp.getInt(UserTable.U_CITYID, -1);
 	}
 
-	public void setF_cityid(int u_cityid) {
+	public void setU_cityid(int u_cityid) {
+		CityDbService cityDbService = CityDbService.getInstance(context);
+		City city = cityDbService.cityDao.queryBuilder().where(Properties.CityID.eq(u_cityid)).unique();
+		if (city != null) {
+			setCityName(city.getCityName());
+		}
 		editor.putInt(UserTable.U_CITYID, u_cityid);
 		editor.commit();
 	}
 
+	public String getCityName() {
+		return sp.getString("cityName", "");
+	}
+
+	public void setCityName(String name) {
+		editor.putString("cityName", name);
+		editor.commit();
+	}
+
 	//学校
-	public int getF_schoolid() {
+	public int getU_schoolid() {
 		return sp.getInt(UserTable.U_SCHOOLID, -1);
 	}
 
-	public void setF_schoolid(int u_schoolid) {
+	public void setU_schoolid(int u_schoolid) {
+		SchoolDbService schoolDbService = SchoolDbService.getInstance(context);
+		School school = schoolDbService.schoolDao.load((long) u_schoolid);
+		setSchoolName(school.getSchoolName());
 		editor.putInt(UserTable.U_SCHOOLID, u_schoolid);
+		editor.commit();
+	}
+
+	public String getSchoolName() {
+		return sp.getString("schoolName", "");
+	}
+
+	public void setSchoolName(String name) {
+		editor.putString("schoolName", name);
 		editor.commit();
 	}
 
