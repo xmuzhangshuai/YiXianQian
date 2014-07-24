@@ -1,5 +1,8 @@
 package com.yixianqian.utils;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+
 import com.yixianqian.dao.CityDao.Properties;
 import com.yixianqian.db.CityDbService;
 import com.yixianqian.db.ProvinceDbService;
@@ -8,9 +11,6 @@ import com.yixianqian.entities.City;
 import com.yixianqian.entities.School;
 import com.yixianqian.table.LoversTable;
 import com.yixianqian.table.UserTable;
-
-import android.content.Context;
-import android.content.SharedPreferences;
 
 /**
  * 类名称：FriendSharePreference
@@ -39,7 +39,17 @@ public class FriendPreference {
 		editor.commit();
 	}
 
-	//情侣ID
+	//获取类型，0为心动关系，1为情侣
+	public int getType() {
+		return sp.getInt("friend", -1);
+	}
+
+	public void setType(int type) {
+		editor.putInt("friend", type);
+		editor.commit();
+	}
+
+	//情侣关系ID
 	public int getLoverId() {
 		return sp.getInt(LoversTable.L_ID, -1);
 	}

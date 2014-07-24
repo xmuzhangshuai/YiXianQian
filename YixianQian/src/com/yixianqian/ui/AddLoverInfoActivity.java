@@ -168,7 +168,7 @@ public class AddLoverInfoActivity extends BaseActivity {
 								ToastTool.showLong(AddLoverInfoActivity.this, "你们已经是情侣啦！");
 							} else {
 								friendpreference.setLoverId(Integer.parseInt(response));
-								ToastTool.showLong(AddLoverInfoActivity.this, "" + Integer.parseInt(response));
+								friendpreference.setType(1);
 								Intent intent = new Intent(AddLoverInfoActivity.this, MainActivity.class);
 								startActivity(intent);
 								overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);

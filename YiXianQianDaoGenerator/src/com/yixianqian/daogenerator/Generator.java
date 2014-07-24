@@ -127,6 +127,7 @@ public class Generator {
 		flipperEntity.addIntProperty("vocationID");
 		flipperEntity.addIntProperty("stateID");
 		flipperEntity.addIntProperty("provinceID");
+		flipperEntity.addIntProperty("cityID");
 		flipperEntity.addIntProperty("schoolID");
 		flipperEntity.addIntProperty("height");
 		flipperEntity.addIntProperty("weight");

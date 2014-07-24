@@ -29,6 +29,10 @@ public class UserPreference {
 	 */
 	public void clear() {
 		editor.clear();
+		String pushUserId = getBpush_UserID();
+		String pushChannelId = getBpush_ChannelID();
+		setBpush_UserID(pushUserId);
+		setBpush_ChannelID(pushChannelId);
 		editor.commit();
 	}
 

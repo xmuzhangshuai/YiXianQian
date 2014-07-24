@@ -40,12 +40,13 @@ public class FlipperDao extends AbstractDao<Flipper, Long> {
         public final static Property VocationID = new Property(14, Integer.class, "vocationID", false, "VOCATION_ID");
         public final static Property StateID = new Property(15, Integer.class, "stateID", false, "STATE_ID");
         public final static Property ProvinceID = new Property(16, Integer.class, "provinceID", false, "PROVINCE_ID");
-        public final static Property SchoolID = new Property(17, Integer.class, "schoolID", false, "SCHOOL_ID");
-        public final static Property Height = new Property(18, Integer.class, "height", false, "HEIGHT");
-        public final static Property Weight = new Property(19, Integer.class, "weight", false, "WEIGHT");
-        public final static Property ImagePass = new Property(20, Integer.class, "imagePass", false, "IMAGE_PASS");
-        public final static Property Salary = new Property(21, Double.class, "salary", false, "SALARY");
-        public final static Property IsRead = new Property(22, Boolean.class, "isRead", false, "IS_READ");
+        public final static Property CityID = new Property(17, Integer.class, "cityID", false, "CITY_ID");
+        public final static Property SchoolID = new Property(18, Integer.class, "schoolID", false, "SCHOOL_ID");
+        public final static Property Height = new Property(19, Integer.class, "height", false, "HEIGHT");
+        public final static Property Weight = new Property(20, Integer.class, "weight", false, "WEIGHT");
+        public final static Property ImagePass = new Property(21, Integer.class, "imagePass", false, "IMAGE_PASS");
+        public final static Property Salary = new Property(22, Double.class, "salary", false, "SALARY");
+        public final static Property IsRead = new Property(23, Boolean.class, "isRead", false, "IS_READ");
     };
 
 
@@ -78,12 +79,13 @@ public class FlipperDao extends AbstractDao<Flipper, Long> {
                 "'VOCATION_ID' INTEGER," + // 14: vocationID
                 "'STATE_ID' INTEGER," + // 15: stateID
                 "'PROVINCE_ID' INTEGER," + // 16: provinceID
-                "'SCHOOL_ID' INTEGER," + // 17: schoolID
-                "'HEIGHT' INTEGER," + // 18: height
-                "'WEIGHT' INTEGER," + // 19: weight
-                "'IMAGE_PASS' INTEGER," + // 20: imagePass
-                "'SALARY' REAL," + // 21: salary
-                "'IS_READ' INTEGER);"); // 22: isRead
+                "'CITY_ID' INTEGER," + // 17: cityID
+                "'SCHOOL_ID' INTEGER," + // 18: schoolID
+                "'HEIGHT' INTEGER," + // 19: height
+                "'WEIGHT' INTEGER," + // 20: weight
+                "'IMAGE_PASS' INTEGER," + // 21: imagePass
+                "'SALARY' REAL," + // 22: salary
+                "'IS_READ' INTEGER);"); // 23: isRead
     }
 
     /** Drops the underlying database table. */
@@ -182,34 +184,39 @@ public class FlipperDao extends AbstractDao<Flipper, Long> {
             stmt.bindLong(17, provinceID);
         }
  
+        Integer cityID = entity.getCityID();
+        if (cityID != null) {
+            stmt.bindLong(18, cityID);
+        }
+ 
         Integer schoolID = entity.getSchoolID();
         if (schoolID != null) {
-            stmt.bindLong(18, schoolID);
+            stmt.bindLong(19, schoolID);
         }
  
         Integer height = entity.getHeight();
         if (height != null) {
-            stmt.bindLong(19, height);
+            stmt.bindLong(20, height);
         }
  
         Integer weight = entity.getWeight();
         if (weight != null) {
-            stmt.bindLong(20, weight);
+            stmt.bindLong(21, weight);
         }
  
         Integer imagePass = entity.getImagePass();
         if (imagePass != null) {
-            stmt.bindLong(21, imagePass);
+            stmt.bindLong(22, imagePass);
         }
  
         Double salary = entity.getSalary();
         if (salary != null) {
-            stmt.bindDouble(22, salary);
+            stmt.bindDouble(23, salary);
         }
  
         Boolean isRead = entity.getIsRead();
         if (isRead != null) {
-            stmt.bindLong(23, isRead ? 1l: 0l);
+            stmt.bindLong(24, isRead ? 1l: 0l);
         }
     }
 
@@ -240,12 +247,13 @@ public class FlipperDao extends AbstractDao<Flipper, Long> {
             cursor.isNull(offset + 14) ? null : cursor.getInt(offset + 14), // vocationID
             cursor.isNull(offset + 15) ? null : cursor.getInt(offset + 15), // stateID
             cursor.isNull(offset + 16) ? null : cursor.getInt(offset + 16), // provinceID
-            cursor.isNull(offset + 17) ? null : cursor.getInt(offset + 17), // schoolID
-            cursor.isNull(offset + 18) ? null : cursor.getInt(offset + 18), // height
-            cursor.isNull(offset + 19) ? null : cursor.getInt(offset + 19), // weight
-            cursor.isNull(offset + 20) ? null : cursor.getInt(offset + 20), // imagePass
-            cursor.isNull(offset + 21) ? null : cursor.getDouble(offset + 21), // salary
-            cursor.isNull(offset + 22) ? null : cursor.getShort(offset + 22) != 0 // isRead
+            cursor.isNull(offset + 17) ? null : cursor.getInt(offset + 17), // cityID
+            cursor.isNull(offset + 18) ? null : cursor.getInt(offset + 18), // schoolID
+            cursor.isNull(offset + 19) ? null : cursor.getInt(offset + 19), // height
+            cursor.isNull(offset + 20) ? null : cursor.getInt(offset + 20), // weight
+            cursor.isNull(offset + 21) ? null : cursor.getInt(offset + 21), // imagePass
+            cursor.isNull(offset + 22) ? null : cursor.getDouble(offset + 22), // salary
+            cursor.isNull(offset + 23) ? null : cursor.getShort(offset + 23) != 0 // isRead
         );
         return entity;
     }
@@ -270,12 +278,13 @@ public class FlipperDao extends AbstractDao<Flipper, Long> {
         entity.setVocationID(cursor.isNull(offset + 14) ? null : cursor.getInt(offset + 14));
         entity.setStateID(cursor.isNull(offset + 15) ? null : cursor.getInt(offset + 15));
         entity.setProvinceID(cursor.isNull(offset + 16) ? null : cursor.getInt(offset + 16));
-        entity.setSchoolID(cursor.isNull(offset + 17) ? null : cursor.getInt(offset + 17));
-        entity.setHeight(cursor.isNull(offset + 18) ? null : cursor.getInt(offset + 18));
-        entity.setWeight(cursor.isNull(offset + 19) ? null : cursor.getInt(offset + 19));
-        entity.setImagePass(cursor.isNull(offset + 20) ? null : cursor.getInt(offset + 20));
-        entity.setSalary(cursor.isNull(offset + 21) ? null : cursor.getDouble(offset + 21));
-        entity.setIsRead(cursor.isNull(offset + 22) ? null : cursor.getShort(offset + 22) != 0);
+        entity.setCityID(cursor.isNull(offset + 17) ? null : cursor.getInt(offset + 17));
+        entity.setSchoolID(cursor.isNull(offset + 18) ? null : cursor.getInt(offset + 18));
+        entity.setHeight(cursor.isNull(offset + 19) ? null : cursor.getInt(offset + 19));
+        entity.setWeight(cursor.isNull(offset + 20) ? null : cursor.getInt(offset + 20));
+        entity.setImagePass(cursor.isNull(offset + 21) ? null : cursor.getInt(offset + 21));
+        entity.setSalary(cursor.isNull(offset + 22) ? null : cursor.getDouble(offset + 22));
+        entity.setIsRead(cursor.isNull(offset + 23) ? null : cursor.getShort(offset + 23) != 0);
      }
     
     /** @inheritdoc */

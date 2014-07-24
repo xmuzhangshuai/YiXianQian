@@ -77,8 +77,8 @@ public class ServerUtil {
 									fRequest.getU_blood_type(), fRequest.getU_constell(), fRequest.getU_introduce(),
 									fRequest.getU_birthday(), fRequest.getTime(), fRequest.getU_age(),
 									fRequest.getU_vocationid(), fRequest.getU_stateid(), fRequest.getU_provinceid(),
-									fRequest.getU_schoolid(), fRequest.getU_height(), fRequest.getU_weight(),
-									fRequest.getU_image_pass(), fRequest.getU_salary(), false);
+									fRequest.getU_cityid(), fRequest.getU_schoolid(), fRequest.getU_height(),
+									fRequest.getU_weight(), fRequest.getU_image_pass(), fRequest.getU_salary(), false);
 							flipperDbService.flipperDao.insert(flipper);
 						}
 					}

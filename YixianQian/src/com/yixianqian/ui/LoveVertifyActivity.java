@@ -2,7 +2,12 @@ package com.yixianqian.ui;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
+import org.apache.http.Header;
+
+import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -15,13 +20,23 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.loopj.android.http.RequestParams;
+import com.loopj.android.http.TextHttpResponseHandler;
 import com.yixianqian.R;
 import com.yixianqian.base.BaseActivity;
+import com.yixianqian.base.BaseApplication;
 import com.yixianqian.db.FlipperDbService;
 import com.yixianqian.entities.Flipper;
+import com.yixianqian.table.FlipperTable;
+import com.yixianqian.table.UserTable;
 import com.yixianqian.utils.AsyncHttpClientImageSound;
+import com.yixianqian.utils.AsyncHttpClientTool;
 import com.yixianqian.utils.DateTimeTools;
+import com.yixianqian.utils.FastJsonTool;
+import com.yixianqian.utils.FriendPreference;
 import com.yixianqian.utils.ImageLoaderTool;
+import com.yixianqian.utils.ToastTool;
+import com.yixianqian.utils.UserPreference;
 
 /**
  * 类名称：LoveVertifyActivity
@@ -36,6 +51,8 @@ public class LoveVertifyActivity extends BaseActivity {
 	private FlipperDbService flipperDbService;
 	private List<Flipper> flipperList;
 	private LoveVertifyAdapter adapter;
+	private FriendPreference friendpreference;
+	private UserPreference userPreference;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +63,8 @@ public class LoveVertifyActivity extends BaseActivity {
 		flipperDbService = FlipperDbService.getInstance(LoveVertifyActivity.this);
 		flipperList = new ArrayList<Flipper>();
 		flipperList = flipperDbService.getFlipperList();
+		friendpreference = BaseApplication.getInstance().getFriendPreference();
+		userPreference = BaseApplication.getInstance().getUserPreference();
 
 		findViewById();
 		initView();
@@ -132,7 +151,7 @@ public class LoveVertifyActivity extends BaseActivity {
 				@Override
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
-
+					addFlipper(flipperList.get(position));
 				}
 			});
 
@@ -149,6 +168,90 @@ public class LoveVertifyActivity extends BaseActivity {
 				}
 			});
 			return view;
+		}
+	}
+
+	/**
+	 * 添加心动关系
+	 */
+	private void addFlipper(final Flipper flipper) {
+
+		if (flipper != null) {
+			RequestParams params = new RequestParams();
+			params.put(FlipperTable.F_USERID, userPreference.getU_id());
+			params.put(FlipperTable.F_FLIPPERID, flipper.getUserID());
+			String url = "buildflipper";
+			TextHttpResponseHandler responseHandler = new TextHttpResponseHandler() {
+				Dialog dialog;
+
+				@Override
+				public void onStart() {
+					// TODO Auto-generated method stub
+					super.onStart();
+					dialog = showProgressDialog("请稍后...");
+				}
+
+				@Override
+				public void onSuccess(int statusCode, Header[] headers, String response) {
+					// TODO Auto-generated method stub
+					if (statusCode == 200) {
+						if (!TextUtils.isEmpty(response)) {
+							if (response.equals("0")) {
+								ToastTool.showLong(LoveVertifyActivity.this, "失败！");
+							} else {
+								friendpreference.clear();
+								Map<String, String> map = FastJsonTool.getObject(response, Map.class);
+								if (map != null) {
+									friendpreference.setLoverId(Integer.parseInt(map.get(FlipperTable.F_ID)));
+									friendpreference.setType(0);
+
+									friendpreference.setBpush_ChannelID(map.get(UserTable.U_BPUSH_CHANNEL_ID));
+									friendpreference.setBpush_UserID(map.get(UserTable.U_BPUSH_USER_ID));
+									friendpreference.setF_age(flipper.getAge());
+									friendpreference.setF_blood_type(flipper.getBloodType());
+									friendpreference.setF_constell(flipper.getConstell());
+									friendpreference.setF_email(flipper.getEmail());
+									friendpreference.setF_gender(flipper.getGender());
+									friendpreference.setF_height(flipper.getHeight());
+									friendpreference.setF_id(flipper.getUserID());
+									friendpreference.setF_introduce(flipper.getIntroduce());
+									friendpreference.setF_large_avatar(flipper.getLargeAvatar());
+									friendpreference.setF_nickname(flipper.getNickname());
+									friendpreference.setF_realname(flipper.getRealname());
+									friendpreference.setF_salary(flipper.getSalary());
+									friendpreference.setF_small_avatar(flipper.getSamllAvatar());
+									friendpreference.setF_stateid(flipper.getStateID());
+									friendpreference.setF_vocationid(flipper.getVocationID());
+									friendpreference.setF_weight(flipper.getWeight());
+									friendpreference.setU_cityid(flipper.getCityID());
+									friendpreference.setU_provinceid(flipper.getProvinceID());
+									friendpreference.setU_schoolid(flipper.getSchoolID());
+
+									Intent intent = new Intent(LoveVertifyActivity.this, MainActivity.class);
+									startActivity(intent);
+									overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+								} else {
+									ToastTool.showLong(LoveVertifyActivity.this, "map为空");
+								}
+							}
+						}
+					}
+				}
+
+				@Override
+				public void onFailure(int statusCode, Header[] headers, String errorResponse, Throwable e) {
+					// TODO Auto-generated method stub
+					ToastTool.showLong(LoveVertifyActivity.this, "服务器失败！" + errorResponse);
+				}
+
+				@Override
+				public void onFinish() {
+					// TODO Auto-generated method stub
+					dialog.dismiss();
+					super.onFinish();
+				}
+			};
+			AsyncHttpClientTool.post(LoveVertifyActivity.this, url, params, responseHandler);
 		}
 	}
 }

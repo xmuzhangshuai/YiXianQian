@@ -26,6 +26,7 @@ public class Flipper {
     private Integer vocationID;
     private Integer stateID;
     private Integer provinceID;
+    private Integer cityID;
     private Integer schoolID;
     private Integer height;
     private Integer weight;
@@ -43,7 +44,7 @@ public class Flipper {
         this.id = id;
     }
 
-    public Flipper(Long id, Integer userID, String nickname, String realname, String gender, String email, String largeAvatar, String samllAvatar, String bloodType, String constell, String introduce, java.util.Date birthday, java.util.Date time, Integer age, Integer vocationID, Integer stateID, Integer provinceID, Integer schoolID, Integer height, Integer weight, Integer imagePass, Double salary, Boolean isRead) {
+    public Flipper(Long id, Integer userID, String nickname, String realname, String gender, String email, String largeAvatar, String samllAvatar, String bloodType, String constell, String introduce, java.util.Date birthday, java.util.Date time, Integer age, Integer vocationID, Integer stateID, Integer provinceID, Integer cityID, Integer schoolID, Integer height, Integer weight, Integer imagePass, Double salary, Boolean isRead) {
         this.id = id;
         this.userID = userID;
         this.nickname = nickname;
@@ -61,6 +62,7 @@ public class Flipper {
         this.vocationID = vocationID;
         this.stateID = stateID;
         this.provinceID = provinceID;
+        this.cityID = cityID;
         this.schoolID = schoolID;
         this.height = height;
         this.weight = weight;
@@ -203,6 +205,14 @@ public class Flipper {
 
     public void setProvinceID(Integer provinceID) {
         this.provinceID = provinceID;
+    }
+
+    public Integer getCityID() {
+        return cityID;
+    }
+
+    public void setCityID(Integer cityID) {
+        this.cityID = cityID;
     }
 
     public Integer getSchoolID() {
