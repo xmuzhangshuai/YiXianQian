@@ -1,5 +1,7 @@
 package com.yixianqian.ui;
 
+import java.util.LinkedList;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -14,7 +16,6 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.baidu.location.f;
 import com.yixianqian.R;
 import com.yixianqian.adapter.HomeListAdapter;
 import com.yixianqian.base.BaseApplication;
@@ -36,18 +37,28 @@ public class HomeFragment extends BaseV4Fragment {
 	private TextView mEmpty;
 	private HomeListAdapter mAdapter;
 	private FriendPreference friendPreference;
+	private ConversationDbService conversationDbService;
+	private LinkedList<Conversation> conversationList;
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		super.onCreate(savedInstanceState);
+		friendPreference = BaseApplication.getInstance().getFriendPreference();
+		conversationDbService = ConversationDbService.getInstance(getActivity());
+		conversationList = new LinkedList<Conversation>();
+	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		rootView = inflater.inflate(R.layout.fragment_home, container, false);
-		friendPreference = BaseApplication.getInstance().getFriendPreference();
+
 		findViewById();// ≥ı ºªØviews
 		initView();
 
-		initFriend();
-
-		mAdapter = new HomeListAdapter(getActivity(), mHomeListView);
+		conversationList.addAll(conversationDbService.conversationDao.loadAll());
+		mAdapter = new HomeListAdapter(getActivity(), mHomeListView, conversationList);
 		mHomeListView.setAdapter(mAdapter);
 		return rootView;
 	}
@@ -84,36 +95,11 @@ public class HomeFragment extends BaseV4Fragment {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				// TODO Auto-generated method stub
 				Intent toChatIntent = new Intent(getActivity(), ChatActivity.class);
-				toChatIntent.putExtra("conversationID", (long) 1);
+				toChatIntent.putExtra("conversationID", conversationList.get(position).getId());
 				startActivity(toChatIntent);
 				getActivity().overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
 			}
 		});
-	}
-
-	private void initFriend() {
-		//’≈Àß
-		//		friendPreference.setBpush_ChannelID("4047819659846814865");
-		//		friendPreference.setBpush_UserID("938594755269115566");
-		//		friendPreference.setAppID("3076853");
-
-		//Àºπß
-		friendPreference.setBpush_ChannelID("4457033861276219312");
-		friendPreference.setBpush_UserID("986694129147131648");
-		friendPreference.setAppID("3076853");
-
-		//Œ∞«ø
-		//		friendPreference.setBpush_ChannelID("3979551606421135105");
-		//		friendPreference.setBpush_UserID("607397228778822055");
-		//		friendPreference.setAppID("3076853");
-
-		friendPreference.setF_nickname("’‘ﬁ»ª∂");
-		friendPreference.setF_large_avatar("http://99touxiang.com/public/upload/nansheng/83/06-032643_657.jpg");
-		friendPreference.setF_small_avatar("http://99touxiang.com/public/upload/nansheng/83/06-032643_657.jpg");
-		ConversationDbService conversationDbService = ConversationDbService.getInstance(getActivity());
-		Conversation conversation = new Conversation(null, new Long(1), "Àºπß", friendPreference.getF_small_avatar(),
-				"¿≤¿≤¿≤", 3, System.currentTimeMillis());
-		conversationDbService.conversationDao.insert(conversation);
 	}
 
 	/**

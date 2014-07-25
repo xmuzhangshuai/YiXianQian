@@ -68,7 +68,6 @@
             android:layout_height="@dimen/register_height"
             android:layout_marginTop="50dp"
             android:background="@drawable/sel_auth_code_again_bg"
-            android:text="添加为情侣"
             android:textColor="@drawable/sel_enable_font_color"
             android:textSize="@dimen/day_recommend_user_font" />
     </LinearLayout>

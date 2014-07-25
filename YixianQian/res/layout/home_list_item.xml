@@ -18,8 +18,7 @@
             android:layout_height="50.0dip"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="10.0dip"
-            android:src="@drawable/headimage1" />
+            android:layout_marginLeft="10.0dip" />
 
         <TextView
             android:id="@+id/recent_list_item_name"
@@ -34,7 +33,6 @@
             android:includeFontPadding="false"
             android:padding="0.0dip"
             android:singleLine="true"
-            android:text="赵奕欢"
             android:textColor="@drawable/contact_list_item_buddy_name_text_color"
             android:textSize="15.0sp" />
 
@@ -53,7 +51,6 @@
             android:paddingLeft="6.0dip"
             android:paddingRight="6.0dip"
             android:singleLine="true"
-            android:text="现在在哪？好久不见"
             android:textColor="@drawable/contact_list_item_buddy_signature_text_color2"
             android:textSize="12.0sp" />
 
@@ -71,7 +68,6 @@
             android:includeFontPadding="false"
             android:padding="0.0dip"
             android:singleLine="true"
-            android:text="昨天 12:20"
             android:textColor="@drawable/contact_list_item_buddy_signature_text_color2"
             android:textSize="10.0sp" />
 
@@ -89,7 +85,6 @@
             android:shadowColor="#19000000"
             android:shadowDy="1.0"
             android:shadowRadius="1.0"
-            android:text="10"
             android:textColor="#ffffffff"
             android:textSize="10.0dip" />
     </RelativeLayout>

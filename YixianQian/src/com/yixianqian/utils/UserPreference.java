@@ -11,6 +11,7 @@ import com.yixianqian.table.UserTable;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.text.TextUtils;
 
 public class UserPreference {
 	private SharedPreferences sp;
@@ -53,6 +54,15 @@ public class UserPreference {
 	public void setUserLogin(boolean login) {
 		editor.putBoolean("login", login);
 		editor.commit();
+	}
+
+	//优先返回真名
+	public String getName() {
+		String name = getU_nickname();
+		if (!TextUtils.isEmpty(getU_realname())) {
+			name = getU_realname();
+		}
+		return name;
 	}
 
 	//用户ID

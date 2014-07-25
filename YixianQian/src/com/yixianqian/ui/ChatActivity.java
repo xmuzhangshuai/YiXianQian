@@ -154,7 +154,7 @@ public class ChatActivity extends BaseActivity implements OnTouchListener, IXLis
 	@Override
 	protected void initView() {
 		// TODO Auto-generated method stub
-		topNavText.setText("’‘ﬁ»ª∂");
+		topNavText.setText(friendPreference.getName());
 		inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
 		params = getWindow().getAttributes();
 

@@ -7,6 +7,7 @@ import android.content.Context;
 
 import com.yixianqian.base.BaseApplication;
 import com.yixianqian.dao.ConversationDao;
+import com.yixianqian.dao.ConversationDao.Properties;
 import com.yixianqian.dao.DaoSession;
 import com.yixianqian.entities.Conversation;
 import com.yixianqian.entities.MessageItem;
@@ -50,5 +51,19 @@ public class ConversationDbService {
 			return conversation.getMessageItemList();
 		}
 		return new ArrayList<MessageItem>();
+	}
+
+	public long getIdByConversation(Conversation conversation) {
+		if (conversation.getId() != null) {
+			return conversation.getId();
+		} else {
+			Conversation con = conversationDao.queryBuilder().where(Properties.UserID.eq(conversation.getUserID()))
+					.unique();
+			if (con != null) {
+				return con.getId();
+			} else {
+				return -1;
+			}
+		}
 	}
 }

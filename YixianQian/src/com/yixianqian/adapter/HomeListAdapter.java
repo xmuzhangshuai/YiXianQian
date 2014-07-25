@@ -2,44 +2,49 @@ package com.yixianqian.adapter;
 
 import java.util.LinkedList;
 
-import com.yixianqian.R;
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.View.OnClickListener;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.TextView.BufferType;
+
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.yixianqian.R;
+import com.yixianqian.db.ConversationDbService;
+import com.yixianqian.db.MessageItemDbService;
+import com.yixianqian.entities.Conversation;
+import com.yixianqian.utils.AsyncHttpClientImageSound;
+import com.yixianqian.utils.DateTimeTools;
+import com.yixianqian.utils.ImageLoaderTool;
 
 public class HomeListAdapter extends BaseAdapter {
 	private LayoutInflater mInflater;
-	//	private LinkedList<RecentItem> mData;
+	private LinkedList<Conversation> conversationList;
 	private ListView mListView;
-	//	private MessageDB mMessageDB;
-	//	private RecentDB mRecentDB;
 	private Context mContext;
+	private ConversationDbService conversationDbService;
 
-	public HomeListAdapter(Context context, ListView listview) {
+	public HomeListAdapter(Context context, ListView listview, LinkedList<Conversation> cList) {
 		this.mContext = context;
 		this.mInflater = LayoutInflater.from(context);
 		this.mListView = listview;
+		this.conversationList = cList;
+		this.conversationDbService = ConversationDbService.getInstance(context);
 	}
 
 	@Override
 	public int getCount() {
 		// TODO Auto-generated method stub
-		return 8;
+		return conversationList.size();
 	}
 
 	@Override
 	public Object getItem(int position) {
 		// TODO Auto-generated method stub
-		return position;
+		return conversationList.get(position);
 	}
 
 	@Override
@@ -60,59 +65,41 @@ public class HomeListAdapter extends BaseAdapter {
 		TextView timeTV = (TextView) convertView.findViewById(R.id.recent_list_item_time);
 		ImageView headIV = (ImageView) convertView.findViewById(R.id.icon);
 
+		nickTV.setText(conversationList.get(position).getName());
+		msgTV.setText(conversationList.get(position).getLastMessage());
+		numTV.setText("" + conversationList.get(position).getNewNum());
+		timeTV.setText(DateTimeTools.getChatTime(conversationList.get(position).getTime()));
+
+		ImageLoader imageLoader = ImageLoader.getInstance();
+		imageLoader.displayImage(
+				AsyncHttpClientImageSound.getAbsoluteUrl(conversationList.get(position).getSmallAvatar()), headIV,
+				ImageLoaderTool.getHeadImageOptions(10));
+
 		return convertView;
 	}
 
-	//	public HomeListAdapter(Context context, LinkedList<RecentItem> data, SwipeListView listview) {
-	//		mContext = context;
-	//		this.mInflater = LayoutInflater.from(context);
-	//		mData = data;
-	//		this.mListView = listview;
-	//		mMessageDB = PushApplication.getInstance().getMessageDB();
-	//		mRecentDB = PushApplication.getInstance().getRecentDB();
-	//	}
+	public void remove(int position) {
+		if (position < conversationList.size()) {
+			conversationList.remove(position);
+			notifyDataSetChanged();
+		}
+	}
 
-	//	public void remove(int position) {
-	//		if (position < mData.size()) {
-	//			mData.remove(position);
-	//			notifyDataSetChanged();
-	//		}
-	//	}
-	//
-	//	public void remove(RecentItem item) {
-	//		if (mData.contains(item)) {
-	//			mData.remove(item);
-	//			notifyDataSetChanged();
-	//		}
-	//	}
-	//
-	//	public void addFirst(RecentItem item) {
-	//		if (mData.contains(item)) {
-	//			mData.remove(item);
-	//		}
-	//		mData.addFirst(item);
-	//		L.i("addFirst: " + item);
-	//		notifyDataSetChanged();
-	//	}
-	//
-	//	@Override
-	//	public int getCount() {
-	//		// TODO Auto-generated method stub
-	//		return mData.size();
-	//	}
-	//
-	//	@Override
-	//	public Object getItem(int position) {
-	//		// TODO Auto-generated method stub
-	//		return mData.get(position);
-	//	}
-	//
-	//	@Override
-	//	public long getItemId(int position) {
-	//		// TODO Auto-generated method stub
-	//		return position;
-	//	}
-	//
+	public void remove(Conversation item) {
+		if (conversationList.contains(item)) {
+			conversationList.remove(item);
+			notifyDataSetChanged();
+		}
+	}
+
+	public void addFirst(Conversation item) {
+		if (conversationList.contains(item)) {
+			conversationList.remove(item);
+		}
+		conversationList.addFirst(item);
+		notifyDataSetChanged();
+	}
+
 	//	@Override
 	//	public View getView(final int position, View convertView, ViewGroup parent) {
 	//		// TODO Auto-generated method stub

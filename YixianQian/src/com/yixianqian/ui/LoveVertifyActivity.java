@@ -27,7 +27,9 @@ import com.yixianqian.baidupush.SendMsgAsyncTask;
 import com.yixianqian.base.BaseActivity;
 import com.yixianqian.base.BaseApplication;
 import com.yixianqian.config.Constants;
+import com.yixianqian.db.ConversationDbService;
 import com.yixianqian.db.FlipperDbService;
+import com.yixianqian.entities.Conversation;
 import com.yixianqian.entities.Flipper;
 import com.yixianqian.jsonobject.JsonMessage;
 import com.yixianqian.table.FlipperTable;
@@ -205,9 +207,14 @@ public class LoveVertifyActivity extends BaseActivity {
 								friendpreference.clear();
 								Map<String, String> map = FastJsonTool.getObject(response, Map.class);
 								if (map != null) {
+									//通知对方
+									JsonMessage jsonMessage = new JsonMessage(userPreference.getU_tel(),
+											Constants.MessageType.MESSAGE_TYPE_FLIPPER_TO);
+									new SendMsgAsyncTask(FastJsonTool.createJsonString(jsonMessage),
+											map.get(UserTable.U_BPUSH_USER_ID)).send();
+
 									friendpreference.setLoverId(Integer.parseInt(map.get(FlipperTable.F_ID)));
 									friendpreference.setType(0);
-
 									friendpreference.setBpush_ChannelID(map.get(UserTable.U_BPUSH_CHANNEL_ID));
 									friendpreference.setBpush_UserID(map.get(UserTable.U_BPUSH_USER_ID));
 									friendpreference.setF_age(flipper.getAge());
@@ -230,13 +237,16 @@ public class LoveVertifyActivity extends BaseActivity {
 									friendpreference.setU_provinceid(flipper.getProvinceID());
 									friendpreference.setU_schoolid(flipper.getSchoolID());
 
-									//通知对方
-									JsonMessage jsonMessage = new JsonMessage(flipper.getTel(),
-											Constants.MessageType.MESSAGE_TYPE_FLIPPER_TO);
-									new SendMsgAsyncTask(FastJsonTool.createJsonString(jsonMessage),
-											map.get(UserTable.U_BPUSH_USER_ID)).send();
+									ConversationDbService conversationDbService = ConversationDbService
+											.getInstance(LoveVertifyActivity.this);
+									Conversation conversation = new Conversation(null, Long.valueOf(friendpreference
+											.getF_id()), friendpreference.getName(),
+											friendpreference.getF_small_avatar(), "好久不见", 6, System.currentTimeMillis());
+									conversationDbService.conversationDao.insert(conversation);
 
-									Intent intent = new Intent(LoveVertifyActivity.this, MainActivity.class);
+									Intent intent = new Intent(LoveVertifyActivity.this, ChatActivity.class);
+									intent.putExtra("conversationID",
+											conversationDbService.getIdByConversation(conversation));
 									startActivity(intent);
 									overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
 								} else {
@@ -257,6 +267,7 @@ public class LoveVertifyActivity extends BaseActivity {
 				public void onFinish() {
 					// TODO Auto-generated method stub
 					dialog.dismiss();
+					finish();
 					super.onFinish();
 				}
 			};

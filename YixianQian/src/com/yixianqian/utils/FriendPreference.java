@@ -2,6 +2,7 @@ package com.yixianqian.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.text.TextUtils;
 
 import com.yixianqian.dao.CityDao.Properties;
 import com.yixianqian.db.CityDbService;
@@ -57,6 +58,15 @@ public class FriendPreference {
 	public void setLoverId(int loverId) {
 		editor.putInt(LoversTable.L_ID, loverId);
 		editor.commit();
+	}
+
+	//优先返回真名
+	public String getName() {
+		String name = getF_nickname();
+		if (!TextUtils.isEmpty(getF_realname())) {
+			name = getF_realname();
+		}
+		return name;
 	}
 
 	//用户ID

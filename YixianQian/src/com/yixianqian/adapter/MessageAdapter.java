@@ -24,6 +24,7 @@ import com.yixianqian.R;
 import com.yixianqian.base.BaseApplication;
 import com.yixianqian.entities.Conversation;
 import com.yixianqian.entities.MessageItem;
+import com.yixianqian.utils.AsyncHttpClientImageSound;
 import com.yixianqian.utils.DateTimeTools;
 import com.yixianqian.utils.ImageLoaderTool;
 import com.yixianqian.utils.UserPreference;
@@ -118,12 +119,12 @@ public class MessageAdapter extends BaseAdapter {
 		holder.time.setVisibility(View.VISIBLE);
 		if (isComMsg) {
 			if (conversation != null) {
-				imageLoader.displayImage(conversation.getSmallAvatar(), holder.head,
-						ImageLoaderTool.getHeadImageOptions(10));
+				imageLoader.displayImage(AsyncHttpClientImageSound.getAbsoluteUrl(conversation.getSmallAvatar()),
+						holder.head, ImageLoaderTool.getHeadImageOptions(10));
 			}
 		} else {
-			imageLoader.displayImage(userPreference.getU_small_avatar(), holder.head,
-					ImageLoaderTool.getHeadImageOptions(10));
+			imageLoader.displayImage(AsyncHttpClientImageSound.getAbsoluteUrl(userPreference.getU_small_avatar()),
+					holder.head, ImageLoaderTool.getHeadImageOptions(10));
 		}
 
 		holder.msg.setText(convertNormalStringToSpannableString(item.getMsgContent()), BufferType.SPANNABLE);

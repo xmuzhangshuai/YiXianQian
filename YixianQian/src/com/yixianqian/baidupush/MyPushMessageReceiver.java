@@ -14,7 +14,6 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.baidu.frontia.api.FrontiaPushMessageReceiver;
 import com.loopj.android.http.RequestParams;
@@ -22,6 +21,8 @@ import com.loopj.android.http.TextHttpResponseHandler;
 import com.yixianqian.R;
 import com.yixianqian.base.BaseApplication;
 import com.yixianqian.config.Constants;
+import com.yixianqian.db.MessageItemDbService;
+import com.yixianqian.entities.MessageItem;
 import com.yixianqian.jsonobject.JsonMessage;
 import com.yixianqian.jsonobject.JsonUser;
 import com.yixianqian.table.UserTable;
@@ -62,9 +63,6 @@ public class MyPushMessageReceiver extends FrontiaPushMessageReceiver {
 		userPreference.setBpush_ChannelID(channelId);
 		userPreference.setBpush_UserID(userId);
 		userPreference.setAppID(appid);
-		//		System.out.println("channelId   " + channelId);
-		//		System.out.println("userId   " + userId);
-		//		System.out.println("appid   " + appid);
 	}
 
 	/**
@@ -79,30 +77,6 @@ public class MyPushMessageReceiver extends FrontiaPushMessageReceiver {
 	*/
 	@Override
 	public void onMessage(Context context, String message, String customContentString) {
-		String messageString = "透传消息 message=" + message + " customContentString=" + customContentString;
-		Log.d(TAG, messageString);
-		// 自定义内容获取方式，mykey和myvalue对应透传消息推送时自定义内容中设置的键和值
-		//		if (customContentString != null & customContentString != "") {
-		//			//			JsonMessage jsonMessage = FastJsonTool.getObject(customContentString, JsonMessage.class);
-		//			//			if (jsonMessage != null) {
-		//			//				parseMessage(jsonMessage);
-		//			//				System.out.println("标识"+jsonMessage);
-		//			//			}
-		//			JSONObject customJson = null;
-		//			try {
-		//				customJson = new JSONObject(customContentString);
-		//				String myvalue = null;
-		//				if (!customJson.isNull("zhangshuai")) {
-		//					myvalue = customJson.getString("zhangshuai");
-		//					ToastTool.showShort(context, myvalue);
-		//				}else {
-		//					ToastTool.showShort(context, "为空");
-		//				}
-		//			} catch (JSONException e) {
-		//				// TODO Auto-generated catch block
-		//				e.printStackTrace();
-		//			}
-		//		}
 
 		JsonMessage jsonMessage = FastJsonTool.getObject(message, JsonMessage.class);
 		if (jsonMessage != null) {
@@ -128,7 +102,7 @@ public class MyPushMessageReceiver extends FrontiaPushMessageReceiver {
 		switch (type) {
 		//普通消息
 		case Constants.MessageType.MESSAGE_TYPE_TEXT:
-
+			chatMessage(msg);
 			break;
 		//图片
 		case Constants.MessageType.MESSAGE_TYPE_IMG:
@@ -140,7 +114,7 @@ public class MyPushMessageReceiver extends FrontiaPushMessageReceiver {
 			break;
 		//心动请求
 		case Constants.MessageType.MESSAGE_TYPE_FLIPPER_REQUEEST:
-			
+
 			break;
 		//也心动
 		case Constants.MessageType.MESSAGE_TYPE_FLIPPER_TO:
@@ -162,17 +136,24 @@ public class MyPushMessageReceiver extends FrontiaPushMessageReceiver {
 			break;
 		}
 
-		//		if (ehList.size() > 0) {
-		//			for (EventHandler eventHandler : ehList) {
-		//				eventHandler.onMessage(msg);
-		//			}
-		//		} else {
-		//			showNotify(msg);
-		//			MessageItem messageItem = new MessageItem(null, Constants.MessageType.MESSAGE_TYPE_TEXT,
-		//					msg.getMessageContent(), System.currentTimeMillis(), true, true, true, 1);
-		//			MessageItemDbService messageItemDbService = MessageItemDbService.getInstance(BaseApplication.getInstance());
-		//			messageItemDbService.messageItemDao.insert(messageItem);
-		//		}
+	}
+
+	/**
+	 * 处理聊天消息
+	 * @param msg
+	 */
+	private void chatMessage(JsonMessage msg) {
+		if (ehList.size() > 0) {
+			for (EventHandler eventHandler : ehList) {
+				eventHandler.onMessage(msg);
+			}
+		} else {
+			showNotify(msg);
+			MessageItem messageItem = new MessageItem(null, Constants.MessageType.MESSAGE_TYPE_TEXT,
+					msg.getMessageContent(), System.currentTimeMillis(), true, true, true, 1);
+			MessageItemDbService messageItemDbService = MessageItemDbService.getInstance(BaseApplication.getInstance());
+			messageItemDbService.messageItemDao.insert(messageItem);
+		}
 	}
 
 	/**
@@ -192,10 +173,11 @@ public class MyPushMessageReceiver extends FrontiaPushMessageReceiver {
 		}
 		//通知
 		NotificationCompat.Builder builder = new NotificationCompat.Builder(application);
-		builder.setSmallIcon(R.drawable.ic_launcher).setContentTitle(name).setContentText("对您怦然心动");
+		builder.setSmallIcon(R.drawable.ic_launcher).setContentTitle(name).setContentText("对您怦然心动").setAutoCancel(true)
+				.setTicker("有人对您砰然心动了！").setDefaults(Notification.DEFAULT_ALL);
 		Intent resultIntent = new Intent(application, VertifyToChatActivity.class);
 		TaskStackBuilder stackBuilder = TaskStackBuilder.create(application);
-		stackBuilder.addParentStack(VertifyToChatActivity.class);
+		stackBuilder.addParentStack(MainActivity.class);
 		stackBuilder.addNextIntent(resultIntent);
 		PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
 		builder.setContentIntent(resultPendingIntent);
@@ -218,8 +200,6 @@ public class MyPushMessageReceiver extends FrontiaPushMessageReceiver {
 					if (statusCode == 200) {
 						JsonUser lover = FastJsonTool.getObject(response, JsonUser.class);
 						if (lover != null) {
-							//							friendPreference.setLoverId();
-							//							friendPreference.setType(0);
 							friendPreference.setBpush_ChannelID(lover.getU_bpush_channel_id());
 							friendPreference.setBpush_UserID(lover.getU_bpush_user_id());
 							friendPreference.setF_address(lover.getU_address());
@@ -263,10 +243,9 @@ public class MyPushMessageReceiver extends FrontiaPushMessageReceiver {
 		// 更新通知栏
 		BaseApplication application = BaseApplication.getInstance();
 
-		int icon = R.drawable.f086;
 		CharSequence tickerText = application.getFriendPreference().getF_nickname() + ":" + message.getMessageContent();
 		long when = System.currentTimeMillis();
-		Notification notification = new Notification(icon, tickerText, when);
+		Notification notification = new Notification(R.drawable.ic_launcher, tickerText, when);
 
 		notification.flags = Notification.FLAG_NO_CLEAR;
 		// 设置默认声音
@@ -288,22 +267,7 @@ public class MyPushMessageReceiver extends FrontiaPushMessageReceiver {
 	*/
 	@Override
 	public void onNotificationClicked(Context context, String title, String description, String customContentString) {
-		String notifyString = "通知点击 title=" + title + " description=" + description + " customContent="
-				+ customContentString;
-		// 自定义内容获取方式，mykey和myvalue对应通知推送时自定义内容中设置的键和值
-		if (customContentString != null & customContentString != "") {
-			//			JSONObject customJson = null;
-			//			try {
-			//				customJson = new JSONObject(customContentString);
-			//				String myvalue = null;
-			//				if (customJson.isNull("mykey")) {
-			//					myvalue = customJson.getString("mykey");
-			//				}
-			//			} catch (JSONException e) {
-			//				// TODO Auto-generated catch block
-			//				e.printStackTrace();
-			//			}
-		}
+
 	}
 
 	/**

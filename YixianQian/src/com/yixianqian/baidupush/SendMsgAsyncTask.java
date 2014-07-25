@@ -1,13 +1,11 @@
 package com.yixianqian.baidupush;
 
-import java.util.Map;
-
-import com.yixianqian.base.BaseApplication;
-import com.yixianqian.utils.NetworkUtils;
-
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.text.TextUtils;
+
+import com.yixianqian.base.BaseApplication;
+import com.yixianqian.utils.NetworkUtils;
 
 public class SendMsgAsyncTask {
 	private BaiduPush mBaiduPush;
