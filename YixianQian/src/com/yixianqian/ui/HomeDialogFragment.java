@@ -17,7 +17,6 @@ import android.widget.TextView;
 
 import com.yixianqian.R;
 import com.yixianqian.db.FlipperDbService;
-import com.yixianqian.ui.GuideActivity.initDataBase;
 
 /**
  * ¿‡√˚≥∆£∫HomeDialogFragment

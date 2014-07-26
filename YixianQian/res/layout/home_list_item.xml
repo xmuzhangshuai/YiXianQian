@@ -6,7 +6,7 @@
     <RelativeLayout
         android:id="@+id/front"
         android:layout_width="fill_parent"
-        android:layout_height="70dip"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:paddingBottom="6.0dip"
         android:paddingTop="6.0dip"
@@ -14,8 +14,8 @@
 
         <ImageView
             android:id="@+id/icon"
-            android:layout_width="50.0dip"
-            android:layout_height="50.0dip"
+            android:layout_width="60.0dip"
+            android:layout_height="60.0dip"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:layout_marginLeft="10.0dip" />
@@ -25,13 +25,12 @@
             android:layout_width="wrap_content"
             android:layout_height="25.0dip"
             android:layout_marginLeft="10.0dip"
-            android:layout_marginRight="58.0dip"
+            android:layout_marginTop="5dp"
             android:layout_toRightOf="@id/icon"
             android:duplicateParentState="true"
             android:ellipsize="end"
             android:gravity="left|center"
             android:includeFontPadding="false"
-            android:padding="0.0dip"
             android:singleLine="true"
             android:textColor="@drawable/contact_list_item_buddy_name_text_color"
             android:textSize="15.0sp" />
@@ -39,16 +38,14 @@
         <TextView
             android:id="@+id/recent_list_item_msg"
             android:layout_width="fill_parent"
-            android:layout_height="25.0dip"
-            android:layout_below="@id/recent_list_item_name"
-            android:layout_marginLeft="64.0dip"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/icon"
+            android:layout_alignLeft="@+id/recent_list_item_name"
+            android:layout_marginBottom="5dp"
             android:layout_marginRight="30.0dip"
-            android:layout_marginTop="2.0dip"
             android:duplicateParentState="true"
             android:ellipsize="end"
-            android:gravity="center_vertical"
             android:includeFontPadding="false"
-            android:paddingLeft="6.0dip"
             android:paddingRight="6.0dip"
             android:singleLine="true"
             android:textColor="@drawable/contact_list_item_buddy_signature_text_color2"
@@ -58,8 +55,8 @@
             android:id="@+id/recent_list_item_time"
             android:layout_width="wrap_content"
             android:layout_height="25.0dip"
-            android:layout_above="@id/recent_list_item_msg"
             android:layout_alignParentRight="true"
+            android:layout_alignTop="@+id/recent_list_item_name"
             android:layout_alignWithParentIfMissing="true"
             android:layout_marginRight="10dip"
             android:duplicateParentState="true"
@@ -75,10 +72,9 @@
             android:id="@+id/unreadmsg"
             android:layout_width="16dip"
             android:layout_height="16.0dip"
+            android:layout_alignBottom="@+id/recent_list_item_msg"
             android:layout_alignParentRight="true"
-            android:layout_below="@id/recent_list_item_name"
             android:layout_marginRight="10.0dip"
-            android:layout_marginTop="5.0dip"
             android:background="@drawable/shape_like_count"
             android:gravity="center"
             android:includeFontPadding="false"
@@ -86,7 +82,8 @@
             android:shadowDy="1.0"
             android:shadowRadius="1.0"
             android:textColor="#ffffffff"
-            android:textSize="10.0dip" />
+            android:textSize="10.0dip"
+            android:visibility="invisible" />
     </RelativeLayout>
 
 </FrameLayout>

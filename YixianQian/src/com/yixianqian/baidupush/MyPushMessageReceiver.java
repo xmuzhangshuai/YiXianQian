@@ -10,27 +10,36 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.text.TextUtils;
 
+import com.baidu.android.pushservice.PushConstants;
+import com.baidu.android.pushservice.PushManager;
 import com.baidu.frontia.api.FrontiaPushMessageReceiver;
 import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.TextHttpResponseHandler;
 import com.yixianqian.R;
 import com.yixianqian.base.BaseApplication;
 import com.yixianqian.config.Constants;
+import com.yixianqian.db.ConversationDbService;
 import com.yixianqian.db.MessageItemDbService;
+import com.yixianqian.entities.Conversation;
 import com.yixianqian.entities.MessageItem;
 import com.yixianqian.jsonobject.JsonMessage;
 import com.yixianqian.jsonobject.JsonUser;
 import com.yixianqian.table.UserTable;
+import com.yixianqian.ui.ChatActivity;
 import com.yixianqian.ui.MainActivity;
 import com.yixianqian.ui.VertifyToChatActivity;
+import com.yixianqian.ui.GuideActivity.initDataBase;
 import com.yixianqian.utils.AsyncHttpClientTool;
 import com.yixianqian.utils.FastJsonTool;
 import com.yixianqian.utils.FriendPreference;
+import com.yixianqian.utils.NetworkUtils;
+import com.yixianqian.utils.ToastTool;
 import com.yixianqian.utils.UserPreference;
 
 public class MyPushMessageReceiver extends FrontiaPushMessageReceiver {
@@ -43,6 +52,7 @@ public class MyPushMessageReceiver extends FrontiaPushMessageReceiver {
 	public static ArrayList<EventHandler> ehList = new ArrayList<EventHandler>();
 	private UserPreference userPreference;
 	private FriendPreference friendPreference;
+	private ConversationDbService conversationDbService;
 
 	public static abstract interface EventHandler {
 		public abstract void onMessage(JsonMessage jsonMessage);
@@ -59,10 +69,7 @@ public class MyPushMessageReceiver extends FrontiaPushMessageReceiver {
 	*/
 	@Override
 	public void onBind(Context context, int errorCode, String appid, String userId, String channelId, String requestId) {
-		userPreference = BaseApplication.getInstance().getUserPreference();
-		userPreference.setBpush_ChannelID(channelId);
-		userPreference.setBpush_UserID(userId);
-		userPreference.setAppID(appid);
+		paraseContent(context, errorCode, appid, userId, channelId);
 	}
 
 	/**
@@ -70,6 +77,7 @@ public class MyPushMessageReceiver extends FrontiaPushMessageReceiver {
 	*/
 	@Override
 	public void onUnbind(Context context, int errorCode, String requestId) {
+
 	}
 
 	/**
@@ -149,11 +157,45 @@ public class MyPushMessageReceiver extends FrontiaPushMessageReceiver {
 			}
 		} else {
 			showNotify(msg);
-			MessageItem messageItem = new MessageItem(null, Constants.MessageType.MESSAGE_TYPE_TEXT,
-					msg.getMessageContent(), System.currentTimeMillis(), true, true, true, 1);
-			MessageItemDbService messageItemDbService = MessageItemDbService.getInstance(BaseApplication.getInstance());
-			messageItemDbService.messageItemDao.insert(messageItem);
+			Conversation conversation = ConversationDbService.getInstance(BaseApplication.getInstance())
+					.getConversationByUser(friendPreference.getF_id());
+
+			if (conversation != null) {
+				MessageItem messageItem = new MessageItem(null, Constants.MessageType.MESSAGE_TYPE_TEXT,
+						msg.getMessageContent(), System.currentTimeMillis(), true, true, true, conversation.getId());
+				MessageItemDbService messageItemDbService = MessageItemDbService.getInstance(BaseApplication
+						.getInstance());
+				messageItemDbService.messageItemDao.insert(messageItem);
+				conversation.setLastMessage(msg.getMessageContent());
+				conversation.setNewNum(mNewNum + 1);
+				conversation.setTime(msg.getTimeSamp());
+			}
 		}
+	}
+
+	private void showNotify(JsonMessage message) {
+		// TODO Auto-generated method stub
+		mNewNum++;
+		// 更新通知栏
+		BaseApplication application = BaseApplication.getInstance();
+		userPreference = application.getUserPreference();
+		friendPreference = application.getFriendPreference();
+		conversationDbService = ConversationDbService.getInstance(application);
+
+		//通知
+		NotificationCompat.Builder builder = new NotificationCompat.Builder(application);
+		String title = userPreference.getName() + "(" + mNewNum + "条新消息)";
+		String text = friendPreference.getName() + ": " + message.getMessageContent();
+		builder.setSmallIcon(R.drawable.ic_launcher).setContentTitle(title).setContentText(text).setAutoCancel(true)
+				.setTicker("新消息！").setDefaults(Notification.DEFAULT_ALL);
+		Intent resultIntent = new Intent(application, ChatActivity.class);
+		resultIntent.putExtra("conversationID", conversationDbService.getConIdByUserId(friendPreference.getF_id()));
+		TaskStackBuilder stackBuilder = TaskStackBuilder.create(application);
+		stackBuilder.addParentStack(MainActivity.class);
+		stackBuilder.addNextIntent(resultIntent);
+		PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+		builder.setContentIntent(resultPendingIntent);
+		application.getNotificationManager().notify(NOTIFY_ID, builder.build());// 通知一下
 	}
 
 	/**
@@ -195,16 +237,11 @@ public class MyPushMessageReceiver extends FrontiaPushMessageReceiver {
 
 		getLoverInfo(phone);//获取信息
 
-		String name = friendPreference.getF_nickname();
-		if (friendPreference.getF_realname() != null) {
-			if (friendPreference.getF_realname().length() > 0) {
-				name = friendPreference.getF_realname();
-			}
-		}
 		//通知
 		NotificationCompat.Builder builder = new NotificationCompat.Builder(application);
-		builder.setSmallIcon(R.drawable.ic_launcher).setContentTitle(name).setContentText("对您怦然心动").setAutoCancel(true)
-				.setTicker("有人对您砰然心动了！").setDefaults(Notification.DEFAULT_ALL);
+		builder.setSmallIcon(R.drawable.ic_launcher).setContentTitle(friendPreference.getName())
+				.setContentText("对您怦然心动").setAutoCancel(true).setTicker("有人对您砰然心动了！")
+				.setDefaults(Notification.DEFAULT_ALL);
 		Intent resultIntent = new Intent(application, VertifyToChatActivity.class);
 		resultIntent.putExtra(VertifyToChatActivity.VERTIFY_TYPE, "0");
 		TaskStackBuilder stackBuilder = TaskStackBuilder.create(application);
@@ -267,38 +304,50 @@ public class MyPushMessageReceiver extends FrontiaPushMessageReceiver {
 		}
 	}
 
-	@SuppressWarnings("deprecation")
-	private void showNotify(JsonMessage message) {
-		// TODO Auto-generated method stub
-		mNewNum++;
-		// 更新通知栏
-		BaseApplication application = BaseApplication.getInstance();
-
-		CharSequence tickerText = application.getFriendPreference().getF_nickname() + ":" + message.getMessageContent();
-		long when = System.currentTimeMillis();
-		Notification notification = new Notification(R.drawable.ic_launcher, tickerText, when);
-
-		notification.flags = Notification.FLAG_NO_CLEAR;
-		// 设置默认声音
-		notification.defaults |= Notification.DEFAULT_SOUND;
-		// 设定震动(需加VIBRATE权限)
-		notification.defaults |= Notification.DEFAULT_VIBRATE;
-		notification.contentView = null;
-
-		Intent intent = new Intent(application, MainActivity.class);
-		PendingIntent contentIntent = PendingIntent.getActivity(application, 0, intent, 0);
-		notification.setLatestEventInfo(BaseApplication.getInstance(), application.getUserPreference().getU_nickname()
-				+ " (" + mNewNum + "条新消息)", tickerText, contentIntent);
-
-		application.getNotificationManager().notify(NOTIFY_ID, notification);// 通知一下才会生效哦
-	}
-
 	/**
 	* 接收通知点击的函数。注：推送通知被用户点击前，应用无法通过接口获取通知的内容。
 	*/
 	@Override
 	public void onNotificationClicked(Context context, String title, String description, String customContentString) {
+	}
 
+	/**
+	 * 处理登录结果
+	 * 
+	 * @param errorCode
+	 * @param content
+	 */
+	private void paraseContent(final Context context, int errorCode, String appid, String userId, String channelId) {
+		// TODO Auto-generated method stub
+		if (errorCode == 0) {
+			userPreference = BaseApplication.getInstance().getUserPreference();
+			userPreference.setAppID(appid);
+			userPreference.setBpush_ChannelID(channelId);
+			userPreference.setBpush_UserID(userId);
+		} else {
+			if (NetworkUtils.isNetworkAvailable(context)) {
+				if (errorCode == 30607) {
+					ToastTool.showLong(context, "账号已过期，请重新登录");
+					// 跳转到重新登录的界面
+					Intent intent = new Intent();
+					intent.setAction("com.yixianqian.loginorregister");
+					context.startActivity(intent);
+				} else {
+					ToastTool.showLong(context, "启动失败，正在重试...");
+					new Handler().postDelayed(new Runnable() {
+
+						@Override
+						public void run() {
+							// TODO Auto-generated method stub
+							PushManager.startWork(context, PushConstants.LOGIN_TYPE_API_KEY,
+									Constants.BaiduPushConfig.API_KEY);
+						}
+					}, 2000);// 两秒后重新开始验证
+				}
+			} else {
+				ToastTool.showLong(context, "网络异常");
+			}
+		}
 	}
 
 	/**
@@ -307,8 +356,6 @@ public class MyPushMessageReceiver extends FrontiaPushMessageReceiver {
 	@Override
 	public void onSetTags(Context context, int errorCode, List<String> sucessTags, List<String> failTags,
 			String requestId) {
-		//		String responseString = "onSetTags errorCode=" + errorCode + " sucessTags=" + sucessTags + " failTags="
-		//				+ failTags + " requestId=" + requestId;
 	}
 
 	/**
@@ -317,8 +364,6 @@ public class MyPushMessageReceiver extends FrontiaPushMessageReceiver {
 	@Override
 	public void onDelTags(Context context, int errorCode, List<String> sucessTags, List<String> failTags,
 			String requestId) {
-		//		String responseString = "onDelTags errorCode=" + errorCode + " sucessTags=" + sucessTags + " failTags="
-		//				+ failTags + " requestId=" + requestId;
 	}
 
 	/**
@@ -326,7 +371,6 @@ public class MyPushMessageReceiver extends FrontiaPushMessageReceiver {
 	*/
 	@Override
 	public void onListTags(Context context, int errorCode, List<String> tags, String requestId) {
-		//		String responseString = "onListTags errorCode=" + errorCode + " tags=" + tags;
 	}
 
 }

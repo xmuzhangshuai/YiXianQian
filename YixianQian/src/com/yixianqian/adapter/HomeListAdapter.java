@@ -14,7 +14,6 @@ import android.widget.TextView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.yixianqian.R;
 import com.yixianqian.db.ConversationDbService;
-import com.yixianqian.db.MessageItemDbService;
 import com.yixianqian.entities.Conversation;
 import com.yixianqian.utils.AsyncHttpClientImageSound;
 import com.yixianqian.utils.DateTimeTools;
@@ -67,7 +66,11 @@ public class HomeListAdapter extends BaseAdapter {
 
 		nickTV.setText(conversationList.get(position).getName());
 		msgTV.setText(conversationList.get(position).getLastMessage());
-		numTV.setText("" + conversationList.get(position).getNewNum());
+		if (conversationList.get(position).getNewNum() > 0) {
+			numTV.setText("" + conversationList.get(position).getNewNum());
+			numTV.setVisibility(View.VISIBLE);
+		}
+
 		timeTV.setText(DateTimeTools.getChatTime(conversationList.get(position).getTime()));
 
 		ImageLoader imageLoader = ImageLoader.getInstance();

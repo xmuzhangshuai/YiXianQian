@@ -34,7 +34,7 @@ public class MainActivity extends BaseFragmentActivity {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_main);
 		userPreference = BaseApplication.getInstance().getUserPreference();
-		
+
 		//设置标签
 		List<String> tags = new ArrayList<String>();
 		tags.add(userPreference.getU_gender());
@@ -112,12 +112,4 @@ public class MainActivity extends BaseFragmentActivity {
 		mTabHost = null;
 	}
 
-	/**
-	 * 初始化通知样式
-	 */
-	private void initNotification() {
-		// Push: 设置自定义的通知样式，具体API介绍见用户手册，如果想使用系统默认的可以不加这段代码
-		// 请在通知推送界面中，高级设置->通知栏样式->自定义样式，选中并且填写值：1，
-		// 与下方代码中 PushManager.setNotificationBuilder(this, 1, cBuilder)中的第二个参数对应
-	}
 }

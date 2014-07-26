@@ -92,14 +92,14 @@ public class ChatActivity extends BaseActivity implements OnTouchListener, IXLis
 		public void handleMessage(Message msg) {
 			if (msg.what == NEW_MESSAGE) {
 				JsonMessage jsonMessage = (JsonMessage) msg.obj;
-//				String userId = jsonMessage.getBpushUserID();
+				//				String userId = jsonMessage.getBpushUserID();
 				//				if (!userId.equals(mFromUser.getUserId()))// 如果不是当前正在聊天对象的消息，不处理
 				//					return;
 
 				//				int headId = msgItem.getHead_id();
 				// TODO Auto-generated method stub
 				MessageItem item = new MessageItem(null, Constants.MessageType.MESSAGE_TYPE_TEXT,
-						jsonMessage.getMessageContent(), System.currentTimeMillis(), true, true, true, conversationID);
+						jsonMessage.getMessageContent(), System.currentTimeMillis(), true, true, false, conversationID);
 				adapter.upDateMsg(item);
 				messageItemDbService.messageItemDao.insert(item);
 				//				RecentItem recentItem = new RecentItem(userId, headId, msgItem.getNick(), msgItem.getMessage(), 0,

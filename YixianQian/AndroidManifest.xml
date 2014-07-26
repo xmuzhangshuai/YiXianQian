@@ -88,6 +88,10 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.yixianqian.ui.LoginOrRegisterActivity" />
+
+            <intent-filter>
+                <action android:name="com.yixianqian.loginorregister" />
+            </intent-filter>
         </activity>
 
         <!-- 注册页面 -->

@@ -5,13 +5,11 @@ import java.util.LinkedList;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -31,7 +29,6 @@ import com.yixianqian.base.BaseApplication;
 import com.yixianqian.base.BaseV4Fragment;
 import com.yixianqian.db.ConversationDbService;
 import com.yixianqian.entities.Conversation;
-import com.yixianqian.utils.DensityUtil;
 import com.yixianqian.utils.FriendPreference;
 
 /**

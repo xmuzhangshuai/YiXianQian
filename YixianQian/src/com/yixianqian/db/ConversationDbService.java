@@ -53,6 +53,11 @@ public class ConversationDbService {
 		return new ArrayList<MessageItem>();
 	}
 
+	/**
+	 * 
+	 * @param conversation
+	 * @return
+	 */
 	public long getIdByConversation(Conversation conversation) {
 		if (conversation.getId() != null) {
 			return conversation.getId();
@@ -65,5 +70,29 @@ public class ConversationDbService {
 				return -1;
 			}
 		}
+	}
+
+	/**
+	 * 通过UserID返回对话
+	 * @param userID
+	 * @return
+	 */
+	public Conversation getConversationByUser(int userID) {
+		if (userID > -1) {
+			return conversationDao.queryBuilder().where(Properties.UserID.eq(userID)).unique();
+		}
+		return null;
+	}
+
+	/**
+	 * 通过user获得对话
+	 * @return
+	 */
+	public Long getConIdByUserId(int userID) {
+		Conversation conversation = getConversationByUser(userID);
+		if (conversation != null) {
+			return conversation.getId();
+		}
+		return (long) -1;
 	}
 }
