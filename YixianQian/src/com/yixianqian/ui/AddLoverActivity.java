@@ -15,7 +15,7 @@ import com.yixianqian.base.BaseActivity;
 
 /**
  * 类名称：AddLoverActivity
- * 类描述：添加情侣页面
+ * 类描述：主页面菜单添加情侣页面，有输入手机号和扫描二维码两种方式
  * 创建人： 张帅
  * 创建时间：2014年7月24日 下午4:21:53
  *

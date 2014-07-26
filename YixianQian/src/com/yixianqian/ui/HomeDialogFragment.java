@@ -83,6 +83,7 @@ public class HomeDialogFragment extends DialogFragment {
 				if (intent != null) {
 					startActivity(intent);
 					getActivity().overridePendingTransition(R.anim.zoomin, R.anim.zoomout);
+					HomeDialogFragment.this.dismiss();
 				}
 			}
 		});

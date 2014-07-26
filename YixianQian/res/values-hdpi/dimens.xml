@@ -6,7 +6,7 @@
     <dimen name="day_recommend_font_info">14sp</dimen>
     <dimen name="day_recommend_info_space">2dp</dimen>
     <dimen name="day_recommend_padding">30dp</dimen>
-    <dimen name="day_recommend_user_font">16sp</dimen>
+    <dimen name="day_recommend_user_font">14sp</dimen>
     <dimen name="day_recommend_viewpager_height">300dp</dimen>
     <dimen name="day_recommend_viewpager_margin_top">10dp</dimen>
     <dimen name="day_recommend_viewpager_padding_top">3dp</dimen>

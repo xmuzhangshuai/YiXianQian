@@ -10,7 +10,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.loopj.android.http.RequestParams;
 import com.yixianqian.R;
 import com.yixianqian.base.BaseActivity;
 import com.yixianqian.base.BaseApplication;
@@ -22,6 +21,7 @@ import com.yixianqian.utils.ImageLoaderTool;
 import com.yixianqian.utils.UserPreference;
 
 public class VertifyToChatActivity extends BaseActivity {
+	public static final String VERTIFY_TYPE = "type";
 	private ImageView topNavLeftBtn;//导航条左边按钮
 	private TextView topNavText;//导航条文字
 	private View right_btn_bg;
@@ -32,6 +32,7 @@ public class VertifyToChatActivity extends BaseActivity {
 	private FriendPreference friendpreference;
 	private UserPreference userPreference;
 	private Button beginChatBtn;
+	private int type = -1;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +43,10 @@ public class VertifyToChatActivity extends BaseActivity {
 
 		friendpreference = BaseApplication.getInstance().getFriendPreference();
 		userPreference = BaseApplication.getInstance().getUserPreference();
+		String typeString = getIntent().getStringExtra(VERTIFY_TYPE);
+		if (!TextUtils.isEmpty(typeString)) {
+			type = Integer.parseInt(typeString);
+		}
 
 		findViewById();
 		initView();
@@ -64,7 +69,11 @@ public class VertifyToChatActivity extends BaseActivity {
 	protected void initView() {
 		// TODO Auto-generated method stub
 		right_btn_bg.setVisibility(View.GONE);
-		topNavText.setText("添加情侣");
+		if (type == 0) {
+			topNavText.setText("心动请求");
+		} else if (type == 1) {
+			topNavText.setText("爱情请求");
+		}
 		beginChatBtn.setText("开始聊天");
 		topNavLeftBtn.setOnClickListener(new OnClickListener() {
 
@@ -118,8 +127,14 @@ public class VertifyToChatActivity extends BaseActivity {
 	 * 确认聊天
 	 */
 	private void votifyToChat() {
-		friendpreference.setType(0);
+		if (type == 0) {
+			friendpreference.setType(0);
+		} else if (type == 1) {
+			friendpreference.setType(1);
+		}
+
 		ConversationDbService conversationDbService = ConversationDbService.getInstance(VertifyToChatActivity.this);
+		conversationDbService.conversationDao.deleteAll();
 		Conversation conversation = new Conversation(null, Long.valueOf(friendpreference.getF_id()),
 				friendpreference.getName(), friendpreference.getF_small_avatar(), "好久不见", 6, System.currentTimeMillis());
 		conversationDbService.conversationDao.insert(conversation);

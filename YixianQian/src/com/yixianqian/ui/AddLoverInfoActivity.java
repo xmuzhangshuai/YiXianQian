@@ -16,8 +16,13 @@ import android.widget.TextView;
 import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.TextHttpResponseHandler;
 import com.yixianqian.R;
+import com.yixianqian.baidupush.SendMsgAsyncTask;
 import com.yixianqian.base.BaseActivity;
 import com.yixianqian.base.BaseApplication;
+import com.yixianqian.config.Constants;
+import com.yixianqian.db.ConversationDbService;
+import com.yixianqian.entities.Conversation;
+import com.yixianqian.jsonobject.JsonMessage;
 import com.yixianqian.jsonobject.JsonUser;
 import com.yixianqian.table.LoversTable;
 import com.yixianqian.table.UserTable;
@@ -31,7 +36,7 @@ import com.yixianqian.utils.UserPreference;
 
 /**
  * 类名称：AddLoverInfoActivity
- * 类描述：添加情侣资料页面
+ * 类描述：通过输入手机号或者扫描出来的情侣信息，添加情侣资料页面
  * 创建人： 张帅
  * 创建时间：2014年7月24日 上午10:50:39
  *
@@ -167,6 +172,20 @@ public class AddLoverInfoActivity extends BaseActivity {
 							} else if (response.equals("重复")) {
 								ToastTool.showLong(AddLoverInfoActivity.this, "你们已经是情侣啦！");
 							} else {
+								//给对方发送消息
+								JsonMessage jsonMessage = new JsonMessage(userPreference.getU_tel(),
+										Constants.MessageType.MESSAGE_TYPE_LOVER);
+								new SendMsgAsyncTask(FastJsonTool.createJsonString(jsonMessage),
+										friendpreference.getBpush_UserID()).send();
+								//创建对话
+								ConversationDbService conversationDbService = ConversationDbService
+										.getInstance(AddLoverInfoActivity.this);
+								conversationDbService.conversationDao.deleteAll();
+								Conversation conversation = new Conversation(null, Long.valueOf(friendpreference
+										.getF_id()), friendpreference.getName(), friendpreference.getF_small_avatar(),
+										"好久不见", 6, System.currentTimeMillis());
+								conversationDbService.conversationDao.insert(conversation);
+
 								friendpreference.setLoverId(Integer.parseInt(response));
 								friendpreference.setType(1);
 								Intent intent = new Intent(AddLoverInfoActivity.this, MainActivity.class);

@@ -59,7 +59,7 @@ public class PersonalDialogFragment extends DialogFragment implements OnItemClic
 		menuitemList.add("编辑资料");
 		menuitemList.add("我的二维码");
 		menuitemList.add("关于");
-		menuitemList.add("注销");
+		menuitemList.add("退出");
 
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), R.layout.dialog_listview_item,
 				R.id.item_name, menuitemList);
@@ -74,15 +74,16 @@ public class PersonalDialogFragment extends DialogFragment implements OnItemClic
 		Intent intent;
 		switch (position) {
 		case 0:
-
+			PersonalDialogFragment.this.dismiss();
 			break;
 		case 1:
 			intent = new Intent(getActivity(), QrCodeActivity.class);
 			getActivity().startActivity(intent);
 			getActivity().overridePendingTransition(R.anim.zoomin, R.anim.zoomout);
+			PersonalDialogFragment.this.dismiss();
 			break;
 		case 2:
-
+			PersonalDialogFragment.this.dismiss();
 			break;
 		case 3:
 			//设置用户不曾登录

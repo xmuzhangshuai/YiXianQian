@@ -239,6 +239,7 @@ public class LoveVertifyActivity extends BaseActivity {
 
 									ConversationDbService conversationDbService = ConversationDbService
 											.getInstance(LoveVertifyActivity.this);
+									conversationDbService.conversationDao.deleteAll();
 									Conversation conversation = new Conversation(null, Long.valueOf(friendpreference
 											.getF_id()), friendpreference.getName(),
 											friendpreference.getF_small_avatar(), "ºÃ¾Ã²»¼û", 6, System.currentTimeMillis());

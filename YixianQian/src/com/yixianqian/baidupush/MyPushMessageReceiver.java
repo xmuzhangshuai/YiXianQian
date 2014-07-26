@@ -122,7 +122,7 @@ public class MyPushMessageReceiver extends FrontiaPushMessageReceiver {
 			break;
 		//情侣请求
 		case Constants.MessageType.MESSAGE_TYPE_LOVER:
-
+			buildLove(msg.getMessageContent());
 			break;
 		//文件
 		case Constants.MessageType.MESSAGE_TYPE_FILE:
@@ -157,6 +157,36 @@ public class MyPushMessageReceiver extends FrontiaPushMessageReceiver {
 	}
 
 	/**
+	 * 处理添加情侣请求
+	 * @param phone
+	 */
+	private void buildLove(String phone) {
+		friendPreference = BaseApplication.getInstance().getFriendPreference();
+		BaseApplication application = BaseApplication.getInstance();
+
+		getLoverInfo(phone);//获取信息
+
+		String name = friendPreference.getF_nickname();
+		if (friendPreference.getF_realname() != null) {
+			if (friendPreference.getF_realname().length() > 0) {
+				name = friendPreference.getF_realname();
+			}
+		}
+		//通知
+		NotificationCompat.Builder builder = new NotificationCompat.Builder(application);
+		builder.setSmallIcon(R.drawable.ic_launcher).setContentTitle(name).setContentText("非常爱你，想添加你为情侣")
+				.setAutoCancel(true).setTicker("情侣邀请！").setDefaults(Notification.DEFAULT_ALL);
+		Intent resultIntent = new Intent(application, VertifyToChatActivity.class);
+		resultIntent.putExtra(VertifyToChatActivity.VERTIFY_TYPE, "1");
+		TaskStackBuilder stackBuilder = TaskStackBuilder.create(application);
+		stackBuilder.addParentStack(MainActivity.class);
+		stackBuilder.addNextIntent(resultIntent);
+		PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+		builder.setContentIntent(resultPendingIntent);
+		application.getNotificationManager().notify(NOTIFY_ID, builder.build());// 通知一下
+	}
+
+	/**
 	 * 处理也心动,在爱情验证页面，对某个人也心动，推送本用户ID到这个人的终端
 	 */
 	private void flipperTo(String phone) {
@@ -176,6 +206,7 @@ public class MyPushMessageReceiver extends FrontiaPushMessageReceiver {
 		builder.setSmallIcon(R.drawable.ic_launcher).setContentTitle(name).setContentText("对您怦然心动").setAutoCancel(true)
 				.setTicker("有人对您砰然心动了！").setDefaults(Notification.DEFAULT_ALL);
 		Intent resultIntent = new Intent(application, VertifyToChatActivity.class);
+		resultIntent.putExtra(VertifyToChatActivity.VERTIFY_TYPE, "0");
 		TaskStackBuilder stackBuilder = TaskStackBuilder.create(application);
 		stackBuilder.addParentStack(MainActivity.class);
 		stackBuilder.addNextIntent(resultIntent);

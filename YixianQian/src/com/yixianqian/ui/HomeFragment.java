@@ -2,18 +2,27 @@ package com.yixianqian.ui;
 
 import java.util.LinkedList;
 
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.WindowManager.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.yixianqian.R;
@@ -22,6 +31,7 @@ import com.yixianqian.base.BaseApplication;
 import com.yixianqian.base.BaseV4Fragment;
 import com.yixianqian.db.ConversationDbService;
 import com.yixianqian.entities.Conversation;
+import com.yixianqian.utils.DensityUtil;
 import com.yixianqian.utils.FriendPreference;
 
 /**
@@ -39,6 +49,9 @@ public class HomeFragment extends BaseV4Fragment {
 	private FriendPreference friendPreference;
 	private ConversationDbService conversationDbService;
 	private LinkedList<Conversation> conversationList;
+	private Vibrator vib;
+	private View popBtn;//删除按钮
+	private int currentItem = -1;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -47,6 +60,9 @@ public class HomeFragment extends BaseV4Fragment {
 		friendPreference = BaseApplication.getInstance().getFriendPreference();
 		conversationDbService = ConversationDbService.getInstance(getActivity());
 		conversationList = new LinkedList<Conversation>();
+		conversationList.addAll(conversationDbService.conversationDao.loadAll());
+		/**震动服务*/
+		vib = (Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE);
 	}
 
 	@Override
@@ -57,7 +73,6 @@ public class HomeFragment extends BaseV4Fragment {
 		findViewById();// 初始化views
 		initView();
 
-		conversationList.addAll(conversationDbService.conversationDao.loadAll());
 		mAdapter = new HomeListAdapter(getActivity(), mHomeListView, conversationList);
 		mHomeListView.setAdapter(mAdapter);
 		return rootView;
@@ -76,9 +91,21 @@ public class HomeFragment extends BaseV4Fragment {
 	@Override
 	protected void initView() {
 		// TODO Auto-generated method stub
+		//如果没有对话
+		if (conversationList.size() < 1) {
+			mEmpty.setVisibility(View.VISIBLE);
+		}
 		topNavLeftBtn.setImageResource(R.drawable.home);
 		topNavRightBtn.setImageResource(R.drawable.ic_action_overflow);
 		right_btn_bg.setBackgroundResource(R.drawable.sel_topnav_btn_bg);
+		final View popView = getActivity().getLayoutInflater().inflate(R.layout.popup, null);
+		popBtn = popView.findViewById(R.id.popup_btn);
+		final PopupWindow popup = new PopupWindow(popView, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, true);
+		// 需要设置一下此参数，点击外边可消失 
+		popup.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+		//设置点击窗口外边窗口消失 
+		popup.setOutsideTouchable(true);
+		popup.setFocusable(true);
 
 		right_btn_bg.setOnClickListener(new OnClickListener() {
 
@@ -98,6 +125,39 @@ public class HomeFragment extends BaseV4Fragment {
 				toChatIntent.putExtra("conversationID", conversationList.get(position).getId());
 				startActivity(toChatIntent);
 				getActivity().overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+			}
+		});
+
+		/**
+		 * 长按事件
+		 */
+		mHomeListView.setOnItemLongClickListener(new OnItemLongClickListener() {
+
+			@Override
+			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+				// TODO Auto-generated method stub
+				vib.vibrate(50);
+				int xoff = view.getWidth() / 2 - popView.getWidth();
+				popup.showAsDropDown(view, xoff, 0);
+				currentItem = position;
+				return false;
+			}
+		});
+
+		/**
+		 * 删除按钮
+		 */
+		popBtn.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				popup.dismiss();
+				if (currentItem > -1) {
+					conversationDbService.conversationDao.delete(conversationList.get(currentItem));
+					conversationList.remove(currentItem);
+					mAdapter.notifyDataSetChanged();
+					currentItem = -1;
+				}
 			}
 		});
 	}
