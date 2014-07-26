@@ -36,4 +36,5 @@
 
     <!-- 时间胶囊 -->
     <dimen name="time_capsule_220">220dp</dimen>
-</resources>
+    <dimen name="motify_data_space">35dp</dimen>
+</resources>

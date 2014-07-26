@@ -195,6 +195,12 @@
             android:screenOrientation="portrait" >
         </activity>
 
+        <!-- 修改个人资料页面 -->
+        <activity
+            android:name="com.yixianqian.ui.ModifyDataActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+
         <!-- 测试页面 -->
         <activity
             android:name="com.yixianqian.test.TestActivity"

@@ -74,6 +74,9 @@ public class PersonalDialogFragment extends DialogFragment implements OnItemClic
 		Intent intent;
 		switch (position) {
 		case 0:
+			intent = new Intent(getActivity(), ModifyDataActivity.class);
+			getActivity().startActivity(intent);
+			getActivity().overridePendingTransition(R.anim.zoomin, R.anim.zoomout);
 			PersonalDialogFragment.this.dismiss();
 			break;
 		case 1:
