@@ -36,14 +36,29 @@
                 android:textColor="@color/dark_gray"
                 android:textSize="@dimen/day_recommend_font_info" />
 
-            <ImageView
-                android:id="@+id/headimage"
+            <FrameLayout
                 android:layout_width="@dimen/get_image_btn_padding"
                 android:layout_height="@dimen/get_image_btn_padding"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentTop="true"
-                android:layout_marginRight="5dp"
-                android:src="@drawable/photoconor" />
+                android:layout_marginRight="5dp" >
+
+                <ImageView
+                    android:id="@+id/headimage"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/photoconor" />
+
+                <TextView
+                    android:id="@+id/waitcheck"
+                    android:layout_width="match_parent"
+                    android:layout_height="20dp"
+                    android:layout_gravity="bottom"
+                    android:background="#b0ffffff"
+                    android:gravity="center"
+                    android:text="待审核"
+                    android:visibility="gone" />
+            </FrameLayout>
 
             <RelativeLayout
                 android:id="@+id/realnameview"
@@ -196,15 +211,13 @@
                     android:textColor="@color/dark_gray"
                     android:textSize="@dimen/day_recommend_font_info" />
 
-                <EditText
+                <TextView
                     android:id="@+id/phone"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignBottom="@+id/phonelabel"
                     android:layout_alignParentRight="true"
                     android:layout_marginRight="5dp"
-                    android:background="@drawable/sel_edittext_bg"
-                    android:inputType="phone"
                     android:maxLength="11"
                     android:paddingBottom="2dp"
                     android:paddingLeft="5dp"

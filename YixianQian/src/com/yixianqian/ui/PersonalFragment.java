@@ -32,6 +32,7 @@ import com.yixianqian.R;
 import com.yixianqian.base.BaseApplication;
 import com.yixianqian.base.BaseV4Fragment;
 import com.yixianqian.config.DefaultKeys;
+import com.yixianqian.server.ServerUtil;
 import com.yixianqian.utils.AsyncHttpClientImageSound;
 import com.yixianqian.utils.ImageLoaderTool;
 import com.yixianqian.utils.UserPreference;
@@ -60,6 +61,7 @@ public class PersonalFragment extends BaseV4Fragment {
 	private TextView nameTextView;//姓名
 	private TextView provinceTextView;//省份
 	private TextView schoolTextView;//学校
+	private TextView waitCheckView;
 	private int count = 0;
 	private Uri takePhotoUri;
 	private String takePhotoPath;
@@ -81,6 +83,36 @@ public class PersonalFragment extends BaseV4Fragment {
 	}
 
 	@Override
+	public void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		//设置头像
+		if (!TextUtils.isEmpty(userPreference.getU_small_avatar())) {
+			//			imageLoader.displayImage(AsyncHttpClientImageSound.getAbsoluteUrl(userPreference.getU_small_avatar()),
+			//					headImageView, ImageLoaderTool.getHeadImageOptions(10));
+			//			if (userPreference.getHeadImagePassed() == 0) {
+			//				waitCheckView.setVisibility(View.VISIBLE);
+			//			} else if (userPreference.getHeadImagePassed() == -1) {
+			//				waitCheckView.setVisibility(View.VISIBLE);
+			//				waitCheckView.setText("未通过");
+			//			}
+			ServerUtil.getInstance(getActivity()).disPlayHeadImage(headImageView, waitCheckView);
+			//点击显示高清头像
+			headImageView.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+					Intent intent = new Intent(getActivity(), ImageShowerActivity.class);
+					intent.putExtra(ImageShowerActivity.SHOW_BIG_IMAGE,
+							AsyncHttpClientImageSound.getAbsoluteUrl(userPreference.getU_large_avatar()));
+					startActivity(intent);
+					getActivity().overridePendingTransition(R.anim.zoomin, R.anim.zoomout);
+				}
+			});
+		}
+	}
+
+	@Override
 	protected void findViewById() {
 		// TODO Auto-generated method stub
 		timeCapsuleBtn = (TextView) rootView.findViewById(R.id.time_capsule);
@@ -97,6 +129,7 @@ public class PersonalFragment extends BaseV4Fragment {
 		nameTextView = (TextView) rootView.findViewById(R.id.name);
 		provinceTextView = (TextView) rootView.findViewById(R.id.province);
 		schoolTextView = (TextView) rootView.findViewById(R.id.school);
+		waitCheckView = (TextView) rootView.findViewById(R.id.waitcheck);
 	}
 
 	@Override
@@ -107,24 +140,6 @@ public class PersonalFragment extends BaseV4Fragment {
 		right_btn_bg.setBackgroundResource(R.drawable.sel_topnav_btn_bg);
 		topNavText.setText("个人信息");
 		initRecorder();
-
-		//设置头像
-		if (!TextUtils.isEmpty(userPreference.getU_small_avatar())) {
-			imageLoader.displayImage(AsyncHttpClientImageSound.getAbsoluteUrl(userPreference.getU_small_avatar()),
-					headImageView, ImageLoaderTool.getHeadImageOptions(10));
-			//点击显示高清头像
-			headImageView.setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					// TODO Auto-generated method stub
-					Intent intent = new Intent(getActivity(), ImageShowerActivity.class);
-					intent.putExtra(ImageShowerActivity.SHOW_BIG_IMAGE,
-							AsyncHttpClientImageSound.getAbsoluteUrl(userPreference.getU_large_avatar()));
-					startActivity(intent);
-					getActivity().overridePendingTransition(R.anim.zoomin, R.anim.zoomout);
-				}
-			});
-		}
 
 		//设置姓名、省份、及学校
 		//优先显示真实姓名

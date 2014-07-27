@@ -40,6 +40,17 @@ public class FriendPreference {
 		editor.commit();
 	}
 
+	//记录头像是否审核通过
+	//-1为未通过，0为待审核，1为已通过
+	public int getHeadImagePassed() {
+		return sp.getInt("passed", 0);
+	}
+
+	public void setHeadImagePassed(int passed) {
+		editor.putInt("passed", passed);
+		editor.commit();
+	}
+
 	//获取类型，0为心动关系，1为情侣
 	public int getType() {
 		return sp.getInt("friend", -1);

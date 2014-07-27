@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/system_back"
+    android:orientation="vertical" >
+
+    <include
+        layout="@layout/top_navigation2"
+        android:focusable="true" />
+
+    <EditText
+        android:id="@+id/phone"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/register_height"
+        android:layout_marginLeft="@dimen/day_recommend_dot_space"
+        android:layout_marginRight="@dimen/day_recommend_dot_space"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/shape_top_radius"
+        android:hint="请输入手机号码"
+        android:inputType="phone"
+        android:maxLength="11"
+        android:maxLines="1"
+        android:paddingLeft="@dimen/personal_timecapsule_padding"
+        android:textColorHint="@color/system_gray"
+        android:textSize="@dimen/day_recommend_user_font" >
+    </EditText>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/day_recommend_dot_space"
+        android:layout_marginRight="@dimen/day_recommend_dot_space"
+        android:layout_marginTop="10dp"
+        android:text="@string/register_phone_info"
+        android:textColor="@color/dark_gray"
+        android:textSize="@dimen/register_font_size" />
+
+</LinearLayout>

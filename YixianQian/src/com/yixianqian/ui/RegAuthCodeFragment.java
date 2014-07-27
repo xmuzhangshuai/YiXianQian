@@ -246,7 +246,7 @@ public class RegAuthCodeFragment extends BaseV4Fragment {
 				Toast.makeText(getActivity(), "¹§Ï²Äú×¢²á³É¹¦£¡", 1).show();
 				userPreference.setU_id(result);
 				userPreference.setUserLogin(true);
-//				userPreference.setU_password("");//Çå³ıÃÜÂë
+				userPreference.setU_password("");//Çå³ıÃÜÂë
 
 				Intent intent = new Intent(getActivity(), HeadImageActivity.class);
 				startActivity(intent);

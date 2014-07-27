@@ -201,6 +201,24 @@
             android:screenOrientation="portrait" >
         </activity>
 
+        <!-- 修改手机号页面 -->
+        <activity
+            android:name="com.yixianqian.ui.ModifyPhoneActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+
+        <!-- 填写验证码页面 -->
+        <activity
+            android:name="com.yixianqian.ui.AuthCodeActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+
+        <!-- 修改密码页面 -->
+        <activity
+            android:name="com.yixianqian.ui.ModifyPassActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+
         <!-- 测试页面 -->
         <activity
             android:name="com.yixianqian.test.TestActivity"

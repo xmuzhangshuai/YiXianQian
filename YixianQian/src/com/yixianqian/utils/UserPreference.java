@@ -1,17 +1,16 @@
 package com.yixianqian.utils;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.text.TextUtils;
+
 import com.yixianqian.dao.CityDao.Properties;
 import com.yixianqian.db.CityDbService;
 import com.yixianqian.db.ProvinceDbService;
 import com.yixianqian.db.SchoolDbService;
 import com.yixianqian.entities.City;
-import com.yixianqian.entities.Province;
 import com.yixianqian.entities.School;
 import com.yixianqian.table.UserTable;
-
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.text.TextUtils;
 
 public class UserPreference {
 	private SharedPreferences sp;
@@ -37,6 +36,17 @@ public class UserPreference {
 		editor.commit();
 	}
 
+	//记录头像是否审核通过
+	//-1为未通过，0为待审核，1为已通过
+	public int getHeadImagePassed() {
+		return sp.getInt("passed", 0);
+	}
+
+	public void setHeadImagePassed(int passed) {
+		editor.putInt("passed", passed);
+		editor.commit();
+	}
+
 	//记录是否更改头像
 	public boolean getHeadImageChanged() {
 		return sp.getBoolean("changed", false);
@@ -44,6 +54,7 @@ public class UserPreference {
 
 	public void setHeadImageChanged(boolean changed) {
 		editor.putBoolean("changed", changed);
+		editor.commit();
 	}
 
 	//记录用户是否登录

@@ -32,6 +32,7 @@ import com.loopj.android.http.TextHttpResponseHandler;
 import com.yixianqian.R;
 import com.yixianqian.base.BaseActivity;
 import com.yixianqian.base.BaseApplication;
+import com.yixianqian.server.ServerUtil;
 import com.yixianqian.table.UserTable;
 import com.yixianqian.utils.AsyncHttpClientImageSound;
 import com.yixianqian.utils.AsyncHttpClientTool;
@@ -54,19 +55,19 @@ public class ModifyDataActivity extends BaseActivity implements OnClickListener 
 	private EditText nameEditText;//姓名
 	private EditText nickNameEditText;//昵称
 	private EditText emailEditText;//邮箱
-	private EditText telEditText;//电话
+	private TextView telEditText;//电话
 	private UserPreference userPreference;
 	private View passView;
 	private View nameView;
 	private View nicknameView;
 	private View emailView;
 	private View phoneView;
+	private TextView waitCheckView;
 	private ImageView headImage;
 	private InputMethodManager imm;
 	private String realname;
 	private String nickname;
 	private String email;
-	private String phone;
 
 	private File picFile;
 	private Uri photoUri;
@@ -88,6 +89,13 @@ public class ModifyDataActivity extends BaseActivity implements OnClickListener 
 	}
 
 	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		telEditText.setText(userPreference.getU_tel());
+	}
+
+	@Override
 	protected void findViewById() {
 		// TODO Auto-generated method stub
 		topNavigation = (TextView) findViewById(R.id.nav_text);
@@ -96,13 +104,14 @@ public class ModifyDataActivity extends BaseActivity implements OnClickListener 
 		nameEditText = (EditText) findViewById(R.id.name);
 		nickNameEditText = (EditText) findViewById(R.id.nickname);
 		emailEditText = (EditText) findViewById(R.id.email);
-		telEditText = (EditText) findViewById(R.id.phone);
+		telEditText = (TextView) findViewById(R.id.phone);
 		passView = findViewById(R.id.passview);
 		nameView = findViewById(R.id.realnameview);
 		nicknameView = findViewById(R.id.nicknameview);
 		emailView = findViewById(R.id.emailview);
 		phoneView = findViewById(R.id.phoneview);
 		headImage = (ImageView) findViewById(R.id.headimage);
+		waitCheckView = (TextView) findViewById(R.id.waitcheck);
 	}
 
 	@Override
@@ -159,10 +168,16 @@ public class ModifyDataActivity extends BaseActivity implements OnClickListener 
 		if (TextUtils.isEmpty(userPreference.getU_email())) {
 			emailEditText.setText("未绑定");
 		}
-		telEditText.setText(userPreference.getU_tel());
 
-		imageLoader.displayImage(AsyncHttpClientImageSound.getAbsoluteUrl(userPreference.getU_small_avatar()),
-				headImage, ImageLoaderTool.getHeadImageOptions(10));
+		ServerUtil.getInstance(ModifyDataActivity.this).disPlayHeadImage(headImage, waitCheckView);
+//		imageLoader.displayImage(AsyncHttpClientImageSound.getAbsoluteUrl(userPreference.getU_small_avatar()),
+//				headImage, ImageLoaderTool.getHeadImageOptions(10));
+//		if (userPreference.getHeadImagePassed() == 0) {
+//			waitCheckView.setVisibility(View.VISIBLE);
+//		} else if (userPreference.getHeadImagePassed() == -1) {
+//			waitCheckView.setVisibility(View.VISIBLE);
+//			waitCheckView.setText("未通过");
+//		}
 	}
 
 	/**
@@ -210,11 +225,6 @@ public class ModifyDataActivity extends BaseActivity implements OnClickListener 
 		case activity_result_cropimage_with_data:
 			try {
 				if (photoUri != null) {
-					//					Bitmap bitmap = decodeUriAsBitmap(photoUri);
-					//					headImage.setImageBitmap(bitmap);
-					imageLoader.displayImage("file://" + photoUri.getPath(), headImage,
-							ImageLoaderTool.getHeadImageOptions(10));
-					headImage.setVisibility(View.VISIBLE);
 					uploadImage(photoUri.getPath());
 				}
 			} catch (Exception e) {
@@ -341,6 +351,8 @@ public class ModifyDataActivity extends BaseActivity implements OnClickListener 
 						smallBitmap.recycle();
 						//设置头像已改变
 						userPreference.setHeadImageChanged(true);
+						//获取新头像地址
+						ServerUtil.getInstance(ModifyDataActivity.this).getHeadImage(headImage, waitCheckView);
 					}
 				}
 
@@ -474,6 +486,7 @@ public class ModifyDataActivity extends BaseActivity implements OnClickListener 
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
+		Intent intent;
 		switch (v.getId()) {
 		case R.id.left_btn_bg:
 			finish();
@@ -482,6 +495,9 @@ public class ModifyDataActivity extends BaseActivity implements OnClickListener 
 			attemptModify();
 			break;
 		case R.id.passview:
+			intent = new Intent(ModifyDataActivity.this, ModifyPassActivity.class);
+			startActivity(intent);
+			overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
 			break;
 		case R.id.headimage:
 			showPicturePicker(ModifyDataActivity.this);
@@ -508,11 +524,9 @@ public class ModifyDataActivity extends BaseActivity implements OnClickListener 
 			imm.showSoftInput(emailEditText, 0);
 			break;
 		case R.id.phoneview:
-			//			telEditText.setFocusable(true);
-			//			telEditText.setFocusableInTouchMode(true);
-			//			telEditText.requestFocus();
-			//			telEditText.requestFocusFromTouch();
-			//			imm.showSoftInput(telEditText, 0);
+			intent = new Intent(ModifyDataActivity.this, ModifyPhoneActivity.class);
+			startActivity(intent);
+			overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
 			break;
 		default:
 			break;

@@ -1,15 +1,21 @@
 package com.yixianqian.server;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.http.Header;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.text.TextUtils;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.TextHttpResponseHandler;
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.yixianqian.R;
 import com.yixianqian.base.BaseApplication;
 import com.yixianqian.db.FlipperDbService;
@@ -21,9 +27,11 @@ import com.yixianqian.jsonobject.JsonTodayRecommend;
 import com.yixianqian.table.UserTable;
 import com.yixianqian.ui.DayRecommendActivity;
 import com.yixianqian.ui.MainActivity;
+import com.yixianqian.utils.AsyncHttpClientImageSound;
 import com.yixianqian.utils.AsyncHttpClientTool;
 import com.yixianqian.utils.DateTimeTools;
 import com.yixianqian.utils.FastJsonTool;
+import com.yixianqian.utils.ImageLoaderTool;
 import com.yixianqian.utils.SharePreferenceUtil;
 import com.yixianqian.utils.UserPreference;
 
@@ -102,7 +110,7 @@ public class ServerUtil {
 	public void getTodayRecommend(final Context context, final boolean isFinished) {
 		final TodayRecommendDbService todayRecommendDbService = TodayRecommendDbService.getInstance(context);
 		todayRecommendDbService.todayRecommendDao.deleteAll();
-//		sharePreferenceUtil.setTodayRecommend("");
+		//		sharePreferenceUtil.setTodayRecommend("");
 
 		//如果没有推荐过
 		if (!sharePreferenceUtil.getTodayRecommend().equals(DateTimeTools.getCurrentDateForString())) {
@@ -159,5 +167,94 @@ public class ServerUtil {
 				((Activity) context).finish();
 			}
 		}
+	}
+
+	/**
+	 * 获取头像地址
+	 * @param context
+	 */
+	public void getHeadImage(final ImageView imageView, final TextView textView) {
+		RequestParams params = new RequestParams();
+		params.put(UserTable.U_ID, userPreference.getU_id());
+
+		TextHttpResponseHandler responseHandler = new TextHttpResponseHandler("utf-8") {
+			@Override
+			public void onSuccess(int statusCode, Header[] headers, String response) {
+				// TODO Auto-generated method stub
+				if (statusCode == 200) {
+					Map<String, String> map = FastJsonTool.getObject(response, Map.class);
+					if (map != null) {
+						userPreference.setU_large_avatar(map.get(UserTable.U_LARGE_AVATAR));
+						userPreference.setU_small_avatar(map.get(UserTable.U_SMALL_AVATAR));
+						if (!TextUtils.isEmpty(map.get(UserTable.U_IMAGE_PASS))) {
+							if (map.get(UserTable.U_IMAGE_PASS).equals("1")) {
+								userPreference.setHeadImagePassed(1);
+							} else if (map.get(UserTable.U_IMAGE_PASS).equals("0")) {
+								userPreference.setHeadImagePassed(0);
+							} else if (map.get(UserTable.U_IMAGE_PASS).equals("-1")) {
+								userPreference.setHeadImagePassed(-1);
+							}
+						}
+						//显示头像
+						disPlayHeadImage(imageView, textView);
+					}
+				}
+			}
+
+			@Override
+			public void onFailure(int statusCode, Header[] headers, String errorResponse, Throwable e) {
+				// TODO Auto-generated method stub
+			}
+		};
+		AsyncHttpClientTool.post("getuseravatardetail", params, responseHandler);
+	}
+
+	/**
+	 * 显示头像，如果本地审核通过
+	 */
+	public void disPlayHeadImage(final ImageView imageView, final TextView textView) {
+		int state = userPreference.getHeadImagePassed();
+		//显示头像
+		ImageLoader.getInstance().displayImage(
+				AsyncHttpClientImageSound.getAbsoluteUrl(userPreference.getU_small_avatar()), imageView,
+				ImageLoaderTool.getHeadImageOptions(10));
+		//如果为待审核
+		if (state == 0) {
+			textView.setVisibility(View.VISIBLE);
+		} else if (state == -1) {
+			textView.setVisibility(View.VISIBLE);
+			textView.setText("未通过");
+		}
+	}
+
+	/**
+	 * 获取头像是否通过
+	 * @param context
+	 */
+	public void getHeadImagePass() {
+		RequestParams params = new RequestParams();
+		params.put(UserTable.U_ID, userPreference.getU_id());
+
+		TextHttpResponseHandler responseHandler = new TextHttpResponseHandler("utf-8") {
+			@Override
+			public void onSuccess(int statusCode, Header[] headers, String response) {
+				// TODO Auto-generated method stub
+				if (statusCode == 200) {
+					if (response.equals("1")) {
+						userPreference.setHeadImagePassed(1);
+					} else if (response.equals("0")) {
+						userPreference.setHeadImagePassed(0);
+					} else if (response.equals("-1")) {
+						userPreference.setHeadImagePassed(-1);
+					}
+				}
+			}
+
+			@Override
+			public void onFailure(int statusCode, Header[] headers, String errorResponse, Throwable e) {
+				// TODO Auto-generated method stub
+			}
+		};
+		AsyncHttpClientTool.post("getuserimagepass", params, responseHandler);
 	}
 }
