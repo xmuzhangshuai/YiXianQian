@@ -8,6 +8,7 @@ import org.apache.http.Header;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
@@ -224,6 +225,7 @@ public class ServerUtil {
 		} else if (state == -1) {
 			textView.setVisibility(View.VISIBLE);
 			textView.setText("Î´Í¨¹ý");
+			textView.setTextColor(Color.RED);
 		}
 	}
 
