@@ -107,7 +107,7 @@ public class UserPreference {
 
 	//用户昵称
 	public String getU_nickname() {
-		return sp.getString(UserTable.U_NICKNAME, null);
+		return sp.getString(UserTable.U_NICKNAME, "");
 	}
 
 	public void setU_nickname(String u_nickname) {
@@ -117,7 +117,7 @@ public class UserPreference {
 
 	//用户真实姓名
 	public String getU_realname() {
-		return sp.getString(UserTable.U_REALNAME, null);
+		return sp.getString(UserTable.U_REALNAME, "");
 	}
 
 	public void setU_realname(String u_realname) {
@@ -127,7 +127,7 @@ public class UserPreference {
 
 	//密码
 	public String getU_password() {
-		return sp.getString(UserTable.U_PASSWORD, null);
+		return sp.getString(UserTable.U_PASSWORD, "");
 	}
 
 	public void setU_password(String u_password) {
@@ -137,7 +137,7 @@ public class UserPreference {
 
 	//性别
 	public String getU_gender() {
-		return sp.getString(UserTable.U_GENDER, null);
+		return sp.getString(UserTable.U_GENDER, "");
 	}
 
 	public void setU_gender(String u_gender) {
@@ -147,7 +147,7 @@ public class UserPreference {
 
 	//手机号
 	public String getU_tel() {
-		return sp.getString(UserTable.U_TEL, null);
+		return sp.getString(UserTable.U_TEL, "");
 	}
 
 	public void setU_tel(String u_tel) {
@@ -157,7 +157,7 @@ public class UserPreference {
 
 	//邮箱
 	public String getU_email() {
-		return sp.getString(UserTable.U_EMAIL, null);
+		return sp.getString(UserTable.U_EMAIL, "");
 	}
 
 	public void setU_email(String u_email) {
@@ -294,7 +294,7 @@ public class UserPreference {
 
 	//地址
 	public String getU_address() {
-		return sp.getString(UserTable.U_ADDRESS, null);
+		return sp.getString(UserTable.U_ADDRESS, "");
 	}
 
 	public void setU_address(String u_address) {
@@ -324,7 +324,7 @@ public class UserPreference {
 
 	//血型
 	public String getU_blood_type() {
-		return sp.getString(UserTable.U_BLOOD_TYPE, null);
+		return sp.getString(UserTable.U_BLOOD_TYPE, "");
 	}
 
 	public void setU_blood_type(String u_blood_type) {
@@ -334,7 +334,7 @@ public class UserPreference {
 
 	//星座
 	public String getU_constell() {
-		return sp.getString(UserTable.U_CONSTELL, null);
+		return sp.getString(UserTable.U_CONSTELL, "");
 	}
 
 	public void setU_constell(String u_constell) {
@@ -344,7 +344,7 @@ public class UserPreference {
 
 	//用户简介
 	public String getU_introduce() {
-		return sp.getString(UserTable.U_INTRODUCE, null);
+		return sp.getString(UserTable.U_INTRODUCE, "");
 	}
 
 	public void setU_introduce(String u_introduce) {

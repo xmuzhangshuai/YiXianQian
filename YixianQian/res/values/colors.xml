@@ -12,6 +12,7 @@
     <color name="dark_gray">#666666</color> <!-- 系统灰色 -->
     <color name="system_blue">#0099CC</color> <!-- 系统蓝色 -->
     <color name="edittext">#B0E2FF</color> <!-- 对话框字体颜色 -->
+    <color name="bg2">#F9F9F9</color>
     <color name="alert_dialog_blue">#0476F0</color>
     <color name="semi_transparent_w">#7fffffff</color>
     <color name="top_nav_black">#333333</color>
