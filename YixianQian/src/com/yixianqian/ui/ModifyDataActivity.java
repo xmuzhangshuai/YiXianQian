@@ -3,10 +3,15 @@ package com.yixianqian.ui;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 import org.apache.http.Header;
 
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
+import android.app.DatePickerDialog.OnDateSetListener;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -17,12 +22,15 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -30,13 +38,14 @@ import android.widget.TextView;
 import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.TextHttpResponseHandler;
 import com.yixianqian.R;
-import com.yixianqian.base.BaseActivity;
 import com.yixianqian.base.BaseApplication;
+import com.yixianqian.base.BaseFragmentActivity;
 import com.yixianqian.server.ServerUtil;
 import com.yixianqian.table.UserTable;
+import com.yixianqian.ui.ConstellDialogFragment.OnConstellChangedListener;
 import com.yixianqian.utils.AsyncHttpClientImageSound;
 import com.yixianqian.utils.AsyncHttpClientTool;
-import com.yixianqian.utils.ImageLoaderTool;
+import com.yixianqian.utils.DateTimeTools;
 import com.yixianqian.utils.ImageTools;
 import com.yixianqian.utils.ToastTool;
 import com.yixianqian.utils.UserPreference;
@@ -48,7 +57,7 @@ import com.yixianqian.utils.UserPreference;
  * 创建时间：2014年7月26日 下午8:47:52
  *
  */
-public class ModifyDataActivity extends BaseActivity implements OnClickListener {
+public class ModifyDataActivity extends BaseFragmentActivity implements OnClickListener, OnConstellChangedListener {
 	private TextView topNavigation;//导航栏文字
 	private View leftImageButton;//导航栏左侧按钮
 	private View rightImageButton;//导航栏右侧按钮
@@ -56,6 +65,20 @@ public class ModifyDataActivity extends BaseActivity implements OnClickListener 
 	private EditText nickNameEditText;//昵称
 	private EditText emailEditText;//邮箱
 	private TextView telEditText;//电话
+	private View genderView;
+	private View ageView;
+	private View birthdayView;
+	private View heightView;
+	private View weightView;
+	private View constellView;
+	private View introView;
+	private EditText ageEditText;
+	private EditText heightEditText;
+	private EditText weightEditText;
+	private TextView constellEditText;
+	private EditText introEditText;
+	private TextView genderText;
+	private TextView birthdayTextView;
 	private UserPreference userPreference;
 	private View passView;
 	private View nameView;
@@ -68,6 +91,11 @@ public class ModifyDataActivity extends BaseActivity implements OnClickListener 
 	private String realname;
 	private String nickname;
 	private String email;
+	private String age;
+	private String weight;
+	private String height;
+	private String constell;
+	private String personIntro;
 
 	private File picFile;
 	private Uri photoUri;
@@ -112,6 +140,20 @@ public class ModifyDataActivity extends BaseActivity implements OnClickListener 
 		phoneView = findViewById(R.id.phoneview);
 		headImage = (ImageView) findViewById(R.id.headimage);
 		waitCheckView = (TextView) findViewById(R.id.waitcheck);
+		genderView = findViewById(R.id.genderview);
+		genderText = (TextView) findViewById(R.id.gender);
+		ageView = findViewById(R.id.ageview);
+		birthdayView = findViewById(R.id.birthdayview);
+		heightView = findViewById(R.id.heightview);
+		weightView = findViewById(R.id.weightview);
+		constellView = findViewById(R.id.constellview);
+		introView = findViewById(R.id.personIntroview);
+		ageEditText = (EditText) findViewById(R.id.age);
+		heightEditText = (EditText) findViewById(R.id.height);
+		weightEditText = (EditText) findViewById(R.id.weight);
+		constellEditText = (TextView) findViewById(R.id.constell);
+		introEditText = (EditText) findViewById(R.id.personIntro);
+		birthdayTextView = (TextView) findViewById(R.id.birthday);
 	}
 
 	@Override
@@ -126,6 +168,41 @@ public class ModifyDataActivity extends BaseActivity implements OnClickListener 
 		nicknameView.setOnClickListener(this);
 		emailView.setOnClickListener(this);
 		phoneView.setOnClickListener(this);
+		genderView.setOnClickListener(this);
+		ageView.setOnClickListener(this);
+		birthdayView.setOnClickListener(this);
+		heightView.setOnClickListener(this);
+		weightView.setOnClickListener(this);
+		constellView.setOnClickListener(this);
+		introView.setOnClickListener(this);
+
+		if (userPreference.getU_age() > 0) {
+			ageEditText.setText("" + userPreference.getU_age());
+		}
+
+		if (userPreference.getU_height() > 0) {
+			heightEditText.setText("" + userPreference.getU_height());
+		}
+
+		if (userPreference.getU_weight() > 0) {
+			weightEditText.setText("" + userPreference.getU_weight());
+		}
+
+		//设置生日
+		if (userPreference.getU_birthday() != null) {
+			birthdayTextView.setText(DateTimeTools.getDateString(userPreference.getU_birthday()));
+		}
+
+		//设置星座
+		if (!TextUtils.isEmpty(userPreference.getU_constell())) {
+			constellEditText.setText(userPreference.getU_constell());
+		}
+
+		if (!TextUtils.isEmpty(userPreference.getU_introduce())) {
+			introEditText.setText(userPreference.getU_introduce());
+		}
+
+		genderText.setText(userPreference.getU_gender());
 		nameEditText.setOnFocusChangeListener(new OnFocusChangeListener() {
 
 			@Override
@@ -170,14 +247,6 @@ public class ModifyDataActivity extends BaseActivity implements OnClickListener 
 		}
 
 		ServerUtil.getInstance(ModifyDataActivity.this).disPlayHeadImage(headImage, waitCheckView);
-//		imageLoader.displayImage(AsyncHttpClientImageSound.getAbsoluteUrl(userPreference.getU_small_avatar()),
-//				headImage, ImageLoaderTool.getHeadImageOptions(10));
-//		if (userPreference.getHeadImagePassed() == 0) {
-//			waitCheckView.setVisibility(View.VISIBLE);
-//		} else if (userPreference.getHeadImagePassed() == -1) {
-//			waitCheckView.setVisibility(View.VISIBLE);
-//			waitCheckView.setText("未通过");
-//		}
 	}
 
 	/**
@@ -373,17 +442,33 @@ public class ModifyDataActivity extends BaseActivity implements OnClickListener 
 		boolean realNameChanged = false;
 		boolean nickNameChanged = false;
 		boolean emailNameChanged = false;
+		boolean ageChanged = false;
+		boolean weightChanged = false;
+		boolean heightChanged = false;
+		boolean constellChanged = false;
+		boolean personIntroChanged = false;
+
 		// 重置错误
 		nameEditText.setError(null);
 		nickNameEditText.setError(null);
 		emailEditText.setError(null);
-		//		telEditText.setError(null);
+		ageEditText.setError(null);
+		weightEditText.setError(null);
+		heightEditText.setError(null);
+		constellEditText.setError(null);
+		introEditText.setError(null);
+		birthdayTextView.setError(null);
 
 		// 存储用户值
 		realname = nameEditText.getText().toString();
 		nickname = nickNameEditText.getText().toString();
 		email = emailEditText.getText().toString();
-		//		phone = telEditText.getText().toString();
+		age = ageEditText.getText().toString();
+		height = heightEditText.getText().toString();
+		weight = weightEditText.getText().toString();
+		constell = constellEditText.getText().toString();
+		personIntro = introEditText.getText().toString();
+
 		boolean cancel = false;
 		View focusView = null;
 
@@ -408,10 +493,57 @@ public class ModifyDataActivity extends BaseActivity implements OnClickListener 
 			}
 		}
 
+		//检查年龄
+		if (!TextUtils.isEmpty(age)) {
+			int a = Integer.parseInt(age);
+			if (a < 16 || a > 30) {
+				ageEditText.setError("年龄必须在16到30岁之间");
+				focusView = ageEditText;
+				cancel = true;
+			} else if (a != userPreference.getU_age()) {
+				ageChanged = true;
+			}
+		}
+
+		//检查身高
+		if (!TextUtils.isEmpty(height)) {
+			int h = Integer.parseInt(height);
+			if (h < 80 || h > 230) {
+				heightEditText.setError("身高必须在80cm~230cm之间");
+				focusView = heightEditText;
+				cancel = true;
+			} else if (Integer.parseInt(height) != userPreference.getU_height()) {
+				heightChanged = true;
+			}
+		}
+
+		//检查体重
+		if (!TextUtils.isEmpty(weight)) {
+			int w = Integer.parseInt(weight);
+			if (w < 30 || w > 300) {
+				weightEditText.setError("体重必须在30~300Kg之间");
+				focusView = weightEditText;
+				cancel = true;
+			} else if (w != userPreference.getU_weight()) {
+				weightChanged = true;
+			}
+		}
+
+		//检查星座
+		if (!constell.equals(userPreference.getU_constell()) && !TextUtils.isEmpty(constell)) {
+			constellChanged = true;
+		}
+
+		//检查个人说明
+		if (!personIntro.equals(userPreference.getU_introduce()) && !TextUtils.isEmpty(personIntro)) {
+			personIntroChanged = true;
+		}
+
 		if (cancel) {
 			// 如果错误，则提示错误
 			focusView.requestFocus();
 		} else {
+			//真名有变化
 			if (realNameChanged) {
 				RequestParams params = new RequestParams();
 				params.put(UserTable.U_ID, userPreference.getU_id());
@@ -434,6 +566,7 @@ public class ModifyDataActivity extends BaseActivity implements OnClickListener 
 				};
 				AsyncHttpClientTool.post("updateuserrealname", params, responseHandler);
 			}
+			//昵称有变化
 			if (nickNameChanged) {
 				RequestParams params = new RequestParams();
 				params.put(UserTable.U_ID, userPreference.getU_id());
@@ -451,11 +584,11 @@ public class ModifyDataActivity extends BaseActivity implements OnClickListener 
 					@Override
 					public void onFailure(int arg0, Header[] arg1, String arg2, Throwable arg3) {
 						// TODO Auto-generated method stub
-
 					}
 				};
 				AsyncHttpClientTool.post("updateusernickname", params, responseHandler);
 			}
+			//邮箱有变化
 			if (emailNameChanged) {
 				RequestParams params = new RequestParams();
 				params.put(UserTable.U_ID, userPreference.getU_id());
@@ -473,14 +606,188 @@ public class ModifyDataActivity extends BaseActivity implements OnClickListener 
 					@Override
 					public void onFailure(int arg0, Header[] arg1, String arg2, Throwable arg3) {
 						// TODO Auto-generated method stub
-
 					}
 				};
 				AsyncHttpClientTool.post("updateusermail", params, responseHandler);
 			}
+			//年龄有变化
+			if (ageChanged) {
+				RequestParams params = new RequestParams();
+				params.put(UserTable.U_ID, userPreference.getU_id());
+				params.put(UserTable.U_AGE, age);
+				TextHttpResponseHandler responseHandler = new TextHttpResponseHandler("utf-8") {
+
+					@Override
+					public void onSuccess(int arg0, Header[] arg1, String arg2) {
+						// TODO Auto-generated method stub
+						if (arg0 == 200) {
+							userPreference.setU_age(Integer.parseInt(age));
+						}
+					}
+
+					@Override
+					public void onFailure(int arg0, Header[] arg1, String arg2, Throwable arg3) {
+						// TODO Auto-generated method stub
+					}
+				};
+				AsyncHttpClientTool.post("updateuserage", params, responseHandler);
+			}
+			//体重有变化
+			if (weightChanged) {
+				RequestParams params = new RequestParams();
+				params.put(UserTable.U_ID, userPreference.getU_id());
+				params.put(UserTable.U_WEIGHT, weight);
+				TextHttpResponseHandler responseHandler = new TextHttpResponseHandler("utf-8") {
+
+					@Override
+					public void onSuccess(int arg0, Header[] arg1, String arg2) {
+						// TODO Auto-generated method stub
+						if (arg0 == 200) {
+							userPreference.setU_weight(Integer.parseInt(weight));
+						}
+					}
+
+					@Override
+					public void onFailure(int arg0, Header[] arg1, String arg2, Throwable arg3) {
+						// TODO Auto-generated method stub
+					}
+				};
+				AsyncHttpClientTool.post("updateuserweight", params, responseHandler);
+			}
+			//身高有变化
+			if (heightChanged) {
+				RequestParams params = new RequestParams();
+				params.put(UserTable.U_ID, userPreference.getU_id());
+				params.put(UserTable.U_HEIGHT, height);
+				TextHttpResponseHandler responseHandler = new TextHttpResponseHandler("utf-8") {
+
+					@Override
+					public void onSuccess(int arg0, Header[] arg1, String arg2) {
+						// TODO Auto-generated method stub
+						if (arg0 == 200) {
+							userPreference.setU_height(Integer.parseInt(height));
+						}
+					}
+
+					@Override
+					public void onFailure(int arg0, Header[] arg1, String arg2, Throwable arg3) {
+						// TODO Auto-generated method stub
+					}
+				};
+				AsyncHttpClientTool.post("updateuserheight", params, responseHandler);
+			}
+			//星座有变化
+			if (constellChanged) {
+				RequestParams params = new RequestParams();
+				params.put(UserTable.U_ID, userPreference.getU_id());
+				params.put(UserTable.U_CONSTELL, constell);
+				TextHttpResponseHandler responseHandler = new TextHttpResponseHandler("utf-8") {
+
+					@Override
+					public void onSuccess(int arg0, Header[] arg1, String arg2) {
+						// TODO Auto-generated method stub
+						if (arg0 == 200) {
+							userPreference.setU_constell(constell);
+						}
+					}
+
+					@Override
+					public void onFailure(int arg0, Header[] arg1, String arg2, Throwable arg3) {
+						// TODO Auto-generated method stub
+					}
+				};
+				AsyncHttpClientTool.post("updateuserconstell", params, responseHandler);
+			}
+
+			//个人说明有变化
+			if (personIntroChanged) {
+				RequestParams params = new RequestParams();
+				params.put(UserTable.U_ID, userPreference.getU_id());
+				params.put(UserTable.U_INTRODUCE, personIntro);
+				TextHttpResponseHandler responseHandler = new TextHttpResponseHandler("utf-8") {
+
+					@Override
+					public void onSuccess(int arg0, Header[] arg1, String arg2) {
+						// TODO Auto-generated method stub
+						if (arg0 == 200) {
+							userPreference.setU_introduce(personIntro);
+						}
+					}
+
+					@Override
+					public void onFailure(int arg0, Header[] arg1, String arg2, Throwable arg3) {
+						// TODO Auto-generated method stub
+					}
+				};
+				AsyncHttpClientTool.post("updateuserintro", params, responseHandler);
+			}
+
 			finish();
 		}
 
+	}
+
+	/**
+	 * 显示星座菜单
+	 */
+	void showConstellDialog() {
+		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		Fragment fragment = getSupportFragmentManager().findFragmentByTag("constell");
+		if (fragment != null) {
+			ft.remove(fragment);
+		}
+		ft.addToBackStack(null);
+
+		// Create and show the dialog.
+		ConstellDialogFragment newFragment = ConstellDialogFragment.newInstance();
+		newFragment.show(ft, "constell");
+	}
+
+	/**
+	 * 显示生日菜单
+	 */
+	private void showDatePicker() {
+		final Calendar calendar = Calendar.getInstance(Locale.CHINA);
+		OnDateSetListener callBack = new OnDateSetListener() {
+
+			@Override
+			public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+				// TODO Auto-generated method stub
+				calendar.set(year, monthOfYear, dayOfMonth);
+				final Date date = calendar.getTime();
+
+				RequestParams params = new RequestParams();
+				params.put(UserTable.U_ID, userPreference.getU_id());
+				params.put(UserTable.U_BIRTHDAY, date.getTime());
+				TextHttpResponseHandler responseHandler = new TextHttpResponseHandler("utf-8") {
+
+					@Override
+					public void onSuccess(int arg0, Header[] arg1, String arg2) {
+						// TODO Auto-generated method stub
+						if (arg0 == 200) {
+							userPreference.setU_birthday(date);
+							birthdayTextView.setText(DateTimeTools.getDateString(date));
+						}
+					}
+
+					@Override
+					public void onFailure(int arg0, Header[] arg1, String arg2, Throwable arg3) {
+						// TODO Auto-generated method stub
+					}
+				};
+				AsyncHttpClientTool.post("updateuserbirthday", params, responseHandler);
+			}
+		};
+		DatePickerDialog datePickerDialog;
+		if (userPreference.getU_birthday() != null) {
+			Date date = userPreference.getU_birthday();
+			calendar.setTime(date);
+			datePickerDialog = new DatePickerDialog(ModifyDataActivity.this, callBack, calendar.get(Calendar.YEAR),
+					calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+		} else {
+			datePickerDialog = new DatePickerDialog(ModifyDataActivity.this, callBack, 1993, 6, 15);
+		}
+		datePickerDialog.show();
 	}
 
 	@Override
@@ -523,13 +830,59 @@ public class ModifyDataActivity extends BaseActivity implements OnClickListener 
 			emailEditText.requestFocusFromTouch();
 			imm.showSoftInput(emailEditText, 0);
 			break;
+		case R.id.ageview:
+			ageEditText.setFocusable(true);
+			ageEditText.setFocusableInTouchMode(true);
+			ageEditText.requestFocus();
+			ageEditText.requestFocusFromTouch();
+			imm.showSoftInput(ageEditText, 0);
+			break;
+		case R.id.birthdayview:
+			showDatePicker();
+			break;
+		case R.id.heightview:
+			heightEditText.setFocusable(true);
+			heightEditText.setFocusableInTouchMode(true);
+			heightEditText.requestFocus();
+			heightEditText.requestFocusFromTouch();
+			imm.showSoftInput(heightEditText, 0);
+			break;
+		case R.id.weightview:
+			weightEditText.setFocusable(true);
+			weightEditText.setFocusableInTouchMode(true);
+			weightEditText.requestFocus();
+			weightEditText.requestFocusFromTouch();
+			imm.showSoftInput(weightEditText, 0);
+			break;
+		case R.id.constellview:
+			showConstellDialog();
+			break;
+		case R.id.personIntroview:
+			introEditText.setFocusable(true);
+			introEditText.setFocusableInTouchMode(true);
+			introEditText.requestFocus();
+			introEditText.requestFocusFromTouch();
+			imm.showSoftInput(introEditText, 0);
+			break;
 		case R.id.phoneview:
 			intent = new Intent(ModifyDataActivity.this, ModifyPhoneActivity.class);
 			startActivity(intent);
 			overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
 			break;
+		case R.id.genderview:
+			ToastTool.showShort(ModifyDataActivity.this, "性别不可修改");
+			break;
 		default:
 			break;
+		}
+	}
+
+	@Override
+	public void onConstellChaged(String constell) {
+		// TODO Auto-generated method stub
+		//设置星座
+		if (!TextUtils.isEmpty(constell)) {
+			constellEditText.setText(constell);
 		}
 	}
 }

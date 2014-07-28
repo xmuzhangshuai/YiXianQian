@@ -1,5 +1,7 @@
 package com.yixianqian.utils;
 
+import java.util.Date;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
@@ -170,15 +172,20 @@ public class FriendPreference {
 		editor.commit();
 	}
 
-	////生日
-	//	public Date getU_birthday() {
-	//		return u_birthday;
-	//	}
-	//
-	//	public void setU_birthday(Date u_birthday) {
-	//		editor.put(UserTable.U_BIRTHDAY, u_birthday);
-	//		editor.commit();
-	//	}
+	//生日
+	public Date getU_birthday() {
+		Long time = sp.getLong(UserTable.U_BIRTHDAY, 0);
+		if (time != 0) {
+			return new Date(time);
+		} else {
+			return null;
+		}
+	}
+
+	public void setU_birthday(Date u_birthday) {
+		editor.putLong(UserTable.U_BIRTHDAY, u_birthday.getTime());
+		editor.commit();
+	}
 
 	//年龄
 	public int getF_age() {

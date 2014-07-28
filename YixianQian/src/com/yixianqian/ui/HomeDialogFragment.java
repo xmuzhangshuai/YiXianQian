@@ -30,7 +30,7 @@ public class HomeDialogFragment extends DialogFragment {
 	private ListView menuitemListView;
 	private List<String> menuitemList;
 	private int flipperCount = -1;
-	FlipperDbService flipperDbService;
+	private FlipperDbService flipperDbService;
 
 	/**
 	 * ´´½¨ÊµÀý

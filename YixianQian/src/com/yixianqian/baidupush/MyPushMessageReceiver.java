@@ -34,7 +34,6 @@ import com.yixianqian.table.UserTable;
 import com.yixianqian.ui.ChatActivity;
 import com.yixianqian.ui.MainActivity;
 import com.yixianqian.ui.VertifyToChatActivity;
-import com.yixianqian.ui.GuideActivity.initDataBase;
 import com.yixianqian.utils.AsyncHttpClientTool;
 import com.yixianqian.utils.FastJsonTool;
 import com.yixianqian.utils.FriendPreference;

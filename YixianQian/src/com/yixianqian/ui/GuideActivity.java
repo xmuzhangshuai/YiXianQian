@@ -37,7 +37,6 @@ import com.yixianqian.utils.UserPreference;
  *
  */
 public class GuideActivity extends BaseActivity {
-	//	private ImageView loadingImage;
 	public LocationClient mLocationClient = null;
 	public BDLocationListener myListener = new MyLocationListener();
 	public SharedPreferences locationPreferences;// 记录用户位置

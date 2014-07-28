@@ -42,6 +42,10 @@ public class DateTimeTools {
 		return format.format(date);
 	}
 
+	public static String getDateString(Date date) {
+		return formatter2.format(date);
+	}
+
 	public static String getTime(long time) {
 		SimpleDateFormat format = new SimpleDateFormat("yy-MM-dd HH:mm");
 		return format.format(new Date(time));
