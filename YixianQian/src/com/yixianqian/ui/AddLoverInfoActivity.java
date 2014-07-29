@@ -188,6 +188,7 @@ public class AddLoverInfoActivity extends BaseActivity {
 
 								friendpreference.setLoverId(Integer.parseInt(response));
 								friendpreference.setType(1);
+								userPreference.setU_stateid(2);
 								Intent intent = new Intent(AddLoverInfoActivity.this, MainActivity.class);
 								startActivity(intent);
 								overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);

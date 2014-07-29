@@ -136,7 +136,7 @@ public class VertifyToChatActivity extends BaseActivity {
 		ConversationDbService conversationDbService = ConversationDbService.getInstance(VertifyToChatActivity.this);
 		conversationDbService.conversationDao.deleteAll();
 		Conversation conversation = new Conversation(null, Long.valueOf(friendpreference.getF_id()),
-				friendpreference.getName(), friendpreference.getF_small_avatar(), "ºÃ¾Ã²»¼û", 6, System.currentTimeMillis());
+				friendpreference.getName(), friendpreference.getF_small_avatar(), "", 0, System.currentTimeMillis());
 		conversationDbService.conversationDao.insert(conversation);
 
 		Intent intent = new Intent(VertifyToChatActivity.this, ChatActivity.class);

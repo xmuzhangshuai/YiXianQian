@@ -13,6 +13,7 @@ import android.os.Handler;
 import android.widget.Toast;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.yixianqian.R;
 
 /**
  * 

@@ -34,7 +34,6 @@ import com.yixianqian.base.BaseV4Fragment;
 import com.yixianqian.config.DefaultKeys;
 import com.yixianqian.server.ServerUtil;
 import com.yixianqian.utils.AsyncHttpClientImageSound;
-import com.yixianqian.utils.ImageLoaderTool;
 import com.yixianqian.utils.UserPreference;
 
 /**
@@ -62,21 +61,22 @@ public class PersonalFragment extends BaseV4Fragment {
 	private TextView provinceTextView;//省份
 	private TextView schoolTextView;//学校
 	private TextView waitCheckView;
-	private int count = 0;
 	private Uri takePhotoUri;
 	private String takePhotoPath;
 	private UserPreference userPreference;
 
-	File soundFileDir;//文件目录
-	File soundFile;//录音文件
-	String soundName = "audio";//文件名称
-	MediaRecorder mRecorder;
+	private File soundFileDir;//文件目录
+	private File soundFile;//录音文件
+	private String soundName = "audio";//文件名称
+	private MediaRecorder mRecorder;
+	private boolean recording = false;//是否正在录音
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		rootView = inflater.inflate(R.layout.fragment_personal, container, false);
 		userPreference = BaseApplication.getInstance().getUserPreference();
+		mRecorder = new MediaRecorder();
 		findViewById();// 初始化views
 		initView();
 		return rootView;
@@ -88,14 +88,6 @@ public class PersonalFragment extends BaseV4Fragment {
 		super.onResume();
 		//设置头像
 		if (!TextUtils.isEmpty(userPreference.getU_small_avatar())) {
-			//			imageLoader.displayImage(AsyncHttpClientImageSound.getAbsoluteUrl(userPreference.getU_small_avatar()),
-			//					headImageView, ImageLoaderTool.getHeadImageOptions(10));
-			//			if (userPreference.getHeadImagePassed() == 0) {
-			//				waitCheckView.setVisibility(View.VISIBLE);
-			//			} else if (userPreference.getHeadImagePassed() == -1) {
-			//				waitCheckView.setVisibility(View.VISIBLE);
-			//				waitCheckView.setText("未通过");
-			//			}
 			ServerUtil.getInstance(getActivity()).disPlayHeadImage(headImageView, waitCheckView);
 			//点击显示高清头像
 			headImageView.setOnClickListener(new OnClickListener() {
@@ -110,6 +102,9 @@ public class PersonalFragment extends BaseV4Fragment {
 				}
 			});
 		}
+
+		recording = false;
+		//		initRecorder();
 	}
 
 	@Override
@@ -139,7 +134,6 @@ public class PersonalFragment extends BaseV4Fragment {
 		topNavRightBtn.setImageResource(R.drawable.ic_action_overflow);
 		right_btn_bg.setBackgroundResource(R.drawable.sel_topnav_btn_bg);
 		topNavText.setText("个人信息");
-		initRecorder();
 
 		//设置姓名、省份、及学校
 		//优先显示真实姓名
@@ -190,20 +184,15 @@ public class PersonalFragment extends BaseV4Fragment {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				if (count % 2 == 0) {
+				if (!recording) {
+					initRecorder();
 					showRecordingTape();
-					try {
-						mRecorder.prepare();
-					} catch (IllegalStateException | IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
 					mRecorder.start();
+					recording = true;
 				} else {
 					shutRecordingTape();
 					mRecorder.stop();
-					mRecorder.release();
-					mRecorder = null;
+					recording = false;
 					String path = null;
 					if (soundFile != null && soundFile.exists()) {
 						path = soundFile.getAbsolutePath();
@@ -214,7 +203,7 @@ public class PersonalFragment extends BaseV4Fragment {
 					intent.putExtra(DefaultKeys.PHOTO_URI, path);
 					startActivity(intent);
 				}
-				count++;
+
 			}
 		});
 	}
@@ -222,7 +211,10 @@ public class PersonalFragment extends BaseV4Fragment {
 	@Override
 	public void onDestroy() {
 		// TODO Auto-generated method stub
-
+		if (mRecorder != null) {
+			mRecorder.release();
+			mRecorder = null;
+		}
 		super.onDestroy();
 	}
 
@@ -241,7 +233,6 @@ public class PersonalFragment extends BaseV4Fragment {
 				soundFile.createNewFile();
 			}
 
-			mRecorder = new MediaRecorder();
 			//设置录音来源
 			mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
 
@@ -252,6 +243,8 @@ public class PersonalFragment extends BaseV4Fragment {
 			mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
 
 			mRecorder.setOutputFile(soundFile.getAbsolutePath());
+
+			mRecorder.prepare();
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
@@ -350,11 +343,11 @@ public class PersonalFragment extends BaseV4Fragment {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (resultCode != Activity.RESULT_OK)
 			return;
-		Intent intent;
+		Intent intent = new Intent(getActivity(), PublishTimeCapActivity.class);
+		intent.putExtra("type", "picture");
 
 		switch (requestCode) {
 		case 1://拍照
-			intent = new Intent(getActivity(), PublishTimeCapActivity.class);
 			intent.putExtra(DefaultKeys.PHOTO_URI, takePhotoPath);
 			startActivity(intent);
 			break;
@@ -370,8 +363,6 @@ public class PersonalFragment extends BaseV4Fragment {
 				cursor.close();
 
 				//跳转到PublishTimeCapActivity页面
-				intent = new Intent(getActivity(), PublishTimeCapActivity.class);
-				intent.putExtra("type", "picture");
 				intent.putExtra(DefaultKeys.PHOTO_URI, picturePath);
 				startActivity(intent);
 			} catch (Exception e) {

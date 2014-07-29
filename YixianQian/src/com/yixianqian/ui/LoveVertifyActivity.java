@@ -213,6 +213,7 @@ public class LoveVertifyActivity extends BaseActivity {
 									new SendMsgAsyncTask(FastJsonTool.createJsonString(jsonMessage),
 											map.get(UserTable.U_BPUSH_USER_ID)).send();
 
+									userPreference.setU_stateid(3);
 									friendpreference.setLoverId(Integer.parseInt(map.get(FlipperTable.F_ID)));
 									friendpreference.setType(0);
 									friendpreference.setBpush_ChannelID(map.get(UserTable.U_BPUSH_CHANNEL_ID));

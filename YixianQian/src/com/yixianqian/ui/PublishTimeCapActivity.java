@@ -1,10 +1,14 @@
 package com.yixianqian.ui;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+
+import org.apache.http.Header;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -19,6 +23,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -28,15 +33,23 @@ import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.loopj.android.http.RequestParams;
+import com.loopj.android.http.TextHttpResponseHandler;
 import com.yixianqian.R;
 import com.yixianqian.base.BaseActivity;
+import com.yixianqian.base.BaseApplication;
 import com.yixianqian.config.DefaultKeys;
+import com.yixianqian.table.LoverTimeCapsuleTable;
+import com.yixianqian.table.UserTable;
+import com.yixianqian.utils.AsyncHttpClientImageSound;
+import com.yixianqian.utils.FriendPreference;
 import com.yixianqian.utils.ImageTools;
+import com.yixianqian.utils.LogTool;
+import com.yixianqian.utils.ToastTool;
+import com.yixianqian.utils.UserPreference;
 
 public class PublishTimeCapActivity extends BaseActivity {
 	private ImageView capsuleImage;
-	private String photoUri;//图片地址
-	//	private ImageView photo;//拍照按钮
 	private ImageView tape;//录音
 	private View tapeView;//旋转磁带
 	private ImageView progressImage1;
@@ -48,16 +61,18 @@ public class PublishTimeCapActivity extends BaseActivity {
 	private View record_view;//录音
 	private TextView recordTime;//音频时间
 	private View right_btn_bg;
-	private int count = 0;
 	private String type;//类型，用于判断先拍照还是先录音
-	private String audioPath;
-	//	private MyRecorder myRecorder;
-	File soundFileDir;//文件目录
-	File soundFile;//录音文件
-	String soundName = "audio";//文件名称
-	MediaRecorder mRecorder;
+	private String audioPath;//音频路径
+	private String photoUri;//图片地址
+	private File soundFileDir;//文件目录
+	private File soundFile;//录音文件
+	private String soundName = "audio";//文件名称
+	private MediaRecorder mRecorder;
 	private MediaPlayer mPlayer;
+	private boolean recording = false;//是否正在录音
 	private int playCount = 0;
+	private UserPreference userPreference;
+	private FriendPreference friendPreference;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +80,9 @@ public class PublishTimeCapActivity extends BaseActivity {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_publish_time_cap);
 		mPlayer = new MediaPlayer();
-		initRecorder();
+		mRecorder = new MediaRecorder();
+		userPreference = BaseApplication.getInstance().getUserPreference();
+		friendPreference = BaseApplication.getInstance().getFriendPreference();
 
 		type = getIntent().getStringExtra("type");
 		if (type.equals("audio")) {
@@ -78,6 +95,13 @@ public class PublishTimeCapActivity extends BaseActivity {
 
 		findViewById();
 		initView();
+	}
+
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		recording = false;
 	}
 
 	@Override
@@ -113,26 +137,20 @@ public class PublishTimeCapActivity extends BaseActivity {
 				@Override
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
-					if (count % 2 == 0) {
+					if (!recording) {
+						initRecorder();
 						showRecordingTape();
-						try {
-							initRecorder();
-							mRecorder.prepare();
-						} catch (IllegalStateException | IOException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
 						mRecorder.start();
+						recording = true;
 					} else {
 						shutRecordingTape();
 						mRecorder.stop();
-						mRecorder.release();
+						recording = false;
 						if (soundFile != null && soundFile.exists()) {
 							audioPath = soundFile.getAbsolutePath();
 						}
 						showRecord();
 					}
-					count++;
 				}
 			});
 		}
@@ -209,6 +227,7 @@ public class PublishTimeCapActivity extends BaseActivity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
+				publish();
 			}
 		});
 	}
@@ -216,6 +235,10 @@ public class PublishTimeCapActivity extends BaseActivity {
 	@Override
 	public void onDestroy() {
 		// TODO Auto-generated method stub
+		if (mRecorder != null) {
+			mRecorder.release();
+			mRecorder = null;
+		}
 		super.onDestroy();
 	}
 
@@ -234,7 +257,6 @@ public class PublishTimeCapActivity extends BaseActivity {
 				soundFile.createNewFile();
 			}
 
-			mRecorder = new MediaRecorder();
 			//设置录音来源
 			mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
 
@@ -245,6 +267,8 @@ public class PublishTimeCapActivity extends BaseActivity {
 			mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
 
 			mRecorder.setOutputFile(soundFile.getAbsolutePath());
+
+			mRecorder.prepare();
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
@@ -278,11 +302,23 @@ public class PublishTimeCapActivity extends BaseActivity {
 	 */
 	public void showRecord() {
 		record_view.setVisibility(View.VISIBLE);
-		MediaPlayer mediaPlayer = MediaPlayer.create(PublishTimeCapActivity.this, Uri.parse(audioPath));
-		int length = mediaPlayer.getDuration() / 1000;
-		mediaPlayer.release();
-		mediaPlayer = null;
+		int length = getRecordLength();
 		recordTime.setText(length + "\"");
+	}
+
+	/**
+	 * 获取录音长度
+	 * @return
+	 */
+	private int getRecordLength() {
+		MediaPlayer mediaPlayer = MediaPlayer.create(PublishTimeCapActivity.this, Uri.parse(audioPath));
+		int length = 0;
+		if (mediaPlayer != null) {
+			length = mediaPlayer.getDuration() / 1000;
+			mediaPlayer.release();
+		}
+		mediaPlayer = null;
+		return length;
 	}
 
 	/**
@@ -409,5 +445,85 @@ public class PublishTimeCapActivity extends BaseActivity {
 		tape.setImageResource(R.drawable.sel_tabp_btn);
 		progressImage1.clearAnimation();
 		progressImage2.clearAnimation();
+	}
+
+	/**
+	 * 上传时间胶囊记录
+	 */
+	private void publish() {
+		File audioFile = null;
+		File photoFile = null;
+		if (!TextUtils.isEmpty(audioPath)) {
+			audioFile = new File(audioPath);
+		}
+		if (!TextUtils.isEmpty(photoUri)) {
+			photoFile = new File(photoUri);
+		}
+
+		RequestParams params = new RequestParams();
+		TextHttpResponseHandler responseHandler = new TextHttpResponseHandler("utf-8") {
+			Dialog dialog;
+
+			@Override
+			public void onStart() {
+				// TODO Auto-generated method stub
+				super.onStart();
+				dialog = showProgressDialog("正在上传...");
+				dialog.setCancelable(false);
+			}
+
+			@Override
+			public void onSuccess(int statusCode, Header[] headers, String response) {
+				// TODO Auto-generated method stub
+				if (statusCode == 200) {
+					ToastTool.showShort(PublishTimeCapActivity.this, "成功！");
+				}
+			}
+
+			@Override
+			public void onFailure(int statusCode, Header[] headers, String errorResponse, Throwable e) {
+				// TODO Auto-generated method stub
+				ToastTool.showShort(PublishTimeCapActivity.this, "失败！");
+			}
+
+			@Override
+			public void onFinish() {
+				// TODO Auto-generated method stub
+				super.onFinish();
+				if (dialog != null) {
+					dialog.dismiss();
+				}
+			}
+
+			@Override
+			public void onCancel() {
+				// TODO Auto-generated method stub
+				super.onCancel();
+				if (dialog != null) {
+					dialog.dismiss();
+				}
+			}
+		};
+		params.put(UserTable.U_STATEID, userPreference.getU_stateid());
+		params.put(LoverTimeCapsuleTable.LTC_LOCATION, userPreference.getU_address());
+		params.put(LoverTimeCapsuleTable.LTC_USERID, userPreference.getU_id());
+		params.put(LoverTimeCapsuleTable.LTC_LOVERID, friendPreference.getF_id());
+		if (!TextUtils.isEmpty(audioPath)) {
+			params.put(LoverTimeCapsuleTable.LTC_VOICE_LENGTH, getRecordLength());
+		}
+
+		try {
+			if (photoFile != null && photoFile.exists()) {
+				params.put(LoverTimeCapsuleTable.LTC_PHOTO, photoFile);
+			}
+			if (audioFile != null && audioFile.exists()) {
+				params.put(LoverTimeCapsuleTable.LTC_VOICE, audioFile);
+			}
+		} catch (FileNotFoundException e) {
+			// TODO: handle exception
+			LogTool.d("发布时间胶囊文件不存在！" + e.getMessage());
+
+		}
+		AsyncHttpClientImageSound.post("capsuleimagesound", params, responseHandler);
 	}
 }
