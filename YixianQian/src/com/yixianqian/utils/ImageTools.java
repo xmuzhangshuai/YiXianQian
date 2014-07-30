@@ -25,7 +25,6 @@ import android.graphics.Shader.TileMode;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.ExifInterface;
-import android.util.Log;
 
 /**
  * Tools for handler picture
@@ -314,6 +313,21 @@ public final class ImageTools {
 	}
 
 	/**
+	 * µÈ±ÈÀýÑ¹ËõÍ¼Æ¬
+	 * @param bitmap
+	 * @param scale
+	 * @return
+	 */
+	public static Bitmap zoomBitmap(Bitmap bitmap, float scale) {
+		int w = bitmap.getWidth();
+		int h = bitmap.getHeight();
+		Matrix matrix = new Matrix();
+		matrix.postScale(scale, scale);
+		Bitmap newbmp = Bitmap.createBitmap(bitmap, 0, 0, w, h, matrix, true);
+		return newbmp;
+	}
+
+	/**
 	 * Resize the drawable
 	 * @param drawable
 	 * @param w
@@ -398,7 +412,7 @@ public final class ImageTools {
 	 * @param photoName
 	 * @param path
 	 */
-	public static File savePhotoToSDCard(Bitmap photoBitmap, String path, String photoName,int quality) {
+	public static File savePhotoToSDCard(Bitmap photoBitmap, String path, String photoName, int quality) {
 		if (checkSDCardAvailable()) {
 			File dir = new File(path);
 			if (!dir.exists()) {
@@ -410,7 +424,7 @@ public final class ImageTools {
 			try {
 				fileOutputStream = new FileOutputStream(photoFile);
 				if (photoBitmap != null) {
-					if (photoBitmap.compress(Bitmap.CompressFormat.PNG, quality, fileOutputStream)) {
+					if (photoBitmap.compress(Bitmap.CompressFormat.JPEG, quality, fileOutputStream)) {
 						fileOutputStream.flush();
 					}
 				}
@@ -513,7 +527,6 @@ public final class ImageTools {
 	public static Bitmap getBitmap(Bitmap bitmap, int screenWidth, int screenHight) {
 		int w = bitmap.getWidth();
 		int h = bitmap.getHeight();
-		Log.e("jj", "Í¼Æ¬¿í¶È" + w + ",screenWidth=" + screenWidth);
 		Matrix matrix = new Matrix();
 		float scale = (float) screenWidth / w;
 		float scale2 = (float) screenHight / h;

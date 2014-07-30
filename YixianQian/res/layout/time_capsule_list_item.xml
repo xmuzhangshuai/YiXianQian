@@ -21,12 +21,14 @@
             android:scaleType="centerCrop" />
 
         <RelativeLayout
+            android:id="@+id/playview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingBottom="@dimen/personal_timecapsule_padding"
             android:paddingLeft="@dimen/personal_timecapsule_padding"
             android:paddingRight="@dimen/personal_timecapsule_padding"
-            android:paddingTop="@dimen/personal_timecapsule_padding" >
+            android:paddingTop="@dimen/personal_timecapsule_padding"
+            android:visibility="gone" >
 
             <ImageView
                 android:id="@+id/play"
@@ -34,6 +36,8 @@
                 android:layout_height="@dimen/day_recommend_help_padding"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
+                android:clickable="true"
+                android:focusable="false"
                 android:src="@drawable/play" />
 
             <TextView
@@ -42,7 +46,6 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
-                android:text="9s"
                 android:textColor="@color/system_blue"
                 android:textSize="@dimen/day_recommend_user_font" />
 
@@ -52,7 +55,6 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:text="2014-7-9 12:04"
                 android:textColor="@color/unenable"
                 android:textSize="@dimen/day_recommend_help_font" />
         </RelativeLayout>

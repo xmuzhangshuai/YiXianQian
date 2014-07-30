@@ -110,10 +110,6 @@ public class HeadImageActivity extends BaseActivity {
 				// TODO Auto-generated method stub
 				uploadImage(photoUri.getPath());
 				ServerUtil.getInstance(HeadImageActivity.this).getFlipperAndRecommend(HeadImageActivity.this, true);
-				//				Intent intent = new Intent(HeadImageActivity.this, MainActivity.class);
-				//				startActivity(intent);
-				//				overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
-				//				finish();
 			}
 		});
 	}
@@ -183,7 +179,7 @@ public class HeadImageActivity extends BaseActivity {
 	 */
 	protected void doTakePhoto() {
 		try {
-			File uploadFileDir = new File(Environment.getExternalStorageDirectory(), "/yixianqian");
+			File uploadFileDir = new File(Environment.getExternalStorageDirectory(), "/yixianqian/image");
 			Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 			if (!uploadFileDir.exists()) {
 				uploadFileDir.mkdirs();

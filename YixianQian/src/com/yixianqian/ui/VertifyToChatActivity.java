@@ -131,6 +131,7 @@ public class VertifyToChatActivity extends BaseActivity {
 			friendpreference.setType(0);
 		} else if (type == 1) {
 			friendpreference.setType(1);
+			userPreference.setU_stateid(2);
 		}
 
 		ConversationDbService conversationDbService = ConversationDbService.getInstance(VertifyToChatActivity.this);

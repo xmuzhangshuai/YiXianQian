@@ -13,10 +13,8 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:cacheColorHint="@color/white"
+        android:descendantFocusability="blocksDescendants"
         android:divider="@color/white"
-        android:drawSelectorOnTop="false"
-        android:fastScrollEnabled="false"
-        android:scrollbars="none"
-        android:smoothScrollbar="true" />
+        android:scrollbars="none" />
 
 </LinearLayout>

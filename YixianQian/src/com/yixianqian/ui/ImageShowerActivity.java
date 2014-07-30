@@ -19,15 +19,17 @@ import com.yixianqian.base.BaseActivity;
  */
 public class ImageShowerActivity extends BaseActivity {
 	public static final String SHOW_BIG_IMAGE = "showBigImage";
+	public static final String CACHE = "cache_on_memory";
 	private ImageView imageView;
 	private String url;
+	private boolean cacahe = true;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_image_shower);
 		url = getIntent().getStringExtra(SHOW_BIG_IMAGE);
-
+		cacahe = getIntent().getBooleanExtra(CACHE, true);
 		findViewById();
 		initView();
 	}
@@ -62,8 +64,7 @@ public class ImageShowerActivity extends BaseActivity {
 		options = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.loading)// 设置图片下载期间显示的图片
 				.showImageForEmptyUri(R.drawable.image_error) // 设置图片Uri为空或是错误的时候显示的图片
 				.showImageOnFail(R.drawable.image_error) // 设置图片加载或解码过程中发生错误显示的图片
-				.cacheInMemory(true) // 设置下载的图片是否缓存在内存中
-				.cacheOnDisk(true) // 设置下载的图片是否缓存在SD卡中
+				.cacheInMemory(cacahe) // 设置下载的图片是否缓存在内存中
 				.imageScaleType(ImageScaleType.EXACTLY_STRETCHED).build(); // 创建配置过得DisplayImageOption对象
 		return options;
 	}

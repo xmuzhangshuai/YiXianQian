@@ -15,7 +15,8 @@
         android:id="@+id/female_headimage"
         android:layout_width="@dimen/get_image_btn_padding"
         android:layout_height="@dimen/get_image_btn_padding"
-        android:layout_alignParentRight="true" />
+        android:layout_alignParentRight="true"
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/male_name"
@@ -24,7 +25,6 @@
         android:layout_alignLeft="@+id/male_headiamge"
         android:layout_below="@+id/male_headiamge"
         android:layout_marginTop="@dimen/day_recommend_dot_space"
-        android:text="王宗智"
         android:textSize="@dimen/day_recommend_help_font" />
 
     <TextView
@@ -34,7 +34,7 @@
         android:layout_alignRight="@+id/female_headimage"
         android:layout_below="@+id/female_headimage"
         android:layout_marginTop="@dimen/day_recommend_dot_space"
-        android:text="于馨"
-        android:textSize="@dimen/day_recommend_help_font" />
+        android:textSize="@dimen/day_recommend_help_font"
+        android:visibility="gone" />
 
 </RelativeLayout>

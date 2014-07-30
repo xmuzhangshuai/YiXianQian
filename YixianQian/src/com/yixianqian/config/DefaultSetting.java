@@ -15,7 +15,10 @@ public class DefaultSetting {
 
 	// 每页20个表情,还有最后一个删除button
 	public static int NUM = 20;
-	
+
 	//域名或者是IP
 	public static String DoMainName = "http://192.168.1.101:8080/";
+
+	//时间胶囊每页显示条数
+	public static int PAGE_NUM = 5;
 }

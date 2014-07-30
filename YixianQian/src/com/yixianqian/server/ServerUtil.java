@@ -244,29 +244,32 @@ public class ServerUtil {
 	 * @param context
 	 */
 	public void getHeadImagePass() {
-		RequestParams params = new RequestParams();
-		params.put(UserTable.U_ID, userPreference.getU_id());
+		if (userPreference.getHeadImageChanged()) {
+			RequestParams params = new RequestParams();
+			params.put(UserTable.U_ID, userPreference.getU_id());
 
-		TextHttpResponseHandler responseHandler = new TextHttpResponseHandler("utf-8") {
-			@Override
-			public void onSuccess(int statusCode, Header[] headers, String response) {
-				// TODO Auto-generated method stub
-				if (statusCode == 200) {
-					if (response.equals("1")) {
-						userPreference.setHeadImagePassed(1);
-					} else if (response.equals("0")) {
-						userPreference.setHeadImagePassed(0);
-					} else if (response.equals("-1")) {
-						userPreference.setHeadImagePassed(-1);
+			TextHttpResponseHandler responseHandler = new TextHttpResponseHandler("utf-8") {
+				@Override
+				public void onSuccess(int statusCode, Header[] headers, String response) {
+					// TODO Auto-generated method stub
+					if (statusCode == 200) {
+						if (response.equals("1")) {
+							userPreference.setHeadImagePassed(1);
+						} else if (response.equals("0")) {
+							userPreference.setHeadImagePassed(0);
+						} else if (response.equals("-1")) {
+							userPreference.setHeadImagePassed(-1);
+						}
 					}
 				}
-			}
 
-			@Override
-			public void onFailure(int statusCode, Header[] headers, String errorResponse, Throwable e) {
-				// TODO Auto-generated method stub
-			}
-		};
-		AsyncHttpClientTool.post("getuserimagepass", params, responseHandler);
+				@Override
+				public void onFailure(int statusCode, Header[] headers, String errorResponse, Throwable e) {
+					// TODO Auto-generated method stub
+				}
+			};
+			AsyncHttpClientTool.post("getuserimagepass", params, responseHandler);
+		}
+
 	}
 }

@@ -230,6 +230,19 @@ public class PublishTimeCapActivity extends BaseActivity {
 				publish();
 			}
 		});
+
+		capsuleImage.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Intent intent = new Intent(PublishTimeCapActivity.this, ImageShowerActivity.class);
+				intent.putExtra(ImageShowerActivity.CACHE, false);
+				intent.putExtra(ImageShowerActivity.SHOW_BIG_IMAGE, "file://" + photoUri);
+				startActivity(intent);
+				overridePendingTransition(R.anim.zoomin, R.anim.zoomout);
+			}
+		});
 	}
 
 	@Override
@@ -286,13 +299,17 @@ public class PublishTimeCapActivity extends BaseActivity {
 		//获取缩略图显示到屏幕上
 		BitmapFactory.Options opts = new BitmapFactory.Options();
 		opts.inSampleSize = 2;
-		Bitmap cbitmap = BitmapFactory.decodeFile(photoUri, opts);
+		Bitmap bitmap = BitmapFactory.decodeFile(photoUri, opts);
+		//把图片旋转为正的方向
+		bitmap = ImageTools.rotaingImageView(degree, bitmap);
+		capsuleImage.setImageBitmap(bitmap);
 
-		/** 
-		 * 把图片旋转为正的方向 
-		 */
-		Bitmap newbitmap = ImageTools.rotaingImageView(degree, cbitmap);
-		capsuleImage.setImageBitmap(newbitmap);
+		String tempPath = Environment.getExternalStorageDirectory() + "/yixianqian/image";
+		String photoName = "timeCapsule.jpeg";
+		File file = ImageTools.savePhotoToSDCard(bitmap, tempPath, photoName, 20);
+		if (file != null) {
+			photoUri = file.getAbsolutePath();
+		}
 		capsuleImage.setVisibility(View.VISIBLE);
 		nullImage.setVisibility(View.GONE);
 	}
@@ -477,6 +494,7 @@ public class PublishTimeCapActivity extends BaseActivity {
 				// TODO Auto-generated method stub
 				if (statusCode == 200) {
 					ToastTool.showShort(PublishTimeCapActivity.this, "成功！");
+					finish();
 				}
 			}
 
@@ -526,4 +544,5 @@ public class PublishTimeCapActivity extends BaseActivity {
 		}
 		AsyncHttpClientImageSound.post("capsuleimagesound", params, responseHandler);
 	}
+
 }
