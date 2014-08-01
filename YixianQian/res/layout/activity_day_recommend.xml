@@ -55,11 +55,11 @@
         </LinearLayout>
 
         <ImageView
-            android:id="@+id/next_btn"
+            android:id="@+id/finish_btn"
             android:layout_width="@dimen/day_recommend_next_btn"
             android:layout_height="@dimen/day_recommend_next_btn"
             android:layout_alignParentRight="true"
-            android:src="@drawable/sel_next_btn" />
+            android:src="@drawable/sel_day_skip_btn" />
     </RelativeLayout>
 
     <ImageView

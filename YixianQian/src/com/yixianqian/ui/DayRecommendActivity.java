@@ -67,7 +67,7 @@ public class DayRecommendActivity extends BaseFragmentActivity {
 	// 当前ViewPager索引
 	private int pageIndex = 0;
 	private ImageView recommendHelp;
-	private ImageView next_btn;
+	private ImageView finish_btn;
 
 	//滑动推荐用户集合
 	private List<TodayRecommend> todayRecommendList;
@@ -82,6 +82,7 @@ public class DayRecommendActivity extends BaseFragmentActivity {
 	private int currentLike = -1;
 	private ProgressDialog progressDialog;
 	private JsonUser jsonUser;
+	private boolean isLiked = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -110,7 +111,7 @@ public class DayRecommendActivity extends BaseFragmentActivity {
 		viewPager = (ViewPager) findViewById(R.id.user_slide_page);
 		recommendHelp = (ImageView) findViewById(R.id.recommend_help);
 		imageCircleView = (ViewGroup) findViewById(R.id.dot);
-		next_btn = (ImageView) findViewById(R.id.next_btn);
+		finish_btn = (ImageView) findViewById(R.id.finish_btn);
 		like = (CheckBox) findViewById(R.id.choose_love);
 	}
 
@@ -151,12 +152,19 @@ public class DayRecommendActivity extends BaseFragmentActivity {
 			}
 		});
 
-		next_btn.setOnClickListener(new OnClickListener() {
+		finish_btn.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				viewPager.setCurrentItem(++pageIndex);
+				if (isLiked) {
+					TodayRecommend todayRecommend = todayRecommendList.get(currentLike);
+					if (todayRecommend != null) {
+						sendLoveReuest(todayRecommendList.get(currentLike).getUserID());
+					}
+				} else {
+					skip();
+				}
 			}
 		});
 
@@ -168,13 +176,32 @@ public class DayRecommendActivity extends BaseFragmentActivity {
 				// TODO Auto-generated method stub
 				if (isChecked) {
 					currentLike = pageIndex;
-					TodayRecommend todayRecommend = todayRecommendList.get(currentLike);
-					if (todayRecommend != null) {
-						sendLoveReuest(todayRecommendList.get(currentLike).getUserID());
+					isLiked = true;
+				} else {
+					if (currentLike == pageIndex) {
+						isLiked = false;
 					}
 				}
+				refreshFinishBtn();
 			}
 		});
+	}
+
+	private void refreshFinishBtn() {
+		if (isLiked) {
+			finish_btn.setImageResource(R.drawable.sel_day_confirm_btn);
+		} else {
+			finish_btn.setImageResource(R.drawable.sel_day_skip_btn);
+		}
+	}
+
+	/**
+	 * 跳过
+	 */
+	private void skip() {
+		startActivity(new Intent(DayRecommendActivity.this, MainActivity.class));
+		overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+		finish();
 	}
 
 	/**
@@ -186,7 +213,7 @@ public class DayRecommendActivity extends BaseFragmentActivity {
 			FlipperDbService flipperDbService = FlipperDbService.getInstance(DayRecommendActivity.this);
 			Flipper flipper = flipperDbService.getFlipperByUserId(filpperId);
 			if (flipper != null && flipper.getStatus().equals(FlipperStatus.BEINVITEED)) {//如果被邀请过
-				LogTool.e("PersonDetailActivity", "已经被邀请过了");
+				LogTool.e("DayRecommendAcitvity", "已经被邀请过了");
 				String name = flipper.getNickname();
 				if (!TextUtils.isEmpty(flipper.getRealname())) {
 					name = flipper.getRealname();
