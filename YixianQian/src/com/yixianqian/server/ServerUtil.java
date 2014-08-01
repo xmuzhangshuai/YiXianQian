@@ -64,6 +64,36 @@ public class ServerUtil {
 	}
 
 	/**
+	 * 初始化用户数据
+	 * @param context
+	 * @param isFinished
+	 */
+	public void initUserData(final Context context, final boolean isFinished) {
+		RequestParams params = new RequestParams();
+		params.put(UserTable.U_ID, userPreference.getU_id());
+		TextHttpResponseHandler responseHandler = new TextHttpResponseHandler("utf-8") {
+			@Override
+			public void onSuccess(int statusCode, Header[] headers, String response) {
+				// TODO Auto-generated method stub
+				if (statusCode == 200) {
+					if (!TextUtils.isEmpty(response)) {
+						if (Integer.parseInt(response) > 0) {
+							userPreference.setU_stateid(Integer.parseInt(response));
+							getTodayRecommend(context, isFinished);
+						}
+					}
+				}
+			}
+
+			@Override
+			public void onFailure(int statusCode, Header[] headers, String errorResponse, Throwable e) {
+				// TODO Auto-generated method stub
+			}
+		};
+		AsyncHttpClientTool.post("getuserstate", params, responseHandler);
+	}
+
+	/**
 	 * 获取心动请求
 	 */
 	public void getFlipperAndRecommend(final Context context, final boolean isFinished) {

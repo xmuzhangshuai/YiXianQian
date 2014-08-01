@@ -79,8 +79,9 @@ public class GuideActivity extends BaseActivity {
 				setContentView(R.layout.activity_guide);
 				findViewById();
 				initView();
+				ServerUtil.getInstance(GuideActivity.this).initUserData(GuideActivity.this, false);
 				ServerUtil.getInstance(GuideActivity.this).getHeadImagePass();
-				ServerUtil.getInstance(GuideActivity.this).getFlipperAndRecommend(GuideActivity.this, false);
+				//				ServerUtil.getInstance(GuideActivity.this).getFlipperAndRecommend(GuideActivity.this, false);
 			} else {//如果用户没有登录过或者已经注销
 				startActivity(new Intent(GuideActivity.this, LoginOrRegisterActivity.class));
 				//				finish();不定位

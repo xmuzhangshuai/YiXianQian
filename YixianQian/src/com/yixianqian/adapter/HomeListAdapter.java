@@ -22,16 +22,17 @@ import com.yixianqian.utils.ImageLoaderTool;
 public class HomeListAdapter extends BaseAdapter {
 	private LayoutInflater mInflater;
 	private LinkedList<Conversation> conversationList;
-	private ListView mListView;
-	private Context mContext;
-	private ConversationDbService conversationDbService;
+
+	//	private ListView mListView;
+	//	private Context mContext;
+	//	private ConversationDbService conversationDbService;
 
 	public HomeListAdapter(Context context, ListView listview, LinkedList<Conversation> cList) {
-		this.mContext = context;
+		//		this.mContext = context;
 		this.mInflater = LayoutInflater.from(context);
-		this.mListView = listview;
+		//		this.mListView = listview;
 		this.conversationList = cList;
-		this.conversationDbService = ConversationDbService.getInstance(context);
+		//		this.conversationDbService = ConversationDbService.getInstance(context);
 	}
 
 	@Override
@@ -102,44 +103,5 @@ public class HomeListAdapter extends BaseAdapter {
 		conversationList.addFirst(item);
 		notifyDataSetChanged();
 	}
-
-	//	@Override
-	//	public View getView(final int position, View convertView, ViewGroup parent) {
-	//		// TODO Auto-generated method stub
-	//		final RecentItem item = mData.get(position);
-	//		if (convertView == null) {
-	//			convertView = mInflater.inflate(R.layout.recent_listview_item, null);
-	//		}
-	//		TextView nickTV = (TextView) convertView.findViewById(R.id.recent_list_item_name);
-	//		TextView msgTV = (TextView) convertView.findViewById(R.id.recent_list_item_msg);
-	//		TextView numTV = (TextView) convertView.findViewById(R.id.unreadmsg);
-	//		TextView timeTV = (TextView) convertView.findViewById(R.id.recent_list_item_time);
-	//		ImageView headIV = (ImageView) convertView.findViewById(R.id.icon);
-	//		Button deleteBtn = (Button) convertView.findViewById(R.id.recent_del_btn);
-	//		nickTV.setText(item.getName());
-	//		msgTV.setText(convertNormalStringToSpannableString(item.getMessage()), BufferType.SPANNABLE);
-	//		timeTV.setText(TimeUtil.getChatTime(item.getTime()));
-	//		headIV.setImageResource(PushApplication.heads[item.getHeadImg()]);
-	//		int num = mMessageDB.getNewCount(item.getUserId());
-	//		if (num > 0) {
-	//			numTV.setVisibility(View.VISIBLE);
-	//			numTV.setText(num + "");
-	//		} else {
-	//			numTV.setVisibility(View.GONE);
-	//		}
-	//		deleteBtn.setOnClickListener(new OnClickListener() {
-	//
-	//			@Override
-	//			public void onClick(View v) {
-	//				// TODO Auto-generated method stub
-	//				mData.remove(position);
-	//				mRecentDB.delRecent(item.getUserId());
-	//				notifyDataSetChanged();
-	//				if (mListView != null)
-	//					mListView.closeOpenedItems();
-	//			}
-	//		});
-	//		return convertView;
-	//	}
 
 }

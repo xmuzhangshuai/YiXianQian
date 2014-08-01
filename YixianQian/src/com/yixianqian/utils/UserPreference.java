@@ -236,7 +236,7 @@ public class UserPreference {
 		editor.commit();
 	}
 
-	//状态
+	//状态,1为冻结 2为情侣，3为心动，4为单身
 	public int getU_stateid() {
 		return sp.getInt(UserTable.U_STATEID, -1);
 	}

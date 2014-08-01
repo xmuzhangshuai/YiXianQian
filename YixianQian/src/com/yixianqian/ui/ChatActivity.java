@@ -55,6 +55,7 @@ import com.yixianqian.customewidget.JazzyViewPager;
 import com.yixianqian.customewidget.JazzyViewPager.TransitionEffect;
 import com.yixianqian.db.ConversationDbService;
 import com.yixianqian.db.MessageItemDbService;
+import com.yixianqian.entities.Conversation;
 import com.yixianqian.entities.MessageItem;
 import com.yixianqian.jsonobject.JsonMessage;
 import com.yixianqian.utils.FastJsonTool;
@@ -70,12 +71,12 @@ public class ChatActivity extends BaseActivity implements OnTouchListener, IXLis
 	private TextView topNavText;//导航条文字
 	private Button sendBtn;//发送按钮
 	private ImageButton faceBtn;//表情
+	private ImageButton moreBtn;//添加图片和声音
 	private boolean isFaceShow = false;//是否显示表情
 	private JazzyViewPager faceViewPager;//表情翻页
 	private EditText msgEt;//输入框
 	private LinearLayout faceLinearLayout;//表情区域
 	private WindowManager.LayoutParams params;
-
 	private InputMethodManager inputMethodManager;
 	private int currentPage = 0;//当前表情页
 	private List<String> keys;
@@ -92,19 +93,18 @@ public class ChatActivity extends BaseActivity implements OnTouchListener, IXLis
 		public void handleMessage(Message msg) {
 			if (msg.what == NEW_MESSAGE) {
 				JsonMessage jsonMessage = (JsonMessage) msg.obj;
-				//				String userId = jsonMessage.getBpushUserID();
-				//				if (!userId.equals(mFromUser.getUserId()))// 如果不是当前正在聊天对象的消息，不处理
-				//					return;
-
-				//				int headId = msgItem.getHead_id();
 				// TODO Auto-generated method stub
 				MessageItem item = new MessageItem(null, Constants.MessageType.MESSAGE_TYPE_TEXT,
 						jsonMessage.getMessageContent(), System.currentTimeMillis(), true, true, false, conversationID);
 				adapter.upDateMsg(item);
 				messageItemDbService.messageItemDao.insert(item);
-				//				RecentItem recentItem = new RecentItem(userId, headId, msgItem.getNick(), msgItem.getMessage(), 0,
-				//						System.currentTimeMillis());
-				//				mRecentDB.saveRecent(recentItem);
+
+				Conversation conversation = ConversationDbService.getInstance(BaseApplication.getInstance())
+						.getConversationByUser(friendPreference.getF_id());
+				conversation.setLastMessage(item.getMsgContent());
+				conversation.setNewNum(0);
+				conversation.setTime(item.getTime());
+				conversationDbService.conversationDao.update(conversation);
 			}
 		};
 	};
@@ -228,8 +228,7 @@ public class ChatActivity extends BaseActivity implements OnTouchListener, IXLis
 	 */
 	private List<MessageItem> initMsgData() {
 		List<MessageItem> msgList = new ArrayList<MessageItem>();
-		ConversationDbService conversationDbService = ConversationDbService.getInstance(ChatActivity.this);
-		msgList = conversationDbService.getMsgItemListByConId(conversationID);
+		msgList = conversationDbService.loadMessageByPage(conversationID, MsgPagerNum);
 		return msgList;
 	}
 
@@ -322,8 +321,8 @@ public class ChatActivity extends BaseActivity implements OnTouchListener, IXLis
 					if (bitmap != null) {
 						int rawHeigh = bitmap.getHeight();
 						int rawWidth = bitmap.getHeight();
-						int newHeight = 40;
-						int newWidth = 40;
+						int newHeight = 60;
+						int newWidth = 60;
 						// 计算缩放因子
 						float heightScale = ((float) newHeight) / rawHeigh;
 						float widthScale = ((float) newWidth) / rawWidth;
@@ -435,18 +434,8 @@ public class ChatActivity extends BaseActivity implements OnTouchListener, IXLis
 			messageItemDbService.messageItemDao.insert(item);
 			msgEt.setText("");
 
-			//			JsonMessage message = new JsonMessage(System.currentTimeMillis(), msg, "");
 			JsonMessage message = new JsonMessage(msg, Constants.MessageType.MESSAGE_TYPE_TEXT);
 			new SendMsgAsyncTask(FastJsonTool.createJsonString(message), friendPreference.getBpush_UserID()).send();
-
-			//			Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-			//			System.out.println(gson.toJson(message));
-			//			new SendMsgAsyncTask(gson.toJson(message), friendSharePreference.getBpush_UserID()).send();;
-
-			//			new SendMsgAsyncTask(mGson.toJson(msgItem), mFromUser.getUserId()).send();
-			//			RecentItem recentItem = new RecentItem(mFromUser.getUserId(), mFromUser.getHeadIcon(), mFromUser.getNick(),
-			//					msg, 0, System.currentTimeMillis());
-			//			mRecentDB.saveRecent(recentItem);
 			break;
 		case R.id.nav_left_btn:
 			finish();
@@ -464,11 +453,11 @@ public class ChatActivity extends BaseActivity implements OnTouchListener, IXLis
 		handler.sendMessage(handlerMsg);
 	}
 
-	@Override
-	public void onBind(String method, int errorCode, String content) {
-		// TODO Auto-generated method stub
-
-	}
+	//	@Override
+	//	public void onBind(String method, int errorCode, String content) {
+	//		// TODO Auto-generated method stub
+	//
+	//	}
 
 	@Override
 	public void onNotify(String title, String content) {
@@ -476,9 +465,12 @@ public class ChatActivity extends BaseActivity implements OnTouchListener, IXLis
 
 	}
 
-	@Override
-	public void onNetChange(boolean isNetConnected) {
-		// TODO Auto-generated method stub
-	}
+	//	@Override
+	//	public void onNetChange(boolean isNetConnected) {
+	//		// TODO Auto-generated method stub
+	//		if (!isNetConnected) {
+	//			NetworkUtils.networkStateTips(ChatActivity.this);
+	//		}
+	//	}
 
 }

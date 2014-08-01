@@ -1,17 +1,20 @@
 package com.yixianqian.utils;
 
 import java.io.File;
+import java.io.IOException;
 
 import org.apache.http.Header;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.media.MediaPlayer;
-import android.os.Environment;
+import android.media.MediaPlayer.OnCompletionListener;
 import android.text.TextUtils;
+import android.widget.ImageView;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.FileAsyncHttpResponseHandler;
+import com.yixianqian.R;
 
 /**
  * 类名称：SoundLoader
@@ -25,11 +28,9 @@ public class SoundLoader {
 	private SharedPreferences.Editor editor;
 	private static SoundLoader soundLoader;
 	private MediaPlayer mediaPlayer = null;
-	private final String cacheFileName = "audioCacheFile";
 	private File cacheFileDir;
 	private File soundFile;
 	private Context context;
-	private boolean isPlaying;
 
 	public SoundLoader(Context context) {
 		// TODO Auto-generated constructor stub
@@ -43,44 +44,62 @@ public class SoundLoader {
 		if (soundLoader != null) {
 			return soundLoader;
 		} else {
-			return new SoundLoader(context);
+			soundLoader = new SoundLoader(context);
+			return soundLoader;
 		}
 	}
 
-	public void start(String path) {
-		isPlaying = true;
-		getCacheFile(path);
+	public void start(String path, final ImageView playImageView) {
+		playImageView.setImageResource(R.drawable.suspend_white);
+		String soundFilePath = isCached(path);
+		//如果没有缓存过
+		if (soundFilePath == null) {
+			loadFile(path);
+		} else {
+			play(soundFilePath);
+		}
+
+		mediaPlayer.setOnCompletionListener(new OnCompletionListener() {
+
+			@Override
+			public void onCompletion(MediaPlayer mp) {
+				// TODO Auto-generated method stub
+				mediaPlayer.stop();
+				playImageView.setImageResource(R.drawable.paly_white);
+			}
+		});
 	}
 
-	private void getCacheFile(String url) {
-		cacheFileDir = new File(Environment.getExternalStorageDirectory(), "/yixianqian/cache");
-		if (!cacheFileDir.exists()) {
-			cacheFileDir.mkdirs();
+	public void stop() {
+		if (mediaPlayer.isPlaying()) {
+			mediaPlayer.stop();
 		}
+	}
+
+	private void loadFile(final String url) {
+		//没有缓存过，重新加载
+		cacheFileDir = FileUtil.createDir("/yixianqian/cache");
 
 		String absulteUrl = AsyncHttpClientImageSound.getAbsoluteUrl(url);
-		System.out.println(absulteUrl);
 		AsyncHttpClient client = new AsyncHttpClient();
+
 		client.get(context, absulteUrl, new FileAsyncHttpResponseHandler(context) {
 
 			@Override
 			public void onSuccess(int statusCode, Header[] headers, File response) {
 				// TODO Auto-generated method stub
-				//				soundFile = new File(cacheFileDir, response.getName());
-
-				System.out.println("结果：");
-				System.out.println(response.getAbsolutePath());
-				System.out.println(response.getName());
+				soundFile = new File(cacheFileDir, response.getName() + ".amr");
+				FileUtil.copy(response.getAbsolutePath(), soundFile.getAbsolutePath());
+				cacheToLocal(url, soundFile.getAbsolutePath());
+				play(soundFile.getAbsolutePath());
 			}
 
 			@Override
 			public void onFailure(int statusCode, Header[] headers, Throwable e, File response) {
 				// TODO Auto-generated method stub
-				System.out.println("失败!");
-				System.out.println(statusCode);
-				System.out.println(e);
 			}
 		});
+
 	}
 
 	/**
@@ -88,7 +107,7 @@ public class SoundLoader {
 	 * @param url
 	 * @return
 	 */
-	private String getCachedPath(String url) {
+	private String isCached(String url) {
 		String dirString = soundPreference.getString(url, "");
 		if (!TextUtils.isEmpty(dirString)) {
 			//判断文件是否存在
@@ -107,7 +126,25 @@ public class SoundLoader {
 	/**
 	 * 缓存到本地
 	 */
-	private void cacheToFile() {
-		
+	private void cacheToLocal(String key, String path) {
+		editor.putString(key, path);
+		editor.commit();
+	}
+
+	/**
+	 * 播放
+	 * @param path
+	 */
+	private void play(String path) {
+		System.out.println("播放" + path);
+		mediaPlayer.reset();
+		try {
+			mediaPlayer.setDataSource(path);
+			mediaPlayer.prepare();
+		} catch (IllegalArgumentException | SecurityException | IllegalStateException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		mediaPlayer.start();
 	}
 }

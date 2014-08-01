@@ -2,7 +2,7 @@ package com.yixianqian.base;
 
 import android.os.Bundle;
 
-public class AbsListViewBaseActivity extends BaseActivity {
+public class AbsListViewBaseActivity extends BaseFragmentActivity {
 	protected static final String STATE_PAUSE_ON_SCROLL = "STATE_PAUSE_ON_SCROLL";
 	protected static final String STATE_PAUSE_ON_FLING = "STATE_PAUSE_ON_FLING";
 

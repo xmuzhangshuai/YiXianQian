@@ -15,9 +15,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.yixianqian.R;
-import com.yixianqian.base.BaseApplication;
 import com.yixianqian.config.Constants;
-import com.yixianqian.utils.UserPreference;
 
 /**
  * ¿‡√˚≥∆£∫ConstellDialogFragment

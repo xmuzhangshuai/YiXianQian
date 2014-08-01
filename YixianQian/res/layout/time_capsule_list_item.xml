@@ -2,62 +2,89 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:paddingBottom="40dp"
+    android:paddingLeft="20dp"
+    android:paddingRight="20dp"
+    android:paddingTop="40dp" >
 
-    <LinearLayout
-        android:id="@+id/test"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/time_capsule20"
-        android:background="@drawable/shape_time_capsule_list"
-        android:orientation="vertical" >
+        android:layout_marginBottom="10dp" >
 
         <ImageView
-            android:id="@+id/item_image"
-            android:layout_width="match_parent"
+            android:id="@+id/timerImage"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/timer" />
+
+        <TextView
+            android:id="@+id/time"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:adjustViewBounds="true"
-            android:scaleType="centerCrop" />
+            android:layout_alignParentTop="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="5dp"
+            android:layout_toRightOf="@+id/timerImage"
+            android:textColor="@color/unenable"
+            android:textSize="14sp" />
 
-        <RelativeLayout
-            android:id="@+id/playview"
-            android:layout_width="match_parent"
+        <ImageView
+            android:id="@+id/more"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginTop="10dp"
+            android:clickable="true"
+            android:focusable="false"
+            android:src="@drawable/sel_more_btn" />
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/item_image"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="5dp"
+        android:adjustViewBounds="true"
+        android:clickable="true"
+        android:focusable="false"
+        android:scaleType="centerCrop"
+        android:visibility="gone" />
+
+    <RelativeLayout
+        android:id="@+id/playview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/sel_paly_bg"
+        android:clickable="true"
+        android:focusable="false"
+        android:padding="15dp"
+        android:visibility="gone" >
+
+        <ImageView
+            android:id="@+id/play"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/paly_white" />
+
+        <TextView
+            android:id="@+id/timespan"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingBottom="@dimen/personal_timecapsule_padding"
-            android:paddingLeft="@dimen/personal_timecapsule_padding"
-            android:paddingRight="@dimen/personal_timecapsule_padding"
-            android:paddingTop="@dimen/personal_timecapsule_padding"
-            android:visibility="gone" >
-
-            <ImageView
-                android:id="@+id/play"
-                android:layout_width="@dimen/day_recommend_help_padding"
-                android:layout_height="@dimen/day_recommend_help_padding"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:clickable="true"
-                android:focusable="false"
-                android:src="@drawable/play" />
-
-            <TextView
-                android:id="@+id/timespan"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_centerVertical="true"
-                android:textColor="@color/system_blue"
-                android:textSize="@dimen/day_recommend_user_font" />
-
-            <TextView
-                android:id="@+id/time"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:textColor="@color/unenable"
-                android:textSize="@dimen/day_recommend_help_font" />
-        </RelativeLayout>
-    </LinearLayout>
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
 
 </LinearLayout>

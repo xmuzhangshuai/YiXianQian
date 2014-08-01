@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import android.os.Environment;
+
 /**
  * 文件简单操作辅助类
  * @author 
@@ -120,11 +122,12 @@ public class FileUtil {
 	 * 创建目录，整个路径上的目录都会创建
 	 * @param path
 	 */
-	public static void createDir(String path) {
-		File file = new File(path);
+	public static File createDir(String path) {
+		File file = new File(Environment.getExternalStorageDirectory(), path);
 		if (!file.exists()) {
 			file.mkdirs();
 		}
+		return file;
 	}
 
 	/** 尝试创建空文件

@@ -56,11 +56,11 @@ public class MyPushMessageReceiver extends FrontiaPushMessageReceiver {
 	public static abstract interface EventHandler {
 		public abstract void onMessage(JsonMessage jsonMessage);
 
-		public abstract void onBind(String method, int errorCode, String content);
+//		public abstract void onBind(String method, int errorCode, String content);
 
 		public abstract void onNotify(String title, String content);
 
-		public abstract void onNetChange(boolean isNetConnected);
+//		public abstract void onNetChange(boolean isNetConnected);
 	}
 
 	/**
@@ -84,7 +84,6 @@ public class MyPushMessageReceiver extends FrontiaPushMessageReceiver {
 	*/
 	@Override
 	public void onMessage(Context context, String message, String customContentString) {
-
 		JsonMessage jsonMessage = FastJsonTool.getObject(message, JsonMessage.class);
 		if (jsonMessage != null) {
 			parseMessage(jsonMessage);
@@ -96,7 +95,6 @@ public class MyPushMessageReceiver extends FrontiaPushMessageReceiver {
 	 * @param msg
 	 */
 	private void parseMessage(JsonMessage msg) {
-
 		//ÅÐ¶ÏÊÇ·ñ¿ªÆôÉùÒô
 		SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(BaseApplication
 				.getInstance());
@@ -168,6 +166,7 @@ public class MyPushMessageReceiver extends FrontiaPushMessageReceiver {
 				conversation.setLastMessage(msg.getMessageContent());
 				conversation.setNewNum(mNewNum + 1);
 				conversation.setTime(msg.getTimeSamp());
+				conversationDbService.conversationDao.update(conversation);
 			}
 		}
 	}

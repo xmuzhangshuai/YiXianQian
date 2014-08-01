@@ -11,7 +11,7 @@ import java.util.Date;
  */
 public class JsonSingleTimeCapsule {
 
-	private int stc_id;
+	private int stc_msgid;;
 	private int stc_userid;
 	private Date stc_record_time;
 	private String stc_voice;
@@ -22,12 +22,12 @@ public class JsonSingleTimeCapsule {
 	public JsonSingleTimeCapsule() {
 	}
 
-	public int getStc_id() {
-		return stc_id;
+	public int getStc_msgid() {
+		return stc_msgid;
 	}
 
-	public void setStc_id(int stc_id) {
-		this.stc_id = stc_id;
+	public void setStc_msgid(int stc_msgid) {
+		this.stc_msgid = stc_msgid;
 	}
 
 	public int getStc_userid() {

@@ -11,6 +11,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
@@ -38,9 +40,11 @@ import com.yixianqian.jsonobject.JsonLoverTimeCapsule;
 import com.yixianqian.jsonobject.JsonSingleTimeCapsule;
 import com.yixianqian.table.LoverTimeCapsuleTable;
 import com.yixianqian.table.SingleTimeCapsuleTable;
+import com.yixianqian.ui.MoreDialogFragment.OnDeleteListener;
 import com.yixianqian.utils.AsyncHttpClientImageSound;
 import com.yixianqian.utils.AsyncHttpClientTool;
 import com.yixianqian.utils.DateTimeTools;
+import com.yixianqian.utils.DensityUtil;
 import com.yixianqian.utils.FastJsonTool;
 import com.yixianqian.utils.FriendPreference;
 import com.yixianqian.utils.ImageLoaderTool;
@@ -56,7 +60,7 @@ import com.yixianqian.utils.UserPreference;
  * 创建时间：2014年7月9日 下午9:33:16
  *
  */
-public class TimeCapsuleActivity extends AbsListViewBaseActivity {
+public class TimeCapsuleActivity extends AbsListViewBaseActivity implements OnDeleteListener {
 	private PullToRefreshListView timeCapsuleListview;
 
 	private View headView;//用户头像区域
@@ -211,7 +215,7 @@ public class TimeCapsuleActivity extends AbsListViewBaseActivity {
 		params.put("page", pageNow);
 
 		//如果是单身
-		if (stateID == 4) {
+		if (stateID == 3 || stateID == 4) {
 			params.put(SingleTimeCapsuleTable.STC_USERID, userPreference.getU_id());
 			TextHttpResponseHandler responseHandler = new TextHttpResponseHandler("utf-8") {
 
@@ -228,6 +232,9 @@ public class TimeCapsuleActivity extends AbsListViewBaseActivity {
 									pageNow = -1;
 								}
 								singleTimeCapsuleList = new LinkedList<JsonSingleTimeCapsule>();
+								for (JsonSingleTimeCapsule jsonSingleTimeCapsule : temp) {
+									System.out.println("声音" + jsonSingleTimeCapsule.getStc_voice());
+								}
 								singleTimeCapsuleList.addAll(temp);
 							}
 							//如果是获取更多
@@ -315,12 +322,13 @@ public class TimeCapsuleActivity extends AbsListViewBaseActivity {
 			public TextView time;
 			public ImageView paly;
 			public View palyView;
+			public ImageView moreBtn;
 		}
 
 		@Override
 		public int getCount() {
 			// TODO Auto-generated method stub
-			if (stateID == 4) {
+			if (stateID == 3 || stateID == 4) {
 				return singleTimeCapsuleList.size();
 			} else if (stateID == 2) {
 				return loverTimeCapsuleList.size();
@@ -331,7 +339,7 @@ public class TimeCapsuleActivity extends AbsListViewBaseActivity {
 		@Override
 		public Object getItem(int position) {
 			// TODO Auto-generated method stub
-			if (stateID == 4) {
+			if (stateID == 3 || stateID == 4) {
 				return singleTimeCapsuleList.get(position);
 			} else if (stateID == 2) {
 				return loverTimeCapsuleList.get(position);
@@ -359,18 +367,37 @@ public class TimeCapsuleActivity extends AbsListViewBaseActivity {
 				holder.time = (TextView) view.findViewById(R.id.time);
 				holder.paly = (ImageView) view.findViewById(R.id.play);
 				holder.palyView = view.findViewById(R.id.playview);
+				holder.moreBtn = (ImageView) view.findViewById(R.id.more);
 				view.setTag(holder); // 给View添加一个格外的数据 
 			} else {
 				holder = (ViewHolder) view.getTag(); // 把数据取出来  
 			}
 
+			holder.capsuleImage.setMaxHeight(DensityUtil.dip2px(TimeCapsuleActivity.this,
+					(DensityUtil.getScreenWidthforDP(TimeCapsuleActivity.this) - 40)));
+
 			//单身
-			if (stateID == 4) {
-				imageLoader.displayImage(
-						AsyncHttpClientImageSound.getAbsoluteUrl(singleTimeCapsuleList.get(position).getStc_photo()),
-						holder.capsuleImage, ImageLoaderTool.getImageOptions());
+			if (stateID == 3 || stateID == 4) {
+				if (!TextUtils.isEmpty(singleTimeCapsuleList.get(position).getStc_photo())) {
+					imageLoader.displayImage(AsyncHttpClientImageSound.getAbsoluteUrl(singleTimeCapsuleList.get(
+							position).getStc_photo()), holder.capsuleImage, ImageLoaderTool.getImageOptions());
+					holder.capsuleImage.setVisibility(View.VISIBLE);
+					holder.capsuleImage.setOnClickListener(new OnClickListener() {
+
+						@Override
+						public void onClick(View v) {
+							// TODO Auto-generated method stub
+							Intent intent = new Intent(TimeCapsuleActivity.this, ImageShowerActivity.class);
+							intent.putExtra(ImageShowerActivity.SHOW_BIG_IMAGE, AsyncHttpClientImageSound
+									.getAbsoluteUrl(singleTimeCapsuleList.get(position).getStc_photo()));
+							startActivity(intent);
+							TimeCapsuleActivity.this.overridePendingTransition(R.anim.zoomin2, R.anim.zoomout);
+						}
+					});
+				}
+
 				if (!TextUtils.isEmpty(singleTimeCapsuleList.get(position).getStc_voice())) {
-					holder.timespan.setText("" + singleTimeCapsuleList.get(position).getStc_voice_length() + "s");
+					holder.timespan.setText("" + singleTimeCapsuleList.get(position).getStc_voice_length() + "\"");
 					holder.time.setText(DateTimeTools.DateToString(singleTimeCapsuleList.get(position)
 							.getStc_record_time()));
 					holder.palyView.setVisibility(View.VISIBLE);
@@ -378,9 +405,25 @@ public class TimeCapsuleActivity extends AbsListViewBaseActivity {
 			}
 			//情侣
 			else if (stateID == 2) {
-				imageLoader.displayImage(
-						AsyncHttpClientImageSound.getAbsoluteUrl(loverTimeCapsuleList.get(position).getLtc_photo()),
-						holder.capsuleImage, ImageLoaderTool.getImageOptions());
+				if (!TextUtils.isEmpty(loverTimeCapsuleList.get(position).getLtc_photo())) {
+					imageLoader
+							.displayImage(AsyncHttpClientImageSound.getAbsoluteUrl(loverTimeCapsuleList.get(position)
+									.getLtc_photo()), holder.capsuleImage, ImageLoaderTool.getImageOptions());
+					holder.capsuleImage.setVisibility(View.VISIBLE);
+					holder.capsuleImage.setOnClickListener(new OnClickListener() {
+
+						@Override
+						public void onClick(View v) {
+							// TODO Auto-generated method stub
+							Intent intent = new Intent(TimeCapsuleActivity.this, ImageShowerActivity.class);
+							intent.putExtra(ImageShowerActivity.SHOW_BIG_IMAGE, AsyncHttpClientImageSound
+									.getAbsoluteUrl(loverTimeCapsuleList.get(position).getLtc_photo()));
+							startActivity(intent);
+							TimeCapsuleActivity.this.overridePendingTransition(R.anim.zoomin2, R.anim.zoomout);
+						}
+					});
+				}
+
 				if (!TextUtils.isEmpty(loverTimeCapsuleList.get(position).getLtc_voice())) {
 					holder.timespan.setText("" + loverTimeCapsuleList.get(position).getLtc_voice_length() + "s");
 					holder.time.setText(DateTimeTools.DateToString(loverTimeCapsuleList.get(position)
@@ -390,30 +433,79 @@ public class TimeCapsuleActivity extends AbsListViewBaseActivity {
 			}
 
 			//点击播放键
-			holder.paly.setOnClickListener(new OnClickListener() {
+			holder.palyView.setOnClickListener(new OnClickListener() {
 				boolean isPlaying = false;
 
 				@Override
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
 					if (isPlaying) {
-						holder.paly.setImageResource(R.drawable.play);
+						holder.paly.setImageResource(R.drawable.paly_white);
+						SoundLoader.getInstance(TimeCapsuleActivity.this).stop();
 						isPlaying = false;
 					} else {
-						holder.paly.setImageResource(R.drawable.suspend);
 						isPlaying = true;
-						if (stateID == 4) {
+						if (stateID == 3 || stateID == 4) {
 							SoundLoader.getInstance(TimeCapsuleActivity.this).start(
-									singleTimeCapsuleList.get(position).getStc_voice());
+									singleTimeCapsuleList.get(position).getStc_voice(), holder.paly);
 						} else if (stateID == 2) {
 							SoundLoader.getInstance(TimeCapsuleActivity.this).start(
-									loverTimeCapsuleList.get(position).getLtc_voice());
+									loverTimeCapsuleList.get(position).getLtc_voice(), holder.paly);
 						}
-
 					}
+				}
+			});
+			//点击更多
+			holder.moreBtn.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+					showMoreDialog(position);
 				}
 			});
 			return view;
 		}
 	}
+
+	/**
+	 * 显示更多
+	 */
+	void showMoreDialog(int position) {
+		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		Fragment fragment = getSupportFragmentManager().findFragmentByTag("more");
+		if (fragment != null) {
+			ft.remove(fragment);
+		}
+		ft.addToBackStack(null);
+
+		// Create and show the dialog.
+		MoreDialogFragment newFragment = MoreDialogFragment.newInstance();
+		Bundle bundle = new Bundle();
+		bundle.putInt("position", position);
+		if (stateID == 2) {
+			bundle.putInt(LoverTimeCapsuleTable.LTC_USERID, loverTimeCapsuleList.get(position).getLtc_userid());
+			bundle.putInt(LoverTimeCapsuleTable.LTC_LOVERID, loverTimeCapsuleList.get(position).getLtc_loverid());
+			bundle.putInt(LoverTimeCapsuleTable.LTC_MSGID, loverTimeCapsuleList.get(position).getLtc_msgid());
+		} else if (stateID == 3 || stateID == 4) {
+			bundle.putInt(SingleTimeCapsuleTable.STC_USERID, singleTimeCapsuleList.get(position).getStc_userid());
+			bundle.putInt(SingleTimeCapsuleTable.STC_MSGID, singleTimeCapsuleList.get(position).getStc_msgid());
+		}
+
+		newFragment.setArguments(bundle);
+		newFragment.show(ft, "more");
+	}
+
+	@Override
+	public void onDelete(int position) {
+		// TODO Auto-generated method stub
+		if (stateID == 2) {
+			loverTimeCapsuleList.remove(position);
+			timeCapsuleAdapter.notifyDataSetChanged();
+		} else if (stateID == 3 || stateID == 4) {
+			singleTimeCapsuleList.remove(position);
+			timeCapsuleAdapter.notifyDataSetChanged();
+		}
+	}
+
 }

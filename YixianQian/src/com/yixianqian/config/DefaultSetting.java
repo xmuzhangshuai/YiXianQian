@@ -17,8 +17,11 @@ public class DefaultSetting {
 	public static int NUM = 20;
 
 	//域名或者是IP
-	public static String DoMainName = "http://192.168.1.101:8080/";
+	public static String DoMainName = "http://192.168.1.101/";
 
 	//时间胶囊每页显示条数
 	public static int PAGE_NUM = 5;
+
+	//聊天每次刷新纪录条数
+	public static int LOAD_MESSAGE_COUNT = 3;
 }

@@ -21,6 +21,8 @@ import com.yixianqian.base.BaseActivity;
 import com.yixianqian.base.BaseApplication;
 import com.yixianqian.config.Constants;
 import com.yixianqian.db.ConversationDbService;
+import com.yixianqian.db.ProvinceDbService;
+import com.yixianqian.db.SchoolDbService;
 import com.yixianqian.entities.Conversation;
 import com.yixianqian.jsonobject.JsonMessage;
 import com.yixianqian.jsonobject.JsonUser;
@@ -54,6 +56,7 @@ public class AddLoverInfoActivity extends BaseActivity {
 	private UserPreference userPreference;
 	private String loverphone;
 	private Button addLoverBtn;
+	private JsonUser jsonUser;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +68,7 @@ public class AddLoverInfoActivity extends BaseActivity {
 		friendpreference = BaseApplication.getInstance().getFriendPreference();
 		userPreference = BaseApplication.getInstance().getUserPreference();
 		loverphone = getIntent().getStringExtra(LOVER_PHONE_KEY);
+		jsonUser = new JsonUser();
 
 		getLoverInfo();
 		findViewById();
@@ -111,8 +115,8 @@ public class AddLoverInfoActivity extends BaseActivity {
 	private void initLoverView() {
 
 		//设置头像
-		if (!TextUtils.isEmpty(friendpreference.getF_small_avatar())) {
-			imageLoader.displayImage(AsyncHttpClientImageSound.getAbsoluteUrl(friendpreference.getF_small_avatar()),
+		if (!TextUtils.isEmpty(jsonUser.getU_small_avatar())) {
+			imageLoader.displayImage(AsyncHttpClientImageSound.getAbsoluteUrl(jsonUser.getU_small_avatar()),
 					headImageView, ImageLoaderTool.getHeadImageOptions(10));
 			//点击显示高清头像
 			headImageView.setOnClickListener(new OnClickListener() {
@@ -121,7 +125,7 @@ public class AddLoverInfoActivity extends BaseActivity {
 					// TODO Auto-generated method stub
 					Intent intent = new Intent(AddLoverInfoActivity.this, ImageShowerActivity.class);
 					intent.putExtra(ImageShowerActivity.SHOW_BIG_IMAGE,
-							AsyncHttpClientImageSound.getAbsoluteUrl(friendpreference.getF_large_avatar()));
+							AsyncHttpClientImageSound.getAbsoluteUrl(jsonUser.getU_large_avatar()));
 					startActivity(intent);
 					AddLoverInfoActivity.this.overridePendingTransition(R.anim.zoomin, R.anim.zoomout);
 				}
@@ -129,15 +133,17 @@ public class AddLoverInfoActivity extends BaseActivity {
 		}
 		//设置姓名、省份、及学校
 		//优先显示真实姓名
-		String name = friendpreference.getF_nickname();
-		if (friendpreference.getF_realname() != null) {
-			if (friendpreference.getF_realname().length() > 0) {
-				name = friendpreference.getF_realname();
+		String name = jsonUser.getU_nickname();
+		if (jsonUser.getU_realname() != null) {
+			if (jsonUser.getU_realname().length() > 0) {
+				name = jsonUser.getU_realname();
 			}
 		}
 		nameTextView.setText(name);
-		provinceTextView.setText(friendpreference.getProvinceName());
-		schoolTextView.setText(friendpreference.getSchoolName());
+		ProvinceDbService provinceDbService = ProvinceDbService.getInstance(this);
+		SchoolDbService schoolDbService = SchoolDbService.getInstance(this);
+		provinceTextView.setText(provinceDbService.getProNameById(jsonUser.getU_provinceid()));
+		schoolTextView.setText(schoolDbService.schoolDao.load((long) jsonUser.getU_schoolid()).getSchoolName());
 	}
 
 	/**
@@ -145,10 +151,10 @@ public class AddLoverInfoActivity extends BaseActivity {
 	 */
 	private void addLover() {
 
-		if (friendpreference.getF_id() > 0) {
+		if (jsonUser.getU_id() > 0) {
 			RequestParams params = new RequestParams();
 			params.put(LoversTable.L_USERID, userPreference.getU_id());
-			params.put(LoversTable.L_LOVERID, friendpreference.getF_id());
+			params.put(LoversTable.L_LOVERID, jsonUser.getU_id());
 			String url = "buildlover";
 			TextHttpResponseHandler responseHandler = new TextHttpResponseHandler() {
 				Dialog dialog;
@@ -169,21 +175,27 @@ public class AddLoverInfoActivity extends BaseActivity {
 							if (response.equals("0")) {
 								addLoverBtn.setEnabled(true);
 								ToastTool.showLong(AddLoverInfoActivity.this, "添加失败！");
+								finish();
 							} else if (response.equals("重复")) {
 								ToastTool.showLong(AddLoverInfoActivity.this, "你们已经是情侣啦！");
+								finish();
+							} else if (response.equals("状态")) {
+								ToastTool.showLong(AddLoverInfoActivity.this, "同时是单身的两个人才能成为情侣哦！");
+								finish();
 							} else {
 								//给对方发送消息
+								saveLoverInfo();
 								JsonMessage jsonMessage = new JsonMessage(userPreference.getU_tel(),
 										Constants.MessageType.MESSAGE_TYPE_LOVER);
 								new SendMsgAsyncTask(FastJsonTool.createJsonString(jsonMessage),
-										friendpreference.getBpush_UserID()).send();
+										jsonUser.getU_bpush_user_id()).send();
 								//创建对话
 								ConversationDbService conversationDbService = ConversationDbService
 										.getInstance(AddLoverInfoActivity.this);
 								conversationDbService.conversationDao.deleteAll();
 								Conversation conversation = new Conversation(null, Long.valueOf(friendpreference
 										.getF_id()), friendpreference.getName(), friendpreference.getF_small_avatar(),
-										"0", 0, System.currentTimeMillis());
+										"", 0, System.currentTimeMillis());
 								conversationDbService.conversationDao.insert(conversation);
 
 								friendpreference.setLoverId(Integer.parseInt(response));
@@ -229,31 +241,8 @@ public class AddLoverInfoActivity extends BaseActivity {
 				public void onSuccess(int statusCode, Header[] headers, String response) {
 					// TODO Auto-generated method stub
 					if (statusCode == 200) {
-						JsonUser lover = FastJsonTool.getObject(response, JsonUser.class);
-						if (lover != null) {
-							friendpreference.setBpush_ChannelID(lover.getU_bpush_channel_id());
-							friendpreference.setBpush_UserID(lover.getU_bpush_user_id());
-							friendpreference.setF_address(lover.getU_address());
-							friendpreference.setF_age(lover.getU_age());
-							friendpreference.setF_blood_type(lover.getU_blood_type());
-							friendpreference.setF_constell(lover.getU_constell());
-							friendpreference.setF_email(lover.getU_email());
-							friendpreference.setF_gender(lover.getU_gender());
-							friendpreference.setF_height(lover.getU_height());
-							friendpreference.setF_id(lover.getU_id());
-							friendpreference.setF_introduce(lover.getU_introduce());
-							friendpreference.setF_large_avatar(lover.getU_large_avatar());
-							friendpreference.setF_nickname(lover.getU_nickname());
-							friendpreference.setF_realname(lover.getU_realname());
-							friendpreference.setF_salary(lover.getU_salary());
-							friendpreference.setF_small_avatar(lover.getU_small_avatar());
-							friendpreference.setF_stateid(lover.getU_stateid());
-							friendpreference.setF_tel(lover.getU_tel());
-							friendpreference.setF_vocationid(lover.getU_vocationid());
-							friendpreference.setF_weight(lover.getU_weight());
-							friendpreference.setU_cityid(lover.getU_cityid());
-							friendpreference.setU_provinceid(lover.getU_provinceid());
-							friendpreference.setU_schoolid(lover.getU_schoolid());
+						jsonUser = FastJsonTool.getObject(response, JsonUser.class);
+						if (jsonUser != null) {
 							initLoverView();
 						}
 					}
@@ -268,4 +257,34 @@ public class AddLoverInfoActivity extends BaseActivity {
 		}
 	}
 
+	/**
+	 * 保存情侣信息
+	 */
+	void saveLoverInfo() {
+		if (jsonUser != null) {
+			friendpreference.setBpush_ChannelID(jsonUser.getU_bpush_channel_id());
+			friendpreference.setBpush_UserID(jsonUser.getU_bpush_user_id());
+			friendpreference.setF_address(jsonUser.getU_address());
+			friendpreference.setF_age(jsonUser.getU_age());
+			friendpreference.setF_blood_type(jsonUser.getU_blood_type());
+			friendpreference.setF_constell(jsonUser.getU_constell());
+			friendpreference.setF_email(jsonUser.getU_email());
+			friendpreference.setF_gender(jsonUser.getU_gender());
+			friendpreference.setF_height(jsonUser.getU_height());
+			friendpreference.setF_id(jsonUser.getU_id());
+			friendpreference.setF_introduce(jsonUser.getU_introduce());
+			friendpreference.setF_large_avatar(jsonUser.getU_large_avatar());
+			friendpreference.setF_nickname(jsonUser.getU_nickname());
+			friendpreference.setF_realname(jsonUser.getU_realname());
+			friendpreference.setF_salary(jsonUser.getU_salary());
+			friendpreference.setF_small_avatar(jsonUser.getU_small_avatar());
+			friendpreference.setF_stateid(jsonUser.getU_stateid());
+			friendpreference.setF_tel(jsonUser.getU_tel());
+			friendpreference.setF_vocationid(jsonUser.getU_vocationid());
+			friendpreference.setF_weight(jsonUser.getU_weight());
+			friendpreference.setU_cityid(jsonUser.getU_cityid());
+			friendpreference.setU_provinceid(jsonUser.getU_provinceid());
+			friendpreference.setU_schoolid(jsonUser.getU_schoolid());
+		}
+	}
 }
