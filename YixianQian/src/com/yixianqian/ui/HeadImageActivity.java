@@ -28,6 +28,7 @@ import com.loopj.android.http.TextHttpResponseHandler;
 import com.yixianqian.R;
 import com.yixianqian.base.BaseActivity;
 import com.yixianqian.base.BaseApplication;
+import com.yixianqian.customewidget.MyAlertDialog;
 import com.yixianqian.server.ServerUtil;
 import com.yixianqian.table.UserTable;
 import com.yixianqian.utils.AsyncHttpClientImageSound;
@@ -70,6 +71,34 @@ public class HeadImageActivity extends BaseActivity {
 
 		findViewById();
 		initView();
+	}
+
+	@Override
+	public void onBackPressed() {
+		// TODO Auto-generated method stub
+		final MyAlertDialog dialog = new MyAlertDialog(HeadImageActivity.this);
+		dialog.setTitle("提示");
+		dialog.setMessage("上传头像后系统才会给您和同校异性牵线搭桥，确定退出？");
+		View.OnClickListener comfirm = new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				dialog.dismiss();
+				finish();
+			}
+		};
+		View.OnClickListener cancle = new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				dialog.dismiss();
+			}
+		};
+		dialog.setPositiveButton("退出", comfirm);
+		dialog.setNegativeButton("取消", cancle);
+		dialog.show();
 	}
 
 	@Override

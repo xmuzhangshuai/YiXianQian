@@ -257,7 +257,7 @@ public class RegPhoneFragment extends BaseV4Fragment {
 					transaction.setCustomAnimations(R.anim.push_left_in, R.anim.push_left_out, R.anim.push_right_in,
 							R.anim.push_right_out);
 					transaction.replace(R.id.fragment_container, fragment);
-					getFragmentManager().popBackStack();
+					transaction.addToBackStack(null);
 					transaction.commit();
 					ToastTool.showShort(RegPhoneFragment.this.getActivity(), "验证码已发送");
 

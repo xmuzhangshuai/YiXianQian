@@ -39,6 +39,7 @@ import com.yixianqian.base.BaseApplication;
 import com.yixianqian.base.BaseV4Fragment;
 import com.yixianqian.config.Constants;
 import com.yixianqian.config.Constants.Config;
+import com.yixianqian.customewidget.MyAlertDialog;
 import com.yixianqian.table.UserTable;
 import com.yixianqian.utils.AsyncHttpClientTool;
 import com.yixianqian.utils.HttpUtil;
@@ -171,7 +172,30 @@ public class RegAuthCodeFragment extends BaseV4Fragment {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				getFragmentManager().popBackStack();
+				final MyAlertDialog dialog = new MyAlertDialog(getActivity());
+				dialog.setTitle("提示");
+				dialog.setMessage("注册过程中退出，信息将不能保存。是否继续退出？");
+				View.OnClickListener comfirm = new OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						// TODO Auto-generated method stub
+						dialog.dismiss();
+						getActivity().finish();
+						BaseApplication.getInstance().getUserPreference().clear();
+					}
+				};
+				View.OnClickListener cancle = new OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						// TODO Auto-generated method stub
+						dialog.dismiss();
+					}
+				};
+				dialog.setPositiveButton("确定", comfirm);
+				dialog.setNegativeButton("取消", cancle);
+				dialog.show();
 			}
 		});
 
