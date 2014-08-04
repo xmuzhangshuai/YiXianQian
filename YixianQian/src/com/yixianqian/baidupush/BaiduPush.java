@@ -314,6 +314,26 @@ public class BaiduPush {
 	}
 
 	/**
+	 * 给指定用户推送消息
+	 * 
+	 * @param message
+	 * @param userid
+	 * @return
+	 */
+	public String PushMessage(String message, String userid, String channelid) {
+		RestApi ra = new RestApi(RestApi.METHOD_PUSH_MESSAGE);
+		ra.put(RestApi._MESSAGE_TYPE, RestApi.MESSAGE_TYPE_MESSAGE);
+		ra.put(RestApi._MESSAGES, message);
+		ra.put(RestApi._MESSAGE_KEYS, MSGKEY);
+		// ra.put(RestApi._MESSAGE_EXPIRES, "86400");
+		ra.put(RestApi._CHANNEL_ID, channelid);
+		ra.put(RestApi._PUSH_TYPE, RestApi.PUSH_TYPE_USER);
+		// ra.put(RestApi._DEVICE_TYPE, RestApi.DEVICE_TYPE_ANDROID);
+		ra.put(RestApi._USER_ID, userid);
+		return PostHttpRequest(ra);
+	}
+
+	/**
 	 * 给指定标签用户推送消息
 	 * 
 	 * @param message

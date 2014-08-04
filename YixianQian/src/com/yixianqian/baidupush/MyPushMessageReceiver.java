@@ -56,11 +56,7 @@ public class MyPushMessageReceiver extends FrontiaPushMessageReceiver {
 	public static abstract interface EventHandler {
 		public abstract void onMessage(JsonMessage jsonMessage);
 
-//		public abstract void onBind(String method, int errorCode, String content);
-
 		public abstract void onNotify(String title, String content);
-
-//		public abstract void onNetChange(boolean isNetConnected);
 	}
 
 	/**
@@ -201,23 +197,18 @@ public class MyPushMessageReceiver extends FrontiaPushMessageReceiver {
 	 * @param phone
 	 */
 	private void buildLove(String phone) {
-		friendPreference = BaseApplication.getInstance().getFriendPreference();
 		BaseApplication application = BaseApplication.getInstance();
+		friendPreference = application.getFriendPreference();
 
-		getLoverInfo(phone);//获取信息
+		//		getLoverInfo(phone);//获取信息
 
-		String name = friendPreference.getF_nickname();
-		if (friendPreference.getF_realname() != null) {
-			if (friendPreference.getF_realname().length() > 0) {
-				name = friendPreference.getF_realname();
-			}
-		}
 		//通知
 		NotificationCompat.Builder builder = new NotificationCompat.Builder(application);
-		builder.setSmallIcon(R.drawable.ic_launcher).setContentTitle(name).setContentText("非常爱你，想添加你为情侣")
+		builder.setSmallIcon(R.drawable.ic_launcher).setContentTitle("情侣邀请").setContentText("有人想添加您为情侣")
 				.setAutoCancel(true).setTicker("情侣邀请！").setDefaults(Notification.DEFAULT_ALL);
 		Intent resultIntent = new Intent(application, VertifyToChatActivity.class);
 		resultIntent.putExtra(VertifyToChatActivity.VERTIFY_TYPE, "1");
+		resultIntent.putExtra(VertifyToChatActivity.PHONE, phone);
 		TaskStackBuilder stackBuilder = TaskStackBuilder.create(application);
 		stackBuilder.addParentStack(MainActivity.class);
 		stackBuilder.addNextIntent(resultIntent);

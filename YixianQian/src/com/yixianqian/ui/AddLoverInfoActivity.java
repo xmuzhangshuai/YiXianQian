@@ -20,13 +20,11 @@ import com.yixianqian.baidupush.SendMsgAsyncTask;
 import com.yixianqian.base.BaseActivity;
 import com.yixianqian.base.BaseApplication;
 import com.yixianqian.config.Constants;
-import com.yixianqian.db.ConversationDbService;
 import com.yixianqian.db.ProvinceDbService;
 import com.yixianqian.db.SchoolDbService;
-import com.yixianqian.entities.Conversation;
 import com.yixianqian.jsonobject.JsonMessage;
 import com.yixianqian.jsonobject.JsonUser;
-import com.yixianqian.table.LoversTable;
+import com.yixianqian.table.LoveRequestTable;
 import com.yixianqian.table.UserTable;
 import com.yixianqian.utils.AsyncHttpClientImageSound;
 import com.yixianqian.utils.AsyncHttpClientTool;
@@ -107,13 +105,12 @@ public class AddLoverInfoActivity extends BaseActivity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				addLover();
+				addLoverRequest();
 			}
 		});
 	}
 
 	private void initLoverView() {
-
 		//设置头像
 		if (!TextUtils.isEmpty(jsonUser.getU_small_avatar())) {
 			imageLoader.displayImage(AsyncHttpClientImageSound.getAbsoluteUrl(jsonUser.getU_small_avatar()),
@@ -147,15 +144,13 @@ public class AddLoverInfoActivity extends BaseActivity {
 	}
 
 	/**
-	 * 添加情侣
+	 * 发起添加情侣请求
 	 */
-	private void addLover() {
-
+	private void addLoverRequest() {
 		if (jsonUser.getU_id() > 0) {
 			RequestParams params = new RequestParams();
-			params.put(LoversTable.L_USERID, userPreference.getU_id());
-			params.put(LoversTable.L_LOVERID, jsonUser.getU_id());
-			String url = "buildlover";
+			params.put(LoveRequestTable.LR_USERID, userPreference.getU_id());
+			params.put(LoveRequestTable.LR_LOVERID, jsonUser.getU_id());
 			TextHttpResponseHandler responseHandler = new TextHttpResponseHandler() {
 				Dialog dialog;
 
@@ -177,31 +172,22 @@ public class AddLoverInfoActivity extends BaseActivity {
 								ToastTool.showLong(AddLoverInfoActivity.this, "添加失败！");
 								finish();
 							} else if (response.equals("重复")) {
-								ToastTool.showLong(AddLoverInfoActivity.this, "你们已经是情侣啦！");
+								ToastTool.showLong(AddLoverInfoActivity.this, "您已经邀请过ta了！");
 								finish();
 							} else if (response.equals("状态")) {
 								ToastTool.showLong(AddLoverInfoActivity.this, "同时是单身的两个人才能成为情侣哦！");
 								finish();
 							} else {
 								//给对方发送消息
-								saveLoverInfo();
 								JsonMessage jsonMessage = new JsonMessage(userPreference.getU_tel(),
 										Constants.MessageType.MESSAGE_TYPE_LOVER);
 								new SendMsgAsyncTask(FastJsonTool.createJsonString(jsonMessage),
 										jsonUser.getU_bpush_user_id()).send();
-								//创建对话
-								ConversationDbService conversationDbService = ConversationDbService
-										.getInstance(AddLoverInfoActivity.this);
-								conversationDbService.conversationDao.deleteAll();
-								Conversation conversation = new Conversation(null, Long.valueOf(friendpreference
-										.getF_id()), friendpreference.getName(), friendpreference.getF_small_avatar(),
-										"", 0, System.currentTimeMillis());
-								conversationDbService.conversationDao.insert(conversation);
-
-								friendpreference.setLoverId(Integer.parseInt(response));
-								friendpreference.setType(1);
-								userPreference.setU_stateid(2);
-								Intent intent = new Intent(AddLoverInfoActivity.this, MainActivity.class);
+//								new SendMsgAsyncTask(FastJsonTool.createJsonString(jsonMessage),
+//										jsonUser.getU_bpush_user_id(),jsonUser.getU_bpush_channel_id()).send();
+								userPreference.setLoveRequest(true);
+								saveLoverInfo();
+								Intent intent = new Intent(AddLoverInfoActivity.this, WaitActivity.class);
 								startActivity(intent);
 								overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
 							}
@@ -223,9 +209,90 @@ public class AddLoverInfoActivity extends BaseActivity {
 					super.onFinish();
 				}
 			};
-			AsyncHttpClientTool.post(AddLoverInfoActivity.this, url, params, responseHandler);
+			AsyncHttpClientTool.post(AddLoverInfoActivity.this, "addloverequest", params, responseHandler);
 		}
 	}
+
+	/**
+	 * 添加情侣
+	 */
+	//	private void addLover() {
+	//
+	//		if (jsonUser.getU_id() > 0) {
+	//			RequestParams params = new RequestParams();
+	//			params.put(LoversTable.L_USERID, userPreference.getU_id());
+	//			params.put(LoversTable.L_LOVERID, jsonUser.getU_id());
+	//			String url = "buildlover";
+	//			TextHttpResponseHandler responseHandler = new TextHttpResponseHandler() {
+	//				Dialog dialog;
+	//
+	//				@Override
+	//				public void onStart() {
+	//					// TODO Auto-generated method stub
+	//					super.onStart();
+	//					addLoverBtn.setEnabled(false);
+	//					dialog = showProgressDialog("请稍后...");
+	//				}
+	//
+	//				@Override
+	//				public void onSuccess(int statusCode, Header[] headers, String response) {
+	//					// TODO Auto-generated method stub
+	//					if (statusCode == 200) {
+	//						if (!TextUtils.isEmpty(response)) {
+	//							if (response.equals("0")) {
+	//								addLoverBtn.setEnabled(true);
+	//								ToastTool.showLong(AddLoverInfoActivity.this, "添加失败！");
+	//								finish();
+	//							} else if (response.equals("重复")) {
+	//								ToastTool.showLong(AddLoverInfoActivity.this, "你们已经是情侣啦！");
+	//								finish();
+	//							} else if (response.equals("状态")) {
+	//								ToastTool.showLong(AddLoverInfoActivity.this, "同时是单身的两个人才能成为情侣哦！");
+	//								finish();
+	//							} else {
+	//								//给对方发送消息
+	//								saveLoverInfo();
+	//								JsonMessage jsonMessage = new JsonMessage(userPreference.getU_tel(),
+	//										Constants.MessageType.MESSAGE_TYPE_LOVER);
+	//								new SendMsgAsyncTask(FastJsonTool.createJsonString(jsonMessage),
+	//										jsonUser.getU_bpush_user_id()).send();
+	//								//创建对话
+	//								ConversationDbService conversationDbService = ConversationDbService
+	//										.getInstance(AddLoverInfoActivity.this);
+	//								conversationDbService.conversationDao.deleteAll();
+	//								Conversation conversation = new Conversation(null, Long.valueOf(friendpreference
+	//										.getF_id()), friendpreference.getName(), friendpreference.getF_small_avatar(),
+	//										"", 0, System.currentTimeMillis());
+	//								conversationDbService.conversationDao.insert(conversation);
+	//
+	//								friendpreference.setLoverId(Integer.parseInt(response));
+	//								friendpreference.setType(1);
+	//								userPreference.setU_stateid(2);
+	//								Intent intent = new Intent(AddLoverInfoActivity.this, MainActivity.class);
+	//								startActivity(intent);
+	//								overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+	//							}
+	//						}
+	//					}
+	//				}
+	//
+	//				@Override
+	//				public void onFailure(int statusCode, Header[] headers, String errorResponse, Throwable e) {
+	//					// TODO Auto-generated method stub
+	//					addLoverBtn.setEnabled(true);
+	//					ToastTool.showLong(AddLoverInfoActivity.this, "添加失败！" + errorResponse);
+	//				}
+	//
+	//				@Override
+	//				public void onFinish() {
+	//					// TODO Auto-generated method stub
+	//					dialog.dismiss();
+	//					super.onFinish();
+	//				}
+	//			};
+	//			AsyncHttpClientTool.post(AddLoverInfoActivity.this, url, params, responseHandler);
+	//		}
+	//	}
 
 	/**
 	 * 获取情侣信息

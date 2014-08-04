@@ -218,6 +218,18 @@
             android:name="com.yixianqian.ui.ModifyPassActivity"
             android:screenOrientation="portrait" >
         </activity>
+        
+         <!-- 修改密码页面 -->
+        <activity
+            android:name="com.yixianqian.ui.WaitActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        
+         <!-- 修改密码页面 -->
+        <activity
+            android:name="com.yixianqian.ui.AlreadyInviteActivity"
+            android:screenOrientation="portrait" >
+        </activity>
 
         <!-- 测试页面 -->
         <activity

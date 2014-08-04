@@ -16,7 +16,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.yixianqian.R;
+import com.yixianqian.base.BaseApplication;
 import com.yixianqian.db.FlipperDbService;
+import com.yixianqian.utils.ToastTool;
+import com.yixianqian.utils.UserPreference;
 
 /**
  * 类名称：HomeDialogFragment
@@ -31,6 +34,7 @@ public class HomeDialogFragment extends DialogFragment {
 	private List<String> menuitemList;
 	private int flipperCount = -1;
 	private FlipperDbService flipperDbService;
+	private UserPreference userPreference;
 
 	/**
 	 * 创建实例
@@ -48,6 +52,7 @@ public class HomeDialogFragment extends DialogFragment {
 
 		setStyle(DialogFragment.STYLE_NO_TITLE, 0);
 		flipperDbService = FlipperDbService.getInstance(getActivity());
+		userPreference = BaseApplication.getInstance().getUserPreference();
 	}
 
 	@Override
@@ -77,7 +82,12 @@ public class HomeDialogFragment extends DialogFragment {
 				if (position == 1) {
 					intent = new Intent(getActivity(), LoveVertifyActivity.class);
 				} else if (position == 0) {
-					intent = new Intent(getActivity(), AddLoverActivity.class);
+					//如果是单身状态
+					if (userPreference.getU_stateid() == 4) {
+						intent = new Intent(getActivity(), AddLoverActivity.class);
+					} else {
+						ToastTool.showLong(getActivity(), "只有单身状态才可以添加情侣哦~！");
+					}
 				}
 				if (intent != null) {
 					startActivity(intent);

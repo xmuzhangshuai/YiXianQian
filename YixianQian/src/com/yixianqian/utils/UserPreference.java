@@ -2,7 +2,6 @@ package com.yixianqian.utils;
 
 import java.util.Date;
 
-import android.R.raw;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
@@ -36,6 +35,16 @@ public class UserPreference {
 		String pushChannelId = getBpush_ChannelID();
 		setBpush_UserID(pushUserId);
 		setBpush_ChannelID(pushChannelId);
+		editor.commit();
+	}
+
+	//记录是否等待情侣相应
+	public boolean getLoveRequest() {
+		return sp.getBoolean("loverequest", false);
+	}
+
+	public void setLoveRequest(boolean wait) {
+		editor.putBoolean("loverequest", wait);
 		editor.commit();
 	}
 

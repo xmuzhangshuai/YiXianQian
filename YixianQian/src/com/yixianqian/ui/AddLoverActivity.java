@@ -1,17 +1,26 @@
 package com.yixianqian.ui;
 
+import org.apache.http.Header;
+
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.loopj.android.http.RequestParams;
+import com.loopj.android.http.TextHttpResponseHandler;
 import com.yixianqian.R;
 import com.yixianqian.base.BaseActivity;
+import com.yixianqian.table.UserTable;
+import com.yixianqian.utils.AsyncHttpClientTool;
+import com.yixianqian.utils.ToastTool;
 
 /**
  * 类名称：AddLoverActivity
@@ -26,6 +35,7 @@ public class AddLoverActivity extends BaseActivity implements OnClickListener {
 	private View right_btn_bg;
 	private View searchBtn;
 	private View scanBtn;
+	private Button alreadyBtn;
 	private EditText mPhoneView;
 	private String mPhone;
 
@@ -49,6 +59,7 @@ public class AddLoverActivity extends BaseActivity implements OnClickListener {
 		searchBtn = findViewById(R.id.search);
 		scanBtn = findViewById(R.id.scan);
 		mPhoneView = (EditText) findViewById(R.id.phone);
+		alreadyBtn = (Button) findViewById(R.id.already);
 	}
 
 	@Override
@@ -59,6 +70,7 @@ public class AddLoverActivity extends BaseActivity implements OnClickListener {
 		topNavLeftBtn.setOnClickListener(this);
 		searchBtn.setOnClickListener(this);
 		scanBtn.setOnClickListener(this);
+		alreadyBtn.setOnClickListener(this);
 	}
 
 	@Override
@@ -73,6 +85,11 @@ public class AddLoverActivity extends BaseActivity implements OnClickListener {
 			break;
 		case R.id.scan:
 			scan();
+			break;
+		case R.id.already:
+			Intent intent = new Intent(AddLoverActivity.this, AlreadyInviteActivity.class);
+			startActivity(intent);
+			overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
 			break;
 		default:
 			break;
@@ -119,9 +136,64 @@ public class AddLoverActivity extends BaseActivity implements OnClickListener {
 			focusView.requestFocus();
 		} else {
 			// 没有错误
-			Intent intent = new Intent(AddLoverActivity.this, AddLoverInfoActivity.class);
-			intent.putExtra(AddLoverInfoActivity.LOVER_PHONE_KEY, mPhone);
-			startActivity(intent);
+			RequestParams params = new RequestParams();
+			params.put(UserTable.U_TEL, mPhone);
+			TextHttpResponseHandler responseHandler = new TextHttpResponseHandler() {
+				Dialog dialog;
+
+				@Override
+				public void onStart() {
+					// TODO Auto-generated method stub
+					super.onStart();
+					dialog = showProgressDialog("正在查找，请稍后...");
+				}
+
+				@Override
+				public void onSuccess(int statusCode, Header[] headers, String response) {
+					// TODO Auto-generated method stub
+					if (!TextUtils.isEmpty(response)) {
+						if (response.equals("1")) {
+							ToastTool.showLong(AddLoverActivity.this, "没有查找到此人！");
+						} else if (response.equals("2")) {
+							ToastTool.showLong(AddLoverActivity.this, "此人正在和ta砰然心动中！");
+						} else if (response.equals("3")) {
+							ToastTool.showLong(AddLoverActivity.this, "此人正在和ta热恋中！");
+						} else if (response.equals("4")) {
+							Intent intent = new Intent(AddLoverActivity.this, AddLoverInfoActivity.class);
+							intent.putExtra(AddLoverInfoActivity.LOVER_PHONE_KEY, mPhone);
+							startActivity(intent);
+						} else {
+							ToastTool.showLong(AddLoverActivity.this, "服务器错误！");
+						}
+					}
+				}
+
+				@Override
+				public void onFailure(int statusCode, Header[] headers, String errorResponse, Throwable e) {
+					// TODO Auto-generated method stub
+
+				}
+
+				@Override
+				public void onFinish() {
+					// TODO Auto-generated method stub
+					if (dialog != null) {
+						dialog.dismiss();
+					}
+					super.onFinish();
+
+				}
+
+				@Override
+				public void onCancel() {
+					// TODO Auto-generated method stub
+					if (dialog != null) {
+						dialog.dismiss();
+					}
+					super.onCancel();
+				}
+			};
+			AsyncHttpClientTool.post(AddLoverActivity.this, "getuserstatebytel", params, responseHandler);
 		}
 	}
 
@@ -132,4 +204,5 @@ public class AddLoverActivity extends BaseActivity implements OnClickListener {
 		Intent openCameraIntent = new Intent(AddLoverActivity.this, CaptureActivity.class);
 		startActivityForResult(openCameraIntent, 0);
 	}
+
 }

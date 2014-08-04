@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/system_back"
+    android:orientation="vertical" >
+
+    <include
+        layout="@layout/top_navigation2"
+        android:focusable="true" />
+
+    <TextView
+        android:id="@+id/info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:padding="@dimen/day_recommend_dot_space"
+        android:text="请输入对方的手机号码以作验证"
+        android:textColor="@color/dark_gray"
+        android:textSize="14sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:orientation="vertical"
+        android:padding="@dimen/day_recommend_dot_space" >
+
+        <EditText
+            android:id="@+id/phone"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/register_height"
+            android:background="@drawable/shape_top_radius"
+            android:hint="请输入手机号码"
+            android:inputType="phone"
+            android:maxLength="11"
+            android:maxLines="1"
+            android:paddingLeft="@dimen/personal_timecapsule_padding"
+            android:textColorHint="@color/system_gray"
+            android:textSize="@dimen/day_recommend_user_font" >
+        </EditText>
+
+        <Button
+            android:id="@+id/submit"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/register_height"
+            android:layout_marginTop="50dp"
+            android:background="@drawable/sel_auth_code_again_bg"
+            android:text="提交"
+            android:textColor="@drawable/sel_enable_font_color"
+            android:textSize="@dimen/day_recommend_user_font" />
+    </LinearLayout>
+
+</LinearLayout>

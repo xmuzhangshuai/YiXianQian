@@ -13,6 +13,7 @@ public class SendMsgAsyncTask {
 	private Handler mHandler;
 	private MyAsyncTask mTask;
 	private String mUserId;
+//	private String mChannelId;
 	private OnSendScuessListener mListener;
 
 	public interface OnSendScuessListener {
@@ -38,6 +39,15 @@ public class SendMsgAsyncTask {
 		mUserId = useId;
 		mHandler = new Handler();
 	}
+	
+//	public SendMsgAsyncTask(String jsonMsg, String useId,String channelId) {
+//		// TODO Auto-generated constructor stub
+//		mBaiduPush = BaseApplication.getInstance().getBaiduPush();
+//		mMessage = jsonMsg;
+//		mUserId = useId;
+//		mChannelId = channelId;
+//		mHandler = new Handler();
+//	}
 
 	// ·¢ËÍ
 	public void send() {
@@ -68,10 +78,14 @@ public class SendMsgAsyncTask {
 		@Override
 		protected String doInBackground(Void... message) {
 			String result = "";
-			if (TextUtils.isEmpty(mUserId))
-				result = mBaiduPush.PushMessage(mMessage);
-			else
+			if (!TextUtils.isEmpty(mUserId)){
 				result = mBaiduPush.PushMessage(mMessage, mUserId);
+			}
+//			if (TextUtils.isEmpty(mUserId))
+//				result = mBaiduPush.PushMessage(mMessage);
+//			else
+//				result = mBaiduPush.PushMessage(mMessage, mUserId);
+////				result = mBaiduPush.PushMessage(mMessage, mUserId,mChannelId);
 			return result;
 		}
 

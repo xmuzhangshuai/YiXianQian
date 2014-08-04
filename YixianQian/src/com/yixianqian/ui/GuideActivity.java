@@ -76,11 +76,15 @@ public class GuideActivity extends BaseActivity {
 			//			finish();不定位
 		} else {// 如果不是第一次使用,则不启动向导页面，显示欢迎页面。
 			if (userPreference.getUserLogin()) {//如果是已经登陆过
-				setContentView(R.layout.activity_guide);
-				findViewById();
-				initView();
-				ServerUtil.getInstance(GuideActivity.this).initUserData(GuideActivity.this, false);
-				ServerUtil.getInstance(GuideActivity.this).getHeadImagePass();
+				if (userPreference.getLoveRequest()) {//如果请求了添加情侣，则直接跳转到等待页面
+					startActivity(new Intent(GuideActivity.this, WaitActivity.class));
+				} else {
+					setContentView(R.layout.activity_guide);
+					findViewById();
+					initView();
+					ServerUtil.getInstance(GuideActivity.this).initUserData(GuideActivity.this, false);
+					ServerUtil.getInstance(GuideActivity.this).getHeadImagePass();
+				}
 				//				ServerUtil.getInstance(GuideActivity.this).getFlipperAndRecommend(GuideActivity.this, false);
 			} else {//如果用户没有登录过或者已经注销
 				startActivity(new Intent(GuideActivity.this, LoginOrRegisterActivity.class));

@@ -436,6 +436,7 @@ public class ChatActivity extends BaseActivity implements OnTouchListener, IXLis
 
 			JsonMessage message = new JsonMessage(msg, Constants.MessageType.MESSAGE_TYPE_TEXT);
 			new SendMsgAsyncTask(FastJsonTool.createJsonString(message), friendPreference.getBpush_UserID()).send();
+//			new SendMsgAsyncTask(FastJsonTool.createJsonString(message), friendPreference.getBpush_UserID(),friendPreference.getBpush_ChannelID()).send();
 			break;
 		case R.id.nav_left_btn:
 			finish();
