@@ -3,8 +3,6 @@ package com.yixianqian.baidupush;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.http.Header;
-
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -14,13 +12,10 @@ import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
-import android.text.TextUtils;
 
 import com.baidu.android.pushservice.PushConstants;
 import com.baidu.android.pushservice.PushManager;
 import com.baidu.frontia.api.FrontiaPushMessageReceiver;
-import com.loopj.android.http.RequestParams;
-import com.loopj.android.http.TextHttpResponseHandler;
 import com.yixianqian.R;
 import com.yixianqian.base.BaseApplication;
 import com.yixianqian.config.Constants;
@@ -29,12 +24,9 @@ import com.yixianqian.db.MessageItemDbService;
 import com.yixianqian.entities.Conversation;
 import com.yixianqian.entities.MessageItem;
 import com.yixianqian.jsonobject.JsonMessage;
-import com.yixianqian.jsonobject.JsonUser;
-import com.yixianqian.table.UserTable;
 import com.yixianqian.ui.ChatActivity;
 import com.yixianqian.ui.MainActivity;
 import com.yixianqian.ui.VertifyToChatActivity;
-import com.yixianqian.utils.AsyncHttpClientTool;
 import com.yixianqian.utils.FastJsonTool;
 import com.yixianqian.utils.FriendPreference;
 import com.yixianqian.utils.NetworkUtils;
@@ -200,8 +192,6 @@ public class MyPushMessageReceiver extends FrontiaPushMessageReceiver {
 		BaseApplication application = BaseApplication.getInstance();
 		friendPreference = application.getFriendPreference();
 
-		//		getLoverInfo(phone);//获取信息
-
 		//通知
 		NotificationCompat.Builder builder = new NotificationCompat.Builder(application);
 		builder.setSmallIcon(R.drawable.ic_launcher).setContentTitle("情侣邀请").setContentText("有人想添加您为情侣")
@@ -224,73 +214,19 @@ public class MyPushMessageReceiver extends FrontiaPushMessageReceiver {
 		friendPreference = BaseApplication.getInstance().getFriendPreference();
 		BaseApplication application = BaseApplication.getInstance();
 
-		getLoverInfo(phone);//获取信息
-
 		//通知
 		NotificationCompat.Builder builder = new NotificationCompat.Builder(application);
-		builder.setSmallIcon(R.drawable.ic_launcher).setContentTitle(friendPreference.getName())
-				.setContentText("对您怦然心动").setAutoCancel(true).setTicker("有人对您砰然心动了！")
-				.setDefaults(Notification.DEFAULT_ALL);
+		builder.setSmallIcon(R.drawable.ic_launcher).setContentTitle("怦然心动").setContentText("有人对您怦然心动了，快来看看吧~！")
+				.setAutoCancel(true).setTicker("有人对您砰然心动了！").setDefaults(Notification.DEFAULT_ALL);
 		Intent resultIntent = new Intent(application, VertifyToChatActivity.class);
 		resultIntent.putExtra(VertifyToChatActivity.VERTIFY_TYPE, "0");
+		resultIntent.putExtra(VertifyToChatActivity.PHONE, phone);
 		TaskStackBuilder stackBuilder = TaskStackBuilder.create(application);
 		stackBuilder.addParentStack(MainActivity.class);
 		stackBuilder.addNextIntent(resultIntent);
 		PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
 		builder.setContentIntent(resultPendingIntent);
 		application.getNotificationManager().notify(NOTIFY_ID, builder.build());// 通知一下
-	}
-
-	/**
-	 * 获取情侣信息
-	 */
-	private void getLoverInfo(String phone) {
-		if (!TextUtils.isEmpty(phone)) {
-			RequestParams params = new RequestParams();
-			params.put(UserTable.U_TEL, phone);
-			String url = "getuserbytel";
-			TextHttpResponseHandler responseHandler = new TextHttpResponseHandler() {
-
-				@Override
-				public void onSuccess(int statusCode, Header[] headers, String response) {
-					// TODO Auto-generated method stub
-					if (statusCode == 200) {
-						JsonUser lover = FastJsonTool.getObject(response, JsonUser.class);
-						if (lover != null) {
-							friendPreference.setBpush_ChannelID(lover.getU_bpush_channel_id());
-							friendPreference.setBpush_UserID(lover.getU_bpush_user_id());
-							friendPreference.setF_address(lover.getU_address());
-							friendPreference.setF_age(lover.getU_age());
-							friendPreference.setF_blood_type(lover.getU_blood_type());
-							friendPreference.setF_constell(lover.getU_constell());
-							friendPreference.setF_email(lover.getU_email());
-							friendPreference.setF_gender(lover.getU_gender());
-							friendPreference.setF_height(lover.getU_height());
-							friendPreference.setF_id(lover.getU_id());
-							friendPreference.setF_introduce(lover.getU_introduce());
-							friendPreference.setF_large_avatar(lover.getU_large_avatar());
-							friendPreference.setF_nickname(lover.getU_nickname());
-							friendPreference.setF_realname(lover.getU_realname());
-							friendPreference.setF_salary(lover.getU_salary());
-							friendPreference.setF_small_avatar(lover.getU_small_avatar());
-							friendPreference.setF_stateid(lover.getU_stateid());
-							friendPreference.setF_tel(lover.getU_tel());
-							friendPreference.setF_vocationid(lover.getU_vocationid());
-							friendPreference.setF_weight(lover.getU_weight());
-							friendPreference.setU_cityid(lover.getU_cityid());
-							friendPreference.setU_provinceid(lover.getU_provinceid());
-							friendPreference.setU_schoolid(lover.getU_schoolid());
-						}
-					}
-				}
-
-				@Override
-				public void onFailure(int statusCode, Header[] headers, String errorResponse, Throwable e) {
-					// TODO Auto-generated method stub
-				}
-			};
-			AsyncHttpClientTool.post(url, params, responseHandler);
-		}
 	}
 
 	/**

@@ -79,7 +79,8 @@ public class ServerUtil {
 					if (!TextUtils.isEmpty(response)) {
 						if (Integer.parseInt(response) > 0) {
 							userPreference.setU_stateid(Integer.parseInt(response));
-							getTodayRecommend(context, isFinished);
+//							getTodayRecommend(context, isFinished);
+							getFlipperAndRecommend(context, isFinished);
 						}
 					}
 				}
@@ -151,7 +152,7 @@ public class ServerUtil {
 	public void getTodayRecommend(final Context context, final boolean isFinished) {
 		final TodayRecommendDbService todayRecommendDbService = TodayRecommendDbService.getInstance(context);
 		todayRecommendDbService.todayRecommendDao.deleteAll();
-		//		sharePreferenceUtil.setTodayRecommend("");
+		sharePreferenceUtil.setTodayRecommend("");
 
 		//如果没有推荐过
 		if (!sharePreferenceUtil.getTodayRecommend().equals(DateTimeTools.getCurrentDateForString())) {

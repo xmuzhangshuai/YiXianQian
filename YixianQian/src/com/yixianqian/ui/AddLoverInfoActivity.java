@@ -190,6 +190,7 @@ public class AddLoverInfoActivity extends BaseActivity {
 								Intent intent = new Intent(AddLoverInfoActivity.this, WaitActivity.class);
 								startActivity(intent);
 								overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+								finish();
 							}
 						}
 					}

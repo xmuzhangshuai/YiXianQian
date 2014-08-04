@@ -64,11 +64,9 @@ public class VertifyToChatActivity extends BaseActivity {
 		String typeString = getIntent().getStringExtra(VERTIFY_TYPE);
 		if (!TextUtils.isEmpty(typeString)) {
 			type = Integer.parseInt(typeString);
-			if (type == 1) {
-				mPhone = getIntent().getStringExtra(PHONE);
-				if (mPhone != null) {
-					getLoverInfo(mPhone);
-				}
+			mPhone = getIntent().getStringExtra(PHONE);
+			if (mPhone != null) {
+				getLoverInfo(mPhone);
 			}
 		}
 
@@ -96,11 +94,13 @@ public class VertifyToChatActivity extends BaseActivity {
 		right_btn_bg.setVisibility(View.GONE);
 		if (type == 0) {
 			topNavText.setText("心动请求");
+			refuseBtn.setVisibility(View.GONE);
 		} else if (type == 1) {
 			topNavText.setText("爱情请求");
+			refuseBtn.setText("拒    绝");
 		}
 		beginChatBtn.setText("确    定");
-		refuseBtn.setText("拒    绝");
+
 		topNavLeftBtn.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -115,7 +115,13 @@ public class VertifyToChatActivity extends BaseActivity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				checkLoverRequest();
+				if (type == 1) {
+					checkLoverRequest();
+				} else if (type == 0 && jsonUser != null) {
+					saveLoverInfo(jsonUser);
+					vertifyToChat();
+				}
+
 			}
 		});
 
@@ -133,9 +139,10 @@ public class VertifyToChatActivity extends BaseActivity {
 	/**
 	 * 确认聊天
 	 */
-	private void votifyToChat() {
+	private void vertifyToChat() {
 		if (type == 0) {
 			friendpreference.setType(0);
+			userPreference.setU_stateid(3);
 		} else if (type == 1) {
 			friendpreference.setType(1);
 			userPreference.setU_stateid(2);
@@ -227,7 +234,7 @@ public class VertifyToChatActivity extends BaseActivity {
 					saveLoverInfo(jsonUser);
 					//创建对话
 					if (jsonUser != null) {
-						votifyToChat();
+						vertifyToChat();
 					}
 				}
 			}

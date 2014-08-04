@@ -80,7 +80,14 @@ public class HomeDialogFragment extends DialogFragment {
 				// TODO Auto-generated method stub
 				Intent intent = null;
 				if (position == 1) {
-					intent = new Intent(getActivity(), LoveVertifyActivity.class);
+					//如果是单身状态
+					if (userPreference.getU_stateid() == 4) {
+						intent = new Intent(getActivity(), LoveVertifyActivity.class);
+					} else if (userPreference.getU_stateid() == 2) {//如果是情侣
+						ToastTool.showLong(getActivity(), "您现在处于恋爱状态，不能接受爱情验证哦~~");
+					} else if (userPreference.getU_stateid() == 3) {//如果是情侣
+						ToastTool.showLong(getActivity(), "您现在处于砰然心动状态，不能贪心哦~~");
+					}
 				} else if (position == 0) {
 					//如果是单身状态
 					if (userPreference.getU_stateid() == 4) {

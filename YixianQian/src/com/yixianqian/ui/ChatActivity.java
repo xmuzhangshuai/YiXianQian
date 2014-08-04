@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -208,7 +209,6 @@ public class ChatActivity extends BaseActivity implements OnTouchListener, IXLis
 		});
 		faceBtn.setOnClickListener(this);
 		sendBtn.setOnClickListener(this);
-
 	}
 
 	private void initData() {
@@ -407,6 +407,14 @@ public class ChatActivity extends BaseActivity implements OnTouchListener, IXLis
 	}
 
 	@Override
+	public void onBackPressed() {
+		// TODO Auto-generated method stub
+		startActivity(new Intent(ChatActivity.this, MainActivity.class));
+		overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
+		finish();
+	}
+
+	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
@@ -436,9 +444,11 @@ public class ChatActivity extends BaseActivity implements OnTouchListener, IXLis
 
 			JsonMessage message = new JsonMessage(msg, Constants.MessageType.MESSAGE_TYPE_TEXT);
 			new SendMsgAsyncTask(FastJsonTool.createJsonString(message), friendPreference.getBpush_UserID()).send();
-//			new SendMsgAsyncTask(FastJsonTool.createJsonString(message), friendPreference.getBpush_UserID(),friendPreference.getBpush_ChannelID()).send();
+			//			new SendMsgAsyncTask(FastJsonTool.createJsonString(message), friendPreference.getBpush_UserID(),friendPreference.getBpush_ChannelID()).send();
 			break;
 		case R.id.nav_left_btn:
+			startActivity(new Intent(ChatActivity.this, MainActivity.class));
+			overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
 			finish();
 			break;
 		default:

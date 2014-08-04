@@ -16,7 +16,7 @@
         <TextView
             android:id="@+id/time"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content" />
     </LinearLayout>
 
     <LinearLayout
@@ -34,9 +34,9 @@
                 android:id="@+id/head_image"
                 android:layout_width="@dimen/get_image_btn_padding"
                 android:layout_height="@dimen/get_image_btn_padding"
-                android:src="@drawable/photoconor"
                 android:layout_alignParentLeft="true"
-                android:layout_centerVertical="true" />
+                android:layout_centerVertical="true"
+                android:src="@drawable/photoconor" />
 
             <TextView
                 android:id="@+id/name"
@@ -61,7 +61,7 @@
             android:id="@+id/flipped"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/day_recommend_dot_margin_top"
+            android:layout_marginTop="@dimen/day_recommend_help_padding"
             android:background="@drawable/sel_flipped_bg"
             android:clickable="true"
             android:focusable="false"
@@ -70,16 +70,16 @@
             android:paddingTop="@dimen/personal_timecapsule_padding"
             android:text="我也对Ta怦然心动"
             android:textColor="@drawable/sel_flipped_font"
-            android:textSize="20sp" />
+            android:textSize="18sp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="@dimen/day_recommend_help"
+            android:layout_marginTop="@dimen/day_recommend_help_padding"
             android:text="如果是陌生人，您可以选择忽略对方"
             android:textColor="@color/unenable_font"
-            android:textSize="18sp" />
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/refuse"
@@ -94,7 +94,7 @@
             android:paddingTop="@dimen/personal_timecapsule_padding"
             android:text="忽略/拒绝"
             android:textColor="@drawable/sel_black_white"
-            android:textSize="20sp" />
+            android:textSize="18sp" />
     </LinearLayout>
 
 </LinearLayout>

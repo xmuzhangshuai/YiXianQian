@@ -16,12 +16,18 @@ import android.widget.TextView;
 import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.TextHttpResponseHandler;
 import com.yixianqian.R;
+import com.yixianqian.baidupush.SendMsgAsyncTask;
 import com.yixianqian.base.BaseActivity;
 import com.yixianqian.base.BaseApplication;
+import com.yixianqian.config.Constants;
 import com.yixianqian.db.ConversationDbService;
+import com.yixianqian.db.MessageItemDbService;
 import com.yixianqian.entities.Conversation;
+import com.yixianqian.entities.MessageItem;
+import com.yixianqian.jsonobject.JsonMessage;
 import com.yixianqian.table.LoveRequestTable;
 import com.yixianqian.utils.AsyncHttpClientTool;
+import com.yixianqian.utils.FastJsonTool;
 import com.yixianqian.utils.FriendPreference;
 import com.yixianqian.utils.ToastTool;
 import com.yixianqian.utils.UserPreference;
@@ -113,6 +119,9 @@ public class WaitActivity extends BaseActivity {
 					if (!TextUtils.isEmpty(response)) {
 						if (response.equals("1")) {
 							userPreference.setLoveRequest(false);
+							friendpreference.setType(1);
+							userPreference.setU_stateid(2);
+
 							//创建对话
 							ConversationDbService conversationDbService = ConversationDbService
 									.getInstance(WaitActivity.this);
@@ -122,11 +131,23 @@ public class WaitActivity extends BaseActivity {
 									friendpreference.getF_small_avatar(), "", 0, System.currentTimeMillis());
 							conversationDbService.conversationDao.insert(conversation);
 
-							friendpreference.setType(1);
-							userPreference.setU_stateid(2);
+							//给对方发送一条消息
+							String msg = "我们已经成为情侣啦~！";
+							JsonMessage message = new JsonMessage(msg, Constants.MessageType.MESSAGE_TYPE_TEXT);
+							new SendMsgAsyncTask(FastJsonTool.createJsonString(message),
+									friendpreference.getBpush_UserID()).send();
+							MessageItem item = new MessageItem(null, Constants.MessageType.MESSAGE_TYPE_TEXT, msg,
+									System.currentTimeMillis(), true, false, false,
+									conversationDbService.getIdByConversation(conversation));
+							MessageItemDbService messageItemDbService = MessageItemDbService
+									.getInstance(WaitActivity.this);
+							messageItemDbService.messageItemDao.insert(item);
+
 							Intent intent = new Intent(WaitActivity.this, ChatActivity.class);
+							intent.putExtra("conversationID", conversationDbService.getIdByConversation(conversation));
 							startActivity(intent);
 							overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+							finish();
 						} else if (response.equals("2")) {
 							//							textInfo.setText("对方拒绝了您的邀请！");
 							ToastTool.showLong(WaitActivity.this, "对方拒绝了您的邀请！");

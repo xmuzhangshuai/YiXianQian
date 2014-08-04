@@ -58,6 +58,8 @@ public class LoveVertifyActivity extends BaseActivity {
 	private LoveVertifyAdapter adapter;
 	private FriendPreference friendpreference;
 	private UserPreference userPreference;
+	private ImageView leftBtn;
+	private TextView mEmpty;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -81,12 +83,25 @@ public class LoveVertifyActivity extends BaseActivity {
 	protected void findViewById() {
 		// TODO Auto-generated method stub
 		loveVertifyList = (ListView) findViewById(R.id.love_vertify_list);
+		mEmpty = (TextView) findViewById(R.id.empty);
+		leftBtn = (ImageView) findViewById(R.id.nav_left_btn);
 	}
 
 	@Override
 	protected void initView() {
 		// TODO Auto-generated method stub
+		if (flipperList.size() == 0) {
+			mEmpty.setVisibility(View.VISIBLE);
+		}
 
+		leftBtn.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				finish();
+			}
+		});
 	}
 
 	/**
@@ -212,9 +227,6 @@ public class LoveVertifyActivity extends BaseActivity {
 											Constants.MessageType.MESSAGE_TYPE_FLIPPER_TO);
 									new SendMsgAsyncTask(FastJsonTool.createJsonString(jsonMessage),
 											map.get(UserTable.U_BPUSH_USER_ID)).send();
-//									new SendMsgAsyncTask(FastJsonTool.createJsonString(jsonMessage),
-//											map.get(UserTable.U_BPUSH_USER_ID),map.get(UserTable.U_BPUSH_CHANNEL_ID)).send();
-
 
 									userPreference.setU_stateid(3);
 									friendpreference.setLoverId(Integer.parseInt(map.get(FlipperTable.F_ID)));

@@ -8,7 +8,7 @@
         layout="@layout/time_capsule_topnav"
         android:focusable="true" />
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:background="@color/system_back"
@@ -22,6 +22,17 @@
             android:descendantFocusability="blocksDescendants"
             android:scrollbars="none" >
         </ListView>
-    </LinearLayout>
+
+        <TextView
+            android:id="@+id/empty"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:drawableTop="@drawable/no_chat"
+            android:text="@string/no_request"
+            android:textColor="#ffb7b7b7"
+            android:textSize="14.0sp"
+            android:visibility="gone" />
+    </FrameLayout>
 
 </LinearLayout>
