@@ -4,7 +4,9 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.text.SpannableString;
@@ -12,6 +14,7 @@ import android.text.Spanned;
 import android.text.style.ImageSpan;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
@@ -24,6 +27,7 @@ import com.yixianqian.R;
 import com.yixianqian.base.BaseApplication;
 import com.yixianqian.entities.Conversation;
 import com.yixianqian.entities.MessageItem;
+import com.yixianqian.ui.PersonDetailActivity;
 import com.yixianqian.utils.AsyncHttpClientImageSound;
 import com.yixianqian.utils.DateTimeTools;
 import com.yixianqian.utils.ImageLoaderTool;
@@ -121,6 +125,22 @@ public class MessageAdapter extends BaseAdapter {
 			if (conversation != null) {
 				imageLoader.displayImage(AsyncHttpClientImageSound.getAbsoluteUrl(conversation.getSmallAvatar()),
 						holder.head, ImageLoaderTool.getHeadImageOptions(10));
+				//点击头像进入对方主页
+				holder.head.setOnClickListener(new OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						// TODO Auto-generated method stub
+						Intent intent = new Intent(mContext, PersonDetailActivity.class);
+						if (userPreference.getU_stateid() == 3) {//如果是心动
+							intent.putExtra(PersonDetailActivity.PERSON_TYPE, 2);
+						} else if (userPreference.getU_stateid() == 2) {//如果是情侣
+							intent.putExtra(PersonDetailActivity.PERSON_TYPE, 3);
+						}
+						mContext.startActivity(intent);
+						((Activity) mContext).overridePendingTransition(R.anim.zoomin2, R.anim.zoomout);
+					}
+				});
 			}
 		} else {
 			imageLoader.displayImage(AsyncHttpClientImageSound.getAbsoluteUrl(userPreference.getU_small_avatar()),

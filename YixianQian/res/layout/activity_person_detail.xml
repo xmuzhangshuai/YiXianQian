@@ -99,7 +99,8 @@
             android:paddingTop="@dimen/personal_timecapsule_padding"
             android:text="时间胶囊"
             android:textColor="@drawable/sel_black_white"
-            android:textSize="@dimen/day_recommend_user_font" />
+            android:textSize="@dimen/day_recommend_user_font"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/send_msg"

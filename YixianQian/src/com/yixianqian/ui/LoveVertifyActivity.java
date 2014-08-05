@@ -171,7 +171,7 @@ public class LoveVertifyActivity extends BaseActivity {
 				@Override
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
-					addFlipper(flipperList.get(position));
+					addFlipper(flipperList.get(position), position);
 				}
 			});
 
@@ -181,10 +181,7 @@ public class LoveVertifyActivity extends BaseActivity {
 				@Override
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
-					Flipper flipper = flipperList.get(position);
-					flipperDbService.flipperDao.delete(flipper);
-					flipperList.remove(position);
-					adapter.notifyDataSetChanged();
+					refuse(flipperList.get(position), position);
 				}
 			});
 			return view;
@@ -192,9 +189,42 @@ public class LoveVertifyActivity extends BaseActivity {
 	}
 
 	/**
+	 * 拒绝用户
+	 * @param context
+	 * @param isFinished
+	 */
+	public void refuse(final Flipper flipper, final int position) {
+		if (flipper != null) {
+			RequestParams params = new RequestParams();
+			params.put(FlipperTable.F_USERID, userPreference.getU_id());
+			params.put(FlipperTable.F_FLIPPERID, flipper.getUserID());
+			TextHttpResponseHandler responseHandler = new TextHttpResponseHandler("utf-8") {
+				@Override
+				public void onSuccess(int statusCode, Header[] headers, String response) {
+					// TODO Auto-generated method stub
+					if (statusCode == 200) {
+						if (!TextUtils.isEmpty(response)) {
+							flipperDbService.flipperDao.delete(flipper);
+							flipperList.remove(position);
+							adapter.notifyDataSetChanged();
+						}
+					}
+				}
+
+				@Override
+				public void onFailure(int statusCode, Header[] headers, String errorResponse, Throwable e) {
+					// TODO Auto-generated method stub
+
+				}
+			};
+			AsyncHttpClientTool.post("refuseflipperrequest", params, responseHandler);
+		}
+	}
+
+	/**
 	 * 添加心动关系
 	 */
-	private void addFlipper(final Flipper flipper) {
+	private void addFlipper(final Flipper flipper, final int position) {
 
 		if (flipper != null) {
 			RequestParams params = new RequestParams();
@@ -219,6 +249,10 @@ public class LoveVertifyActivity extends BaseActivity {
 							if (response.equals("0")) {
 								ToastTool.showLong(LoveVertifyActivity.this, "失败！");
 							} else {
+								flipperDbService.flipperDao.delete(flipper);
+								flipperList.remove(position);
+								adapter.notifyDataSetChanged();
+
 								friendpreference.clear();
 								Map<String, String> map = FastJsonTool.getObject(response, Map.class);
 								if (map != null) {

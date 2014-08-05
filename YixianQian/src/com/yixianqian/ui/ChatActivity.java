@@ -47,7 +47,6 @@ import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import com.yixianqian.R;
@@ -152,6 +151,7 @@ public class ChatActivity extends BaseActivity implements OnTouchListener, IXLis
 	protected void onPause() {
 		// TODO Auto-generated method stub
 		faceLinearLayout.setVisibility(View.GONE);
+		morePanel.setVisibility(View.GONE);
 		super.onPause();
 		MyPushMessageReceiver.ehList.remove(this);// ÒÆ³ý¼àÌý
 	}
@@ -259,8 +259,8 @@ public class ChatActivity extends BaseActivity implements OnTouchListener, IXLis
 	 * ³õÊ¼»¯·¢ËÍÍ¼Æ¬µÈ´°¿Ú
 	 */
 	private void initMorePage() {
-//		SimpleAdapter adapter = new SimpleAdapter(ChatActivity.this, data, resource, from, to);
-//		moreGridView
+		//		SimpleAdapter adapter = new SimpleAdapter(ChatActivity.this, data, resource, from, to);
+		//		moreGridView
 	}
 
 	/**
@@ -317,7 +317,7 @@ public class ChatActivity extends BaseActivity implements OnTouchListener, IXLis
 		gv.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 		gv.setGravity(Gravity.CENTER);
 		gv.setAdapter(new FaceAdapter(this, i));
-//		gv.setOnTouchListener(forbidenScroll());
+		//		gv.setOnTouchListener(forbidenScroll());
 		gv.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
@@ -453,18 +453,6 @@ public class ChatActivity extends BaseActivity implements OnTouchListener, IXLis
 			e.printStackTrace();
 		}
 	}
-
-//	// ·ÀÖ¹ÂÒpageviewÂÒ¹ö¶¯
-//	private OnTouchListener forbidenScroll() {
-//		return new OnTouchListener() {
-//			public boolean onTouch(View v, MotionEvent event) {
-//				if (event.getAction() == MotionEvent.ACTION_MOVE) {
-//					return true;
-//				}
-//				return false;
-//			}
-//		};
-//	}
 
 	@Override
 	public boolean onTouch(View v, MotionEvent event) {

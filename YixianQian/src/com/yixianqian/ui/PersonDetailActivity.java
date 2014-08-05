@@ -19,8 +19,10 @@ import com.yixianqian.R;
 import com.yixianqian.base.BaseApplication;
 import com.yixianqian.base.BaseFragmentActivity;
 import com.yixianqian.customewidget.MyAlertDialog;
+import com.yixianqian.db.ConversationDbService;
 import com.yixianqian.db.ProvinceDbService;
 import com.yixianqian.db.SchoolDbService;
+import com.yixianqian.entities.Conversation;
 import com.yixianqian.jsonobject.JsonUser;
 import com.yixianqian.table.FlipperRequestTable;
 import com.yixianqian.table.UserTable;
@@ -103,8 +105,11 @@ public class PersonDetailActivity extends BaseFragmentActivity implements OnClic
 		topNavText.setText("个人资料");
 		topNavLeftBtn.setOnClickListener(this);
 		right_btn_bg.setOnClickListener(this);
-		timeCapsule.setOnClickListener(this);
 		sendMsg.setOnClickListener(this);
+		if (type == 1 || type == 2) {
+			timeCapsule.setOnClickListener(this);
+			timeCapsule.setVisibility(View.VISIBLE);
+		}
 	}
 
 	/**
@@ -213,7 +218,7 @@ public class PersonDetailActivity extends BaseFragmentActivity implements OnClic
 		bundle.putInt(PERSON_TYPE, type);
 		if (type == 1) {
 			bundle.putInt(UserTable.U_ID, jsonUser.getU_id());
-		}
+		} 
 		newFragment.setArguments(bundle);
 		newFragment.show(ft, "persondetail");
 	}
@@ -242,30 +247,38 @@ public class PersonDetailActivity extends BaseFragmentActivity implements OnClic
 		String msgString = "";
 		if (type == 1) {
 			msgString = "您和 " + getUserName(jsonUser) + " 还不是心动关系，不能聊天哦~！";
+			final MyAlertDialog myAlertDialog = new MyAlertDialog(this);
+			myAlertDialog.setTitle("提示");
+			myAlertDialog.setMessage(msgString);
+			View.OnClickListener comfirm = new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+					myAlertDialog.dismiss();
+					sendLoveReuest(jsonUser.getU_id());
+				}
+			};
+			View.OnClickListener cancle = new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+					myAlertDialog.dismiss();
+				}
+			};
+			myAlertDialog.setPositiveButton("心动", comfirm);
+			myAlertDialog.setNegativeButton("算了", cancle);
+			myAlertDialog.show();
+		} else if (type == 2 || type == 3) {
+			Conversation conversation = ConversationDbService.getInstance(BaseApplication.getInstance())
+					.getConversationByUser(friendPreference.getF_id());
+			Intent intent = new Intent(PersonDetailActivity.this, ChatActivity.class);
+			intent.putExtra("conversationID", conversation.getId());
+			startActivity(intent);
+			overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
 		}
-		final MyAlertDialog myAlertDialog = new MyAlertDialog(this);
-		myAlertDialog.setTitle("提示");
-		myAlertDialog.setMessage(msgString);
-		View.OnClickListener comfirm = new OnClickListener() {
 
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				myAlertDialog.dismiss();
-				sendLoveReuest(jsonUser.getU_id());
-			}
-		};
-		View.OnClickListener cancle = new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				myAlertDialog.dismiss();
-			}
-		};
-		myAlertDialog.setPositiveButton("心动", comfirm);
-		myAlertDialog.setNegativeButton("算了", cancle);
-		myAlertDialog.show();
 	}
 
 	/**
@@ -311,7 +324,11 @@ public class PersonDetailActivity extends BaseFragmentActivity implements OnClic
 			showDialog();
 			break;
 		case R.id.time_capsule:
-
+			Intent intent = new Intent(PersonDetailActivity.this, PersonTimeCapsuleActivity.class);
+			intent.putExtra("user", jsonUser);
+			intent.putExtra(PERSON_TYPE, type);
+			startActivity(intent);
+			overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
 			break;
 		case R.id.send_msg:
 			showSendMsgDialog();

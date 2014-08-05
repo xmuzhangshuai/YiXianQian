@@ -218,25 +218,31 @@
             android:name="com.yixianqian.ui.ModifyPassActivity"
             android:screenOrientation="portrait" >
         </activity>
-        
-         <!-- 修改密码页面 -->
+
+        <!-- 修改密码页面 -->
         <activity
             android:name="com.yixianqian.ui.WaitActivity"
             android:screenOrientation="portrait" >
         </activity>
-        
-         <!-- 修改密码页面 -->
+
+        <!-- 修改密码页面 -->
         <activity
             android:name="com.yixianqian.ui.AlreadyInviteActivity"
             android:screenOrientation="portrait" >
         </activity>
-        
+
         <!-- 个人详细资料页面 -->
         <activity
             android:name="com.yixianqian.ui.PersonDetailActivity"
             android:screenOrientation="portrait" >
         </activity>
-
+        
+        <!-- 个人时间胶囊页面 -->
+        <activity
+            android:name="com.yixianqian.ui.PersonTimeCapsuleActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        
         <!-- 测试页面 -->
         <activity
             android:name="com.yixianqian.test.TestActivity"

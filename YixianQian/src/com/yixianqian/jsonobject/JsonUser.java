@@ -1,5 +1,6 @@
 package com.yixianqian.jsonobject;
 
+import java.io.Serializable;
 import java.sql.Date;
 
 /**
@@ -10,7 +11,7 @@ import java.sql.Date;
 * @version V1.0
  */
 
-public class JsonUser {
+public class JsonUser implements Serializable{
 
 	private int u_id;
 	private String u_nickname;

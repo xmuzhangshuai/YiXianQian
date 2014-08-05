@@ -136,7 +136,6 @@ public class SoundLoader {
 	 * @param path
 	 */
 	private void play(String path) {
-		System.out.println("²¥·Å" + path);
 		mediaPlayer.reset();
 		try {
 			mediaPlayer.setDataSource(path);
