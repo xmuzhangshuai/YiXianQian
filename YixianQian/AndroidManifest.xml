@@ -230,6 +230,12 @@
             android:name="com.yixianqian.ui.AlreadyInviteActivity"
             android:screenOrientation="portrait" >
         </activity>
+        
+        <!-- 个人详细资料页面 -->
+        <activity
+            android:name="com.yixianqian.ui.PersonDetailActivity"
+            android:screenOrientation="portrait" >
+        </activity>
 
         <!-- 测试页面 -->
         <activity

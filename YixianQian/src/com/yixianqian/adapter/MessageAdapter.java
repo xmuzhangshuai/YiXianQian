@@ -127,6 +127,15 @@ public class MessageAdapter extends BaseAdapter {
 					holder.head, ImageLoaderTool.getHeadImageOptions(10));
 		}
 
+		//如果未读，改为已读
+		if (item.getIsNew()) {
+			item.setIsNew(false);
+			int newNum = conversation.getNewNum();
+			if (newNum > 0) {
+				conversation.setNewNum(newNum - 1);
+			}
+		}
+
 		holder.msg.setText(convertNormalStringToSpannableString(item.getMsgContent()), BufferType.SPANNABLE);
 		holder.progressBar.setVisibility(View.GONE);
 		holder.progressBar.setProgress(50);

@@ -31,7 +31,7 @@
         android:layout_alignParentLeft="true"
         android:gravity="center"
         android:orientation="vertical"
-        android:padding="10dp" >
+        android:padding="@dimen/personal_timecapsule_padding" >
 
         <ImageView
             android:id="@+id/nav_left_btn"

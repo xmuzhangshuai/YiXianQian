@@ -7,12 +7,14 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.widget.Toast;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.yixianqian.utils.NetworkUtils;
 
 /**   
 *    
@@ -41,6 +43,17 @@ public abstract class BaseFragmentActivity extends FragmentActivity {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			close();
+		}
+	};
+	//¼àÌýÍøÂç×´Ì¬
+	private BroadcastReceiver netBroadCastReceiver = new BroadcastReceiver() {
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			// TODO Auto-generated method stub
+			if (!NetworkUtils.isNetworkAvailable(BaseFragmentActivity.this)) {
+				NetworkUtils.networkStateTips(BaseFragmentActivity.this);
+			}
 		}
 	};
 
@@ -77,14 +90,20 @@ public abstract class BaseFragmentActivity extends FragmentActivity {
 	protected void onPause() {
 		// TODO Auto-generated method stub
 		super.onPause();
-		//		MobclickAgent.onPause(this);
+		// Ð¶ÔØ¹ã²¥
+		if (netBroadCastReceiver != null) {
+			BaseFragmentActivity.this.unregisterReceiver(netBroadCastReceiver);
+		}
 	}
 
 	@Override
 	protected void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
-		//		MobclickAgent.onResume(this);
+		// ×¢²á¹ã²¥
+		IntentFilter intentFilter = new IntentFilter();
+		intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
+		BaseFragmentActivity.this.registerReceiver(netBroadCastReceiver, intentFilter);
 	}
 
 	@Override

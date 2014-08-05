@@ -1,10 +1,5 @@
 package com.yixianqian.ui;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -17,7 +12,6 @@ import android.view.Window;
 import com.yixianqian.R;
 import com.yixianqian.base.BaseFragmentActivity;
 import com.yixianqian.customewidget.MyAlertDialog;
-import com.yixianqian.utils.NetworkUtils;
 
 /**
  * 类名称：RegisterActivity
@@ -30,17 +24,6 @@ public class RegisterActivity extends BaseFragmentActivity {
 
 	private FragmentTransaction fragmentTransaction;
 	private FragmentManager fragmentManager;
-
-	// 提醒用户网络状况有异常
-	private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			// TODO Auto-generated method stub
-			if (!NetworkUtils.isNetworkAvailable(RegisterActivity.this)) {
-				NetworkUtils.networkStateTips(RegisterActivity.this);
-			}
-		}
-	};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -60,26 +43,6 @@ public class RegisterActivity extends BaseFragmentActivity {
 		fragmentTransaction.replace(R.id.fragment_container, fragment);
 		fragmentTransaction.commit();
 
-	}
-
-	@Override
-	public void onResume() {
-		// TODO Auto-generated method stub
-		super.onResume();
-		// 注册广播
-		IntentFilter intentFilter = new IntentFilter();
-		intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
-		RegisterActivity.this.registerReceiver(broadcastReceiver, intentFilter);
-	}
-
-	@Override
-	public void onPause() {
-		// TODO Auto-generated method stub
-		super.onPause();
-		// 卸载广播
-		if (broadcastReceiver != null) {
-			RegisterActivity.this.unregisterReceiver(broadcastReceiver);
-		}
 	}
 
 	@Override

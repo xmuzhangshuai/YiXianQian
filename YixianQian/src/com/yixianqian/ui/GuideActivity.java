@@ -20,6 +20,7 @@ import com.yixianqian.config.Constants;
 import com.yixianqian.config.DefaultKeys;
 import com.yixianqian.db.CopyDataBase;
 import com.yixianqian.server.ServerUtil;
+import com.yixianqian.utils.NetworkUtils;
 import com.yixianqian.utils.SharePreferenceUtil;
 import com.yixianqian.utils.UserPreference;
 
@@ -63,8 +64,6 @@ public class GuideActivity extends BaseActivity {
 		PushManager.startWork(GuideActivity.this, PushConstants.LOGIN_TYPE_API_KEY, Constants.BaiduPushConfig.API_KEY);
 		// 基于地理位置推送，可以打开支持地理位置的推送的开关
 		PushManager.enableLbs(getApplicationContext());
-		//		//设置标签
-		//		PushManager.setTags(this, Constants.getTags());
 
 		if (count == 0) {// 如果是第一次登陆，则启动向导页面
 			// 第一次运行拷贝数据库文件
@@ -73,22 +72,23 @@ public class GuideActivity extends BaseActivity {
 			//						schoolDbService.schoolDao.loadAll();
 			sharePreferenceUtil.setUseCount(++count);// 次数加1
 			startActivity(new Intent(GuideActivity.this, GuidePagerActivity.class));
-			//			finish();不定位
 		} else {// 如果不是第一次使用,则不启动向导页面，显示欢迎页面。
 			if (userPreference.getUserLogin()) {//如果是已经登陆过
-				if (userPreference.getLoveRequest()) {//如果请求了添加情侣，则直接跳转到等待页面
-					startActivity(new Intent(GuideActivity.this, WaitActivity.class));
+				if (NetworkUtils.isNetworkAvailable(GuideActivity.this)) {//如果网络可用
+					if (userPreference.getLoveRequest()) {//如果请求了添加情侣，则直接跳转到等待页面
+						startActivity(new Intent(GuideActivity.this, WaitActivity.class));
+					} else {
+						setContentView(R.layout.activity_guide);
+						findViewById();
+						initView();
+						ServerUtil.getInstance(GuideActivity.this).initUserData(GuideActivity.this, false);
+						ServerUtil.getInstance(GuideActivity.this).getHeadImagePass();
+					}
 				} else {
-					setContentView(R.layout.activity_guide);
-					findViewById();
-					initView();
-					ServerUtil.getInstance(GuideActivity.this).initUserData(GuideActivity.this, false);
-					ServerUtil.getInstance(GuideActivity.this).getHeadImagePass();
+					startActivity(new Intent(GuideActivity.this, MainActivity.class));
 				}
-				//				ServerUtil.getInstance(GuideActivity.this).getFlipperAndRecommend(GuideActivity.this, false);
 			} else {//如果用户没有登录过或者已经注销
 				startActivity(new Intent(GuideActivity.this, LoginOrRegisterActivity.class));
-				//				finish();不定位
 			}
 			sharePreferenceUtil.setUseCount(++count);// 次数加1
 		}
@@ -109,14 +109,12 @@ public class GuideActivity extends BaseActivity {
 	@Override
 	protected void onStart() {
 		// TODO Auto-generated method stub
-		//		PushManager.activityStarted(this);
 		super.onStart();
 	}
 
 	@Override
 	protected void onStop() {
 		// TODO Auto-generated method stub
-		//		PushManager.activityStoped(this);
 		super.onStop();
 	}
 

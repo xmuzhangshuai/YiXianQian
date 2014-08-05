@@ -30,9 +30,11 @@ import com.yixianqian.R;
 import com.yixianqian.base.BaseApplication;
 import com.yixianqian.base.BaseFragmentActivity;
 import com.yixianqian.config.Constants;
+import com.yixianqian.customewidget.MyAlertDialog;
 import com.yixianqian.db.TodayRecommendDbService;
 import com.yixianqian.entities.TodayRecommend;
 import com.yixianqian.table.FlipperRequestTable;
+import com.yixianqian.table.UserTable;
 import com.yixianqian.utils.AsyncHttpClientImageSound;
 import com.yixianqian.utils.AsyncHttpClientTool;
 import com.yixianqian.utils.DensityUtil;
@@ -78,6 +80,36 @@ public class DayRecommendActivity extends BaseFragmentActivity {
 
 		findViewById();
 		initView();
+
+	}
+
+	@Override
+	public void onBackPressed() {
+		// TODO Auto-generated method stub
+		close();
+//		final MyAlertDialog myAlertDialog = new MyAlertDialog(this);
+//		myAlertDialog.setTitle("提示");
+//		myAlertDialog.setMessage("是否退出一线牵客户端？");
+//		View.OnClickListener comfirm = new OnClickListener() {
+//
+//			@Override
+//			public void onClick(View v) {
+//				// TODO Auto-generated method stub
+//				myAlertDialog.dismiss();
+//				close();
+//			}
+//		};
+//		View.OnClickListener cancle = new OnClickListener() {
+//
+//			@Override
+//			public void onClick(View v) {
+//				// TODO Auto-generated method stub
+//				myAlertDialog.dismiss();
+//			}
+//		};
+//		myAlertDialog.setPositiveButton("确定", comfirm);
+//		myAlertDialog.setNegativeButton("取消", cancle);
+//		myAlertDialog.show();
 
 	}
 
@@ -225,7 +257,7 @@ public class DayRecommendActivity extends BaseFragmentActivity {
 		}
 
 		@Override
-		public Object instantiateItem(ViewGroup container, int position) {
+		public Object instantiateItem(ViewGroup container, final int position) {
 			// TODO Auto-generated method stub  
 			final ViewHolder holder;
 
@@ -254,6 +286,19 @@ public class DayRecommendActivity extends BaseFragmentActivity {
 						holder.headimage, ImageLoaderTool.getHeadImageOptions());
 			}
 
+			//点击头像进入详情页面
+			holder.headimage.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+					Intent intent = new Intent(DayRecommendActivity.this, PersonDetailActivity.class);
+					intent.putExtra(PersonDetailActivity.PERSON_TYPE, 1);
+					intent.putExtra(UserTable.U_ID, todayRecommendList.get(position).getUserID());
+					startActivity(intent);
+					overridePendingTransition(R.anim.zoomin2, R.anim.zoomout);
+				}
+			});
 			container.addView(view);
 			return view;
 		}

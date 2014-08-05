@@ -91,20 +91,6 @@ public class MainActivity extends BaseFragmentActivity {
 
 	}
 
-	//	@Override
-	//	protected void onStart() {
-	//		// TODO Auto-generated method stub
-	//		PushManager.activityStarted(this);
-	//		super.onStart();
-	//	}
-	//
-	//	@Override
-	//	protected void onStop() {
-	//		// TODO Auto-generated method stub
-	//		PushManager.activityStoped(this);
-	//		super.onStop();
-	//	}
-
 	@Override
 	protected void onDestroy() {
 		// TODO Auto-generated method stub

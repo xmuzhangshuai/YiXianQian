@@ -1,18 +1,26 @@
 package com.yixianqian.ui;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.MediaStore;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.text.Editable;
 import android.text.Spannable;
@@ -34,10 +42,12 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import com.yixianqian.R;
@@ -59,6 +69,7 @@ import com.yixianqian.db.MessageItemDbService;
 import com.yixianqian.entities.Conversation;
 import com.yixianqian.entities.MessageItem;
 import com.yixianqian.jsonobject.JsonMessage;
+import com.yixianqian.utils.DensityUtil;
 import com.yixianqian.utils.FastJsonTool;
 import com.yixianqian.utils.FriendPreference;
 import com.yixianqian.xlistview.MsgListView;
@@ -72,11 +83,14 @@ public class ChatActivity extends BaseActivity implements OnTouchListener, IXLis
 	private TextView topNavText;//导航条文字
 	private Button sendBtn;//发送按钮
 	private ImageButton faceBtn;//表情
-	private ImageButton moreBtn;//添加图片和声音
+	private ImageButton moreBtn;//添加图片
 	private boolean isFaceShow = false;//是否显示表情
+	private boolean isMoreShow = false;//是否显示更多
 	private JazzyViewPager faceViewPager;//表情翻页
 	private EditText msgEt;//输入框
 	private LinearLayout faceLinearLayout;//表情区域
+	private FrameLayout morePanel;//更多区域
+	private GridView moreGridView;
 	private WindowManager.LayoutParams params;
 	private InputMethodManager inputMethodManager;
 	private int currentPage = 0;//当前表情页
@@ -88,6 +102,8 @@ public class ChatActivity extends BaseActivity implements OnTouchListener, IXLis
 	private MessageItemDbService messageItemDbService;
 	private static int MsgPagerNum;//消息页数
 	private FriendPreference friendPreference;
+	private String audioPath;//音频路径
+	private String photoPath;//图片地址
 	public static final int NEW_MESSAGE = 0x001;// 收到消息
 
 	private Handler handler = new Handler() {
@@ -122,6 +138,7 @@ public class ChatActivity extends BaseActivity implements OnTouchListener, IXLis
 		initData();
 		initView();
 		initFacePage();
+		initMorePage();
 	}
 
 	@Override
@@ -150,6 +167,9 @@ public class ChatActivity extends BaseActivity implements OnTouchListener, IXLis
 		msgEt = (EditText) findViewById(R.id.msg_et);
 		faceLinearLayout = (LinearLayout) findViewById(R.id.face_ll);
 		faceViewPager = (JazzyViewPager) findViewById(R.id.face_pager);
+		moreBtn = (ImageButton) findViewById(R.id.more_btn);
+		morePanel = (FrameLayout) findViewById(R.id.panelLayout);
+		moreGridView = (GridView) findViewById(R.id.panel);
 	}
 
 	@Override
@@ -164,6 +184,7 @@ public class ChatActivity extends BaseActivity implements OnTouchListener, IXLis
 		mMsgListView.setOnTouchListener(this);
 		mMsgListView.setPullLoadEnable(false);
 		mMsgListView.setXListViewListener(this);
+		moreBtn.setOnClickListener(this);
 		mMsgListView.setAdapter(adapter);
 		mMsgListView.setSelection(adapter.getCount() - 1);
 		topNavLeftBtn.setOnClickListener(this);
@@ -174,10 +195,12 @@ public class ChatActivity extends BaseActivity implements OnTouchListener, IXLis
 			public boolean onKey(View v, int keyCode, KeyEvent event) {
 				// TODO Auto-generated method stub
 				if (keyCode == KeyEvent.KEYCODE_BACK) {
-					if (params.softInputMode == WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE || isFaceShow) {
+					if (params.softInputMode == WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE || isFaceShow
+							|| isMoreShow) {
 						faceLinearLayout.setVisibility(View.GONE);
+						morePanel.setVisibility(View.GONE);
 						isFaceShow = false;
-						// imm.showSoftInput(msgEt, 0);
+						isMoreShow = false;
 						return true;
 					}
 				}
@@ -233,6 +256,14 @@ public class ChatActivity extends BaseActivity implements OnTouchListener, IXLis
 	}
 
 	/**
+	 * 初始化发送图片等窗口
+	 */
+	private void initMorePage() {
+//		SimpleAdapter adapter = new SimpleAdapter(ChatActivity.this, data, resource, from, to);
+//		moreGridView
+	}
+
+	/**
 	 * 初始化表情窗口
 	 */
 	private void initFacePage() {
@@ -244,7 +275,7 @@ public class ChatActivity extends BaseActivity implements OnTouchListener, IXLis
 		faceViewPager.setAdapter(adapter);
 		faceViewPager.setCurrentItem(currentPage);
 		//设置翻页效果
-		faceViewPager.setTransitionEffect(TransitionEffect.Accordion);
+		faceViewPager.setTransitionEffect(TransitionEffect.Standard);
 		CirclePageIndicator indicator = (CirclePageIndicator) findViewById(R.id.indicator);
 		indicator.setViewPager(faceViewPager);
 		adapter.notifyDataSetChanged();
@@ -282,11 +313,11 @@ public class ChatActivity extends BaseActivity implements OnTouchListener, IXLis
 		gv.setBackgroundColor(Color.TRANSPARENT);
 		gv.setCacheColorHint(Color.TRANSPARENT);
 		gv.setHorizontalSpacing(1);
-		gv.setVerticalSpacing(1);
+		gv.setVerticalSpacing(DensityUtil.dip2px(ChatActivity.this, 25));
 		gv.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 		gv.setGravity(Gravity.CENTER);
 		gv.setAdapter(new FaceAdapter(this, i));
-		gv.setOnTouchListener(forbidenScroll());
+//		gv.setOnTouchListener(forbidenScroll());
 		gv.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
@@ -356,17 +387,84 @@ public class ChatActivity extends BaseActivity implements OnTouchListener, IXLis
 		return gv;
 	}
 
-	// 防止乱pageview乱滚动
-	private OnTouchListener forbidenScroll() {
-		return new OnTouchListener() {
-			public boolean onTouch(View v, MotionEvent event) {
-				if (event.getAction() == MotionEvent.ACTION_MOVE) {
-					return true;
-				}
-				return false;
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		// TODO Auto-generated method stub
+		super.onActivityResult(requestCode, resultCode, data);
+		if (resultCode != Activity.RESULT_OK)
+			return;
+
+		switch (requestCode) {
+		case 1://拍照
+				//			showPicture();
+				//			tip.setText("更换图片");
+			break;
+		case 2://从相册选择
+			try {
+				Uri selectedImage = data.getData();
+				String[] filePathColumn = { MediaStore.Images.Media.DATA };
+				Cursor cursor = ChatActivity.this.getContentResolver().query(selectedImage, filePathColumn, null, null,
+						null);
+				cursor.moveToFirst();
+				int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+				photoPath = cursor.getString(columnIndex);
+				cursor.close();
+				//				showPicture();
+				//				tip.setText("更换图片");
+			} catch (Exception e) {
+				// TODO: handle exception   
+				e.printStackTrace();
 			}
-		};
+			break;
+		}
 	}
+
+	/**
+	 * 从相册选择图片
+	 */
+	private void choosePhoto() {
+		Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+		startActivityForResult(intent, 2);
+	}
+
+	/**
+	 * 拍照
+	 */
+	private void takePhoto() {
+		try {
+			File uploadFileDir = new File(Environment.getExternalStorageDirectory(), "/yixianqian/image");
+			Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+			if (!uploadFileDir.exists()) {
+				uploadFileDir.mkdirs();
+			}
+			File picFile = new File(uploadFileDir, "yixianqian.jpeg");
+
+			if (!picFile.exists()) {
+				picFile.createNewFile();
+			}
+
+			photoPath = picFile.getAbsolutePath();
+			Uri takePhotoUri = Uri.fromFile(picFile);
+			cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, takePhotoUri);
+			startActivityForResult(cameraIntent, 1);
+		} catch (ActivityNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+//	// 防止乱pageview乱滚动
+//	private OnTouchListener forbidenScroll() {
+//		return new OnTouchListener() {
+//			public boolean onTouch(View v, MotionEvent event) {
+//				if (event.getAction() == MotionEvent.ACTION_MOVE) {
+//					return true;
+//				}
+//				return false;
+//			}
+//		};
+//	}
 
 	@Override
 	public boolean onTouch(View v, MotionEvent event) {
@@ -375,12 +473,16 @@ public class ChatActivity extends BaseActivity implements OnTouchListener, IXLis
 		case R.id.msg_listView:
 			inputMethodManager.hideSoftInputFromWindow(msgEt.getWindowToken(), 0);
 			faceLinearLayout.setVisibility(View.GONE);
+			morePanel.setVisibility(View.GONE);
 			isFaceShow = false;
+			isMoreShow = false;
 			break;
 		case R.id.msg_et:
 			inputMethodManager.showSoftInput(msgEt, 0);
 			faceLinearLayout.setVisibility(View.GONE);
+			morePanel.setVisibility(View.GONE);
 			isFaceShow = false;
+			isMoreShow = false;
 			break;
 
 		default:
@@ -428,6 +530,8 @@ public class ChatActivity extends BaseActivity implements OnTouchListener, IXLis
 				}
 				faceLinearLayout.setVisibility(View.VISIBLE);
 				isFaceShow = true;
+				morePanel.setVisibility(View.GONE);
+				isMoreShow = false;
 			} else {
 				faceLinearLayout.setVisibility(View.GONE);
 				isFaceShow = false;
@@ -444,12 +548,28 @@ public class ChatActivity extends BaseActivity implements OnTouchListener, IXLis
 
 			JsonMessage message = new JsonMessage(msg, Constants.MessageType.MESSAGE_TYPE_TEXT);
 			new SendMsgAsyncTask(FastJsonTool.createJsonString(message), friendPreference.getBpush_UserID()).send();
-			//			new SendMsgAsyncTask(FastJsonTool.createJsonString(message), friendPreference.getBpush_UserID(),friendPreference.getBpush_ChannelID()).send();
 			break;
 		case R.id.nav_left_btn:
 			startActivity(new Intent(ChatActivity.this, MainActivity.class));
 			overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
 			finish();
+			break;
+		case R.id.more_btn:
+			if (!isMoreShow) {
+				inputMethodManager.hideSoftInputFromWindow(msgEt.getWindowToken(), 0);
+				try {
+					Thread.sleep(80);// 解决此时会黑一下屏幕的问题
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				morePanel.setVisibility(View.VISIBLE);
+				isMoreShow = true;
+				faceLinearLayout.setVisibility(View.GONE);
+				isFaceShow = false;
+			} else {
+				morePanel.setVisibility(View.GONE);
+				isMoreShow = false;
+			}
 			break;
 		default:
 			break;
@@ -464,24 +584,9 @@ public class ChatActivity extends BaseActivity implements OnTouchListener, IXLis
 		handler.sendMessage(handlerMsg);
 	}
 
-	//	@Override
-	//	public void onBind(String method, int errorCode, String content) {
-	//		// TODO Auto-generated method stub
-	//
-	//	}
-
 	@Override
 	public void onNotify(String title, String content) {
 		// TODO Auto-generated method stub
 
 	}
-
-	//	@Override
-	//	public void onNetChange(boolean isNetConnected) {
-	//		// TODO Auto-generated method stub
-	//		if (!isNetConnected) {
-	//			NetworkUtils.networkStateTips(ChatActivity.this);
-	//		}
-	//	}
-
 }

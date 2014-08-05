@@ -8,8 +8,10 @@
 
     <ImageView
         android:id="@+id/leftimage"
-        android:layout_width="@dimen/day_recommend_help_padding"
-        android:layout_height="@dimen/day_recommend_help_padding"
+        android:layout_width="@dimen/day_recommend_help"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="@dimen/personal_timecapsule_padding"
+        android:layout_toLeftOf="@+id/item_name"
         android:visibility="gone" />
 
     <TextView

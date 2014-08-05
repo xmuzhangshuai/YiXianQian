@@ -5,11 +5,7 @@ import java.util.List;
 
 import org.apache.http.Header;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -48,7 +44,6 @@ import com.yixianqian.utils.DensityUtil;
 import com.yixianqian.utils.FastJsonTool;
 import com.yixianqian.utils.FriendPreference;
 import com.yixianqian.utils.ImageLoaderTool;
-import com.yixianqian.utils.NetworkUtils;
 import com.yixianqian.utils.SoundLoader;
 import com.yixianqian.utils.ToastTool;
 import com.yixianqian.utils.UserPreference;
@@ -77,17 +72,6 @@ public class TimeCapsuleActivity extends AbsListViewBaseActivity implements OnDe
 	private LinkedList<JsonLoverTimeCapsule> loverTimeCapsuleList;
 	private TimeCapsuleAdapter timeCapsuleAdapter;
 	private int stateID = 0;
-
-	// 提醒用户网络状况有异常
-	private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			// TODO Auto-generated method stub
-			if (!NetworkUtils.isNetworkAvailable(TimeCapsuleActivity.this)) {
-				NetworkUtils.networkStateTips(TimeCapsuleActivity.this);
-			}
-		}
-	};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -183,21 +167,7 @@ public class TimeCapsuleActivity extends AbsListViewBaseActivity implements OnDe
 	protected void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
-		// 注册广播
-		IntentFilter intentFilter = new IntentFilter();
-		intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
-		TimeCapsuleActivity.this.registerReceiver(broadcastReceiver, intentFilter);
 		timeCapsuleListview.setOnScrollListener(new PauseOnScrollListener(imageLoader, pauseOnScroll, pauseOnFling));
-	}
-
-	@Override
-	public void onPause() {
-		// TODO Auto-generated method stub
-		super.onPause();
-		// 卸载广播
-		if (broadcastReceiver != null) {
-			TimeCapsuleActivity.this.unregisterReceiver(broadcastReceiver);
-		}
 	}
 
 	@Override

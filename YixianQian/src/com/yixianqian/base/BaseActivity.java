@@ -8,12 +8,15 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.widget.Toast;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.yixianqian.R;
+import com.yixianqian.ui.LoginActivity;
+import com.yixianqian.utils.NetworkUtils;
 
 /**
  * 
@@ -41,6 +44,18 @@ public abstract class BaseActivity extends Activity {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			close();
+		}
+	};
+
+	//¼àÌýÍøÂç×´Ì¬
+	private BroadcastReceiver netBroadCastReceiver = new BroadcastReceiver() {
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			// TODO Auto-generated method stub
+			if (!NetworkUtils.isNetworkAvailable(BaseActivity.this)) {
+				NetworkUtils.networkStateTips(BaseActivity.this);
+			}
 		}
 	};
 
@@ -78,14 +93,20 @@ public abstract class BaseActivity extends Activity {
 	protected void onPause() {
 		// TODO Auto-generated method stub
 		super.onPause();
-		// MobclickAgent.onPause(this);
+		// Ð¶ÔØ¹ã²¥
+		if (netBroadCastReceiver != null) {
+			BaseActivity.this.unregisterReceiver(netBroadCastReceiver);
+		}
 	}
 
 	@Override
 	protected void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
-		// MobclickAgent.onResume(this);
+		// ×¢²á¹ã²¥
+		IntentFilter intentFilter = new IntentFilter();
+		intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
+		BaseActivity.this.registerReceiver(netBroadCastReceiver, intentFilter);
 	}
 
 	@Override
@@ -105,25 +126,6 @@ public abstract class BaseActivity extends Activity {
 		// TODO Auto-generated method stub
 		super.onStop();
 	}
-
-	/**
-	 * ÉèÖÃActionBarÑùÊ½
-	 */
-	//	@Override
-	//	public ActionBar getActionBar() {
-	//		// TODO Auto-generated method stub
-	//		ActionBar actionBar = super.getActionBar();
-	//		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-	//			// Show the Up button in the action bar.
-	////			actionBar.setDisplayHomeAsUpEnabled(true);
-	//		}
-	//
-	//		// actionBar.setBackgroundDrawable(getResources().getDrawable(R.drawable.title_bar));
-	//		// actionBar.setStackedBackgroundDrawable(getResources().getDrawable(R.drawable.actionbar_stacked_bg));
-	//		// actionBar.setSplitBackgroundDrawable(getResources().getDrawable(R.drawable.title_bar));
-	//		actionBar.setBackgroundDrawable(getResources().getDrawable(R.color.system_male));
-	//		return actionBar;
-	//	}
 
 	/**
 	 * °ó¶¨¿Ø¼þid

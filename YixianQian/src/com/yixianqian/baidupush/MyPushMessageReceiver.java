@@ -152,7 +152,7 @@ public class MyPushMessageReceiver extends FrontiaPushMessageReceiver {
 						.getInstance());
 				messageItemDbService.messageItemDao.insert(messageItem);
 				conversation.setLastMessage(msg.getMessageContent());
-				conversation.setNewNum(mNewNum + 1);
+				conversation.setNewNum(conversation.getNewNum() + 1);
 				conversation.setTime(msg.getTimeSamp());
 				conversationDbService.conversationDao.update(conversation);
 			}

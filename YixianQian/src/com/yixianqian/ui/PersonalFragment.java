@@ -137,13 +137,7 @@ public class PersonalFragment extends BaseV4Fragment {
 
 		//设置姓名、省份、及学校
 		//优先显示真实姓名
-		String name = userPreference.getU_nickname();
-		if (userPreference.getU_realname() != null) {
-			if (userPreference.getU_realname().length() > 0) {
-				name = userPreference.getU_realname();
-			}
-		}
-		nameTextView.setText(name);
+		nameTextView.setText(userPreference.getName());
 		provinceTextView.setText(userPreference.getProvinceName());
 		schoolTextView.setText(userPreference.getSchoolName());
 

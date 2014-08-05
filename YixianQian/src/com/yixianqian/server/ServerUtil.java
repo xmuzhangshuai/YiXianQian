@@ -79,7 +79,6 @@ public class ServerUtil {
 					if (!TextUtils.isEmpty(response)) {
 						if (Integer.parseInt(response) > 0) {
 							userPreference.setU_stateid(Integer.parseInt(response));
-//							getTodayRecommend(context, isFinished);
 							getFlipperAndRecommend(context, isFinished);
 						}
 					}
@@ -303,4 +302,5 @@ public class ServerUtil {
 		}
 
 	}
+
 }

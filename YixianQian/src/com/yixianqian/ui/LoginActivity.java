@@ -6,11 +6,6 @@ import java.util.Map;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -30,7 +25,6 @@ import com.yixianqian.server.ServerUtil;
 import com.yixianqian.table.UserTable;
 import com.yixianqian.utils.FastJsonTool;
 import com.yixianqian.utils.HttpUtil;
-import com.yixianqian.utils.NetworkUtils;
 import com.yixianqian.utils.SIMCardInfo;
 import com.yixianqian.utils.UserPreference;
 
@@ -56,17 +50,6 @@ public class LoginActivity extends BaseActivity {
 	private View rightImageButton;//导航栏右侧按钮
 	private UserPreference userPreference;
 
-	// 提醒用户网络状况有异常
-	private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			// TODO Auto-generated method stub
-			if (!NetworkUtils.isNetworkAvailable(LoginActivity.this)) {
-				NetworkUtils.networkStateTips(LoginActivity.this);
-			}
-		}
-	};
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -76,26 +59,6 @@ public class LoginActivity extends BaseActivity {
 		findViewById();
 		initView();
 
-	}
-
-	@Override
-	public void onResume() {
-		// TODO Auto-generated method stub
-		super.onResume();
-		// 注册广播
-		IntentFilter intentFilter = new IntentFilter();
-		intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
-		LoginActivity.this.registerReceiver(broadcastReceiver, intentFilter);
-	}
-
-	@Override
-	public void onPause() {
-		// TODO Auto-generated method stub
-		super.onPause();
-		// 卸载广播
-		if (broadcastReceiver != null) {
-			LoginActivity.this.unregisterReceiver(broadcastReceiver);
-		}
 	}
 
 	@Override
