@@ -29,7 +29,6 @@
         android:layout_width="40.0dip"
         android:layout_height="40.0dip"
         android:layout_below="@id/datetime"
-        android:background="@drawable/chat_tool_camera"
         android:clickable="true"
         android:focusable="true"
         android:scaleType="fitXY"

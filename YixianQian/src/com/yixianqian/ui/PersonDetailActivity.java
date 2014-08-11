@@ -273,7 +273,7 @@ public class PersonDetailActivity extends BaseFragmentActivity implements OnClic
 		} else if (type == 2 || type == 3) {
 			Conversation conversation = ConversationDbService.getInstance(BaseApplication.getInstance())
 					.getConversationByUser(friendPreference.getF_id());
-			Intent intent = new Intent(PersonDetailActivity.this, ChatActivity.class);
+			Intent intent = new Intent(PersonDetailActivity.this, ChatActivity2.class);
 			intent.putExtra("conversationID", conversation.getId());
 			startActivity(intent);
 			overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);

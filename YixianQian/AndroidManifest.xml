@@ -13,6 +13,7 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
@@ -20,6 +21,7 @@
     <uses-permission android:name="android.permission.GET_TASKS" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.REORDER_TASKS" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
@@ -121,21 +123,18 @@
         <!-- 上传头像页面 -->
         <activity
             android:name="com.yixianqian.ui.HeadImageActivity"
-            android:label="@string/title_activity_head_image"
             android:screenOrientation="portrait" >
         </activity>
 
         <!-- 时间胶囊页面 -->
         <activity
             android:name="com.yixianqian.ui.TimeCapsuleActivity"
-            android:label="@string/title_activity_time_capsule"
             android:screenOrientation="portrait" >
         </activity>
 
         <!-- 发布记录页面 -->
         <activity
             android:name="com.yixianqian.ui.PublishTimeCapActivity"
-            android:label="@string/title_activity_publish_time_cap"
             android:screenOrientation="portrait" >
         </activity>
 
@@ -155,6 +154,14 @@
             android:windowSoftInputMode="stateHidden|adjustResize" >
         </activity>
 
+        <!-- 聊天页面 -->
+        <activity
+            android:name="com.yixianqian.ui.ChatActivity2"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" >
+        </activity>
+
         <!-- 二维码扫描页面 -->
         <activity
             android:name="com.yixianqian.ui.CaptureActivity"
@@ -169,6 +176,18 @@
             android:name="com.yixianqian.ui.ImageShowerActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
+        </activity>
+
+        <!-- 自定义的alertdialog -->
+        <activity
+            android:name="com.yixianqian.customewidget.ChatAlertDialog"
+            android:theme="@style/MyDialogStyle" >
+        </activity>
+
+        <!-- 显示下载大图页面 -->
+        <activity
+            android:name="com.yixianqian.ui.ShowBigImage"
+            android:theme="@style/horizontal_slide" >
         </activity>
 
         <!-- 我的二维码 -->
@@ -236,17 +255,15 @@
             android:name="com.yixianqian.ui.PersonDetailActivity"
             android:screenOrientation="portrait" >
         </activity>
-        
+
         <!-- 个人时间胶囊页面 -->
         <activity
             android:name="com.yixianqian.ui.PersonTimeCapsuleActivity"
             android:screenOrientation="portrait" >
         </activity>
-        
+
         <!-- 测试页面 -->
-        <activity
-            android:name="com.yixianqian.test.TestActivity"
-            android:label="@string/title_activity_test" >
+        <activity android:name="com.yixianqian.test.TestActivity" >
         </activity>
 
         <!-- 百度推送富媒体 -->
@@ -319,6 +336,13 @@
         </service>
         <!-- push service end -->
 
+
+        <!-- 设置环信应用的appkey -->
+        <meta-data
+            android:name="EASEMOB_APPKEY"
+            android:value="yixianqian#yixianqian" />
+        <!-- 声明sdk所需的service -->
+        <service android:name="com.easemob.chat.EMChatService" />
 
         <!-- ###################第三方组件Appkey###################### -->
         <meta-data

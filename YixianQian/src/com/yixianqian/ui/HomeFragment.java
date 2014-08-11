@@ -23,6 +23,7 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.loopj.android.http.RequestParams;
@@ -62,6 +63,8 @@ public class HomeFragment extends BaseV4Fragment {
 	private View popBtn;//删除按钮
 	private int currentItem = -1;
 	private MyAlertDialog myAlertDialog;
+	public RelativeLayout errorItem;//无法连接到网络提示
+	public TextView errorText;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -99,6 +102,8 @@ public class HomeFragment extends BaseV4Fragment {
 		right_btn_bg = (View) rootView.findViewById(R.id.right_btn_bg);
 		mHomeListView = (ListView) rootView.findViewById(R.id.recent_listview);
 		mEmpty = (TextView) rootView.findViewById(R.id.empty);
+		errorItem = (RelativeLayout) rootView.findViewById(R.id.rl_error_item);
+		errorText = (TextView) errorItem.findViewById(R.id.tv_connect_errormsg);
 	}
 
 	@Override
@@ -134,8 +139,9 @@ public class HomeFragment extends BaseV4Fragment {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				// TODO Auto-generated method stub
-				Intent toChatIntent = new Intent(getActivity(), ChatActivity.class);
-				toChatIntent.putExtra("conversationID", conversationList.get(position).getId());
+				Intent toChatIntent = new Intent(getActivity(), ChatActivity2.class);
+				//				toChatIntent.putExtra("conversationID", conversationList.get(position).getId());
+				toChatIntent.putExtra("userId", "lasdjfo");
 				startActivity(toChatIntent);
 				getActivity().overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
 			}
@@ -168,6 +174,18 @@ public class HomeFragment extends BaseV4Fragment {
 				showDeletDialog();
 			}
 		});
+	}
+
+	/**
+	 * 刷新页面
+	 */
+	public void refresh() {
+		//		adapter = new ChatHistoryAdapter(getActivity(), R.layout.row_chat_history, loadUsersWithRecentChat());
+		//		listView.setAdapter(adapter);
+		//		adapter.notifyDataSetChanged();
+		mAdapter = new HomeListAdapter(getActivity(), mHomeListView, conversationList);
+		mHomeListView.setAdapter(mAdapter);
+		mAdapter.notifyDataSetChanged();
 	}
 
 	//显示删除心动或情侣对话窗口

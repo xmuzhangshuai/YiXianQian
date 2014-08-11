@@ -17,6 +17,8 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.easemob.EMCallBack;
+import com.easemob.chat.EMChatManager;
 import com.yixianqian.R;
 import com.yixianqian.base.BaseActivity;
 import com.yixianqian.base.BaseApplication;
@@ -25,7 +27,9 @@ import com.yixianqian.server.ServerUtil;
 import com.yixianqian.table.UserTable;
 import com.yixianqian.utils.FastJsonTool;
 import com.yixianqian.utils.HttpUtil;
+import com.yixianqian.utils.NetworkUtils;
 import com.yixianqian.utils.SIMCardInfo;
+import com.yixianqian.utils.ToastTool;
 import com.yixianqian.utils.UserPreference;
 
 /**
@@ -190,6 +194,46 @@ public class LoginActivity extends BaseActivity {
 	}
 
 	/**
+	 * 登陆
+	 * 
+	 * @param view
+	 */
+	public void loginHuanXin() {
+		if (!NetworkUtils.isNetworkAvailable(this)) {
+			NetworkUtils.networkStateTips(this);
+			return;
+		}
+
+		// 调用sdk登陆方法登陆聊天服务器
+		if (!TextUtils.isEmpty(userPreference.getHuanXinUserName())
+				&& !TextUtils.isEmpty(userPreference.getHuanXinPassword())) {
+			EMChatManager.getInstance().login(userPreference.getHuanXinUserName(), userPreference.getHuanXinPassword(),
+					new EMCallBack() {
+
+						@Override
+						public void onSuccess() {
+							ServerUtil.getInstance(LoginActivity.this).getFlipperAndRecommend(LoginActivity.this, true);
+							userPreference.setUserLogin(true);
+							showProgress(false);
+						}
+
+						@Override
+						public void onProgress(int progress, String status) {
+							showProgress(false);
+							userPreference.clear();
+						}
+
+						@Override
+						public void onError(int code, final String message) {
+						}
+					});
+		}else {
+			showProgress(false);
+			ToastTool.showShort(LoginActivity.this, "登录聊天服务器失败");
+		}
+	}
+
+	/**
 	 * 类名称：UserLoginTask 类描述：异步任务登录 创建人： 张帅 创建时间：2014-7-4 上午9:30:44
 	 * 
 	 */
@@ -228,7 +272,6 @@ public class LoginActivity extends BaseActivity {
 		@Override
 		protected void onPostExecute(final JsonUser user) {
 			mAuthTask = null;
-			showProgress(false);
 			if (user != null) {
 				userPreference.clear();
 				userPreference.setU_birthday(user.getU_birthday());
@@ -254,8 +297,11 @@ public class LoginActivity extends BaseActivity {
 				userPreference.setU_vocationid(user.getU_vocationid());
 				userPreference.setU_weight(user.getU_weight());
 
-				ServerUtil.getInstance(LoginActivity.this).getFlipperAndRecommend(LoginActivity.this, true);
+				//登录环信
+//				loginHuanXin();
 				userPreference.setUserLogin(true);
+				ServerUtil.getInstance(LoginActivity.this).getFlipperAndRecommend(LoginActivity.this, true);
+				
 			} else {
 				mPasswordView.setError("用户名或密码错误！");
 				mPasswordView.requestFocus();

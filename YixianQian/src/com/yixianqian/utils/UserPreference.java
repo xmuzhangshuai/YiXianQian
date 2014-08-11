@@ -38,6 +38,25 @@ public class UserPreference {
 		editor.commit();
 	}
 
+	//环信用户名和密码
+	public void setHuanXinUserName(String username) {
+		editor.putString("huanxin_username", username);
+		editor.commit();
+	}
+
+	public String getHuanXinUserName() {
+		return sp.getString("huanxin_username", "");
+	}
+
+	public void setHuanXinPassword(String password) {
+		editor.putString("huanxin_password", password);
+		editor.commit();
+	}
+
+	public String getHuanXinPassword() {
+		return sp.getString("huanxin_password", "");
+	}
+
 	//记录是否等待情侣相应
 	public boolean getLoveRequest() {
 		return sp.getBoolean("loverequest", false);

@@ -37,4 +37,9 @@
     <!-- 时间胶囊 -->
     <dimen name="time_capsule_220">220dp</dimen>
     <dimen name="motify_data_space">35dp</dimen>
-</resources>
+
+    <!-- 聊天 -->
+    <dimen name="margin_chat_activity">5dp</dimen>
+    <dimen name="size_avatar">50dp</dimen>
+
+</resources>

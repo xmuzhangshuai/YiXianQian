@@ -143,7 +143,7 @@ public class WaitActivity extends BaseActivity {
 									.getInstance(WaitActivity.this);
 							messageItemDbService.messageItemDao.insert(item);
 
-							Intent intent = new Intent(WaitActivity.this, ChatActivity.class);
+							Intent intent = new Intent(WaitActivity.this, ChatActivity2.class);
 							intent.putExtra("conversationID", conversationDbService.getIdByConversation(conversation));
 							startActivity(intent);
 							overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);

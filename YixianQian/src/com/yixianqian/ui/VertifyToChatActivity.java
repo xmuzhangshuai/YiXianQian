@@ -154,7 +154,7 @@ public class VertifyToChatActivity extends BaseActivity {
 				friendpreference.getName(), friendpreference.getF_small_avatar(), "", 0, System.currentTimeMillis());
 		conversationDbService.conversationDao.insert(conversation);
 
-		Intent intent = new Intent(VertifyToChatActivity.this, ChatActivity.class);
+		Intent intent = new Intent(VertifyToChatActivity.this, ChatActivity2.class);
 		intent.putExtra("conversationID", conversationDbService.getIdByConversation(conversation));
 		startActivity(intent);
 		overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);

@@ -13,6 +13,7 @@ import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.widget.Toast;
 
+import com.easemob.chat.EMChatManager;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.yixianqian.utils.NetworkUtils;
 
@@ -104,6 +105,8 @@ public abstract class BaseFragmentActivity extends FragmentActivity {
 		IntentFilter intentFilter = new IntentFilter();
 		intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
 		BaseFragmentActivity.this.registerReceiver(netBroadCastReceiver, intentFilter);
+		//onresume时，取消notification显示
+		EMChatManager.getInstance().activityResumed();
 	}
 
 	@Override

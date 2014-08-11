@@ -295,7 +295,7 @@ public class LoveVertifyActivity extends BaseActivity {
 											friendpreference.getF_small_avatar(), "", 0, System.currentTimeMillis());
 									conversationDbService.conversationDao.insert(conversation);
 
-									Intent intent = new Intent(LoveVertifyActivity.this, ChatActivity.class);
+									Intent intent = new Intent(LoveVertifyActivity.this, ChatActivity2.class);
 									intent.putExtra("conversationID",
 											conversationDbService.getIdByConversation(conversation));
 									startActivity(intent);

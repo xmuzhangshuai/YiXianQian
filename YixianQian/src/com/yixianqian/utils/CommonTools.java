@@ -1,8 +1,11 @@
 package com.yixianqian.utils;
 
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import android.app.ActivityManager;
+import android.app.ActivityManager.RunningTaskInfo;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.view.Gravity;
@@ -28,6 +31,27 @@ import com.yixianqian.config.DefaultKeys;
 *    
 */
 public class CommonTools {
+	/**
+	 * 检测Sdcard是否存在
+	 * 
+	 * @return
+	 */
+	public static boolean isExitsSdcard() {
+		if (android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED))
+			return true;
+		else
+			return false;
+	}
+
+	public static String getTopActivity(Context context) {
+		ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+		List<RunningTaskInfo> runningTaskInfos = manager.getRunningTasks(1);
+
+		if (runningTaskInfos != null)
+			return runningTaskInfos.get(0).topActivity.getClassName();
+		else
+			return "";
+	}
 
 	/**
 	 * 短暂显示Toast消息

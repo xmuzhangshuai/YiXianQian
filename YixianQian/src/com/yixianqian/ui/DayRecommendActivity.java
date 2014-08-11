@@ -30,7 +30,6 @@ import com.yixianqian.R;
 import com.yixianqian.base.BaseApplication;
 import com.yixianqian.base.BaseFragmentActivity;
 import com.yixianqian.config.Constants;
-import com.yixianqian.customewidget.MyAlertDialog;
 import com.yixianqian.db.TodayRecommendDbService;
 import com.yixianqian.entities.TodayRecommend;
 import com.yixianqian.table.FlipperRequestTable;
@@ -87,30 +86,6 @@ public class DayRecommendActivity extends BaseFragmentActivity {
 	public void onBackPressed() {
 		// TODO Auto-generated method stub
 		close();
-//		final MyAlertDialog myAlertDialog = new MyAlertDialog(this);
-//		myAlertDialog.setTitle("提示");
-//		myAlertDialog.setMessage("是否退出一线牵客户端？");
-//		View.OnClickListener comfirm = new OnClickListener() {
-//
-//			@Override
-//			public void onClick(View v) {
-//				// TODO Auto-generated method stub
-//				myAlertDialog.dismiss();
-//				close();
-//			}
-//		};
-//		View.OnClickListener cancle = new OnClickListener() {
-//
-//			@Override
-//			public void onClick(View v) {
-//				// TODO Auto-generated method stub
-//				myAlertDialog.dismiss();
-//			}
-//		};
-//		myAlertDialog.setPositiveButton("确定", comfirm);
-//		myAlertDialog.setNegativeButton("取消", cancle);
-//		myAlertDialog.show();
-
 	}
 
 	@Override

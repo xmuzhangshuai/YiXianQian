@@ -90,6 +90,7 @@ public class PersonalDialogFragment extends DialogFragment implements OnItemClic
 			break;
 		case 3:
 			//设置用户不曾登录
+			BaseApplication.getInstance().logout();
 			userPreference.setUserLogin(false);
 			userPreference.clear();
 			FlipperDbService flipperDbService = FlipperDbService.getInstance(getActivity());

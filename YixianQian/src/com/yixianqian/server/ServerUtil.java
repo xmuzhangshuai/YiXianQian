@@ -133,6 +133,7 @@ public class ServerUtil {
 					// TODO Auto-generated method stub
 					getTodayRecommend(context, isFinished);
 				}
+
 			};
 			AsyncHttpClientTool.post(context, "getflipperrequest", params, responseHandler);
 		} else {
@@ -151,7 +152,7 @@ public class ServerUtil {
 	public void getTodayRecommend(final Context context, final boolean isFinished) {
 		final TodayRecommendDbService todayRecommendDbService = TodayRecommendDbService.getInstance(context);
 		todayRecommendDbService.todayRecommendDao.deleteAll();
-		sharePreferenceUtil.setTodayRecommend("");
+//		sharePreferenceUtil.setTodayRecommend("");
 
 		//如果没有推荐过
 		if (!sharePreferenceUtil.getTodayRecommend().equals(DateTimeTools.getCurrentDateForString())) {
@@ -236,8 +237,13 @@ public class ServerUtil {
 								userPreference.setHeadImagePassed(-1);
 							}
 						}
+						if (!TextUtils.isEmpty(map.get(UserTable.U_LARGE_AVATAR))
+								&& !TextUtils.isEmpty(map.get(UserTable.U_SMALL_AVATAR))) {
+							userPreference.setHeadImageChanged(false);
+						}
 						//显示头像
 						disPlayHeadImage(imageView, textView);
+						
 					}
 				}
 			}

@@ -2,8 +2,6 @@ package com.yixianqian.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
-import android.preference.PreferenceManager;
 
 /**
  * 类名称：PreferenceUtils
@@ -13,63 +11,71 @@ import android.preference.PreferenceManager;
  *
  */
 public class PreferenceUtils {
-	public static String getPrefString(Context context, String key, final String defaultValue) {
-		final SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
-		return settings.getString(key, defaultValue);
+	/**
+	 * 保存Preference的name
+	 */
+	public static final String PREFERENCE_NAME = "saveInfo";
+	private static SharedPreferences mSharedPreferences;
+	private static PreferenceUtils mPreferenceUtils;
+	private static SharedPreferences.Editor editor;
+
+	private String SHARED_KEY_SETTING_NOTIFICATION = "shared_key_setting_notification";
+	private String SHARED_KEY_SETTING_SOUND = "shared_key_setting_sound";
+	private String SHARED_KEY_SETTING_VIBRATE = "shared_key_setting_vibrate";
+	private String SHARED_KEY_SETTING_SPEAKER = "shared_key_setting_speaker";
+
+	private PreferenceUtils(Context cxt) {
+		mSharedPreferences = cxt.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE);
 	}
 
-	public static void setPrefString(Context context, final String key, final String value) {
-		final SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
-		settings.edit().putString(key, value).commit();
+	/**
+	 * 单例模式，获取instance实例
+	 * 
+	 * @param cxt
+	 * @return
+	 */
+	public static PreferenceUtils getInstance(Context cxt) {
+		if (mPreferenceUtils == null) {
+			mPreferenceUtils = new PreferenceUtils(cxt);
+		}
+		editor = mSharedPreferences.edit();
+		return mPreferenceUtils;
 	}
 
-	public static boolean getPrefBoolean(Context context, final String key, final boolean defaultValue) {
-		final SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
-		return settings.getBoolean(key, defaultValue);
-	}
-
-	public static boolean hasKey(Context context, final String key) {
-		return PreferenceManager.getDefaultSharedPreferences(context).contains(key);
-	}
-
-	public static void setPrefBoolean(Context context, final String key, final boolean value) {
-		final SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
-		settings.edit().putBoolean(key, value).commit();
-	}
-
-	public static void setPrefInt(Context context, final String key, final int value) {
-		final SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
-		settings.edit().putInt(key, value).commit();
-	}
-
-	public static int getPrefInt(Context context, final String key, final int defaultValue) {
-		final SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
-		return settings.getInt(key, defaultValue);
-	}
-
-	public static void setPrefFloat(Context context, final String key, final float value) {
-		final SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
-		settings.edit().putFloat(key, value).commit();
-	}
-
-	public static float getPrefFloat(Context context, final String key, final float defaultValue) {
-		final SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
-		return settings.getFloat(key, defaultValue);
-	}
-
-	public static void setSettingLong(Context context, final String key, final long value) {
-		final SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
-		settings.edit().putLong(key, value).commit();
-	}
-
-	public static long getPrefLong(Context context, final String key, final long defaultValue) {
-		final SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
-		return settings.getLong(key, defaultValue);
-	}
-
-	public static void clearPreference(Context context, final SharedPreferences p) {
-		final Editor editor = p.edit();
-		editor.clear();
+	public void setSettingMsgNotification(boolean paramBoolean) {
+		editor.putBoolean(SHARED_KEY_SETTING_NOTIFICATION, paramBoolean);
 		editor.commit();
+	}
+
+	public boolean getSettingMsgNotification() {
+		return mSharedPreferences.getBoolean(SHARED_KEY_SETTING_NOTIFICATION, true);
+	}
+
+	public void setSettingMsgSound(boolean paramBoolean) {
+		editor.putBoolean(SHARED_KEY_SETTING_SOUND, paramBoolean);
+		editor.commit();
+	}
+
+	public boolean getSettingMsgSound() {
+
+		return mSharedPreferences.getBoolean(SHARED_KEY_SETTING_SOUND, true);
+	}
+
+	public void setSettingMsgVibrate(boolean paramBoolean) {
+		editor.putBoolean(SHARED_KEY_SETTING_VIBRATE, paramBoolean);
+		editor.commit();
+	}
+
+	public boolean getSettingMsgVibrate() {
+		return mSharedPreferences.getBoolean(SHARED_KEY_SETTING_VIBRATE, true);
+	}
+
+	public void setSettingMsgSpeaker(boolean paramBoolean) {
+		editor.putBoolean(SHARED_KEY_SETTING_SPEAKER, paramBoolean);
+		editor.commit();
+	}
+
+	public boolean getSettingMsgSpeaker() {
+		return mSharedPreferences.getBoolean(SHARED_KEY_SETTING_SPEAKER, true);
 	}
 }

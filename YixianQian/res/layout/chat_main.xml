@@ -22,70 +22,138 @@
             android:divider="@null"
             android:listSelector="@android:color/transparent"
             android:transcriptMode="normal" />
+
+        <RelativeLayout
+            android:id="@+id/recording_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/recording_hint_bg"
+            android:padding="10dp"
+            android:visibility="invisible" >
+
+            <ImageView
+                android:id="@+id/mic_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/record_animate_01" />
+
+            <TextView
+                android:id="@+id/recording_hint"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/mic_image"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="5dp"
+                android:padding="2dp"
+                android:text="@string/move_up_to_cancel"
+                android:textSize="10sp" />
+        </RelativeLayout>
     </FrameLayout>
 
     <LinearLayout
         android:id="@+id/inputBar"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/bottombar_bg"
-        android:gravity="center_vertical" >
+        android:background="@drawable/shape_bottombar_gb"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:gravity="center_vertical"
+        android:padding="7dp" >
 
-        <ImageButton
-            android:id="@+id/more_btn"
-            android:layout_width="42.0dip"
-            android:layout_height="fill_parent"
+        <ImageView
+            android:id="@+id/voice_btn"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:background="@android:color/transparent"
-            android:paddingLeft="10.0dip"
-            android:src="@drawable/pop_btn_selector" />
+            android:padding="5dp"
+            android:src="@drawable/sel_chat_voice" />
 
-        <ImageButton
+        <ImageView
             android:id="@+id/face_btn"
-            android:layout_width="42.0dip"
-            android:layout_height="fill_parent"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="5dp"
             android:background="@android:color/transparent"
-            android:paddingLeft="5.0dip"
-            android:paddingRight="5.0dip"
+            android:padding="5dp"
             android:src="@drawable/pop_btn_face_selector" />
+
+        <ImageView
+            android:id="@+id/btn_set_mode_keyboard"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/chatting_setmode_keyboard_btn"
+            android:onClick="setModeKeyboard"
+            android:padding="5dp"
+            android:visibility="gone" />
 
         <EditText
             android:id="@+id/msg_et"
             android:layout_width="0.0dip"
             android:layout_height="wrap_content"
             android:layout_marginBottom="6.0dip"
+            android:layout_marginLeft="5dp"
             android:layout_marginTop="6.0dip"
             android:layout_weight="1.0"
-            android:background="@drawable/chat_bottombar_input"
+            android:background="@drawable/sel_chat_input"
             android:inputType="textMultiLine"
             android:maxHeight="200.0dip"
-            android:paddingBottom="4.0dip"
             android:paddingLeft="10.0dip"
             android:paddingRight="14.0dip"
-            android:paddingTop="4.0dip"
             android:textSize="16.0sp" />
 
         <LinearLayout
+            android:id="@+id/btn_press_to_speak"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="6dp"
+            android:layout_marginRight="6dp"
+            android:layout_weight="1"
+            android:background="@drawable/chat_press_speak_btn"
+            android:gravity="center"
+            android:visibility="gone" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:text="@string/button_pushtotalk"
+                android:textColor="@drawable/sel_chat_pressed_to_talk"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <LinearLayout
             android:id="@+id/send_layout"
-            android:layout_width="56.0dip"
+            android:layout_width="wrap_content"
             android:layout_height="fill_parent"
             android:layout_gravity="left|center"
             android:clickable="true"
             android:gravity="center_vertical" >
 
+            <ImageView
+                android:id="@+id/more_btn"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@android:color/transparent"
+                android:padding="3dp"
+                android:src="@drawable/pop_btn_selector" />
+
             <Button
                 android:id="@+id/send_btn"
-                android:layout_width="42.0dip"
-                android:layout_height="34.0dip"
-                android:layout_marginLeft="4.0dip"
-                android:background="@drawable/chat_bottombar_btn_selector"
+                android:layout_width="50dp"
+                android:layout_height="35dp"
+                android:layout_marginBottom="3dp"
+                android:layout_marginLeft="5.0dip"
+                android:layout_marginTop="3dp"
+                android:background="@drawable/chat_press_speak_btn"
                 android:enabled="false"
-                android:shadowColor="#ff568ab5"
-                android:shadowDx="0.0"
-                android:shadowDy="-1.0"
-                android:shadowRadius="0.2"
                 android:text="发送"
-                android:textColor="@drawable/send_btn_textcolor"
-                android:textSize="14.0sp" />
+                android:textColor="@drawable/sel_chat_pressed_to_talk"
+                android:textSize="16.0sp"
+                android:visibility="gone" />
         </LinearLayout>
     </LinearLayout>
 
@@ -93,7 +161,7 @@
         android:id="@+id/panelLayout"
         android:layout_width="fill_parent"
         android:layout_height="220.0dip"
-        android:background="#fff0f0f0"
+        android:background="@color/white"
         android:visibility="gone" >
 
         <GridView
@@ -101,7 +169,7 @@
             android:layout_width="fill_parent"
             android:layout_height="220.0dip"
             android:gravity="center"
-            android:listSelector="#ff34373c"
+            android:listSelector="#00000000"
             android:numColumns="4"
             android:paddingLeft="11.0dip"
             android:paddingRight="11.0dip"
@@ -109,18 +177,13 @@
             android:scrollbars="none"
             android:stretchMode="columnWidth"
             android:verticalSpacing="14.0dip" />
-
-        <ImageView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/chat_plugin_shadow" />
     </FrameLayout>
 
     <LinearLayout
         android:id="@+id/face_ll"
         android:layout_width="fill_parent"
         android:layout_height="220dp"
-        android:background="#fff0f0f0"
+        android:background="@color/white"
         android:orientation="vertical"
         android:paddingBottom="5dip"
         android:paddingTop="5dip"

@@ -3,7 +3,9 @@ package com.yixianqian.ui;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import android.app.Activity;
@@ -44,9 +46,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.GridView;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import com.yixianqian.R;
@@ -81,8 +83,8 @@ public class ChatActivity extends BaseActivity implements OnTouchListener, IXLis
 	private ImageView topNavLeftBtn;//导航条左边按钮
 	private TextView topNavText;//导航条文字
 	private Button sendBtn;//发送按钮
-	private ImageButton faceBtn;//表情
-	private ImageButton moreBtn;//添加图片
+	private ImageView faceBtn;//表情
+	private ImageView moreBtn;//添加图片
 	private boolean isFaceShow = false;//是否显示表情
 	private boolean isMoreShow = false;//是否显示更多
 	private JazzyViewPager faceViewPager;//表情翻页
@@ -163,11 +165,11 @@ public class ChatActivity extends BaseActivity implements OnTouchListener, IXLis
 		topNavLeftBtn = (ImageView) findViewById(R.id.nav_left_btn);
 		topNavText = (TextView) findViewById(R.id.nav_text);
 		sendBtn = (Button) findViewById(R.id.send_btn);
-		faceBtn = (ImageButton) findViewById(R.id.face_btn);
+		faceBtn = (ImageView) findViewById(R.id.face_btn);
 		msgEt = (EditText) findViewById(R.id.msg_et);
 		faceLinearLayout = (LinearLayout) findViewById(R.id.face_ll);
 		faceViewPager = (JazzyViewPager) findViewById(R.id.face_pager);
-		moreBtn = (ImageButton) findViewById(R.id.more_btn);
+		moreBtn = (ImageView) findViewById(R.id.more_btn);
 		morePanel = (FrameLayout) findViewById(R.id.panelLayout);
 		moreGridView = (GridView) findViewById(R.id.panel);
 	}
@@ -259,8 +261,18 @@ public class ChatActivity extends BaseActivity implements OnTouchListener, IXLis
 	 * 初始化发送图片等窗口
 	 */
 	private void initMorePage() {
-		//		SimpleAdapter adapter = new SimpleAdapter(ChatActivity.this, data, resource, from, to);
-		//		moreGridView
+		int[] imageIds = new int[] { R.drawable.sel_chat_take_photo, R.drawable.sel_chat_choose_photo };
+		String[] names = new String[] { "拍照", "相册" };
+		List<Map<String, Object>> listItems = new ArrayList<Map<String, Object>>();
+		for (int i = 0; i < imageIds.length; i++) {
+			Map<String, Object> listItem = new HashMap<String, Object>();
+			listItem.put("image", imageIds[i]);
+			listItem.put("name", names[i]);
+			listItems.add(listItem);
+		}
+		SimpleAdapter adapter = new SimpleAdapter(ChatActivity.this, listItems, R.layout.more_gridview_cell,
+				new String[] { "image", "name" }, new int[] { R.id.cellimage, R.id.celltext });
+		moreGridView.setAdapter(adapter);
 	}
 
 	/**

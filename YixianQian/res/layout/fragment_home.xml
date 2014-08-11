@@ -8,14 +8,20 @@
         layout="@layout/top_navigation"
         android:focusable="true" />
 
-    <FrameLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
+
+        <include
+            android:id="@+id/rl_error_item"
+            layout="@layout/chat_neterror_item"
+            android:visibility="gone" />
 
         <ListView
             android:id="@+id/recent_listview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_below="@+id/rl_error_item"
             android:scrollbars="none" >
         </ListView>
 
@@ -23,12 +29,13 @@
             android:id="@+id/empty"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
             android:layout_gravity="center"
             android:drawableTop="@drawable/no_chat"
             android:text="@string/no_chat"
             android:textColor="#ffb7b7b7"
             android:textSize="14.0sp"
             android:visibility="gone" />
-    </FrameLayout>
+    </RelativeLayout>
 
 </LinearLayout>

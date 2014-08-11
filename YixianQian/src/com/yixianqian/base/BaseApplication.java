@@ -1,16 +1,30 @@
 package com.yixianqian.base;
 
+import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
+import android.app.ActivityManager;
 import android.app.Application;
 import android.app.NotificationManager;
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.StrictMode;
+import android.preference.PreferenceManager;
 
 import com.baidu.frontia.FrontiaApplication;
+import com.easemob.chat.ConnectionListener;
+import com.easemob.chat.EMChat;
+import com.easemob.chat.EMChatManager;
+import com.easemob.chat.EMChatOptions;
+import com.easemob.chat.EMMessage;
+import com.easemob.chat.EMMessage.ChatType;
+import com.easemob.chat.OnNotificationClickListener;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -22,7 +36,11 @@ import com.yixianqian.config.Constants.Config;
 import com.yixianqian.dao.DaoMaster;
 import com.yixianqian.dao.DaoMaster.OpenHelper;
 import com.yixianqian.dao.DaoSession;
+import com.yixianqian.jsonobject.JsonUser;
+import com.yixianqian.ui.ChatActivity2;
+import com.yixianqian.ui.MainActivity;
 import com.yixianqian.utils.FriendPreference;
+import com.yixianqian.utils.LogTool;
 import com.yixianqian.utils.UserPreference;
 
 /**   
@@ -48,6 +66,9 @@ public class BaseApplication extends Application {
 	private MediaPlayer messagePlayer;
 	private BaiduPush mBaiduPushServer;
 	private NotificationManager mNotificationManager;
+	public static Context applicationContext;
+	private String huanXinUserName;
+	private String huanxinPassword;
 
 	public synchronized static BaseApplication getInstance() {
 		return myApplication;
@@ -62,18 +83,65 @@ public class BaseApplication extends Application {
 			StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectAll().penaltyDeath().build());
 		}
 		super.onCreate();
-		initImageLoader(getApplicationContext());
-		initFaceMap();
-		initDate();
 
-		//使用百度push接口
-		FrontiaApplication.initFrontiaApplication(getApplicationContext());
-
+		applicationContext = this;
 		if (myApplication == null)
 			myApplication = this;
+		initImageLoader(getApplicationContext());
+//		//使用百度push接口
+		FrontiaApplication.initFrontiaApplication(applicationContext);
+		initFaceMap();
+		initData();
+
+		int pid = android.os.Process.myPid();
+		String processAppName = getAppName(pid);
+		//如果使用到百度地图或者类似启动remote service的第三方库，这个if判断不能少
+		if (processAppName == null || processAppName.equals("")) {
+			// workaround for baidu location sdk 
+			// 百度定位sdk，定位服务运行在一个单独的进程，每次定位服务启动的时候，都会调用application::onCreate
+			// 创建新的进程。
+			// 但环信的sdk只需要在主进程中初始化一次。 这个特殊处理是，如果从pid 找不到对应的processInfo
+			// processName，
+			// 则此application::onCreate 是被service 调用的，直接返回
+			return;
+		}
+
+		// 初始化环信SDK,一定要先调用init()
+		EMChat.getInstance().init(applicationContext);
+		EMChat.getInstance().setDebugMode(true);
+		// 获取到EMChatOptions对象
+		EMChatOptions options = EMChatManager.getInstance().getChatOptions();
+		// 默认添加好友时，是不需要验证的，改成需要验证
+		options.setAcceptInvitationAlways(false);
+		// 设置收到消息是否有新消息通知，默认为true
+		options.setNotificationEnable(true);
+		// 设置收到消息是否有声音提示，默认为true
+		options.setNoticeBySound(true);
+		// 设置收到消息是否震动 默认为true
+		options.setNoticedByVibrate(true);
+		// 设置语音消息播放是否设置为扬声器播放 默认为true
+		options.setUseSpeaker(true);
+
+		//设置notification消息点击时，跳转的intent为自定义的intent
+		options.setOnNotificationClickListener(new OnNotificationClickListener() {
+
+			@Override
+			public Intent onNotificationClick(EMMessage message) {
+				Intent intent = new Intent(applicationContext, ChatActivity2.class);
+				ChatType chatType = message.getChatType();
+				if (chatType == ChatType.Chat) { //单聊信息
+					intent.putExtra("userId", message.getFrom());
+					intent.putExtra("chatType", ChatActivity2.CHATTYPE_SINGLE);
+				}
+				return intent;
+			}
+		});
+		//设置一个connectionlistener监听账户重复登陆
+		EMChatManager.getInstance().addConnectionListener(new MyConnectionListener());
+
 	}
 
-	private void initDate() {
+	private void initData() {
 		mBaiduPushServer = new BaiduPush(BaiduPush.HTTP_METHOD_POST, Constants.BaiduPushConfig.SECRIT_KEY,
 				Constants.BaiduPushConfig.API_KEY);
 		friendSharePreference = new FriendPreference(this);
@@ -86,6 +154,86 @@ public class BaseApplication extends Application {
 		if (mNotificationManager == null)
 			mNotificationManager = (NotificationManager) getSystemService(android.content.Context.NOTIFICATION_SERVICE);
 		return mNotificationManager;
+	}
+
+	private String getAppName(int pID) {
+		String processName = null;
+		ActivityManager am = (ActivityManager) this.getSystemService(ACTIVITY_SERVICE);
+		List l = am.getRunningAppProcesses();
+		Iterator i = l.iterator();
+		PackageManager pm = this.getPackageManager();
+		while (i.hasNext()) {
+			ActivityManager.RunningAppProcessInfo info = (ActivityManager.RunningAppProcessInfo) (i.next());
+			try {
+				if (info.pid == pID) {
+					CharSequence c = pm.getApplicationLabel(pm.getApplicationInfo(info.processName,
+							PackageManager.GET_META_DATA));
+					//					LogTool.d("Process",
+					//							"Id: " + info.pid + " ProcessName: " + info.processName + "  Label: " + c.toString());
+					processName = c.toString();
+					processName = info.processName;
+					return processName;
+				}
+			} catch (Exception e) {
+				LogTool.d("Process", "Error>> :" + e.toString());
+			}
+		}
+		return processName;
+	}
+
+	/**
+	 * 获取当前登陆用户名
+	 * 
+	 * @return
+	 */
+	public String getHuanXinUserName() {
+		if (huanXinUserName == null) {
+			userPreference.getHuanXinUserName();
+		}
+		return huanXinUserName;
+	}
+
+	/**
+	 * 获取密码
+	 * 
+	 * @return
+	 */
+	public String getHuanXinPassword() {
+		if (huanxinPassword == null) {
+			userPreference.getHuanXinPassword();
+		}
+		return huanxinPassword;
+	}
+
+	/**
+	 * 设置用户名
+	 * 
+	 * @param user
+	 */
+	public void setHuanXinUserName(String username) {
+		if (username != null) {
+			userPreference.setHuanXinUserName(username);
+		}
+	}
+
+	/**
+	 * 设置密码
+	 * 下面的实例代码 只是demo，实际的应用中需要加password 加密后存入 preference
+	 * 环信sdk 内部的自动登录需要的密码，已经加密存储了
+	 * @param pwd
+	 */
+	public void setHuanXinPassword(String pwd) {
+		userPreference.setHuanXinPassword(pwd);
+	}
+
+	/**
+	 * 退出登录,清空数据
+	 */
+	public void logout() {
+		// 先调用sdk logout，在清理app中自己的数据
+		EMChatManager.getInstance().logout();
+		userPreference.setHuanXinUserName(null);
+		userPreference.setHuanXinPassword(null);
 	}
 
 	/**
@@ -165,6 +313,36 @@ public class BaseApplication extends Application {
 		if (!mFaceMap.isEmpty())
 			return mFaceMap;
 		return null;
+	}
+
+	class MyConnectionListener implements ConnectionListener {
+		@Override
+		public void onReConnecting() {
+		}
+
+		@Override
+		public void onReConnected() {
+		}
+
+		@Override
+		public void onDisConnected(String errorString) {
+			if (errorString != null && errorString.contains("conflict")) {
+				Intent intent = new Intent(applicationContext, MainActivity.class);
+				intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+				intent.putExtra("conflict", true);
+				startActivity(intent);
+			}
+
+		}
+
+		@Override
+		public void onConnecting(String progress) {
+
+		}
+
+		@Override
+		public void onConnected() {
+		}
 	}
 
 	/**

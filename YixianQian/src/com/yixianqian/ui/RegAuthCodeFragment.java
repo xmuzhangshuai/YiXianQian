@@ -22,12 +22,16 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.easemob.EMCallBack;
+import com.easemob.chat.EMChatManager;
 import com.yixianqian.R;
 import com.yixianqian.base.BaseApplication;
 import com.yixianqian.base.BaseV4Fragment;
 import com.yixianqian.config.DefaultSetting;
 import com.yixianqian.table.UserTable;
 import com.yixianqian.utils.HttpUtil;
+import com.yixianqian.utils.MD5For16;
+import com.yixianqian.utils.ToastTool;
 import com.yixianqian.utils.UserPreference;
 
 /**
@@ -48,6 +52,8 @@ public class RegAuthCodeFragment extends BaseV4Fragment {
 	private EditText authCode;
 	private Timer timer;
 	private UserPreference userPreference;
+	private String huanxinUsername;
+	private String huanxinaPassword;
 
 	/**
 	 * 用户注册异步任务
@@ -194,8 +200,8 @@ public class RegAuthCodeFragment extends BaseV4Fragment {
 	* @version    
 	*    
 	*/
+	ProgressDialog dialog;
 	public class UserRegisterTask extends AsyncTask<Void, Void, Integer> {
-		ProgressDialog dialog;
 
 		@Override
 		protected void onPreExecute() {
@@ -240,20 +246,24 @@ public class RegAuthCodeFragment extends BaseV4Fragment {
 		@Override
 		protected void onPostExecute(Integer result) {
 			mRegisterTask = null;
-			dialog.dismiss();
 
 			if (result > -1) {
-				Toast.makeText(getActivity(), "恭喜您注册成功！", 1).show();
 				userPreference.setU_id(result);
-				userPreference.setUserLogin(true);
-				userPreference.setU_password("");//清除密码
 
-				Intent intent = new Intent(getActivity(), HeadImageActivity.class);
-				startActivity(intent);
-				getActivity().overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
-				getActivity().finish();
+				// 调用环信sdk注册方法
+				huanxinUsername = "" + result;
+				huanxinaPassword = MD5For16.GetMD5CodeToLower(userPreference.getU_password());
+				try {
+					CreateAccountTask task = new CreateAccountTask();
+					task.execute(huanxinUsername, huanxinaPassword);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
 			} else {
 				Toast.makeText(getActivity(), "注册失败", 1).show();
+				dialog.dismiss();
 			}
 		}
 
@@ -264,4 +274,57 @@ public class RegAuthCodeFragment extends BaseV4Fragment {
 		}
 	}
 
+	/**
+	 * 
+	 * 类名称：CreateAccountTask
+	 * 类描述：注册环信账号异步任务
+	 * 创建人： 张帅
+	 * 创建时间：2014年8月11日 下午9:04:00
+	 *
+	 */
+	private class CreateAccountTask extends AsyncTask<String, Void, String> {
+		protected String doInBackground(String... args) {
+			String userid = args[0];
+			String pwd = args[1];
+			try {
+				EMChatManager.getInstance().createAccountOnServer(userid, pwd);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return userid;
+		}
+
+		@Override
+		protected void onPostExecute(String result) {
+			// TODO Auto-generated method stub
+			super.onPostExecute(result);
+
+			//登录到聊天服务器
+			EMChatManager.getInstance().login(huanxinUsername, huanxinaPassword, new EMCallBack() {
+
+				@Override
+				public void onError(int arg0, final String errorMsg) {
+					Toast.makeText(getActivity(), "登录聊天服务器失败：" + errorMsg, Toast.LENGTH_SHORT).show();
+				}
+
+				@Override
+				public void onProgress(int arg0, String arg1) {
+				}
+
+				@Override
+				public void onSuccess() {
+					userPreference.setHuanXinUserName(huanxinUsername);
+					userPreference.setHuanXinPassword(huanxinaPassword);
+					userPreference.setUserLogin(true);
+					userPreference.setU_password("");//清除密码
+					dialog.dismiss();
+
+					Intent intent = new Intent(getActivity(), HeadImageActivity.class);
+					startActivity(intent);
+					getActivity().overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+					getActivity().finish();
+				}
+			});
+		}
+	}
 }

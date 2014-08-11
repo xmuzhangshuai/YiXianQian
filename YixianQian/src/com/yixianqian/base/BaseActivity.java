@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.widget.Toast;
 
+import com.easemob.chat.EMChatManager;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.yixianqian.R;
 import com.yixianqian.ui.LoginActivity;
@@ -107,6 +108,8 @@ public abstract class BaseActivity extends Activity {
 		IntentFilter intentFilter = new IntentFilter();
 		intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
 		BaseActivity.this.registerReceiver(netBroadCastReceiver, intentFilter);
+		//onresume时，取消notification显示
+		EMChatManager.getInstance().activityResumed();
 	}
 
 	@Override

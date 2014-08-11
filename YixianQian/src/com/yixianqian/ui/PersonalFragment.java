@@ -89,6 +89,12 @@ public class PersonalFragment extends BaseV4Fragment {
 		//设置头像
 		if (!TextUtils.isEmpty(userPreference.getU_small_avatar())) {
 			ServerUtil.getInstance(getActivity()).disPlayHeadImage(headImageView, waitCheckView);
+		} else {
+			//获取新头像地址
+			ServerUtil.getInstance(getActivity()).getHeadImage(headImageView, waitCheckView);
+		}
+
+		if (!TextUtils.isEmpty(userPreference.getU_small_avatar())) {
 			//点击显示高清头像
 			headImageView.setOnClickListener(new OnClickListener() {
 				@Override
@@ -102,7 +108,6 @@ public class PersonalFragment extends BaseV4Fragment {
 				}
 			});
 		}
-
 		recording = false;
 		//		initRecorder();
 	}
