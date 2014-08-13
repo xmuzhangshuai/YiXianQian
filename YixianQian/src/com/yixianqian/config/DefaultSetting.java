@@ -20,7 +20,7 @@ public class DefaultSetting {
 	public static String DoMainName = "http://192.168.1.102/";
 
 	//时间胶囊每页显示条数
-	public static int PAGE_NUM = 5;
+	public static int PAGE_NUM = 20;
 
 	//聊天每次刷新纪录条数
 	public static int LOAD_MESSAGE_COUNT = 3;

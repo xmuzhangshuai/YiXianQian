@@ -474,6 +474,13 @@ public final class ImageTools {
 		}
 	}
 
+	public static void deleteImageByPath(String path) {
+		File file = new File(path);
+		if (file != null) {
+			file.delete();
+		}
+	}
+
 	/**
 	 * 读取本地资源的图片
 	 * 

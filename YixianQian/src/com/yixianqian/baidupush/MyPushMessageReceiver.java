@@ -24,7 +24,7 @@ import com.yixianqian.db.MessageItemDbService;
 import com.yixianqian.entities.Conversation;
 import com.yixianqian.entities.MessageItem;
 import com.yixianqian.jsonobject.JsonMessage;
-import com.yixianqian.ui.ChatActivity2;
+import com.yixianqian.ui.ChatActivity;
 import com.yixianqian.ui.MainActivity;
 import com.yixianqian.ui.VertifyToChatActivity;
 import com.yixianqian.utils.FastJsonTool;
@@ -174,7 +174,7 @@ public class MyPushMessageReceiver extends FrontiaPushMessageReceiver {
 		String text = friendPreference.getName() + ": " + message.getMessageContent();
 		builder.setSmallIcon(R.drawable.ic_launcher).setContentTitle(title).setContentText(text).setAutoCancel(true)
 				.setTicker("ÐÂÏûÏ¢£¡").setDefaults(Notification.DEFAULT_ALL);
-		Intent resultIntent = new Intent(application, ChatActivity2.class);
+		Intent resultIntent = new Intent(application, ChatActivity.class);
 		resultIntent.putExtra("conversationID", conversationDbService.getConIdByUserId(friendPreference.getF_id()));
 		TaskStackBuilder stackBuilder = TaskStackBuilder.create(application);
 		stackBuilder.addParentStack(MainActivity.class);

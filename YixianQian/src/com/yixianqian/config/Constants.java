@@ -61,6 +61,33 @@ public class Constants {
 
 	}
 
+	public static class FlipperStatus {
+		/**被邀请*/
+		public static final String BEINVITEED = "BEINVITEED";
+
+		/**被拒绝*/
+		public static final String BEREFUSED = "BEREFUSED";
+
+		/**对方同意*/
+		public static final String BEAGREED = "BEAGREED";
+
+		/**对方申请*/
+		public static final String BEAPPLYED = "BEAPPLYED";
+
+		/**我同意了对方的请求*/
+		public static final String AGREED = "AGREED";
+
+		/**我拒绝了对方的请求*/
+		public static final String REFUSED = "AGREED";
+
+	}
+
+	public static class FlipperType {
+		public static final int FROM = 0;//被邀请
+		public static final int TO = 1;//我邀请别人
+	}
+
+	//星座
 	public static class Constell {
 		public static final String Aries = "白羊座";
 		public static final String Taurus = "金牛座";

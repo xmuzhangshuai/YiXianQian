@@ -139,9 +139,8 @@ public class HomeFragment extends BaseV4Fragment {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				// TODO Auto-generated method stub
-				Intent toChatIntent = new Intent(getActivity(), ChatActivity2.class);
-				//				toChatIntent.putExtra("conversationID", conversationList.get(position).getId());
-				toChatIntent.putExtra("userId", "lasdjfo");
+				Intent toChatIntent = new Intent(getActivity(), ChatActivity.class);
+				toChatIntent.putExtra("userId", "" + conversationList.get(position).getUserID());
 				startActivity(toChatIntent);
 				getActivity().overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
 			}
@@ -180,9 +179,6 @@ public class HomeFragment extends BaseV4Fragment {
 	 * Ë¢ÐÂÒ³Ãæ
 	 */
 	public void refresh() {
-		//		adapter = new ChatHistoryAdapter(getActivity(), R.layout.row_chat_history, loadUsersWithRecentChat());
-		//		listView.setAdapter(adapter);
-		//		adapter.notifyDataSetChanged();
 		mAdapter = new HomeListAdapter(getActivity(), mHomeListView, conversationList);
 		mHomeListView.setAdapter(mAdapter);
 		mAdapter.notifyDataSetChanged();

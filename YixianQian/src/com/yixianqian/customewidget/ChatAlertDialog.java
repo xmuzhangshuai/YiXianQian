@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.yixianqian.R;
 import com.yixianqian.base.BaseActivity;
-import com.yixianqian.ui.ChatActivity2;
+import com.yixianqian.ui.ChatActivity;
 
 public class ChatAlertDialog extends BaseActivity {
 	private TextView mTextView;
@@ -95,7 +95,7 @@ public class ChatAlertDialog extends BaseActivity {
 				new Intent().putExtra("position", position).putExtra("edittext", editText.getText().toString())
 		/*.putExtra("voicePath", voicePath)*/);
 		if (position != -1)
-			ChatActivity2.resendPos = position;
+			ChatActivity.resendPos = position;
 		finish();
 
 	}

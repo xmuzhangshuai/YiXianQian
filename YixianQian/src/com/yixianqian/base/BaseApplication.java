@@ -37,7 +37,7 @@ import com.yixianqian.dao.DaoMaster;
 import com.yixianqian.dao.DaoMaster.OpenHelper;
 import com.yixianqian.dao.DaoSession;
 import com.yixianqian.jsonobject.JsonUser;
-import com.yixianqian.ui.ChatActivity2;
+import com.yixianqian.ui.ChatActivity;
 import com.yixianqian.ui.MainActivity;
 import com.yixianqian.utils.FriendPreference;
 import com.yixianqian.utils.LogTool;
@@ -118,7 +118,7 @@ public class BaseApplication extends Application {
 		// 设置收到消息是否有声音提示，默认为true
 		options.setNoticeBySound(true);
 		// 设置收到消息是否震动 默认为true
-		options.setNoticedByVibrate(true);
+		options.setNoticedByVibrate(false);
 		// 设置语音消息播放是否设置为扬声器播放 默认为true
 		options.setUseSpeaker(true);
 
@@ -127,11 +127,11 @@ public class BaseApplication extends Application {
 
 			@Override
 			public Intent onNotificationClick(EMMessage message) {
-				Intent intent = new Intent(applicationContext, ChatActivity2.class);
+				Intent intent = new Intent(applicationContext, ChatActivity.class);
 				ChatType chatType = message.getChatType();
 				if (chatType == ChatType.Chat) { //单聊信息
 					intent.putExtra("userId", message.getFrom());
-					intent.putExtra("chatType", ChatActivity2.CHATTYPE_SINGLE);
+					intent.putExtra("chatType", ChatActivity.CHATTYPE_SINGLE);
 				}
 				return intent;
 			}

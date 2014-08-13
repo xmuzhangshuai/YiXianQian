@@ -55,4 +55,13 @@ public class FlipperDbService {
 		flippers = flipperDao.queryBuilder().orderDesc(Properties.Time).list();
 		return flippers;
 	}
+
+	/**
+	 * 根据请求者的ID获取Flipper
+	 * @param userId
+	 * @return
+	 */
+	public Flipper getFlipperByUserId(int userId) {
+		return flipperDao.queryBuilder().where(Properties.UserID.eq(userId)).unique();
+	}
 }

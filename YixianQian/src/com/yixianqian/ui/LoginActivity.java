@@ -27,6 +27,9 @@ import com.yixianqian.server.ServerUtil;
 import com.yixianqian.table.UserTable;
 import com.yixianqian.utils.FastJsonTool;
 import com.yixianqian.utils.HttpUtil;
+import com.yixianqian.utils.LogTool;
+import com.yixianqian.utils.MD5For16;
+import com.yixianqian.utils.MD5For32;
 import com.yixianqian.utils.NetworkUtils;
 import com.yixianqian.utils.SIMCardInfo;
 import com.yixianqian.utils.ToastTool;
@@ -116,7 +119,7 @@ public class LoginActivity extends BaseActivity {
 
 		// Store values at the time of the login attempt.
 		String phone = mPhoneView.getText().toString();
-		String password = mPasswordView.getText().toString();
+		String password = MD5For32.GetMD5Code(mPasswordView.getText().toString());
 
 		boolean cancel = false;
 		View focusView = null;
@@ -194,11 +197,36 @@ public class LoginActivity extends BaseActivity {
 	}
 
 	/**
+	 * 登录环信
+	 */
+	private void loginHuanXin() {
+		EMChatManager.getInstance().login(userPreference.getHuanXinUserName(), userPreference.getHuanXinPassword(),
+				new EMCallBack() {
+
+					@Override
+					public void onSuccess() {
+						userPreference.setUserLogin(true);
+					}
+
+					@Override
+					public void onProgress(int progress, String status) {
+					}
+
+					@Override
+					public void onError(int code, final String message) {
+						userPreference.clear();
+					}
+				});
+		ServerUtil.getInstance(LoginActivity.this).getFlipperAndRecommend(LoginActivity.this, true);
+		showProgress(false);
+	}
+
+	/**
 	 * 登陆
 	 * 
 	 * @param view
 	 */
-	public void loginHuanXin() {
+	public void attempLoginHuanXin(int time) {
 		if (!NetworkUtils.isNetworkAvailable(this)) {
 			NetworkUtils.networkStateTips(this);
 			return;
@@ -207,29 +235,16 @@ public class LoginActivity extends BaseActivity {
 		// 调用sdk登陆方法登陆聊天服务器
 		if (!TextUtils.isEmpty(userPreference.getHuanXinUserName())
 				&& !TextUtils.isEmpty(userPreference.getHuanXinPassword())) {
-			EMChatManager.getInstance().login(userPreference.getHuanXinUserName(), userPreference.getHuanXinPassword(),
-					new EMCallBack() {
-
-						@Override
-						public void onSuccess() {
-							ServerUtil.getInstance(LoginActivity.this).getFlipperAndRecommend(LoginActivity.this, true);
-							userPreference.setUserLogin(true);
-							showProgress(false);
-						}
-
-						@Override
-						public void onProgress(int progress, String status) {
-							showProgress(false);
-							userPreference.clear();
-						}
-
-						@Override
-						public void onError(int code, final String message) {
-						}
-					});
-		}else {
-			showProgress(false);
-			ToastTool.showShort(LoginActivity.this, "登录聊天服务器失败");
+			loginHuanXin();
+		} else {
+			if (time == 1) {
+				userPreference.setHuanXinUserName("" + userPreference.getU_id());
+				userPreference.setHuanXinPassword(MD5For16.GetMD5Code(userPreference.getU_password()));
+				attempLoginHuanXin(2);
+			} else {
+				showProgress(false);
+				ToastTool.showShort(LoginActivity.this, "登录聊天服务器失败");
+			}
 		}
 	}
 
@@ -296,15 +311,16 @@ public class LoginActivity extends BaseActivity {
 				userPreference.setU_tel(user.getU_tel());
 				userPreference.setU_vocationid(user.getU_vocationid());
 				userPreference.setU_weight(user.getU_weight());
+				userPreference.setU_password(MD5For32.GetMD5Code(mPassword));
+				userPreference.setHuanXinUserName("" + user.getU_id());
+				userPreference.setHuanXinPassword(MD5For16.GetMD5Code(mPassword));
 
 				//登录环信
-//				loginHuanXin();
-				userPreference.setUserLogin(true);
-				ServerUtil.getInstance(LoginActivity.this).getFlipperAndRecommend(LoginActivity.this, true);
-				
+				attempLoginHuanXin(1);
 			} else {
 				mPasswordView.setError("用户名或密码错误！");
 				mPasswordView.requestFocus();
+				showProgress(false);
 			}
 		}
 

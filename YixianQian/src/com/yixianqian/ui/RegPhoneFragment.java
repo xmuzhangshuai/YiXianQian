@@ -23,6 +23,7 @@ import com.yixianqian.base.BaseV4Fragment;
 import com.yixianqian.config.DefaultKeys;
 import com.yixianqian.table.UserTable;
 import com.yixianqian.utils.HttpUtil;
+import com.yixianqian.utils.MD5For32;
 import com.yixianqian.utils.SIMCardInfo;
 import com.yixianqian.utils.UserPreference;
 
@@ -206,7 +207,7 @@ public class RegPhoneFragment extends BaseV4Fragment {
 		} else {
 			// Ã»ÓÐ´íÎó£¬Ôò×¢²á
 			userPreference.setU_tel(mPhone);
-			userPreference.setU_password(mPassword);
+			userPreference.setU_password(MD5For32.GetMD5Code(mPassword));
 			userPreference.setU_nickname(mName);
 
 			RegAuthCodeFragment fragment = new RegAuthCodeFragment();

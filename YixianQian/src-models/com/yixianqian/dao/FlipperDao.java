@@ -48,6 +48,8 @@ public class FlipperDao extends AbstractDao<Flipper, Long> {
         public final static Property Salary = new Property(22, Double.class, "salary", false, "SALARY");
         public final static Property IsRead = new Property(23, Boolean.class, "isRead", false, "IS_READ");
         public final static Property Tel = new Property(24, String.class, "tel", false, "TEL");
+        public final static Property Status = new Property(25, String.class, "status", false, "STATUS");
+        public final static Property Type = new Property(26, Integer.class, "type", false, "TYPE");
     };
 
 
@@ -87,7 +89,9 @@ public class FlipperDao extends AbstractDao<Flipper, Long> {
                 "'IMAGE_PASS' INTEGER," + // 21: imagePass
                 "'SALARY' REAL," + // 22: salary
                 "'IS_READ' INTEGER," + // 23: isRead
-                "'TEL' TEXT);"); // 24: tel
+                "'TEL' TEXT," + // 24: tel
+                "'STATUS' TEXT," + // 25: status
+                "'TYPE' INTEGER);"); // 26: type
     }
 
     /** Drops the underlying database table. */
@@ -225,6 +229,16 @@ public class FlipperDao extends AbstractDao<Flipper, Long> {
         if (tel != null) {
             stmt.bindString(25, tel);
         }
+ 
+        String status = entity.getStatus();
+        if (status != null) {
+            stmt.bindString(26, status);
+        }
+ 
+        Integer type = entity.getType();
+        if (type != null) {
+            stmt.bindLong(27, type);
+        }
     }
 
     /** @inheritdoc */
@@ -261,7 +275,9 @@ public class FlipperDao extends AbstractDao<Flipper, Long> {
             cursor.isNull(offset + 21) ? null : cursor.getInt(offset + 21), // imagePass
             cursor.isNull(offset + 22) ? null : cursor.getDouble(offset + 22), // salary
             cursor.isNull(offset + 23) ? null : cursor.getShort(offset + 23) != 0, // isRead
-            cursor.isNull(offset + 24) ? null : cursor.getString(offset + 24) // tel
+            cursor.isNull(offset + 24) ? null : cursor.getString(offset + 24), // tel
+            cursor.isNull(offset + 25) ? null : cursor.getString(offset + 25), // status
+            cursor.isNull(offset + 26) ? null : cursor.getInt(offset + 26) // type
         );
         return entity;
     }
@@ -294,6 +310,8 @@ public class FlipperDao extends AbstractDao<Flipper, Long> {
         entity.setSalary(cursor.isNull(offset + 22) ? null : cursor.getDouble(offset + 22));
         entity.setIsRead(cursor.isNull(offset + 23) ? null : cursor.getShort(offset + 23) != 0);
         entity.setTel(cursor.isNull(offset + 24) ? null : cursor.getString(offset + 24));
+        entity.setStatus(cursor.isNull(offset + 25) ? null : cursor.getString(offset + 25));
+        entity.setType(cursor.isNull(offset + 26) ? null : cursor.getInt(offset + 26));
      }
     
     /** @inheritdoc */

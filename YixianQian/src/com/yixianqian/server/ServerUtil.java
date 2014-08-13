@@ -19,6 +19,7 @@ import com.loopj.android.http.TextHttpResponseHandler;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.yixianqian.R;
 import com.yixianqian.base.BaseApplication;
+import com.yixianqian.config.Constants;
 import com.yixianqian.db.FlipperDbService;
 import com.yixianqian.db.TodayRecommendDbService;
 import com.yixianqian.entities.Flipper;
@@ -80,6 +81,7 @@ public class ServerUtil {
 						if (Integer.parseInt(response) > 0) {
 							userPreference.setU_stateid(Integer.parseInt(response));
 							getFlipperAndRecommend(context, isFinished);
+							//							getTodayRecommend(context, isFinished);
 						}
 					}
 				}
@@ -120,7 +122,8 @@ public class ServerUtil {
 										fRequest.getU_age(), fRequest.getU_vocationid(), fRequest.getU_stateid(),
 										fRequest.getU_provinceid(), fRequest.getU_cityid(), fRequest.getU_schoolid(),
 										fRequest.getU_height(), fRequest.getU_weight(), fRequest.getU_image_pass(),
-										fRequest.getU_salary(), false, fRequest.getU_tel());
+										fRequest.getU_salary(), false, fRequest.getU_tel(),
+										Constants.FlipperStatus.BEINVITEED, Constants.FlipperType.FROM);
 								flipperDbService.flipperDao.insert(flipper);
 							}
 						}
@@ -152,7 +155,7 @@ public class ServerUtil {
 	public void getTodayRecommend(final Context context, final boolean isFinished) {
 		final TodayRecommendDbService todayRecommendDbService = TodayRecommendDbService.getInstance(context);
 		todayRecommendDbService.todayRecommendDao.deleteAll();
-//		sharePreferenceUtil.setTodayRecommend("");
+		sharePreferenceUtil.setTodayRecommend("");
 
 		//如果没有推荐过
 		if (!sharePreferenceUtil.getTodayRecommend().equals(DateTimeTools.getCurrentDateForString())) {
@@ -243,7 +246,7 @@ public class ServerUtil {
 						}
 						//显示头像
 						disPlayHeadImage(imageView, textView);
-						
+
 					}
 				}
 			}

@@ -160,10 +160,12 @@ public class HeadImageActivity extends BaseActivity {
 			try {
 				if (photoUri != null) {
 					Bitmap bitmap = decodeUriAsBitmap(photoUri);
-					camera_image.setVisibility(View.GONE);
-					headImage.setImageBitmap(bitmap);
-					headImage.setVisibility(View.VISIBLE);
-					rightImageButton.setEnabled(true);
+					if (bitmap != null) {
+						camera_image.setVisibility(View.GONE);
+						headImage.setImageBitmap(bitmap);
+						headImage.setVisibility(View.VISIBLE);
+						rightImageButton.setEnabled(true);
+					}
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -300,6 +302,8 @@ public class HeadImageActivity extends BaseActivity {
 						smallBitmap.recycle();
 						//设置头像已改变
 						userPreference.setHeadImageChanged(true);
+						//删除本地头像
+						ImageTools.deleteImageByPath(photoUri.getPath());
 					}
 				}
 

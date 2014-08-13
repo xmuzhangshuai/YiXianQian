@@ -1,8 +1,16 @@
 package com.yixianqian.adapter;
 
+import java.util.Date;
 import java.util.LinkedList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.ImageSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,31 +18,31 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.TextView.BufferType;
 
+import com.easemob.chat.EMChatManager;
+import com.easemob.chat.EMConversation;
 import com.easemob.chat.EMMessage;
 import com.easemob.chat.ImageMessageBody;
 import com.easemob.chat.TextMessageBody;
+import com.easemob.util.DateUtils;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.yixianqian.R;
+import com.yixianqian.base.BaseApplication;
 import com.yixianqian.entities.Conversation;
 import com.yixianqian.utils.AsyncHttpClientImageSound;
-import com.yixianqian.utils.DateTimeTools;
 import com.yixianqian.utils.ImageLoaderTool;
 
 public class HomeListAdapter extends BaseAdapter {
 	private LayoutInflater mInflater;
 	private LinkedList<Conversation> conversationList;
-
-	//	private ListView mListView;
-	//	private Context mContext;
-	//	private ConversationDbService conversationDbService;
+	private Context mContext;
+	public static final Pattern EMOTION_URL = Pattern.compile("\\[(\\S+?)\\]");
 
 	public HomeListAdapter(Context context, ListView listview, LinkedList<Conversation> cList) {
-		//		this.mContext = context;
+		this.mContext = context;
 		this.mInflater = LayoutInflater.from(context);
-		//		this.mListView = listview;
 		this.conversationList = cList;
-		//		this.conversationDbService = ConversationDbService.getInstance(context);
 	}
 
 	@Override
@@ -73,10 +81,12 @@ public class HomeListAdapter extends BaseAdapter {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		// TODO Auto-generated method stub
+
 		if (convertView == null) {
-			convertView = mInflater.inflate(R.layout.home_list_item, parent, false);
+			convertView = mInflater.inflate(R.layout.home_list_item, null);
 		}
-		ViewHolder holder = (ViewHolder) convertView.getTag();
+
+		ViewHolder holder = new ViewHolder();
 
 		if (holder != null) {
 			holder.name = (TextView) convertView.findViewById(R.id.recent_list_item_name);
@@ -87,21 +97,37 @@ public class HomeListAdapter extends BaseAdapter {
 			holder.msgState = convertView.findViewById(R.id.msg_state);
 		}
 
-		// 获取与此用户/群组的会话
-		//		EMConversation conversation = EMChatManager.getInstance().getConversation(conversationList.get(position).getUserID());
+		Conversation conversation = conversationList.get(position);
 
-		holder.name.setText(conversationList.get(position).getName());
-		holder.message.setText(conversationList.get(position).getLastMessage());
-		if (conversationList.get(position).getNewNum() > 0) {
-			holder.unreadLabel.setText("" + conversationList.get(position).getNewNum());
+		// 获取与此用户/群组的会话
+		EMConversation emCconversation = EMChatManager.getInstance().getConversation("" + conversation.getUserID());
+
+		holder.name.setText(conversation.getName());
+
+		if (emCconversation.getUnreadMsgCount() > 0) {
+			// 显示与此用户的消息未读数
+			holder.unreadLabel.setText(String.valueOf(emCconversation.getUnreadMsgCount()));
 			holder.unreadLabel.setVisibility(View.VISIBLE);
+		} else {
+			holder.unreadLabel.setVisibility(View.INVISIBLE);
 		}
 
-		holder.time.setText(DateTimeTools.getChatTime(conversationList.get(position).getTime()));
+		if (emCconversation.getMsgCount() != 0) {
+			// 把最后一条消息的内容作为item的message内容
+			EMMessage lastMessage = emCconversation.getLastMessage();
+			holder.message.setText(convertNormalStringToSpannableString(getMessageDigest(lastMessage, mContext)),
+					BufferType.SPANNABLE);
+
+			holder.time.setText(DateUtils.getTimestampString(new Date(lastMessage.getMsgTime())));
+			if (lastMessage.direct == EMMessage.Direct.SEND && lastMessage.status == EMMessage.Status.FAIL) {
+				holder.msgState.setVisibility(View.VISIBLE);
+			} else {
+				holder.msgState.setVisibility(View.GONE);
+			}
+		}
 
 		ImageLoader imageLoader = ImageLoader.getInstance();
-		imageLoader.displayImage(
-				AsyncHttpClientImageSound.getAbsoluteUrl(conversationList.get(position).getSmallAvatar()),
+		imageLoader.displayImage(AsyncHttpClientImageSound.getAbsoluteUrl(conversation.getSmallAvatar()),
 				holder.avatar, ImageLoaderTool.getHeadImageOptions(10));
 
 		return convertView;
@@ -168,6 +194,47 @@ public class HomeListAdapter extends BaseAdapter {
 		}
 
 		return digest;
+	}
+
+	/**
+	 * 另外一种方法解析表情
+	 * @param message
+	 * 传入的需要处理的String
+	 * @return
+	 */
+	private CharSequence convertNormalStringToSpannableString(String message) {
+		// TODO Auto-generated method stub
+		String hackTxt;
+		if (message != null) {
+			if (message.startsWith("[") && message.endsWith("]")) {
+				hackTxt = message + " ";
+			} else {
+				hackTxt = message;
+			}
+			SpannableString value = SpannableString.valueOf(hackTxt);
+
+			Matcher localMatcher = EMOTION_URL.matcher(value);
+			while (localMatcher.find()) {
+				String str2 = localMatcher.group(0);
+				int k = localMatcher.start();
+				int m = localMatcher.end();
+				// k = str2.lastIndexOf("[");
+				// Log.i("way", "str2.length = "+str2.length()+", k = " + k);
+				// str2 = str2.substring(k, m);
+				if (m - k < 8) {
+					if (BaseApplication.getInstance().getFaceMap().containsKey(str2)) {
+						int face = BaseApplication.getInstance().getFaceMap().get(str2);
+						Bitmap bitmap = BitmapFactory.decodeResource(mContext.getResources(), face);
+						if (bitmap != null) {
+							ImageSpan localImageSpan = new ImageSpan(mContext, bitmap, ImageSpan.ALIGN_BASELINE);
+							value.setSpan(localImageSpan, k, m, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+						}
+					}
+				}
+			}
+			return value;
+		}
+		return null;
 	}
 
 	String getString(Context context, int resId) {

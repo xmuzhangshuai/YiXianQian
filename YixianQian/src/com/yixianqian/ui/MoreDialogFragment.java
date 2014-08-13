@@ -55,7 +55,7 @@ public class MoreDialogFragment extends DialogFragment {
 	 * 创建实例
 	 * @return
 	 */
-	static MoreDialogFragment newInstance() {
+	public static MoreDialogFragment newInstance() {
 		MoreDialogFragment f = new MoreDialogFragment();
 		return f;
 	}
@@ -89,7 +89,7 @@ public class MoreDialogFragment extends DialogFragment {
 		menuitemListView = (ListView) rootView.findViewById(R.id.dialog_listview);
 		View view = rootView.findViewById(R.id.divider);
 		TextView title = (TextView) rootView.findViewById(R.id.title);
-		title.setText("更多");
+		title.setText("操作");
 		view.setVisibility(View.VISIBLE);
 		title.setVisibility(View.VISIBLE);
 

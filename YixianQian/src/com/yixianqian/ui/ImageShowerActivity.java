@@ -1,14 +1,13 @@
 package com.yixianqian.ui;
 
 import android.os.Bundle;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.ImageView;
+import android.view.Window;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.yixianqian.R;
 import com.yixianqian.base.BaseActivity;
+import com.yixianqian.photoview.PhotoView;
 
 /**
  * ¿‡√˚≥∆£∫ImageShowerActivity
@@ -20,14 +19,16 @@ import com.yixianqian.base.BaseActivity;
 public class ImageShowerActivity extends BaseActivity {
 	public static final String SHOW_BIG_IMAGE = "showBigImage";
 	public static final String CACHE = "cache_on_memory";
-	private ImageView imageView;
+	private PhotoView imageView;
 	private String url;
 	private boolean cacahe = true;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_image_shower);
+
 		url = getIntent().getStringExtra(SHOW_BIG_IMAGE);
 		cacahe = getIntent().getBooleanExtra(CACHE, true);
 		findViewById();
@@ -37,21 +38,13 @@ public class ImageShowerActivity extends BaseActivity {
 	@Override
 	protected void findViewById() {
 		// TODO Auto-generated method stub
-		imageView = (ImageView) findViewById(R.id.imageview);
+		imageView = (PhotoView) findViewById(R.id.imageview);
 	}
 
 	@Override
 	protected void initView() {
 		// TODO Auto-generated method stub
 		imageLoader.displayImage(url, imageView, getImageOptions());
-		imageView.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				finish();
-			}
-		});
 	}
 
 	/**

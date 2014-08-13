@@ -13,6 +13,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.easemob.chat.EMChatManager;
+import com.easemob.exceptions.EaseMobException;
 import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.TextHttpResponseHandler;
 import com.yixianqian.R;
@@ -143,11 +145,20 @@ public class WaitActivity extends BaseActivity {
 									.getInstance(WaitActivity.this);
 							messageItemDbService.messageItemDao.insert(item);
 
-							Intent intent = new Intent(WaitActivity.this, ChatActivity2.class);
-							intent.putExtra("conversationID", conversationDbService.getIdByConversation(conversation));
+//							try {
+//								EMChatManager.getInstance().acceptInvitation("" + friendpreference.getF_id());
+//							} catch (EaseMobException e) {
+//								// TODO Auto-generated catch block
+//								e.printStackTrace();
+//							}
+
+							Intent intent = new Intent(WaitActivity.this, ChatActivity.class);
+							//							intent.putExtra("conversationID", conversationDbService.getIdByConversation(conversation));
+							intent.putExtra("userId", "" + friendpreference.getF_id());
 							startActivity(intent);
 							overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
 							finish();
+
 						} else if (response.equals("2")) {
 							//							textInfo.setText("对方拒绝了您的邀请！");
 							ToastTool.showLong(WaitActivity.this, "对方拒绝了您的邀请！");

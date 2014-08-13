@@ -218,7 +218,7 @@ public class PersonDetailActivity extends BaseFragmentActivity implements OnClic
 		bundle.putInt(PERSON_TYPE, type);
 		if (type == 1) {
 			bundle.putInt(UserTable.U_ID, jsonUser.getU_id());
-		} 
+		}
 		newFragment.setArguments(bundle);
 		newFragment.show(ft, "persondetail");
 	}
@@ -271,10 +271,8 @@ public class PersonDetailActivity extends BaseFragmentActivity implements OnClic
 			myAlertDialog.setNegativeButton("À„¡À", cancle);
 			myAlertDialog.show();
 		} else if (type == 2 || type == 3) {
-			Conversation conversation = ConversationDbService.getInstance(BaseApplication.getInstance())
-					.getConversationByUser(friendPreference.getF_id());
-			Intent intent = new Intent(PersonDetailActivity.this, ChatActivity2.class);
-			intent.putExtra("conversationID", conversation.getId());
+			Intent intent = new Intent(PersonDetailActivity.this, ChatActivity.class);
+			intent.putExtra("userId", "" + friendPreference.getF_id());
 			startActivity(intent);
 			overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
 		}

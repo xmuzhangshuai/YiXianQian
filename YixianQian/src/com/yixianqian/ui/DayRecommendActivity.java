@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.apache.http.Header;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -24,6 +25,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.easemob.chat.EMContactManager;
 import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.TextHttpResponseHandler;
 import com.yixianqian.R;
@@ -31,6 +33,7 @@ import com.yixianqian.base.BaseApplication;
 import com.yixianqian.base.BaseFragmentActivity;
 import com.yixianqian.config.Constants;
 import com.yixianqian.db.TodayRecommendDbService;
+import com.yixianqian.entities.Flipper;
 import com.yixianqian.entities.TodayRecommend;
 import com.yixianqian.table.FlipperRequestTable;
 import com.yixianqian.table.UserTable;
@@ -66,6 +69,7 @@ public class DayRecommendActivity extends BaseFragmentActivity {
 	//喜欢
 	private CheckBox like;
 	private int currentLike = -1;
+	private ProgressDialog progressDialog;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -152,10 +156,14 @@ public class DayRecommendActivity extends BaseFragmentActivity {
 				// TODO Auto-generated method stub
 				if (isChecked) {
 					currentLike = pageIndex;
-					sendLoveReuest(todayRecommendList.get(currentLike).getUserID());
-					Intent intent = new Intent(DayRecommendActivity.this, MainActivity.class);
-					startActivity(intent);
-					overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+					TodayRecommend todayRecommend = todayRecommendList.get(currentLike);
+					if (todayRecommend != null) {
+						sendLoveReuest(todayRecommendList.get(currentLike).getUserID());
+						Intent intent = new Intent(DayRecommendActivity.this, MainActivity.class);
+						startActivity(intent);
+						overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+					}
+
 				}
 			}
 		});
@@ -190,6 +198,41 @@ public class DayRecommendActivity extends BaseFragmentActivity {
 			};
 			AsyncHttpClientTool.post(DayRecommendActivity.this, url, params, responseHandler);
 		}
+	}
+
+	/**
+	 *  添加contact
+	 * @param view
+	 */
+	public void addContact(final int flipperId) {
+
+		progressDialog = new ProgressDialog(this);
+		progressDialog.setMessage("正在发送请求...");
+		progressDialog.setCanceledOnTouchOutside(false);
+		progressDialog.show();
+
+		new Thread(new Runnable() {
+			public void run() {
+
+				try {
+					//添加好友
+					EMContactManager.getInstance().addContact("" + flipperId, userPreference.getName() + "对您砰然心动！");
+					runOnUiThread(new Runnable() {
+						public void run() {
+							progressDialog.dismiss();
+							ToastTool.showShort(getApplicationContext(), "爱情验证已发送！等待对方同意");
+						}
+					});
+				} catch (final Exception e) {
+					runOnUiThread(new Runnable() {
+						public void run() {
+							progressDialog.dismiss();
+							ToastTool.showShort(getApplicationContext(), "请求添加好友失败:" + e.getMessage());
+						}
+					});
+				}
+			}
+		}).start();
 	}
 
 	/**

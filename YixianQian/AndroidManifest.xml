@@ -154,14 +154,6 @@
             android:windowSoftInputMode="stateHidden|adjustResize" >
         </activity>
 
-        <!-- 聊天页面 -->
-        <activity
-            android:name="com.yixianqian.ui.ChatActivity2"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize" >
-        </activity>
-
         <!-- 二维码扫描页面 -->
         <activity
             android:name="com.yixianqian.ui.CaptureActivity"
@@ -174,8 +166,7 @@
         <!-- 显示高清图片 -->
         <activity
             android:name="com.yixianqian.ui.ImageShowerActivity"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
+            android:screenOrientation="portrait" >
         </activity>
 
         <!-- 自定义的alertdialog -->
@@ -187,6 +178,7 @@
         <!-- 显示下载大图页面 -->
         <activity
             android:name="com.yixianqian.ui.ShowBigImage"
+            android:screenOrientation="portrait"
             android:theme="@style/horizontal_slide" >
         </activity>
 
@@ -260,6 +252,13 @@
         <activity
             android:name="com.yixianqian.ui.PersonTimeCapsuleActivity"
             android:screenOrientation="portrait" >
+        </activity>
+
+        <!-- 菜单页面 -->
+        <activity
+            android:name="com.yixianqian.ui.ContextMenu"
+            android:screenOrientation="portrait"
+            android:theme="@style/MyDialogStyle" >
         </activity>
 
         <!-- 测试页面 -->
@@ -337,6 +336,15 @@
         <!-- push service end -->
 
 
+        <!-- 开机自启动服务 -->
+        <receiver android:name="com.easemob.chat.StartServiceReceiver" >
+            <intent-filter android:priority="1000" >
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </receiver>
         <!-- 设置环信应用的appkey -->
         <meta-data
             android:name="EASEMOB_APPKEY"

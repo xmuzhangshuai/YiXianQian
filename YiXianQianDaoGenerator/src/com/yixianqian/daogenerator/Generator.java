@@ -135,6 +135,8 @@ public class Generator {
 		flipperEntity.addDoubleProperty("salary");
 		flipperEntity.addBooleanProperty("isRead");
 		flipperEntity.addStringProperty("tel");
+		flipperEntity.addStringProperty("status");//×´Ì¬
+		flipperEntity.addIntProperty("type");//ÀàÐÍ
 	}
 
 }

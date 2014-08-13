@@ -8,6 +8,8 @@ import org.apache.http.Header;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -142,6 +144,8 @@ public class LoveVertifyActivity extends BaseActivity {
 				flipperDbService.flipperDao.update(flipper);
 			}
 
+			String status = flipper.getStatus();
+
 			View view = convertView;
 			if (convertView == null) {
 				view = LayoutInflater.from(LoveVertifyActivity.this).inflate(R.layout.love_vertify_list_item, null);
@@ -151,19 +155,48 @@ public class LoveVertifyActivity extends BaseActivity {
 			TextView timeTextView = (TextView) view.findViewById(R.id.time);
 			View flipperBtn = (View) view.findViewById(R.id.flipped);
 			View refuseBtn = (View) view.findViewById(R.id.refuse);
+			TextView info = (TextView) view.findViewById(R.id.info);
+			TextView info2 = (TextView) view.findViewById(R.id.info2);
 
-			timeTextView.setText(DateTimeTools.DateToString(flipperList.get(position).getTime()));
+			timeTextView.setText(DateTimeTools.DateToString(flipper.getTime()));
 			if (!TextUtils.isEmpty(flipperList.get(position).getSamllAvatar())) {
-				imageLoader.displayImage(
-						AsyncHttpClientImageSound.getAbsoluteUrl(flipperList.get(position).getSamllAvatar()),
+				imageLoader.displayImage(AsyncHttpClientImageSound.getAbsoluteUrl(flipper.getSamllAvatar()),
 						headImageView, ImageLoaderTool.getHeadImageOptions(10));
+				headImageView.setOnClickListener(new OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						// TODO Auto-generated method stub
+						Intent intent = new Intent(LoveVertifyActivity.this, PersonDetailActivity.class);
+						intent.putExtra(PersonDetailActivity.PERSON_TYPE, 1);
+						intent.putExtra(UserTable.U_ID, flipperList.get(position).getUserID());
+						startActivity(intent);
+						overridePendingTransition(R.anim.zoomin2, R.anim.zoomout);
+					}
+				});
 			}
 			//优先显示真名
-			String name = flipperList.get(position).getNickname();
-			if (!TextUtils.isEmpty(flipperList.get(position).getRealname())) {
-				name = flipperList.get(position).getRealname();
+			String name = flipper.getNickname();
+			if (!TextUtils.isEmpty(flipper.getRealname())) {
+				name = flipper.getRealname();
 			}
 			nameTextView.setText(name);
+
+			if (status.equals(Constants.FlipperStatus.REFUSED)) {
+				nameTextView.setTextColor(getResources().getColor(R.color.unenable));
+				info.setText("您已经拒绝");
+				info.setTextColor(getResources().getColor(R.color.unenable));
+				info2.setVisibility(View.GONE);
+				flipperBtn.setVisibility(View.GONE);
+				refuseBtn.setVisibility(View.GONE);
+			} else {
+				nameTextView.setTextColor(Color.BLACK);
+				info.setText("对你怦然心动");
+				info.setTextColor(Color.BLACK);
+				info2.setVisibility(View.VISIBLE);
+				flipperBtn.setVisibility(View.VISIBLE);
+				refuseBtn.setVisibility(View.VISIBLE);
+			}
 
 			//点击接受按钮
 			flipperBtn.setOnClickListener(new OnClickListener() {
@@ -204,9 +237,12 @@ public class LoveVertifyActivity extends BaseActivity {
 					// TODO Auto-generated method stub
 					if (statusCode == 200) {
 						if (!TextUtils.isEmpty(response)) {
-							flipperDbService.flipperDao.delete(flipper);
-							flipperList.remove(position);
+							flipper.setStatus(Constants.FlipperStatus.REFUSED);
+							flipperDbService.flipperDao.update(flipper);
 							adapter.notifyDataSetChanged();
+							//							flipperDbService.flipperDao.delete(flipper);
+							//							flipperList.remove(position);
+							//							adapter.notifyDataSetChanged();
 						}
 					}
 				}
@@ -249,6 +285,10 @@ public class LoveVertifyActivity extends BaseActivity {
 							if (response.equals("0")) {
 								ToastTool.showLong(LoveVertifyActivity.this, "失败！");
 							} else {
+								//								flipper.setStatus(Constants.FlipperStatus.AGREED);
+								//								flipperDbService.flipperDao.update(flipper);
+								//								adapter.notifyDataSetChanged();
+
 								flipperDbService.flipperDao.delete(flipper);
 								flipperList.remove(position);
 								adapter.notifyDataSetChanged();
@@ -295,7 +335,7 @@ public class LoveVertifyActivity extends BaseActivity {
 											friendpreference.getF_small_avatar(), "", 0, System.currentTimeMillis());
 									conversationDbService.conversationDao.insert(conversation);
 
-									Intent intent = new Intent(LoveVertifyActivity.this, ChatActivity2.class);
+									Intent intent = new Intent(LoveVertifyActivity.this, ChatActivity.class);
 									intent.putExtra("conversationID",
 											conversationDbService.getIdByConversation(conversation));
 									startActivity(intent);

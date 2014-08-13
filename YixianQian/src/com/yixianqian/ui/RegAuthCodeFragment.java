@@ -31,7 +31,6 @@ import com.yixianqian.config.DefaultSetting;
 import com.yixianqian.table.UserTable;
 import com.yixianqian.utils.HttpUtil;
 import com.yixianqian.utils.MD5For16;
-import com.yixianqian.utils.ToastTool;
 import com.yixianqian.utils.UserPreference;
 
 /**
@@ -316,7 +315,7 @@ public class RegAuthCodeFragment extends BaseV4Fragment {
 					userPreference.setHuanXinUserName(huanxinUsername);
 					userPreference.setHuanXinPassword(huanxinaPassword);
 					userPreference.setUserLogin(true);
-					userPreference.setU_password("");//Çå³ıÃÜÂë
+//					userPreference.setU_password("");//Çå³ıÃÜÂë
 					dialog.dismiss();
 
 					Intent intent = new Intent(getActivity(), HeadImageActivity.class);

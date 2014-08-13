@@ -13,6 +13,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.easemob.chat.EMContactManager;
+import com.easemob.exceptions.EaseMobException;
 import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.TextHttpResponseHandler;
 import com.yixianqian.R;
@@ -183,10 +185,17 @@ public class AddLoverInfoActivity extends BaseActivity {
 										Constants.MessageType.MESSAGE_TYPE_LOVER);
 								new SendMsgAsyncTask(FastJsonTool.createJsonString(jsonMessage),
 										jsonUser.getU_bpush_user_id()).send();
-//								new SendMsgAsyncTask(FastJsonTool.createJsonString(jsonMessage),
-//										jsonUser.getU_bpush_user_id(),jsonUser.getU_bpush_channel_id()).send();
 								userPreference.setLoveRequest(true);
 								saveLoverInfo();
+								
+								
+//								try {
+//									EMContactManager.getInstance().addContact(""+jsonUser.getU_id(), "加好友");
+//								} catch (EaseMobException e) {
+//									// TODO Auto-generated catch block
+//									e.printStackTrace();
+//								}
+								
 								Intent intent = new Intent(AddLoverInfoActivity.this, WaitActivity.class);
 								startActivity(intent);
 								overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
@@ -213,87 +222,6 @@ public class AddLoverInfoActivity extends BaseActivity {
 			AsyncHttpClientTool.post(AddLoverInfoActivity.this, "addloverequest", params, responseHandler);
 		}
 	}
-
-	/**
-	 * 添加情侣
-	 */
-	//	private void addLover() {
-	//
-	//		if (jsonUser.getU_id() > 0) {
-	//			RequestParams params = new RequestParams();
-	//			params.put(LoversTable.L_USERID, userPreference.getU_id());
-	//			params.put(LoversTable.L_LOVERID, jsonUser.getU_id());
-	//			String url = "buildlover";
-	//			TextHttpResponseHandler responseHandler = new TextHttpResponseHandler() {
-	//				Dialog dialog;
-	//
-	//				@Override
-	//				public void onStart() {
-	//					// TODO Auto-generated method stub
-	//					super.onStart();
-	//					addLoverBtn.setEnabled(false);
-	//					dialog = showProgressDialog("请稍后...");
-	//				}
-	//
-	//				@Override
-	//				public void onSuccess(int statusCode, Header[] headers, String response) {
-	//					// TODO Auto-generated method stub
-	//					if (statusCode == 200) {
-	//						if (!TextUtils.isEmpty(response)) {
-	//							if (response.equals("0")) {
-	//								addLoverBtn.setEnabled(true);
-	//								ToastTool.showLong(AddLoverInfoActivity.this, "添加失败！");
-	//								finish();
-	//							} else if (response.equals("重复")) {
-	//								ToastTool.showLong(AddLoverInfoActivity.this, "你们已经是情侣啦！");
-	//								finish();
-	//							} else if (response.equals("状态")) {
-	//								ToastTool.showLong(AddLoverInfoActivity.this, "同时是单身的两个人才能成为情侣哦！");
-	//								finish();
-	//							} else {
-	//								//给对方发送消息
-	//								saveLoverInfo();
-	//								JsonMessage jsonMessage = new JsonMessage(userPreference.getU_tel(),
-	//										Constants.MessageType.MESSAGE_TYPE_LOVER);
-	//								new SendMsgAsyncTask(FastJsonTool.createJsonString(jsonMessage),
-	//										jsonUser.getU_bpush_user_id()).send();
-	//								//创建对话
-	//								ConversationDbService conversationDbService = ConversationDbService
-	//										.getInstance(AddLoverInfoActivity.this);
-	//								conversationDbService.conversationDao.deleteAll();
-	//								Conversation conversation = new Conversation(null, Long.valueOf(friendpreference
-	//										.getF_id()), friendpreference.getName(), friendpreference.getF_small_avatar(),
-	//										"", 0, System.currentTimeMillis());
-	//								conversationDbService.conversationDao.insert(conversation);
-	//
-	//								friendpreference.setLoverId(Integer.parseInt(response));
-	//								friendpreference.setType(1);
-	//								userPreference.setU_stateid(2);
-	//								Intent intent = new Intent(AddLoverInfoActivity.this, MainActivity.class);
-	//								startActivity(intent);
-	//								overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
-	//							}
-	//						}
-	//					}
-	//				}
-	//
-	//				@Override
-	//				public void onFailure(int statusCode, Header[] headers, String errorResponse, Throwable e) {
-	//					// TODO Auto-generated method stub
-	//					addLoverBtn.setEnabled(true);
-	//					ToastTool.showLong(AddLoverInfoActivity.this, "添加失败！" + errorResponse);
-	//				}
-	//
-	//				@Override
-	//				public void onFinish() {
-	//					// TODO Auto-generated method stub
-	//					dialog.dismiss();
-	//					super.onFinish();
-	//				}
-	//			};
-	//			AsyncHttpClientTool.post(AddLoverInfoActivity.this, url, params, responseHandler);
-	//		}
-	//	}
 
 	/**
 	 * 获取情侣信息
