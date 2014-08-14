@@ -28,6 +28,9 @@ public class JsonFlipperRequest {
 	private int u_image_pass;
 	//请求时间
 	private Date time;
+	//用于聊天所需要的字段
+	private String u_bpush_user_id;
+	private String u_bpush_channel_id;
 
 	public JsonFlipperRequest() {
 		// TODO Auto-generated constructor stub
@@ -35,6 +38,22 @@ public class JsonFlipperRequest {
 
 	public int getU_id() {
 		return u_id;
+	}
+
+	public String getU_bpush_user_id() {
+		return u_bpush_user_id;
+	}
+
+	public void setU_bpush_user_id(String u_bpush_user_id) {
+		this.u_bpush_user_id = u_bpush_user_id;
+	}
+
+	public String getU_bpush_channel_id() {
+		return u_bpush_channel_id;
+	}
+
+	public void setU_bpush_channel_id(String u_bpush_channel_id) {
+		this.u_bpush_channel_id = u_bpush_channel_id;
 	}
 
 	public void setU_id(int u_id) {
@@ -220,7 +239,8 @@ public class JsonFlipperRequest {
 	public JsonFlipperRequest(int u_id, String u_tel, String u_nickname, String u_realname, String u_gender,
 			String u_email, Date u_birthday, int u_age, String u_large_avatar, String u_small_avatar, int u_vocationid,
 			int u_stateid, int u_provinceid, int u_cityid, int u_schoolid, int u_height, int u_weight,
-			String u_blood_type, String u_constell, String u_introduce, double u_salary, int u_image_pass, Date time) {
+			String u_blood_type, String u_constell, String u_introduce, double u_salary, int u_image_pass, Date time,
+			String u_bpush_user_id, String u_bpush_channel_id) {
 		super();
 		this.u_id = u_id;
 		this.u_tel = u_tel;
@@ -245,8 +265,38 @@ public class JsonFlipperRequest {
 		this.u_salary = u_salary;
 		this.u_image_pass = u_image_pass;
 		this.time = time;
+		this.u_bpush_user_id = u_bpush_user_id;
+		this.u_bpush_channel_id = u_bpush_channel_id;
 	}
 
-	
+//	public JsonFlipperRequest(int u_id, String u_tel, String u_nickname, String u_realname, String u_gender,
+//			String u_email, Date u_birthday, int u_age, String u_large_avatar, String u_small_avatar, int u_vocationid,
+//			int u_stateid, int u_provinceid, int u_cityid, int u_schoolid, int u_height, int u_weight,
+//			String u_blood_type, String u_constell, String u_introduce, double u_salary, int u_image_pass, Date time) {
+//		super();
+//		this.u_id = u_id;
+//		this.u_tel = u_tel;
+//		this.u_nickname = u_nickname;
+//		this.u_realname = u_realname;
+//		this.u_gender = u_gender;
+//		this.u_email = u_email;
+//		this.u_birthday = u_birthday;
+//		this.u_age = u_age;
+//		this.u_large_avatar = u_large_avatar;
+//		this.u_small_avatar = u_small_avatar;
+//		this.u_vocationid = u_vocationid;
+//		this.u_stateid = u_stateid;
+//		this.u_provinceid = u_provinceid;
+//		this.u_cityid = u_cityid;
+//		this.u_schoolid = u_schoolid;
+//		this.u_height = u_height;
+//		this.u_weight = u_weight;
+//		this.u_blood_type = u_blood_type;
+//		this.u_constell = u_constell;
+//		this.u_introduce = u_introduce;
+//		this.u_salary = u_salary;
+//		this.u_image_pass = u_image_pass;
+//		this.time = time;
+//	}
 
 }

@@ -10,8 +10,8 @@
         android:layout_height="wrap_content"
         android:background="@color/system_back"
         android:gravity="center"
-        android:paddingBottom="@dimen/day_recommend_dot_space"
-        android:paddingTop="@dimen/day_recommend_padding" >
+        android:paddingBottom="10dp"
+        android:paddingTop="30dp" >
 
         <TextView
             android:id="@+id/time"
@@ -32,8 +32,8 @@
 
             <ImageView
                 android:id="@+id/head_image"
-                android:layout_width="@dimen/get_image_btn_padding"
-                android:layout_height="@dimen/get_image_btn_padding"
+                android:layout_width="@dimen/love_vertify_headimage"
+                android:layout_height="@dimen/love_vertify_headimage"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
                 android:src="@drawable/photoconor" />
@@ -45,7 +45,7 @@
                 android:layout_alignTop="@+id/head_image"
                 android:layout_marginLeft="10dp"
                 android:layout_toRightOf="@+id/head_image"
-                android:textSize="18sp" />
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/info"
@@ -55,7 +55,7 @@
                 android:layout_marginLeft="10dp"
                 android:layout_toRightOf="@+id/name"
                 android:text="对你怦然心动"
-                android:textSize="18sp" />
+                android:textSize="16sp" />
         </RelativeLayout>
 
         <TextView

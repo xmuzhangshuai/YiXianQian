@@ -11,6 +11,8 @@ public class Flipper {
 
     private Long id;
     private Integer userID;
+    private String bpushUserID;
+    private String bpushChannelID;
     private String nickname;
     private String realname;
     private String gender;
@@ -47,9 +49,11 @@ public class Flipper {
         this.id = id;
     }
 
-    public Flipper(Long id, Integer userID, String nickname, String realname, String gender, String email, String largeAvatar, String samllAvatar, String bloodType, String constell, String introduce, java.util.Date birthday, java.util.Date time, Integer age, Integer vocationID, Integer stateID, Integer provinceID, Integer cityID, Integer schoolID, Integer height, Integer weight, Integer imagePass, Double salary, Boolean isRead, String tel, String status, Integer type) {
+    public Flipper(Long id, Integer userID, String bpushUserID, String bpushChannelID, String nickname, String realname, String gender, String email, String largeAvatar, String samllAvatar, String bloodType, String constell, String introduce, java.util.Date birthday, java.util.Date time, Integer age, Integer vocationID, Integer stateID, Integer provinceID, Integer cityID, Integer schoolID, Integer height, Integer weight, Integer imagePass, Double salary, Boolean isRead, String tel, String status, Integer type) {
         this.id = id;
         this.userID = userID;
+        this.bpushUserID = bpushUserID;
+        this.bpushChannelID = bpushChannelID;
         this.nickname = nickname;
         this.realname = realname;
         this.gender = gender;
@@ -91,6 +95,22 @@ public class Flipper {
 
     public void setUserID(Integer userID) {
         this.userID = userID;
+    }
+
+    public String getBpushUserID() {
+        return bpushUserID;
+    }
+
+    public void setBpushUserID(String bpushUserID) {
+        this.bpushUserID = bpushUserID;
+    }
+
+    public String getBpushChannelID() {
+        return bpushChannelID;
+    }
+
+    public void setBpushChannelID(String bpushChannelID) {
+        this.bpushChannelID = bpushChannelID;
     }
 
     public String getNickname() {

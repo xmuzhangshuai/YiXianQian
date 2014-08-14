@@ -1,6 +1,7 @@
 package com.yixianqian.ui;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.http.Header;
@@ -32,14 +33,17 @@ import com.yixianqian.R;
 import com.yixianqian.base.BaseApplication;
 import com.yixianqian.base.BaseFragmentActivity;
 import com.yixianqian.config.Constants;
+import com.yixianqian.db.FlipperDbService;
 import com.yixianqian.db.TodayRecommendDbService;
 import com.yixianqian.entities.Flipper;
 import com.yixianqian.entities.TodayRecommend;
+import com.yixianqian.jsonobject.JsonUser;
 import com.yixianqian.table.FlipperRequestTable;
 import com.yixianqian.table.UserTable;
 import com.yixianqian.utils.AsyncHttpClientImageSound;
 import com.yixianqian.utils.AsyncHttpClientTool;
 import com.yixianqian.utils.DensityUtil;
+import com.yixianqian.utils.FastJsonTool;
 import com.yixianqian.utils.ImageLoaderTool;
 import com.yixianqian.utils.ToastTool;
 import com.yixianqian.utils.UserPreference;
@@ -70,6 +74,7 @@ public class DayRecommendActivity extends BaseFragmentActivity {
 	private CheckBox like;
 	private int currentLike = -1;
 	private ProgressDialog progressDialog;
+	private JsonUser jsonUser;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -163,7 +168,6 @@ public class DayRecommendActivity extends BaseFragmentActivity {
 						startActivity(intent);
 						overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
 					}
-
 				}
 			}
 		});
@@ -173,7 +177,7 @@ public class DayRecommendActivity extends BaseFragmentActivity {
 	 * 异步发送爱情验证
 	 * @param userID
 	 */
-	private void sendLoveReuest(int filpperId) {
+	private void sendLoveReuest(final int filpperId) {
 		if (filpperId > 0) {
 			String url = "addflipperrequest";
 			RequestParams params = new RequestParams();
@@ -181,6 +185,15 @@ public class DayRecommendActivity extends BaseFragmentActivity {
 			params.put(FlipperRequestTable.FR_USERID, myUserID);
 			params.put(FlipperRequestTable.FR_FLIPPERID, filpperId);
 			TextHttpResponseHandler responseHandler = new TextHttpResponseHandler() {
+				@Override
+				public void onStart() {
+					// TODO Auto-generated method stub
+					super.onStart();
+					progressDialog = new ProgressDialog(DayRecommendActivity.this);
+					progressDialog.setMessage("正在发送请求...");
+					progressDialog.setCanceledOnTouchOutside(false);
+					progressDialog.show();
+				}
 
 				@Override
 				public void onFailure(int arg0, Header[] arg1, String arg2, Throwable arg3) {
@@ -192,8 +205,14 @@ public class DayRecommendActivity extends BaseFragmentActivity {
 				@Override
 				public void onSuccess(int arg0, Header[] arg1, String arg2) {
 					// TODO Auto-generated method stub
-					ToastTool.showLong(DayRecommendActivity.this, "爱情验证已发送！");
+					addContact(filpperId);
 					DayRecommendActivity.this.finish();
+				}
+
+				@Override
+				public void onFinish() {
+					// TODO Auto-generated method stub
+					super.onFinish();
 				}
 			};
 			AsyncHttpClientTool.post(DayRecommendActivity.this, url, params, responseHandler);
@@ -206,33 +225,85 @@ public class DayRecommendActivity extends BaseFragmentActivity {
 	 */
 	public void addContact(final int flipperId) {
 
-		progressDialog = new ProgressDialog(this);
-		progressDialog.setMessage("正在发送请求...");
-		progressDialog.setCanceledOnTouchOutside(false);
-		progressDialog.show();
-
 		new Thread(new Runnable() {
 			public void run() {
-
 				try {
 					//添加好友
 					EMContactManager.getInstance().addContact("" + flipperId, userPreference.getName() + "对您砰然心动！");
+
 					runOnUiThread(new Runnable() {
 						public void run() {
+							saveFlipper(flipperId);
 							progressDialog.dismiss();
-							ToastTool.showShort(getApplicationContext(), "爱情验证已发送！等待对方同意");
+							ToastTool.showLong(getApplicationContext(), "爱情验证已发送！等待对方同意");
 						}
 					});
 				} catch (final Exception e) {
 					runOnUiThread(new Runnable() {
 						public void run() {
 							progressDialog.dismiss();
-							ToastTool.showShort(getApplicationContext(), "请求添加好友失败:" + e.getMessage());
+							ToastTool.showLong(getApplicationContext(), "爱情验证发送失败:" + e.getMessage());
 						}
 					});
 				}
 			}
 		}).start();
+	}
+
+	/**
+	 * 存储到数据库，已经同意
+	 */
+	public void saveFlipper(final int flipperId) {
+		FlipperDbService flipperDbService = FlipperDbService.getInstance(DayRecommendActivity.this);
+		Flipper flipper = flipperDbService.getFlipperByUserId(flipperId);
+		//如果数据库中存在该用户的请求，则更新状态
+		if (flipper != null) {
+			flipper.setIsRead(true);
+			flipper.setTime(new Date());
+			flipper.setStatus(Constants.FlipperStatus.INVITE);
+			flipper.setType(Constants.FlipperType.TO);
+			flipperDbService.flipperDao.update(flipper);
+		} else {
+			getUser(flipperId);
+		}
+	}
+
+	/**
+	 * 	网络获取User信息
+	 */
+	private void getUser(int userId) {
+		RequestParams params = new RequestParams();
+		params.put(UserTable.U_ID, userId);
+
+		TextHttpResponseHandler responseHandler = new TextHttpResponseHandler("utf-8") {
+			@Override
+			public void onSuccess(int statusCode, Header[] headers, String response) {
+				// TODO Auto-generated method stub
+				if (statusCode == 200) {
+					jsonUser = FastJsonTool.getObject(response, JsonUser.class);
+					if (jsonUser != null) {
+						FlipperDbService flipperDbService = FlipperDbService.getInstance(DayRecommendActivity.this);
+						Flipper flipper = new Flipper(null, jsonUser.getU_id(), jsonUser.getU_bpush_user_id(),
+								jsonUser.getU_bpush_channel_id(), jsonUser.getU_nickname(), jsonUser.getU_realname(),
+								jsonUser.getU_gender(), jsonUser.getU_email(), jsonUser.getU_large_avatar(),
+								jsonUser.getU_small_avatar(), jsonUser.getU_blood_type(), jsonUser.getU_constell(),
+								jsonUser.getU_introduce(), jsonUser.getU_birthday(), new Date(), jsonUser.getU_age(),
+								jsonUser.getU_vocationid(), jsonUser.getU_stateid(), jsonUser.getU_provinceid(),
+								jsonUser.getU_cityid(), jsonUser.getU_schoolid(), jsonUser.getU_height(),
+								jsonUser.getU_weight(), jsonUser.getU_image_pass(), jsonUser.getU_salary(), true,
+								jsonUser.getU_tel(), Constants.FlipperStatus.INVITE, Constants.FlipperType.TO);
+						flipperDbService.flipperDao.insert(flipper);
+					}
+				}
+			}
+
+			@Override
+			public void onFailure(int statusCode, Header[] headers, String errorResponse, Throwable e) {
+				// TODO Auto-generated method stub
+				ToastTool.showLong(DayRecommendActivity.this, "服务器错误");
+			}
+		};
+		AsyncHttpClientTool.post(DayRecommendActivity.this, "getuserbyid", params, responseHandler);
 	}
 
 	/**

@@ -26,6 +26,9 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.easemob.chat.EMChatManager;
+import com.easemob.chat.EMContactManager;
+import com.easemob.exceptions.EaseMobException;
 import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.TextHttpResponseHandler;
 import com.yixianqian.R;
@@ -179,9 +182,20 @@ public class HomeFragment extends BaseV4Fragment {
 	 * 刷新页面
 	 */
 	public void refresh() {
-		mAdapter = new HomeListAdapter(getActivity(), mHomeListView, conversationList);
-		mHomeListView.setAdapter(mAdapter);
-		mAdapter.notifyDataSetChanged();
+		try {
+			// 可能会在子线程中调到这方法
+			getActivity().runOnUiThread(new Runnable() {
+				public void run() {
+					conversationList.clear();
+					conversationList.addAll(conversationDbService.conversationDao.loadAll());
+//					mAdapter = new HomeListAdapter(getActivity(), mHomeListView, conversationList);
+//					mHomeListView.setAdapter(mAdapter);
+					mAdapter.notifyDataSetChanged();
+				}
+			});
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	//显示删除心动或情侣对话窗口
@@ -213,6 +227,15 @@ public class HomeFragment extends BaseV4Fragment {
 								currentItem = -1;
 								new SendNotifyTask(userPreference.getName() + "和您解除了心动关系", userPreference.getName(),
 										friendPreference.getBpush_UserID()).send();
+								//删除会话
+								EMChatManager.getInstance().deleteConversation("" + friendPreference.getF_id());
+								//删除好友
+								try {
+									EMContactManager.getInstance().deleteContact("" + friendPreference.getF_id());
+								} catch (EaseMobException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
 								friendPreference.clear();
 								userPreference.setU_stateid(4);
 							}
@@ -233,7 +256,6 @@ public class HomeFragment extends BaseV4Fragment {
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
 					myAlertDialog.dismiss();
-
 				}
 			};
 			myAlertDialog.setPositiveButton("删除", comfirm);
@@ -267,6 +289,8 @@ public class HomeFragment extends BaseV4Fragment {
 								currentItem = -1;
 								new SendNotifyTask(userPreference.getName() + "和您解除了情侣关系", userPreference.getName(),
 										friendPreference.getBpush_UserID()).send();
+								//删除会话
+								EMChatManager.getInstance().deleteConversation("" + friendPreference.getF_id());
 								friendPreference.clear();
 								userPreference.setU_stateid(4);
 							}

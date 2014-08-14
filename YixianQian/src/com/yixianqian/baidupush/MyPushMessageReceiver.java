@@ -20,15 +20,12 @@ import com.yixianqian.R;
 import com.yixianqian.base.BaseApplication;
 import com.yixianqian.config.Constants;
 import com.yixianqian.db.ConversationDbService;
-import com.yixianqian.db.MessageItemDbService;
-import com.yixianqian.entities.Conversation;
-import com.yixianqian.entities.MessageItem;
 import com.yixianqian.jsonobject.JsonMessage;
-import com.yixianqian.ui.ChatActivity;
 import com.yixianqian.ui.MainActivity;
 import com.yixianqian.ui.VertifyToChatActivity;
 import com.yixianqian.utils.FastJsonTool;
 import com.yixianqian.utils.FriendPreference;
+import com.yixianqian.utils.LogTool;
 import com.yixianqian.utils.NetworkUtils;
 import com.yixianqian.utils.ToastTool;
 import com.yixianqian.utils.UserPreference;
@@ -38,7 +35,6 @@ public class MyPushMessageReceiver extends FrontiaPushMessageReceiver {
 	public static final String TAG = MyPushMessageReceiver.class.getSimpleName();
 	public static final String MESSAGE_TYPE = "messageType";
 	public static final int NOTIFY_ID = 0x000;
-	public static int mNewNum = 0;// 通知栏新消息条目，我只是用了一个全局变量，
 	public static final String RESPONSE = "response";
 	public static ArrayList<EventHandler> ehList = new ArrayList<EventHandler>();
 	private UserPreference userPreference;
@@ -64,7 +60,6 @@ public class MyPushMessageReceiver extends FrontiaPushMessageReceiver {
 	*/
 	@Override
 	public void onUnbind(Context context, int errorCode, String requestId) {
-
 	}
 
 	/**
@@ -72,6 +67,9 @@ public class MyPushMessageReceiver extends FrontiaPushMessageReceiver {
 	*/
 	@Override
 	public void onMessage(Context context, String message, String customContentString) {
+		String messageString = "透传消息 message=" + message + " customContentString=" + customContentString;
+		LogTool.d(TAG, messageString);
+
 		JsonMessage jsonMessage = FastJsonTool.getObject(message, JsonMessage.class);
 		if (jsonMessage != null) {
 			parseMessage(jsonMessage);
@@ -93,18 +91,18 @@ public class MyPushMessageReceiver extends FrontiaPushMessageReceiver {
 
 		int type = msg.getType();
 		switch (type) {
-		//普通消息
-		case Constants.MessageType.MESSAGE_TYPE_TEXT:
-			chatMessage(msg);
-			break;
-		//图片
-		case Constants.MessageType.MESSAGE_TYPE_IMG:
-
-			break;
-		//声音
-		case Constants.MessageType.MESSAGE_TYPE_SOUND:
-
-			break;
+		//		//普通消息
+		//		case Constants.MessageType.MESSAGE_TYPE_TEXT:
+		//			chatMessage(msg);
+		//			break;
+		//		//图片
+		//		case Constants.MessageType.MESSAGE_TYPE_IMG:
+		//
+		//			break;
+		//		//声音
+		//		case Constants.MessageType.MESSAGE_TYPE_SOUND:
+		//
+		//			break;
 		//心动请求
 		case Constants.MessageType.MESSAGE_TYPE_FLIPPER_REQUEEST:
 
@@ -117,71 +115,10 @@ public class MyPushMessageReceiver extends FrontiaPushMessageReceiver {
 		case Constants.MessageType.MESSAGE_TYPE_LOVER:
 			buildLove(msg.getMessageContent());
 			break;
-		//文件
-		case Constants.MessageType.MESSAGE_TYPE_FILE:
-
-			break;
-		//通知
-		case Constants.MessageType.MESSAGE_TYPE_NOTIFY:
-
-			break;
 		default:
 			break;
 		}
 
-	}
-
-	/**
-	 * 处理聊天消息
-	 * @param msg
-	 */
-	private void chatMessage(JsonMessage msg) {
-		if (ehList.size() > 0) {
-			for (EventHandler eventHandler : ehList) {
-				eventHandler.onMessage(msg);
-			}
-		} else {
-			showNotify(msg);
-			Conversation conversation = ConversationDbService.getInstance(BaseApplication.getInstance())
-					.getConversationByUser(friendPreference.getF_id());
-
-			if (conversation != null) {
-				MessageItem messageItem = new MessageItem(null, Constants.MessageType.MESSAGE_TYPE_TEXT,
-						msg.getMessageContent(), System.currentTimeMillis(), true, true, true, conversation.getId());
-				MessageItemDbService messageItemDbService = MessageItemDbService.getInstance(BaseApplication
-						.getInstance());
-				messageItemDbService.messageItemDao.insert(messageItem);
-				conversation.setLastMessage(msg.getMessageContent());
-				conversation.setNewNum(conversation.getNewNum() + 1);
-				conversation.setTime(msg.getTimeSamp());
-				conversationDbService.conversationDao.update(conversation);
-			}
-		}
-	}
-
-	private void showNotify(JsonMessage message) {
-		// TODO Auto-generated method stub
-		mNewNum++;
-		// 更新通知栏
-		BaseApplication application = BaseApplication.getInstance();
-		userPreference = application.getUserPreference();
-		friendPreference = application.getFriendPreference();
-		conversationDbService = ConversationDbService.getInstance(application);
-
-		//通知
-		NotificationCompat.Builder builder = new NotificationCompat.Builder(application);
-		String title = userPreference.getName() + "(" + mNewNum + "条新消息)";
-		String text = friendPreference.getName() + ": " + message.getMessageContent();
-		builder.setSmallIcon(R.drawable.ic_launcher).setContentTitle(title).setContentText(text).setAutoCancel(true)
-				.setTicker("新消息！").setDefaults(Notification.DEFAULT_ALL);
-		Intent resultIntent = new Intent(application, ChatActivity.class);
-		resultIntent.putExtra("conversationID", conversationDbService.getConIdByUserId(friendPreference.getF_id()));
-		TaskStackBuilder stackBuilder = TaskStackBuilder.create(application);
-		stackBuilder.addParentStack(MainActivity.class);
-		stackBuilder.addNextIntent(resultIntent);
-		PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-		builder.setContentIntent(resultPendingIntent);
-		application.getNotificationManager().notify(NOTIFY_ID, builder.build());// 通知一下
 	}
 
 	/**

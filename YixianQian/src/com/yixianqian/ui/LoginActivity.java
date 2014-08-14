@@ -1,6 +1,7 @@
 package com.yixianqian.ui;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import android.animation.Animator;
@@ -22,12 +23,14 @@ import com.easemob.chat.EMChatManager;
 import com.yixianqian.R;
 import com.yixianqian.base.BaseActivity;
 import com.yixianqian.base.BaseApplication;
+import com.yixianqian.db.ConversationDbService;
+import com.yixianqian.entities.Conversation;
 import com.yixianqian.jsonobject.JsonUser;
 import com.yixianqian.server.ServerUtil;
 import com.yixianqian.table.UserTable;
 import com.yixianqian.utils.FastJsonTool;
+import com.yixianqian.utils.FriendPreference;
 import com.yixianqian.utils.HttpUtil;
-import com.yixianqian.utils.LogTool;
 import com.yixianqian.utils.MD5For16;
 import com.yixianqian.utils.MD5For32;
 import com.yixianqian.utils.NetworkUtils;
@@ -56,6 +59,8 @@ public class LoginActivity extends BaseActivity {
 	private View leftImageButton;//导航栏左侧按钮
 	private View rightImageButton;//导航栏右侧按钮
 	private UserPreference userPreference;
+	private FriendPreference friendpreference;
+	List<JsonUser> jsonUsers;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +68,7 @@ public class LoginActivity extends BaseActivity {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_login);
 		userPreference = BaseApplication.getInstance().getUserPreference();
+		friendpreference = BaseApplication.getInstance().getFriendPreference();
 		findViewById();
 		initView();
 
@@ -119,13 +125,17 @@ public class LoginActivity extends BaseActivity {
 
 		// Store values at the time of the login attempt.
 		String phone = mPhoneView.getText().toString();
-		String password = MD5For32.GetMD5Code(mPasswordView.getText().toString());
+		String password = mPasswordView.getText().toString();
 
 		boolean cancel = false;
 		View focusView = null;
 
 		// Check for a valid password, if the user entered one.
-		if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
+		if (TextUtils.isEmpty(password)) {
+			mPasswordView.setError(getString(R.string.error_field_required));
+			focusView = mPasswordView;
+			cancel = true;
+		} else if (!isPasswordValid(password)) {
 			mPasswordView.setError(getString(R.string.error_invalid_password));
 			focusView = mPasswordView;
 			cancel = true;
@@ -150,7 +160,7 @@ public class LoginActivity extends BaseActivity {
 			// Show a progress spinner, and kick off a background task to
 			// perform the user login attempt.
 			showProgress(true);
-			mAuthTask = new UserLoginTask(phone, password);
+			mAuthTask = new UserLoginTask(phone, MD5For32.GetMD5Code(password));
 			mAuthTask.execute((Void) null);
 		}
 	}
@@ -217,7 +227,7 @@ public class LoginActivity extends BaseActivity {
 						userPreference.clear();
 					}
 				});
-		ServerUtil.getInstance(LoginActivity.this).getFlipperAndRecommend(LoginActivity.this, true);
+		ServerUtil.getInstance(LoginActivity.this).getTodayRecommend(LoginActivity.this, true);
 		showProgress(false);
 	}
 
@@ -249,10 +259,79 @@ public class LoginActivity extends BaseActivity {
 	}
 
 	/**
+	 * 存储自己的信息
+	 */
+	private void saveUser(JsonUser user, String password) {
+		userPreference.clear();
+		userPreference.setU_birthday(user.getU_birthday());
+		userPreference.setU_blood_type(user.getU_blood_type());
+		userPreference.setU_cityid(user.getU_cityid());
+		userPreference.setU_constell(user.getU_constell());
+		userPreference.setU_email(user.getU_email());
+		userPreference.setU_gender(user.getU_gender());
+		userPreference.setU_age(user.getU_age());
+		userPreference.setU_height(user.getU_height());
+		userPreference.setU_id(user.getU_id());
+		userPreference.setU_introduce(user.getU_introduce());
+		userPreference.setU_large_avatar(user.getU_large_avatar());
+		userPreference.setU_nickname(user.getU_nickname());
+		userPreference.setU_password(user.getU_password());
+		userPreference.setU_provinceid(user.getU_provinceid());
+		userPreference.setU_realname(user.getU_realname());
+		userPreference.setU_salary(user.getU_salary());
+		userPreference.setU_schoolid(user.getU_schoolid());
+		userPreference.setU_small_avatar(user.getU_small_avatar());
+		userPreference.setU_stateid(user.getU_stateid());
+		userPreference.setU_tel(user.getU_tel());
+		userPreference.setU_vocationid(user.getU_vocationid());
+		userPreference.setU_weight(user.getU_weight());
+		userPreference.setU_password(MD5For32.GetMD5Code(password));
+		userPreference.setHuanXinUserName("" + user.getU_id());
+		userPreference.setHuanXinPassword(MD5For16.GetMD5Code(password));
+	}
+
+	/**
+	 * 存储另一半
+	 */
+	private void saveFriend(JsonUser jsonUser) {
+		if (userPreference.getU_stateid() == 2) {
+			friendpreference.setType(1);
+		} else if (userPreference.getU_stateid() == 3) {
+			friendpreference.setType(0);
+		} else {
+			return;
+		}
+
+		friendpreference.setBpush_ChannelID(jsonUser.getU_bpush_channel_id());
+		friendpreference.setBpush_UserID(jsonUser.getU_bpush_user_id());
+		friendpreference.setF_address(jsonUser.getU_address());
+		friendpreference.setF_age(jsonUser.getU_age());
+		friendpreference.setF_blood_type(jsonUser.getU_blood_type());
+		friendpreference.setF_constell(jsonUser.getU_constell());
+		friendpreference.setF_email(jsonUser.getU_email());
+		friendpreference.setF_gender(jsonUser.getU_gender());
+		friendpreference.setF_height(jsonUser.getU_height());
+		friendpreference.setF_id(jsonUser.getU_id());
+		friendpreference.setF_introduce(jsonUser.getU_introduce());
+		friendpreference.setF_large_avatar(jsonUser.getU_large_avatar());
+		friendpreference.setF_nickname(jsonUser.getU_nickname());
+		friendpreference.setF_realname(jsonUser.getU_realname());
+		friendpreference.setF_salary(jsonUser.getU_salary());
+		friendpreference.setF_small_avatar(jsonUser.getU_small_avatar());
+		friendpreference.setF_stateid(jsonUser.getU_stateid());
+		friendpreference.setF_tel(jsonUser.getU_tel());
+		friendpreference.setF_vocationid(jsonUser.getU_vocationid());
+		friendpreference.setF_weight(jsonUser.getU_weight());
+		friendpreference.setU_cityid(jsonUser.getU_cityid());
+		friendpreference.setU_provinceid(jsonUser.getU_provinceid());
+		friendpreference.setU_schoolid(jsonUser.getU_schoolid());
+	}
+
+	/**
 	 * 类名称：UserLoginTask 类描述：异步任务登录 创建人： 张帅 创建时间：2014-7-4 上午9:30:44
 	 * 
 	 */
-	public class UserLoginTask extends AsyncTask<Void, Void, JsonUser> {
+	public class UserLoginTask extends AsyncTask<Void, Void, Void> {
 
 		private final String mPhone;
 		private final String mPassword;
@@ -263,7 +342,7 @@ public class LoginActivity extends BaseActivity {
 		}
 
 		@Override
-		protected JsonUser doInBackground(Void... params) {
+		protected Void doInBackground(Void... params) {
 			// TODO: attempt authentication against a network service.
 			String url = "login";
 			Map<String, String> map = new HashMap<String, String>();
@@ -279,44 +358,33 @@ public class LoginActivity extends BaseActivity {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			JsonUser user = FastJsonTool.getObject(jsonString, JsonUser.class);
+			jsonUsers = FastJsonTool.getObjectList(jsonString, JsonUser.class);
 			// TODO: register the new account here.
-			return user;
+			return null;
 		}
 
 		@Override
-		protected void onPostExecute(final JsonUser user) {
+		protected void onPostExecute(Void result) {
+			// TODO Auto-generated method stub
+			super.onPostExecute(result);
 			mAuthTask = null;
-			if (user != null) {
-				userPreference.clear();
-				userPreference.setU_birthday(user.getU_birthday());
-				userPreference.setU_blood_type(user.getU_blood_type());
-				userPreference.setU_cityid(user.getU_cityid());
-				userPreference.setU_constell(user.getU_constell());
-				userPreference.setU_email(user.getU_email());
-				userPreference.setU_gender(user.getU_gender());
-				userPreference.setU_age(user.getU_age());
-				userPreference.setU_height(user.getU_height());
-				userPreference.setU_id(user.getU_id());
-				userPreference.setU_introduce(user.getU_introduce());
-				userPreference.setU_large_avatar(user.getU_large_avatar());
-				userPreference.setU_nickname(user.getU_nickname());
-				userPreference.setU_password(user.getU_password());
-				userPreference.setU_provinceid(user.getU_provinceid());
-				userPreference.setU_realname(user.getU_realname());
-				userPreference.setU_salary(user.getU_salary());
-				userPreference.setU_schoolid(user.getU_schoolid());
-				userPreference.setU_small_avatar(user.getU_small_avatar());
-				userPreference.setU_stateid(user.getU_stateid());
-				userPreference.setU_tel(user.getU_tel());
-				userPreference.setU_vocationid(user.getU_vocationid());
-				userPreference.setU_weight(user.getU_weight());
-				userPreference.setU_password(MD5For32.GetMD5Code(mPassword));
-				userPreference.setHuanXinUserName("" + user.getU_id());
-				userPreference.setHuanXinPassword(MD5For16.GetMD5Code(mPassword));
-
-				//登录环信
-				attempLoginHuanXin(1);
+			if (jsonUsers != null) {
+				if (jsonUsers.size() > 0) {
+					if (jsonUsers.size() == 1) {
+						saveUser(jsonUsers.get(0), mPassword);
+					} else if (jsonUsers.size() > 1) {
+						saveUser(jsonUsers.get(0), mPassword);
+						saveFriend(jsonUsers.get(1));
+						
+						//创建对话
+						ConversationDbService conversationDbService = ConversationDbService.getInstance(LoginActivity.this);
+						Conversation conversation = new Conversation(null, Long.valueOf(friendpreference.getF_id()),
+								friendpreference.getName(), friendpreference.getF_small_avatar(), "", 0, System.currentTimeMillis());
+						conversationDbService.conversationDao.insert(conversation);
+					}
+					//登录环信
+					attempLoginHuanXin(1);
+				}
 			} else {
 				mPasswordView.setError("用户名或密码错误！");
 				mPasswordView.requestFocus();

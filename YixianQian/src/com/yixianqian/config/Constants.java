@@ -42,26 +42,18 @@ public class Constants {
 	}
 
 	public static class MessageType {
-		// Text
-		public static final int MESSAGE_TYPE_TEXT = 1;
-		// image
-		public static final int MESSAGE_TYPE_IMG = 2;
-		// sound
-		public static final int MESSAGE_TYPE_SOUND = 3;
-		// file
-		public static final int MESSAGE_TYPE_FILE = 4;
-		//通知
-		public static final int MESSAGE_TYPE_NOTIFY = 5;
 		//心动
 		public static final int MESSAGE_TYPE_FLIPPER_REQUEEST = 6;
 		//同意心动
 		public static final int MESSAGE_TYPE_FLIPPER_TO = 7;
 		//情侣
 		public static final int MESSAGE_TYPE_LOVER = 8;
-
 	}
 
 	public static class FlipperStatus {
+		/**我邀请**/
+		public static final String INVITE = "INVITE";
+
 		/**被邀请*/
 		public static final String BEINVITEED = "BEINVITEED";
 

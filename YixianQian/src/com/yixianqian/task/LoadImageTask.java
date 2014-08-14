@@ -32,67 +32,64 @@ import com.easemob.util.ImageUtils;
 import com.easemob.util.NetUtils;
 import com.yixianqian.ui.ShowBigImage;
 import com.yixianqian.utils.ImageCache;
+import com.yixianqian.utils.ImageTools;
 import com.yixianqian.utils.NetworkUtils;
 
 public class LoadImageTask extends AsyncTask<Object, Void, Bitmap> {
 	private ImageView iv = null;
-    String localFullSizePath = null;
-	String thumbnailPath = null;	
+	String localFullSizePath = null;
+	String thumbnailPath = null;
 	String remotePath = null;
 	EMMessage message = null;
-    ChatType chatType;
+	ChatType chatType;
 	Activity activity;
-	
+
 	@Override
 	protected Bitmap doInBackground(Object... args) {
-		thumbnailPath = (String)args[0];
-		localFullSizePath = (String)args[1];
-        remotePath = (String)args[2];
-		chatType = (ChatType) args[3];		
-		iv = (ImageView)args[4];		
-//		if(args[2] != null) {
-		    activity = (Activity) args[5];
-//		}
+		thumbnailPath = (String) args[0];
+		localFullSizePath = (String) args[1];
+		remotePath = (String) args[2];
+		chatType = (ChatType) args[3];
+		iv = (ImageView) args[4];
+		activity = (Activity) args[5];
 		message = (EMMessage) args[6];
 		File file = new File(thumbnailPath);
-		if(file.exists()){
+		if (file.exists()) {
 			return ImageUtils.decodeScaleImage(thumbnailPath, 120, 120);
-		}
-		else{
-			if(message.direct==EMMessage.Direct.SEND)
-			{
+		} else {
+			if (message.direct == EMMessage.Direct.SEND) {
 				return ImageUtils.decodeScaleImage(localFullSizePath, 120, 120);
-			}else{
+			} else {
 				return null;
 			}
 		}
-		
+
 	}
-	
+
 	protected void onPostExecute(Bitmap image) {
 		if (image != null) {
-            iv.setImageBitmap(image);
-            ImageCache.getInstance().put(thumbnailPath, image);
+			iv.setImageBitmap(image);
+			ImageCache.getInstance().put(thumbnailPath, image);
 			iv.setClickable(true);
 			iv.setTag(thumbnailPath);
-		    iv.setOnClickListener(new View.OnClickListener() {
+			iv.setOnClickListener(new View.OnClickListener() {
 				@Override
-				public void onClick(View v) {                   
-					if(thumbnailPath != null){
-					    
-					    Intent intent = new Intent(activity, ShowBigImage.class);  
-	                    File file = new File(localFullSizePath);
-	                    if(file.exists()) {
-	                        Uri uri = Uri.fromFile(file);
-	                        intent.putExtra("uri", uri);                    
-	                    } else {
-	                        //The local full size pic does not exist yet. ShowBigImage needs to download it from the server first
-	                        intent.putExtra("remotepath", remotePath);                          
-	                    }  
-	                    if (message.getChatType() != ChatType.Chat) {
-	                        // delete the image from server after download
-	                    }
-	                    if(message != null && message.direct == EMMessage.Direct.RECEIVE && !message.isAcked){
+				public void onClick(View v) {
+					if (thumbnailPath != null) {
+
+						Intent intent = new Intent(activity, ShowBigImage.class);
+						File file = new File(localFullSizePath);
+						if (file.exists()) {
+							Uri uri = Uri.fromFile(file);
+							intent.putExtra("uri", uri);
+						} else {
+							//The local full size pic does not exist yet. ShowBigImage needs to download it from the server first
+							intent.putExtra("remotepath", remotePath);
+						}
+						if (message.getChatType() != ChatType.Chat) {
+							// delete the image from server after download
+						}
+						if (message != null && message.direct == EMMessage.Direct.RECEIVE && !message.isAcked) {
 							message.isAcked = true;
 							try {
 								//看了大图后发个已读回执给对方
@@ -101,30 +98,28 @@ public class LoadImageTask extends AsyncTask<Object, Void, Bitmap> {
 								e.printStackTrace();
 							}
 						}
-	                    activity.startActivity(intent); 					    
-					}				    
+						activity.startActivity(intent);
+					}
 				}
 			});
 		} else {
-		    if(message.status==EMMessage.Status.FAIL)
-		    {
-		    	if(NetworkUtils.isNetworkAvailable(activity))
-		    	{
-		    		new Thread(new Runnable() {
-						
+			if (message.status == EMMessage.Status.FAIL) {
+				if (NetworkUtils.isNetworkAvailable(activity)) {
+					new Thread(new Runnable() {
+
 						@Override
 						public void run() {
 							EMChatManager.getInstance().asyncFetchMessage(message);
 						}
 					}).start();
-		    	}
-		    } 
-		     
+				}
+			}
+
 		}
 	}
-	
+
 	@Override
 	protected void onPreExecute() {
-	    super.onPreExecute();
+		super.onPreExecute();
 	}
 }

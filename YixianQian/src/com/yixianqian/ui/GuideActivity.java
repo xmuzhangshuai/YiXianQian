@@ -13,6 +13,7 @@ import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.baidu.location.LocationClientOption.LocationMode;
+import com.umeng.analytics.MobclickAgent;
 import com.yixianqian.R;
 import com.yixianqian.base.BaseActivity;
 import com.yixianqian.base.BaseApplication;
@@ -59,18 +60,22 @@ public class GuideActivity extends BaseActivity {
 		int count = sharePreferenceUtil.getUseCount();
 		userPreference = BaseApplication.getInstance().getUserPreference();
 
+		/************初始化友盟服务**************/
+		MobclickAgent.updateOnlineConfig(this);
+
 		//获取定位
 		initLocation();
 		//开启百度推送服务
-		PushManager.startWork(GuideActivity.this, PushConstants.LOGIN_TYPE_API_KEY, Constants.BaiduPushConfig.API_KEY);
+		PushManager.startWork(getApplicationContext(), PushConstants.LOGIN_TYPE_API_KEY,
+				Constants.BaiduPushConfig.API_KEY);
 		// 基于地理位置推送，可以打开支持地理位置的推送的开关
 		PushManager.enableLbs(getApplicationContext());
 
 		if (count == 0) {// 如果是第一次登陆，则启动向导页面
 			// 第一次运行拷贝数据库文件
 			new initDataBase().execute();
-			//	SchoolDbService schoolDbService = SchoolDbService.getInstance(this);
-			//	schoolDbService.schoolDao.loadAll();
+//				SchoolDbService schoolDbService = SchoolDbService.getInstance(this);
+//				schoolDbService.schoolDao.loadAll();
 			sharePreferenceUtil.setUseCount(++count);// 次数加1
 			startActivity(new Intent(GuideActivity.this, GuidePagerActivity.class));
 		} else {// 如果不是第一次使用,则不启动向导页面，显示欢迎页面。

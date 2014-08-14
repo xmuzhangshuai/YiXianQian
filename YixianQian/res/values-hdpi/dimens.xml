@@ -37,4 +37,10 @@
     <dimen name="time_capsule_220">180dp</dimen>
     <dimen name="motify_data_space">30dp</dimen>
 
+    <!-- 聊天 -->
+    <dimen name="margin_chat_activity">4dp</dimen>
+    <dimen name="size_avatar">40dp</dimen>
+    <dimen name="message_padding">4dp</dimen>
+    <dimen name="love_vertify_headimage">60dp</dimen>
+
 </resources>

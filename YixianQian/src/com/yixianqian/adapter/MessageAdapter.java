@@ -27,6 +27,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TextView.BufferType;
 import android.widget.Toast;
@@ -58,6 +59,7 @@ import com.yixianqian.ui.ShowBigImage;
 import com.yixianqian.utils.AsyncHttpClientImageSound;
 import com.yixianqian.utils.ImageCache;
 import com.yixianqian.utils.ImageLoaderTool;
+import com.yixianqian.utils.ImageTools;
 import com.yixianqian.utils.ImageUtils;
 import com.yixianqian.utils.ToastTool;
 import com.yixianqian.utils.UserPreference;
@@ -795,6 +797,10 @@ public class MessageAdapter extends BaseAdapter {
 		// first check if the thumbnail image already loaded into cache
 		Bitmap bitmap = ImageCache.getInstance().get(thumbernailPath);
 		if (bitmap != null) {
+//			System.out.println("缩放前高度" + bitmap.getHeight());
+//			bitmap = ImageTools.zoomBitmap(bitmap, 3);
+//			System.out.println("缩放后高度" + bitmap.getHeight());
+
 			// thumbnail image is already loaded, reuse the drawable
 			iv.setImageBitmap(bitmap);
 			iv.setClickable(true);
@@ -829,7 +835,6 @@ public class MessageAdapter extends BaseAdapter {
 			});
 			return true;
 		} else {
-
 			new LoadImageTask().execute(thumbernailPath, localFullSizePath, remote, message.getChatType(), iv,
 					activity, message);
 			return true;
@@ -892,9 +897,6 @@ public class MessageAdapter extends BaseAdapter {
 		LinearLayout ll_container;
 		ImageView iv_read_status;
 		TextView tv_ack;
-		TextView tv_file_name;
-		TextView tv_file_size;
-		TextView tv_file_download_state;
 	}
 
 	/*

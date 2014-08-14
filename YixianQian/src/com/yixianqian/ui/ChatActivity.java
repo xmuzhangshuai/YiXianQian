@@ -22,7 +22,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.PowerManager;
 import android.provider.MediaStore;
@@ -63,13 +62,13 @@ import com.easemob.chat.EMMessage;
 import com.easemob.chat.ImageMessageBody;
 import com.easemob.chat.TextMessageBody;
 import com.easemob.chat.VoiceMessageBody;
+import com.easemob.util.PathUtil;
 import com.easemob.util.VoiceRecorder;
 import com.yixianqian.R;
 import com.yixianqian.Listener.VoicePlayClickListener;
 import com.yixianqian.adapter.FaceAdapter;
 import com.yixianqian.adapter.FacePageAdeapter;
 import com.yixianqian.adapter.MessageAdapter;
-import com.yixianqian.base.BaseActivity;
 import com.yixianqian.base.BaseApplication;
 import com.yixianqian.base.BaseFragmentActivity;
 import com.yixianqian.config.DefaultSetting;
@@ -466,10 +465,8 @@ public class ChatActivity extends BaseFragmentActivity implements OnTouchListene
 
 		//		System.out.println(PathUtil.getInstance().getImagePath() + "   " + userPreference.getU_id()
 		//				+ System.currentTimeMillis() + ".jpg");
-		//		cameraFile = new File(PathUtil.getInstance().getImagePath(), "" + userPreference.getU_id()
-		//				+ System.currentTimeMillis() + ".jpg");
-		cameraFile = new File(Environment.getExternalStorageDirectory(), "yixianqian/messageImage/"
-				+ userPreference.getU_id() + System.currentTimeMillis() + ".jpg");
+		cameraFile = new File(PathUtil.getInstance().getImagePath(), "" + userPreference.getU_id()
+				+ System.currentTimeMillis() + ".jpg");
 		cameraFile.getParentFile().mkdirs();
 		startActivityForResult(
 				new Intent(MediaStore.ACTION_IMAGE_CAPTURE).putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(cameraFile)),

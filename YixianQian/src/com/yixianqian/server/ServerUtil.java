@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.easemob.chat.EMChatManager;
 import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.TextHttpResponseHandler;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -33,6 +34,7 @@ import com.yixianqian.utils.AsyncHttpClientImageSound;
 import com.yixianqian.utils.AsyncHttpClientTool;
 import com.yixianqian.utils.DateTimeTools;
 import com.yixianqian.utils.FastJsonTool;
+import com.yixianqian.utils.FriendPreference;
 import com.yixianqian.utils.ImageLoaderTool;
 import com.yixianqian.utils.SharePreferenceUtil;
 import com.yixianqian.utils.UserPreference;
@@ -41,6 +43,7 @@ public class ServerUtil {
 	private static ServerUtil instance;
 	private static Context appContext;
 	private UserPreference userPreference;
+	private FriendPreference friendPreference;
 	private SharePreferenceUtil sharePreferenceUtil;
 
 	public ServerUtil() {
@@ -59,6 +62,7 @@ public class ServerUtil {
 				appContext = context.getApplicationContext();
 			}
 			instance.userPreference = BaseApplication.getInstance().getUserPreference();
+			instance.friendPreference = BaseApplication.getInstance().getFriendPreference();
 			instance.sharePreferenceUtil = new SharePreferenceUtil(context, SharePreferenceUtil.USE_COUNT);
 		}
 		return instance;
@@ -79,9 +83,16 @@ public class ServerUtil {
 				if (statusCode == 200) {
 					if (!TextUtils.isEmpty(response)) {
 						if (Integer.parseInt(response) > 0) {
-							userPreference.setU_stateid(Integer.parseInt(response));
-							getFlipperAndRecommend(context, isFinished);
-							//							getTodayRecommend(context, isFinished);
+							int oldState = userPreference.getU_stateid();
+							int newState = Integer.parseInt(response);
+							userPreference.setU_stateid(newState);
+							//如果由情侣或心动变为单身
+							if ((oldState == 2 || oldState == 3) && newState == 4) {
+								//删除会话
+								EMChatManager.getInstance().deleteConversation("" + friendPreference.getF_id());
+							}
+							//							getFlipperAndRecommend(context, isFinished);
+							getTodayRecommend(context, isFinished);
 						}
 					}
 				}
@@ -114,7 +125,8 @@ public class ServerUtil {
 								JsonFlipperRequest.class);
 						if (jsonFlipperRequests != null && jsonFlipperRequests.size() > 0) {
 							for (JsonFlipperRequest fRequest : jsonFlipperRequests) {
-								Flipper flipper = new Flipper(null, fRequest.getU_id(), fRequest.getU_nickname(),
+								Flipper flipper = new Flipper(null, fRequest.getU_id(), fRequest.getU_bpush_user_id(),
+										fRequest.getU_bpush_channel_id(), fRequest.getU_nickname(),
 										fRequest.getU_realname(), fRequest.getU_gender(), fRequest.getU_email(),
 										fRequest.getU_large_avatar(), fRequest.getU_small_avatar(),
 										fRequest.getU_blood_type(), fRequest.getU_constell(),
@@ -153,57 +165,68 @@ public class ServerUtil {
 	 * 获取今日推荐
 	 */
 	public void getTodayRecommend(final Context context, final boolean isFinished) {
-		final TodayRecommendDbService todayRecommendDbService = TodayRecommendDbService.getInstance(context);
-		todayRecommendDbService.todayRecommendDao.deleteAll();
-		sharePreferenceUtil.setTodayRecommend("");
+		if (userPreference.getU_stateid() == 4) {
+			final TodayRecommendDbService todayRecommendDbService = TodayRecommendDbService.getInstance(context);
+			todayRecommendDbService.todayRecommendDao.deleteAll();
+			sharePreferenceUtil.setTodayRecommend("");
 
-		//如果没有推荐过
-		if (!sharePreferenceUtil.getTodayRecommend().equals(DateTimeTools.getCurrentDateForString())) {
-			RequestParams params = new RequestParams();
-			params.put(UserTable.U_ID, userPreference.getU_id());
-			TextHttpResponseHandler responseHandler = new TextHttpResponseHandler("utf-8") {
-				Intent intent = new Intent(context, DayRecommendActivity.class);
+			//如果没有推荐过
+			if (!sharePreferenceUtil.getTodayRecommend().equals(DateTimeTools.getCurrentDateForString())) {
+				RequestParams params = new RequestParams();
+				params.put(UserTable.U_ID, userPreference.getU_id());
+				TextHttpResponseHandler responseHandler = new TextHttpResponseHandler("utf-8") {
+					Intent intent = new Intent(context, DayRecommendActivity.class);
 
-				@Override
-				public void onSuccess(int statusCode, Header[] headers, String response) {
-					// TODO Auto-generated method stub
-					if (statusCode == 200) {
-						List<JsonTodayRecommend> todayRecommends = FastJsonTool.getObjectList(response,
-								JsonTodayRecommend.class);
-						if (todayRecommends != null && todayRecommends.size() > 0) {
-							for (JsonTodayRecommend jsonTodayRecommend : todayRecommends) {
-								TodayRecommend todayRecommend = new TodayRecommend(null,
-										jsonTodayRecommend.getUserID(), jsonTodayRecommend.getUserName(),
-										jsonTodayRecommend.getUserAvatar(), jsonTodayRecommend.getUserAge(),
-										DateTimeTools.getCurrentDateForString(), jsonTodayRecommend.getSchoolID());
-								todayRecommendDbService.todayRecommendDao.insert(todayRecommend);
+					@Override
+					public void onSuccess(int statusCode, Header[] headers, String response) {
+						// TODO Auto-generated method stub
+						if (statusCode == 200) {
+							List<JsonTodayRecommend> todayRecommends = FastJsonTool.getObjectList(response,
+									JsonTodayRecommend.class);
+							if (todayRecommends != null && todayRecommends.size() > 0) {
+								for (JsonTodayRecommend jsonTodayRecommend : todayRecommends) {
+									TodayRecommend todayRecommend = new TodayRecommend(null,
+											jsonTodayRecommend.getUserID(), jsonTodayRecommend.getUserName(),
+											jsonTodayRecommend.getUserAvatar(), jsonTodayRecommend.getUserAge(),
+											DateTimeTools.getCurrentDateForString(), jsonTodayRecommend.getSchoolID());
+									todayRecommendDbService.todayRecommendDao.insert(todayRecommend);
+								}
+								context.startActivity(intent);
+								((Activity) context).overridePendingTransition(R.anim.push_left_in,
+										R.anim.push_left_out);
+							} else {
+								intent = new Intent(context, MainActivity.class);
+								context.startActivity(intent);
+								((Activity) context).overridePendingTransition(R.anim.push_left_in,
+										R.anim.push_left_out);
+								if (isFinished) {
+									((Activity) context).finish();
+								}
 							}
-							context.startActivity(intent);
-							((Activity) context).overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
-						} else {
-							intent = new Intent(context, MainActivity.class);
-							context.startActivity(intent);
-							((Activity) context).overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
-							if (isFinished) {
-								((Activity) context).finish();
-							}
+							sharePreferenceUtil.setTodayRecommend(DateTimeTools.getCurrentDateForString());
 						}
-						sharePreferenceUtil.setTodayRecommend(DateTimeTools.getCurrentDateForString());
 					}
-				}
 
-				@Override
-				public void onFailure(int statusCode, Header[] headers, String errorResponse, Throwable e) {
-					// TODO Auto-generated method stub
-					intent = new Intent(context, MainActivity.class);
-					context.startActivity(intent);
-					((Activity) context).overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
-					if (isFinished) {
-						((Activity) context).finish();
+					@Override
+					public void onFailure(int statusCode, Header[] headers, String errorResponse, Throwable e) {
+						// TODO Auto-generated method stub
+						intent = new Intent(context, MainActivity.class);
+						context.startActivity(intent);
+						((Activity) context).overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+						if (isFinished) {
+							((Activity) context).finish();
+						}
 					}
+				};
+				AsyncHttpClientTool.post(context, "userpush", params, responseHandler);
+			} else {
+				Intent intent = new Intent(context, MainActivity.class);
+				context.startActivity(intent);
+				((Activity) context).overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+				if (isFinished) {
+					((Activity) context).finish();
 				}
-			};
-			AsyncHttpClientTool.post(context, "userpush", params, responseHandler);
+			}
 		} else {
 			Intent intent = new Intent(context, MainActivity.class);
 			context.startActivity(intent);

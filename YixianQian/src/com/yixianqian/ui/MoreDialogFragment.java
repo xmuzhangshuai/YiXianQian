@@ -37,18 +37,20 @@ public class MoreDialogFragment extends DialogFragment {
 	private int msgID = -1;
 	private int userID = -1;
 	private int loverID = -1;
-	private int position = -1;
-	private OnDeleteListener onDeleteListener;
+	private int timeCapsulePosition = -1;
+	private OnChooseMenuListener onChooseMenuListener;
 
-	public interface OnDeleteListener {
+	public interface OnChooseMenuListener {
 		public void onDelete(int position);
+
+		public void onShare(int position);
 	}
 
 	@Override
 	public void onAttach(Activity activity) {
 		// TODO Auto-generated method stub
 		super.onAttach(activity);
-		onDeleteListener = (OnDeleteListener) activity;
+		onChooseMenuListener = (OnChooseMenuListener) activity;
 	}
 
 	/**
@@ -70,7 +72,7 @@ public class MoreDialogFragment extends DialogFragment {
 		menuitemList.add("·Ö    Ïí");
 		userPreference = BaseApplication.getInstance().getUserPreference();
 		stateID = userPreference.getU_stateid();
-		position = getArguments().getInt("position", -1);
+		timeCapsulePosition = getArguments().getInt("position", -1);
 		if (stateID == 2) {
 			msgID = getArguments().getInt(LoverTimeCapsuleTable.LTC_MSGID, -1);
 			userID = getArguments().getInt(LoverTimeCapsuleTable.LTC_USERID, -1);
@@ -107,7 +109,9 @@ public class MoreDialogFragment extends DialogFragment {
 				case 0:
 					deleteTimeCapsule();
 					break;
-
+				case 1:
+					onChooseMenuListener.onShare(timeCapsulePosition);
+					break;
 				default:
 					break;
 				}
@@ -126,7 +130,7 @@ public class MoreDialogFragment extends DialogFragment {
 			@Override
 			public void onSuccess(int statusCode, Header[] headers, String response) {
 				// TODO Auto-generated method stub
-				onDeleteListener.onDelete(position);
+				onChooseMenuListener.onDelete(timeCapsulePosition);
 			}
 
 			@Override

@@ -1,10 +1,14 @@
 package com.yixianqian.ui;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.http.Header;
 
+import u.aly.co;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -13,7 +17,6 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -28,21 +31,32 @@ import com.easemob.chat.EMContactManager;
 import com.easemob.chat.EMConversation;
 import com.easemob.chat.EMMessage;
 import com.easemob.chat.EMNotifier;
+import com.easemob.chat.TextMessageBody;
+import com.easemob.exceptions.EaseMobException;
 import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.TextHttpResponseHandler;
 import com.yixianqian.R;
+import com.yixianqian.baidupush.SendNotifyTask;
 import com.yixianqian.base.BaseApplication;
 import com.yixianqian.base.BaseFragmentActivity;
 import com.yixianqian.config.Constants;
 import com.yixianqian.customewidget.MyAlertDialog;
+import com.yixianqian.db.ConversationDbService;
 import com.yixianqian.db.FlipperDbService;
+import com.yixianqian.entities.Conversation;
 import com.yixianqian.entities.Flipper;
 import com.yixianqian.jsonobject.JsonFlipperRequest;
+import com.yixianqian.jsonobject.JsonUser;
 import com.yixianqian.table.FlipperRequestTable;
+import com.yixianqian.table.FlipperTable;
+import com.yixianqian.table.LoversTable;
 import com.yixianqian.table.UserTable;
 import com.yixianqian.utils.AsyncHttpClientTool;
 import com.yixianqian.utils.FastJsonTool;
+import com.yixianqian.utils.FriendPreference;
+import com.yixianqian.utils.HttpUtil;
 import com.yixianqian.utils.LogTool;
+import com.yixianqian.utils.ToastTool;
 import com.yixianqian.utils.UserPreference;
 
 /**
@@ -55,6 +69,7 @@ import com.yixianqian.utils.UserPreference;
 public class MainActivity extends BaseFragmentActivity {
 	private View[] mTabs;
 	private UserPreference userPreference;
+	private FriendPreference friendpreference;
 	//消息接收广播
 	private NewMessageBroadcastReceiver msgReceiver;
 	// 账号在别处登录
@@ -67,6 +82,9 @@ public class MainActivity extends BaseFragmentActivity {
 	// 当前fragment的index
 	private int currentTabIndex;
 	private Fragment[] fragments;
+	private JsonUser jsonUser;
+	private MyAlertDialog myAlertDialog;
+	private ConversationDbService conversationDbService;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +92,8 @@ public class MainActivity extends BaseFragmentActivity {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_main);
 		userPreference = BaseApplication.getInstance().getUserPreference();
+		friendpreference = BaseApplication.getInstance().getFriendPreference();
+		conversationDbService = ConversationDbService.getInstance(MainActivity.this);
 		homeFragment = new HomeFragment();
 		personalFragment = new PersonalFragment();
 		fragments = new Fragment[] { homeFragment, personalFragment };
@@ -307,7 +327,6 @@ public class MainActivity extends BaseFragmentActivity {
 	 */
 	private class MyContactListener implements EMContactListener {
 
-		//添加了心动关系时
 		@Override
 		public void onContactAdded(List<String> usernameList) {
 			// 保存增加的联系人
@@ -350,9 +369,6 @@ public class MainActivity extends BaseFragmentActivity {
 
 		}
 
-		/**
-		 * 解除心动关系时
-		 */
 		@Override
 		public void onContactDeleted(List<String> usernameList) {
 			// 被删除
@@ -366,43 +382,49 @@ public class MainActivity extends BaseFragmentActivity {
 			//			if (currentTabIndex == 1)
 			//				contactListFragment.refresh();
 			//			updateUnreadLabel();
-			for (String string : usernameList) {
-				System.out.println(string + "删除");
+			Log.e("心动请求，", "以下是被删除：");
+
+			for (String username : usernameList) {
+				Log.e("心动请求，", "被" + username + "删除");
+				showDeletDialog(Integer.parseInt(username));
 			}
 		}
 
 		//收到心动请求
 		@Override
-		public void onContactInvited(String username, String reason) {
+		public void onContactInvited(final String username, String reason) {
+			Log.e("心动请求，", "收到心动请求，来自" + username + ",reason: " + reason);
+
 			// 接到邀请的消息，如果不处理(同意或拒绝)，掉线后，服务器会自动再发过来，所以客户端不要重复提醒
-			if (userPreference.getU_stateid() == 4 && !TextUtils.isEmpty(username)) {
-				RequestParams params = new RequestParams();
-				params.put(FlipperRequestTable.FR_USERID, userPreference.getU_id());
-				params.put(FlipperRequestTable.FR_FLIPPERID, Integer.parseInt(username));
-
-				TextHttpResponseHandler responseHandler = new TextHttpResponseHandler("utf-8") {
-					@Override
-					public void onSuccess(int statusCode, Header[] headers, String response) {
-						// TODO Auto-generated method stub
-						if (statusCode == 200) {
-							JsonFlipperRequest fRequest = FastJsonTool.getObject(response, JsonFlipperRequest.class);
-							if (fRequest != null) {
-								notifyNewFlipper(fRequest);
-							} else {
-								LogTool.d("心动请求", "为空");
-							}
-						}
-					}
-
-					@Override
-					public void onFailure(int statusCode, Header[] headers, String errorResponse, Throwable e) {
-						// TODO Auto-generated method stub
-					}
-				};
-				AsyncHttpClientTool.post(MainActivity.this, "getflipperrequest", params, responseHandler);
+			Map<String, String> map = new HashMap<String, String>();
+			map.put("" + FlipperRequestTable.FR_USERID, "" + userPreference.getU_id());
+			map.put("" + FlipperRequestTable.FR_FLIPPERID, username);
+			try {
+				String response = HttpUtil.postRequest("getjsonflipperrequest", map);
+				JsonFlipperRequest fRequest = FastJsonTool.getObject(response, JsonFlipperRequest.class);
+				if (fRequest != null) {
+					notifyNewFlipper(fRequest);
+				} else {
+					LogTool.e("心动请求", "JsonFlipperRequest为空");
+				}
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
 			}
 
-			Log.d("心动请求，", username + "心动请求,reason: " + reason);
+			//			new Thread(new Runnable() {
+			//
+			//				@Override
+			//				public void run() {
+			//					// TODO Auto-generated method stub
+			//					try {
+			//						EMChatManager.getInstance().refuseInvitation(username);
+			//					} catch (EaseMobException e) {
+			//						// TODO Auto-generated catch block
+			//						e.printStackTrace();
+			//					}
+			//				}
+			//			}).start();
 
 		}
 
@@ -427,13 +449,25 @@ public class MainActivity extends BaseFragmentActivity {
 			//				Flipper flipper = flipperDbService.getFlipperByUserId(Integer.parseInt(username));
 			//				flipper.setStatus(Constants.FlipperStatus.BEAGREED);
 			//			}
-			Log.d("心动请求，", username + "同意");
+			Log.d("心动请求，", username + "被同意");
+			ToastTool.showLong(MainActivity.this, "您对" + username + "的心动请求已经被同意");
+
+			FlipperDbService flipperDbService = FlipperDbService.getInstance(MainActivity.this);
+			Flipper flipper = flipperDbService.getFlipperByUserId(Integer.parseInt(username));
+			if (flipper != null) {
+				flipper.setStatus(Constants.FlipperStatus.BEAGREED);
+				flipperDbService.flipperDao.update(flipper);
+				saveFlipperRelation(flipper);
+			} else {
+				saveFlipperRealitionById(Integer.parseInt(username));
+			}
 		}
 
 		//心动请求被拒绝
 		@Override
 		public void onContactRefused(String username) {
 			Log.d("心动请求，", username + "拒绝");
+			ToastTool.showLong(MainActivity.this, "您对" + username + "的心动请求被拒绝");
 		}
 
 	}
@@ -447,6 +481,7 @@ public class MainActivity extends BaseFragmentActivity {
 		saveFlipper(flipperRequest);
 		// 提示有新消息
 		EMNotifier.getInstance(getApplicationContext()).notifyOnNewMsg();
+		ToastTool.showShort(getApplicationContext(), flipperRequest.getU_nickname() + "对你怦然心动");
 	}
 
 	/**
@@ -455,15 +490,176 @@ public class MainActivity extends BaseFragmentActivity {
 	 */
 	private void saveFlipper(JsonFlipperRequest fRequest) {
 		FlipperDbService flipperDbService = FlipperDbService.getInstance(MainActivity.this);
-		Flipper flipper = new Flipper(null, fRequest.getU_id(), fRequest.getU_nickname(), fRequest.getU_realname(),
-				fRequest.getU_gender(), fRequest.getU_email(), fRequest.getU_large_avatar(),
-				fRequest.getU_small_avatar(), fRequest.getU_blood_type(), fRequest.getU_constell(),
-				fRequest.getU_introduce(), fRequest.getU_birthday(), fRequest.getTime(), fRequest.getU_age(),
-				fRequest.getU_vocationid(), fRequest.getU_stateid(), fRequest.getU_provinceid(),
-				fRequest.getU_cityid(), fRequest.getU_schoolid(), fRequest.getU_height(), fRequest.getU_weight(),
-				fRequest.getU_image_pass(), fRequest.getU_salary(), false, fRequest.getU_tel(),
-				Constants.FlipperStatus.BEINVITEED, Constants.FlipperType.FROM);
-		flipperDbService.flipperDao.insert(flipper);
+		Flipper flipper = flipperDbService.getFlipperByUserId(fRequest.getU_id());
+		//如果数据库中存在该用户的请求，则更新状态
+		if (flipper != null) {
+			flipper.setIsRead(false);
+			flipper.setTime(new Date());
+			flipper.setStatus(Constants.FlipperStatus.BEINVITEED);
+			flipper.setType(Constants.FlipperType.FROM);
+			flipperDbService.flipperDao.update(flipper);
+		} else {
+			flipper = new Flipper(null, fRequest.getU_id(), fRequest.getU_bpush_user_id(),
+					fRequest.getU_bpush_channel_id(), fRequest.getU_nickname(), fRequest.getU_realname(),
+					fRequest.getU_gender(), fRequest.getU_email(), fRequest.getU_large_avatar(),
+					fRequest.getU_small_avatar(), fRequest.getU_blood_type(), fRequest.getU_constell(),
+					fRequest.getU_introduce(), fRequest.getU_birthday(), fRequest.getTime(), fRequest.getU_age(),
+					fRequest.getU_vocationid(), fRequest.getU_stateid(), fRequest.getU_provinceid(),
+					fRequest.getU_cityid(), fRequest.getU_schoolid(), fRequest.getU_height(), fRequest.getU_weight(),
+					fRequest.getU_image_pass(), fRequest.getU_salary(), false, fRequest.getU_tel(),
+					Constants.FlipperStatus.BEINVITEED, Constants.FlipperType.FROM);
+			flipperDbService.flipperDao.insert(flipper);
+		}
+
+	}
+
+	/**
+	 * 保存心动者信息
+	 */
+	private void saveFlipperRelation(Flipper flipper) {
+		userPreference.setU_stateid(3);
+		friendpreference.setType(0);
+		friendpreference.setBpush_ChannelID(flipper.getBpushChannelID());
+		friendpreference.setBpush_UserID(flipper.getBpushUserID());
+		friendpreference.setF_age(flipper.getAge());
+		friendpreference.setF_blood_type(flipper.getBloodType());
+		friendpreference.setF_constell(flipper.getConstell());
+		friendpreference.setF_email(flipper.getEmail());
+		friendpreference.setF_gender(flipper.getGender());
+		friendpreference.setF_height(flipper.getHeight());
+		friendpreference.setF_id(flipper.getUserID());
+		friendpreference.setF_introduce(flipper.getIntroduce());
+		friendpreference.setF_large_avatar(flipper.getLargeAvatar());
+		friendpreference.setF_nickname(flipper.getNickname());
+		friendpreference.setF_realname(flipper.getRealname());
+		friendpreference.setF_salary(flipper.getSalary());
+		friendpreference.setF_small_avatar(flipper.getSamllAvatar());
+		friendpreference.setF_stateid(flipper.getStateID());
+		friendpreference.setF_vocationid(flipper.getVocationID());
+		friendpreference.setF_weight(flipper.getWeight());
+		friendpreference.setU_cityid(flipper.getCityID());
+		friendpreference.setU_provinceid(flipper.getProvinceID());
+		friendpreference.setU_schoolid(flipper.getSchoolID());
+		creatConversation();
+	}
+
+	/**
+	 * 	网络获取User信息
+	 */
+	private void saveFlipperRealitionById(int userId) {
+		jsonUser = new JsonUser();
+		RequestParams params = new RequestParams();
+		params.put(UserTable.U_ID, userId);
+
+		TextHttpResponseHandler responseHandler = new TextHttpResponseHandler("utf-8") {
+			@Override
+			public void onSuccess(int statusCode, Header[] headers, String response) {
+				// TODO Auto-generated method stub
+				if (statusCode == 200) {
+					jsonUser = FastJsonTool.getObject(response, JsonUser.class);
+					if (jsonUser != null) {
+						userPreference.setU_stateid(3);
+						friendpreference.setType(0);
+						friendpreference.setBpush_ChannelID(jsonUser.getU_bpush_channel_id());
+						friendpreference.setBpush_UserID(jsonUser.getU_bpush_user_id());
+						friendpreference.setF_address(jsonUser.getU_address());
+						friendpreference.setF_age(jsonUser.getU_age());
+						friendpreference.setF_blood_type(jsonUser.getU_blood_type());
+						friendpreference.setF_constell(jsonUser.getU_constell());
+						friendpreference.setF_email(jsonUser.getU_email());
+						friendpreference.setF_gender(jsonUser.getU_gender());
+						friendpreference.setF_height(jsonUser.getU_height());
+						friendpreference.setF_id(jsonUser.getU_id());
+						friendpreference.setF_introduce(jsonUser.getU_introduce());
+						friendpreference.setF_large_avatar(jsonUser.getU_large_avatar());
+						friendpreference.setF_nickname(jsonUser.getU_nickname());
+						friendpreference.setF_realname(jsonUser.getU_realname());
+						friendpreference.setF_salary(jsonUser.getU_salary());
+						friendpreference.setF_small_avatar(jsonUser.getU_small_avatar());
+						friendpreference.setF_stateid(jsonUser.getU_stateid());
+						friendpreference.setF_tel(jsonUser.getU_tel());
+						friendpreference.setF_vocationid(jsonUser.getU_vocationid());
+						friendpreference.setF_weight(jsonUser.getU_weight());
+						friendpreference.setU_cityid(jsonUser.getU_cityid());
+						friendpreference.setU_provinceid(jsonUser.getU_provinceid());
+						friendpreference.setU_schoolid(jsonUser.getU_schoolid());
+
+						creatConversation();
+					}
+				}
+			}
+
+			@Override
+			public void onFailure(int statusCode, Header[] headers, String errorResponse, Throwable e) {
+				// TODO Auto-generated method stub
+				ToastTool.showLong(MainActivity.this, "服务器错误");
+			}
+		};
+		AsyncHttpClientTool.post(MainActivity.this, "getuserbyid", params, responseHandler);
+	}
+
+	/**
+	 * 创建会话
+	 */
+	private void creatConversation() {
+		conversationDbService.conversationDao.deleteAll();
+		Conversation conversation = new Conversation(null, Long.valueOf(friendpreference.getF_id()),
+				friendpreference.getName(), friendpreference.getF_small_avatar(), "", 0, System.currentTimeMillis());
+		conversationDbService.conversationDao.insert(conversation);
+
+		//给对方发送一条消息
+		String msg = "我和你一见钟情，开始聊天吧~！";
+		//获取到与聊天人的会话对象。参数username为聊天人的userid或者groupid，后文中的username皆是如此
+		EMConversation emConversation = EMChatManager.getInstance().getConversation("" + friendpreference.getF_id());
+		//创建一条文本消息
+		EMMessage message = EMMessage.createSendMessage(EMMessage.Type.TXT);
+		//设置消息body
+		TextMessageBody txtBody = new TextMessageBody(msg);
+		message.addBody(txtBody);
+		//设置接收人
+		message.setReceipt("" + friendpreference.getF_id());
+		//把消息加入到此会话对象中
+		emConversation.addMessage(message);
+
+		if (currentTabIndex == 0) {
+			// 当前页面如果为聊天历史页面，刷新此页面
+			if (homeFragment != null) {
+				homeFragment.refresh();
+			}
+		}
+	}
+
+	//显示删除心动或情侣对话窗口
+	private void showDeletDialog(final int userID) {
+		//如果是心动关系
+		if (userPreference.getU_stateid() == 3) {
+			myAlertDialog = new MyAlertDialog(MainActivity.this);
+			myAlertDialog.setTitle("提示");
+			myAlertDialog.setMessage(friendpreference.getName() + "解除了和您的心动关系");
+			View.OnClickListener comfirm = new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+					myAlertDialog.dismiss();
+					conversationDbService.conversationDao.delete(conversationDbService.getConversationByUser(userID));
+
+					if (currentTabIndex == 0) {
+						// 当前页面如果为聊天历史页面，刷新此页面
+						if (homeFragment != null) {
+							homeFragment.refresh();
+						}
+					}
+
+					//删除会话
+					EMChatManager.getInstance().deleteConversation("" + friendpreference.getF_id());
+					friendpreference.clear();
+					userPreference.setU_stateid(4);
+				}
+			};
+			myAlertDialog.setPositiveButton("确定", comfirm);
+			myAlertDialog.show();
+		}
 	}
 
 	/**

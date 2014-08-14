@@ -112,6 +112,8 @@ public class Generator {
 		Entity flipperEntity = schema.addEntity("Flipper");
 		flipperEntity.addIdProperty().autoincrement();
 		flipperEntity.addIntProperty("userID");
+		flipperEntity.addStringProperty("bpushUserID");
+		flipperEntity.addStringProperty("bpushChannelID");
 		flipperEntity.addStringProperty("nickname");
 		flipperEntity.addStringProperty("realname");
 		flipperEntity.addStringProperty("gender");

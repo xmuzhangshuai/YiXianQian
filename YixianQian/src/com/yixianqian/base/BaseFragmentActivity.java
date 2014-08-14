@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.easemob.chat.EMChatManager;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.umeng.analytics.MobclickAgent;
 import com.yixianqian.utils.NetworkUtils;
 
 /**   
@@ -95,6 +96,9 @@ public abstract class BaseFragmentActivity extends FragmentActivity {
 		if (netBroadCastReceiver != null) {
 			BaseFragmentActivity.this.unregisterReceiver(netBroadCastReceiver);
 		}
+
+		//友盟统计
+		MobclickAgent.onPause(this);
 	}
 
 	@Override
@@ -105,8 +109,12 @@ public abstract class BaseFragmentActivity extends FragmentActivity {
 		IntentFilter intentFilter = new IntentFilter();
 		intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
 		BaseFragmentActivity.this.registerReceiver(netBroadCastReceiver, intentFilter);
+
 		//onresume时，取消notification显示
 		EMChatManager.getInstance().activityResumed();
+
+		//友盟统计
+		MobclickAgent.onResume(this);
 	}
 
 	@Override
@@ -193,7 +201,7 @@ public abstract class BaseFragmentActivity extends FragmentActivity {
 	@SuppressLint("ShowToast")
 	public Dialog showProgressDialog() {
 		ProgressDialog dialog = new ProgressDialog(this);
-		dialog.setMessage("请稍候，正在努力加载...");
+		dialog.setMessage("请稍候...");
 		// dialog.setCancelable(false);
 		dialog.show();
 		return dialog;

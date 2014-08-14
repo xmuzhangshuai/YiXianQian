@@ -32,6 +32,7 @@ import com.yixianqian.base.BaseApplication;
 import com.yixianqian.entities.Conversation;
 import com.yixianqian.utils.AsyncHttpClientImageSound;
 import com.yixianqian.utils.ImageLoaderTool;
+import com.yixianqian.utils.ImageTools;
 
 public class HomeListAdapter extends BaseAdapter {
 	private LayoutInflater mInflater;
@@ -225,8 +226,9 @@ public class HomeListAdapter extends BaseAdapter {
 					if (BaseApplication.getInstance().getFaceMap().containsKey(str2)) {
 						int face = BaseApplication.getInstance().getFaceMap().get(str2);
 						Bitmap bitmap = BitmapFactory.decodeResource(mContext.getResources(), face);
+						bitmap = ImageTools.zoomBitmap(bitmap, 0.5f);
 						if (bitmap != null) {
-							ImageSpan localImageSpan = new ImageSpan(mContext, bitmap, ImageSpan.ALIGN_BASELINE);
+							ImageSpan localImageSpan = new ImageSpan(mContext, bitmap, ImageSpan.ALIGN_BOTTOM);
 							value.setSpan(localImageSpan, k, m, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 						}
 					}

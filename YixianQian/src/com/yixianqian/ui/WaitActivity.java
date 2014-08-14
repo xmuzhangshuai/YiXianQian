@@ -14,22 +14,18 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.easemob.chat.EMChatManager;
-import com.easemob.exceptions.EaseMobException;
+import com.easemob.chat.EMConversation;
+import com.easemob.chat.EMMessage;
+import com.easemob.chat.TextMessageBody;
 import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.TextHttpResponseHandler;
 import com.yixianqian.R;
-import com.yixianqian.baidupush.SendMsgAsyncTask;
 import com.yixianqian.base.BaseActivity;
 import com.yixianqian.base.BaseApplication;
-import com.yixianqian.config.Constants;
 import com.yixianqian.db.ConversationDbService;
-import com.yixianqian.db.MessageItemDbService;
 import com.yixianqian.entities.Conversation;
-import com.yixianqian.entities.MessageItem;
-import com.yixianqian.jsonobject.JsonMessage;
 import com.yixianqian.table.LoveRequestTable;
 import com.yixianqian.utils.AsyncHttpClientTool;
-import com.yixianqian.utils.FastJsonTool;
 import com.yixianqian.utils.FriendPreference;
 import com.yixianqian.utils.ToastTool;
 import com.yixianqian.utils.UserPreference;
@@ -135,32 +131,26 @@ public class WaitActivity extends BaseActivity {
 
 							//给对方发送一条消息
 							String msg = "我们已经成为情侣啦~！";
-							JsonMessage message = new JsonMessage(msg, Constants.MessageType.MESSAGE_TYPE_TEXT);
-							new SendMsgAsyncTask(FastJsonTool.createJsonString(message),
-									friendpreference.getBpush_UserID()).send();
-							MessageItem item = new MessageItem(null, Constants.MessageType.MESSAGE_TYPE_TEXT, msg,
-									System.currentTimeMillis(), true, false, false,
-									conversationDbService.getIdByConversation(conversation));
-							MessageItemDbService messageItemDbService = MessageItemDbService
-									.getInstance(WaitActivity.this);
-							messageItemDbService.messageItemDao.insert(item);
-
-//							try {
-//								EMChatManager.getInstance().acceptInvitation("" + friendpreference.getF_id());
-//							} catch (EaseMobException e) {
-//								// TODO Auto-generated catch block
-//								e.printStackTrace();
-//							}
+							//获取到与聊天人的会话对象。参数username为聊天人的userid或者groupid，后文中的username皆是如此
+							EMConversation emConversation = EMChatManager.getInstance().getConversation(
+									"" + friendpreference.getF_id());
+							//创建一条文本消息
+							EMMessage message = EMMessage.createSendMessage(EMMessage.Type.TXT);
+							//设置消息body
+							TextMessageBody txtBody = new TextMessageBody(msg);
+							message.addBody(txtBody);
+							//设置接收人
+							message.setReceipt("" + friendpreference.getF_id());
+							//把消息加入到此会话对象中
+							emConversation.addMessage(message);
 
 							Intent intent = new Intent(WaitActivity.this, ChatActivity.class);
-							//							intent.putExtra("conversationID", conversationDbService.getIdByConversation(conversation));
 							intent.putExtra("userId", "" + friendpreference.getF_id());
 							startActivity(intent);
 							overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
 							finish();
 
 						} else if (response.equals("2")) {
-							//							textInfo.setText("对方拒绝了您的邀请！");
 							ToastTool.showLong(WaitActivity.this, "对方拒绝了您的邀请！");
 							userPreference.setLoveRequest(false);
 							Intent intent = new Intent(WaitActivity.this, MainActivity.class);

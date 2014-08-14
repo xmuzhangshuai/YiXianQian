@@ -35,6 +35,7 @@ public class HomeDialogFragment extends DialogFragment {
 	private int flipperCount = -1;
 	private FlipperDbService flipperDbService;
 	private UserPreference userPreference;
+	private HomeDialogAdapter mAdapter;
 
 	/**
 	 * 创建实例
@@ -53,6 +54,7 @@ public class HomeDialogFragment extends DialogFragment {
 		setStyle(DialogFragment.STYLE_NO_TITLE, 0);
 		flipperDbService = FlipperDbService.getInstance(getActivity());
 		userPreference = BaseApplication.getInstance().getUserPreference();
+		mAdapter = new HomeDialogAdapter();
 	}
 
 	@Override
@@ -60,6 +62,7 @@ public class HomeDialogFragment extends DialogFragment {
 		// TODO Auto-generated method stub
 		super.onResume();
 		flipperCount = flipperDbService.getFlipperCount();
+		mAdapter.notifyDataSetChanged();
 	}
 
 	@Override
@@ -72,7 +75,7 @@ public class HomeDialogFragment extends DialogFragment {
 		menuitemList.add("添加情侣");
 		menuitemList.add("爱情验证");
 
-		menuitemListView.setAdapter(new HomeDialogAdapter());
+		menuitemListView.setAdapter(mAdapter);
 		menuitemListView.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
@@ -81,13 +84,14 @@ public class HomeDialogFragment extends DialogFragment {
 				Intent intent = null;
 				if (position == 1) {
 					//如果是单身状态
-					if (userPreference.getU_stateid() == 4) {
-						intent = new Intent(getActivity(), LoveVertifyActivity.class);
-					} else if (userPreference.getU_stateid() == 2) {//如果是情侣
-						ToastTool.showLong(getActivity(), "您现在处于恋爱状态，不能接受爱情验证哦~~");
-					} else if (userPreference.getU_stateid() == 3) {//如果是情侣
-						ToastTool.showLong(getActivity(), "您现在处于砰然心动状态，不能贪心哦~~");
-					}
+					intent = new Intent(getActivity(), LoveVertifyActivity.class);
+//					if (userPreference.getU_stateid() == 4) {
+//						intent = new Intent(getActivity(), LoveVertifyActivity.class);
+//					} else if (userPreference.getU_stateid() == 2) {//如果是情侣
+//						ToastTool.showLong(getActivity(), "您现在处于恋爱状态，不能接受爱情验证哦~~");
+//					} else if (userPreference.getU_stateid() == 3) {//如果是情侣
+//						ToastTool.showLong(getActivity(), "您现在处于砰然心动状态，不能贪心哦~~");
+//					}
 				} else if (position == 0) {
 					//如果是单身状态
 					if (userPreference.getU_stateid() == 4) {

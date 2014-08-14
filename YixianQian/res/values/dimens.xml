@@ -41,5 +41,7 @@
     <!-- 聊天 -->
     <dimen name="margin_chat_activity">5dp</dimen>
     <dimen name="size_avatar">50dp</dimen>
+    <dimen name="message_padding">5dp</dimen>
+    <dimen name="love_vertify_headimage">70dp</dimen>
 
 </resources>
