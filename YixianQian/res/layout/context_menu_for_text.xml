@@ -2,41 +2,68 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginLeft="20dp"
-    android:layout_marginRight="20dp" >
+    android:background="@android:color/transparent"
+    android:gravity="center_horizontal" >
 
-    <TextView
-        android:id="@+id/menu1"
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="1dp"
-        android:background="@drawable/context_menu_item_bg"
-        android:clickable="true"
-        android:gravity="center"
-        android:onClick="copy"
-        android:padding="10dp"
-        android:text="@string/copy_message"
-        android:textColor="@android:color/black"
-        android:textSize="@dimen/day_recommend_user_font" />
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="15dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:background="@android:color/transparent"
+        android:gravity="center_horizontal"
+        android:orientation="vertical" >
 
-    <View
-        android:id="@+id/divider"
-        android:layout_below="@+id/menu1"
-        android:layout_width="match_parent"
-        android:layout_height="0.2dp"
-        android:background="@color/system_gray" />
+        <TextView
+            android:id="@+id/menu1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="1dp"
+            android:background="@drawable/context_menu_item_bg_top"
+            android:clickable="true"
+            android:gravity="center"
+            android:onClick="copy"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp"
+            android:text="@string/copy_message"
+            android:textColor="@drawable/sel_chat_pressed_to_talk"
+            android:textSize="@dimen/day_recommend_user_font" />
 
-    <TextView
-        android:layout_below="@+id/divider"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/context_menu_item_bg"
-        android:clickable="true"
-        android:gravity="center"
-        android:onClick="delete"
-        android:padding="10dp"
-        android:text="@string/delete_message"
-        android:textColor="@android:color/black"
-        android:textSize="@dimen/day_recommend_user_font" />
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="0.2dp"
+            android:background="@color/system_gray" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/context_menu_item_bg_bottom"
+            android:clickable="true"
+            android:gravity="center"
+            android:onClick="delete"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp"
+            android:text="@string/delete_message"
+            android:textColor="@drawable/sel_chat_pressed_to_talk"
+            android:textSize="@dimen/day_recommend_user_font" />
+
+        <TextView
+            android:id="@+id/cancel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/context_menu_cancel"
+            android:clickable="true"
+            android:gravity="center"
+            android:onClick="cancel"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp"
+            android:text="@string/cancel"
+            android:textColor="@color/system_female"
+            android:textSize="@dimen/day_recommend_user_font" />
+    </LinearLayout>
 
 </RelativeLayout>

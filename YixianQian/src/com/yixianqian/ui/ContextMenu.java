@@ -59,6 +59,10 @@ public class ContextMenu extends BaseActivity {
 		finish();
 	}
 
+	public void cancel(View view) {
+		finish();
+	}
+
 	public void open(View v) {
 		setResult(ChatActivity.RESULT_CODE_OPEN, new Intent().putExtra("position", position));
 		finish();

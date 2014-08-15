@@ -257,7 +257,6 @@
         <!-- 菜单页面 -->
         <activity
             android:name="com.yixianqian.ui.ContextMenu"
-            android:screenOrientation="portrait"
             android:theme="@style/MyDialogStyle" >
         </activity>
 

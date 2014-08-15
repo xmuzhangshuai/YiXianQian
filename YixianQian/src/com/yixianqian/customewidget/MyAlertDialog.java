@@ -1,6 +1,7 @@
 package com.yixianqian.customewidget;
 
 import android.content.Context;
+import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.widget.TextView;
@@ -14,6 +15,7 @@ public class MyAlertDialog {
 	TextView messageView;
 	TextView positiveButton;
 	TextView negativeButton;
+	boolean showCancle = true;
 
 	public MyAlertDialog(Context context) {
 		// TODO Auto-generated constructor stub
@@ -30,11 +32,20 @@ public class MyAlertDialog {
 	}
 
 	public void setTitle(int resId) {
+		System.out.println(showCancle);
+		if (!showCancle) {
+			titleView.setGravity(Gravity.LEFT);
+			System.out.println("¾Ö×ù");
+		}
 		titleView.setText(resId);
 	}
 
 	public void setTitle(String title) {
 		titleView.setText(title);
+	}
+
+	public void setShowCancel(boolean showCancel) {
+		this.showCancle = showCancel;
 	}
 
 	public void setMessage(int resId) {
@@ -61,8 +72,14 @@ public class MyAlertDialog {
 	 * @param listener
 	 */
 	public void setNegativeButton(String text, final View.OnClickListener listener) {
-		negativeButton.setText(text);
-		negativeButton.setOnClickListener(listener);
+		if (showCancle) {
+			negativeButton.setText(text);
+			negativeButton.setOnClickListener(listener);
+			negativeButton.setVisibility(View.VISIBLE);
+		} else {
+			negativeButton.setVisibility(View.GONE);
+			System.out.println("²»¼û");
+		}
 	}
 
 	/**

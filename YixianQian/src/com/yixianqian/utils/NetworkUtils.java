@@ -1,5 +1,7 @@
 package com.yixianqian.utils;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.List;
 
 import android.content.Context;
@@ -22,6 +24,24 @@ import android.telephony.TelephonyManager;
 *    
 */
 public class NetworkUtils {
+	/**
+	 * 根据域名返回IP
+	 * @param host
+	 * @return
+	 */
+	public static String getInetAddress(String host) {
+		String IPAddress = "";
+		InetAddress ReturnStr1 = null;
+		try {
+			ReturnStr1 = java.net.InetAddress.getByName(host);
+			IPAddress = ReturnStr1.getHostAddress();
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return IPAddress;
+		}
+		return IPAddress;
+	}
 
 	/**
 	 * 检查网络使用状况并提示

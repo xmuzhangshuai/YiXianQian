@@ -382,7 +382,7 @@ public class DayRecommendActivity extends BaseFragmentActivity {
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
 					Intent intent = new Intent(DayRecommendActivity.this, PersonDetailActivity.class);
-					intent.putExtra(PersonDetailActivity.PERSON_TYPE, 1);
+					intent.putExtra(PersonDetailActivity.PERSON_TYPE, Constants.PersonDetailType.SINGLE);
 					intent.putExtra(UserTable.U_ID, todayRecommendList.get(position).getUserID());
 					startActivity(intent);
 					overridePendingTransition(R.anim.zoomin2, R.anim.zoomout);

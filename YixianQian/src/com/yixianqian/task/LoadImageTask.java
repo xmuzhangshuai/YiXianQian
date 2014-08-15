@@ -30,6 +30,7 @@ import com.easemob.chat.EMMessage.ChatType;
 import com.easemob.exceptions.EaseMobException;
 import com.easemob.util.ImageUtils;
 import com.easemob.util.NetUtils;
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.yixianqian.ui.ShowBigImage;
 import com.yixianqian.utils.ImageCache;
 import com.yixianqian.utils.ImageTools;
@@ -55,10 +56,10 @@ public class LoadImageTask extends AsyncTask<Object, Void, Bitmap> {
 		message = (EMMessage) args[6];
 		File file = new File(thumbnailPath);
 		if (file.exists()) {
-			return ImageUtils.decodeScaleImage(thumbnailPath, 120, 120);
+			return ImageUtils.decodeScaleImage(thumbnailPath, 200, 200);
 		} else {
 			if (message.direct == EMMessage.Direct.SEND) {
-				return ImageUtils.decodeScaleImage(localFullSizePath, 120, 120);
+				return ImageUtils.decodeScaleImage(localFullSizePath, 200, 200);
 			} else {
 				return null;
 			}
@@ -68,6 +69,18 @@ public class LoadImageTask extends AsyncTask<Object, Void, Bitmap> {
 
 	protected void onPostExecute(Bitmap image) {
 		if (image != null) {
+			//根据大小缩放
+			int height = image.getHeight();
+			if (height < 100) {
+				image = ImageTools.zoomBitmap(image, 4);
+			} else if (height <= 150) {
+				image = ImageTools.zoomBitmap(image, 3);
+			} else if (height <= 200) {
+				image = ImageTools.zoomBitmap(image, 2);
+			} else if (height <= 250) {
+				image = ImageTools.zoomBitmap(image, 1.5f);
+			}
+
 			iv.setImageBitmap(image);
 			ImageCache.getInstance().put(thumbnailPath, image);
 			iv.setClickable(true);

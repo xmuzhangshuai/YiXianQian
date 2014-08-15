@@ -18,11 +18,10 @@ import com.loopj.android.http.TextHttpResponseHandler;
 import com.yixianqian.R;
 import com.yixianqian.base.BaseApplication;
 import com.yixianqian.base.BaseFragmentActivity;
+import com.yixianqian.config.Constants;
 import com.yixianqian.customewidget.MyAlertDialog;
-import com.yixianqian.db.ConversationDbService;
 import com.yixianqian.db.ProvinceDbService;
 import com.yixianqian.db.SchoolDbService;
-import com.yixianqian.entities.Conversation;
 import com.yixianqian.jsonobject.JsonUser;
 import com.yixianqian.table.FlipperRequestTable;
 import com.yixianqian.table.UserTable;
@@ -74,9 +73,9 @@ public class PersonDetailActivity extends BaseFragmentActivity implements OnClic
 		findViewById();
 		initView();
 
-		if (type == 1 && userId > 0) {
+		if (type == Constants.PersonDetailType.SINGLE && userId > 0) {
 			getUser();
-		} else if (type == 2 || type == 3) {
+		} else if (type == Constants.PersonDetailType.LOVER || type == Constants.PersonDetailType.FLIPPER) {
 			initPersonView();
 		}
 	}
@@ -106,7 +105,7 @@ public class PersonDetailActivity extends BaseFragmentActivity implements OnClic
 		topNavLeftBtn.setOnClickListener(this);
 		right_btn_bg.setOnClickListener(this);
 		sendMsg.setOnClickListener(this);
-		if (type == 1 || type == 2) {
+		if (type == Constants.PersonDetailType.SINGLE || type == Constants.PersonDetailType.FLIPPER) {
 			timeCapsule.setOnClickListener(this);
 			timeCapsule.setVisibility(View.VISIBLE);
 		}
@@ -116,7 +115,7 @@ public class PersonDetailActivity extends BaseFragmentActivity implements OnClic
 	 * 初始化个人信息
 	 */
 	private void initPersonView() {
-		if (type == 1) {
+		if (type == Constants.PersonDetailType.SINGLE) {
 			//设置头像
 			if (!TextUtils.isEmpty(jsonUser.getU_small_avatar())) {
 				imageLoader.displayImage(AsyncHttpClientImageSound.getAbsoluteUrl(jsonUser.getU_small_avatar()),
@@ -144,7 +143,7 @@ public class PersonDetailActivity extends BaseFragmentActivity implements OnClic
 			schoolTextView.setText(schoolDbService.schoolDao.load((long) jsonUser.getU_schoolid()).getSchoolName());
 			genderView.setText(jsonUser.getU_gender());
 
-		} else if (type == 2 || type == 3) {
+		} else if (type == Constants.PersonDetailType.LOVER || type == Constants.PersonDetailType.FLIPPER) {
 			//设置姓名、省份、及学校
 			//优先显示真实姓名
 			nameTextView.setText(friendPreference.getName());
@@ -216,7 +215,7 @@ public class PersonDetailActivity extends BaseFragmentActivity implements OnClic
 		PersonDetailDialog newFragment = PersonDetailDialog.newInstance();
 		Bundle bundle = new Bundle();
 		bundle.putInt(PERSON_TYPE, type);
-		if (type == 1) {
+		if (type == Constants.PersonDetailType.SINGLE) {
 			bundle.putInt(UserTable.U_ID, jsonUser.getU_id());
 		}
 		newFragment.setArguments(bundle);
@@ -245,7 +244,7 @@ public class PersonDetailActivity extends BaseFragmentActivity implements OnClic
 	 */
 	void showSendMsgDialog() {
 		String msgString = "";
-		if (type == 1) {
+		if (type == Constants.PersonDetailType.SINGLE) {
 			msgString = "您和 " + getUserName(jsonUser) + " 还不是心动关系，不能聊天哦~！";
 			final MyAlertDialog myAlertDialog = new MyAlertDialog(this);
 			myAlertDialog.setTitle("提示");

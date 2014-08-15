@@ -29,6 +29,7 @@ import com.nostra13.universalimageloader.core.listener.PauseOnScrollListener;
 import com.yixianqian.R;
 import com.yixianqian.base.AbsListViewBaseActivity;
 import com.yixianqian.base.BaseApplication;
+import com.yixianqian.config.Constants;
 import com.yixianqian.config.DefaultSetting;
 import com.yixianqian.jsonobject.JsonSingleTimeCapsule;
 import com.yixianqian.jsonobject.JsonUser;
@@ -104,12 +105,12 @@ public class PersonTimeCapsuleActivity extends AbsListViewBaseActivity {
 			}
 		});
 		//设置头像
-		if (type == 1) {
+		if (type == Constants.PersonDetailType.SINGLE) {
 			imageLoader.displayImage(AsyncHttpClientImageSound.getAbsoluteUrl(jsonUser.getU_small_avatar()), headImage,
 					ImageLoaderTool.getHeadImageOptions(10));
 			name.setText(getUserName(jsonUser));
 
-		} else if (type == 2) {
+		} else if (type == Constants.PersonDetailType.FLIPPER) {
 			imageLoader.displayImage(AsyncHttpClientImageSound.getAbsoluteUrl(friendPreference.getF_small_avatar()),
 					headImage, ImageLoaderTool.getHeadImageOptions(10));
 			name.setText(friendPreference.getName());
@@ -201,9 +202,6 @@ public class PersonTimeCapsuleActivity extends AbsListViewBaseActivity {
 								pageNow = -1;
 							}
 							singleTimeCapsuleList = new LinkedList<JsonSingleTimeCapsule>();
-							for (JsonSingleTimeCapsule jsonSingleTimeCapsule : temp) {
-								System.out.println("声音" + jsonSingleTimeCapsule.getStc_voice());
-							}
 							singleTimeCapsuleList.addAll(temp);
 						}
 						//如果是获取更多

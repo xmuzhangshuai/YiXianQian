@@ -684,10 +684,12 @@ public class ChatActivity extends BaseFragmentActivity implements OnTouchListene
 		// TODO Auto-generated method stub
 		List<EMMessage> messages;
 		int position = adapter.getCount();
-		messages = emConversation.loadMoreMsgFromDB(adapter.getItem(0).getMsgId(), DefaultSetting.PAGE_NUM);
-		adapter.notifyDataSetChanged();
+		if (position > 0) {
+			messages = emConversation.loadMoreMsgFromDB(adapter.getItem(0).getMsgId(), DefaultSetting.PAGE_NUM);
+			adapter.notifyDataSetChanged();
+			mMsgListView.setSelection(adapter.getCount() - position - 1);
+		}
 		mMsgListView.stopRefresh();
-		mMsgListView.setSelection(adapter.getCount() - position - 1);
 	}
 
 	@Override

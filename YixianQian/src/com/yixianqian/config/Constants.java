@@ -41,6 +41,17 @@ public class Constants {
 		return tList;
 	}
 
+
+	public static class PersonDetailType {
+		//心动
+		public static final int SINGLE = 1;
+		//同意心动
+		public static final int FLIPPER = 2;
+		//情侣
+		public static final int LOVER = 3;
+	}
+
+	
 	public static class MessageType {
 		//心动
 		public static final int MESSAGE_TYPE_FLIPPER_REQUEEST = 6;
@@ -70,7 +81,7 @@ public class Constants {
 		public static final String AGREED = "AGREED";
 
 		/**我拒绝了对方的请求*/
-		public static final String REFUSED = "AGREED";
+		public static final String REFUSED = "REFUSED";
 
 	}
 

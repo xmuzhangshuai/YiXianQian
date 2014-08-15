@@ -20,7 +20,6 @@ import com.yixianqian.base.BaseApplication;
 import com.yixianqian.config.Constants;
 import com.yixianqian.config.DefaultKeys;
 import com.yixianqian.db.CopyDataBase;
-import com.yixianqian.db.SchoolDbService;
 import com.yixianqian.server.ServerUtil;
 import com.yixianqian.utils.NetworkUtils;
 import com.yixianqian.utils.SharePreferenceUtil;
@@ -74,8 +73,8 @@ public class GuideActivity extends BaseActivity {
 		if (count == 0) {// 如果是第一次登陆，则启动向导页面
 			// 第一次运行拷贝数据库文件
 			new initDataBase().execute();
-//				SchoolDbService schoolDbService = SchoolDbService.getInstance(this);
-//				schoolDbService.schoolDao.loadAll();
+			//				SchoolDbService schoolDbService = SchoolDbService.getInstance(this);
+			//				schoolDbService.schoolDao.loadAll();
 			sharePreferenceUtil.setUseCount(++count);// 次数加1
 			startActivity(new Intent(GuideActivity.this, GuidePagerActivity.class));
 		} else {// 如果不是第一次使用,则不启动向导页面，显示欢迎页面。

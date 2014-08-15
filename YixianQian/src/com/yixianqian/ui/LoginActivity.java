@@ -375,15 +375,21 @@ public class LoginActivity extends BaseActivity {
 					} else if (jsonUsers.size() > 1) {
 						saveUser(jsonUsers.get(0), mPassword);
 						saveFriend(jsonUsers.get(1));
-						
+
 						//创建对话
-						ConversationDbService conversationDbService = ConversationDbService.getInstance(LoginActivity.this);
+						ConversationDbService conversationDbService = ConversationDbService
+								.getInstance(LoginActivity.this);
 						Conversation conversation = new Conversation(null, Long.valueOf(friendpreference.getF_id()),
-								friendpreference.getName(), friendpreference.getF_small_avatar(), "", 0, System.currentTimeMillis());
+								friendpreference.getName(), friendpreference.getF_small_avatar(), "", 0,
+								System.currentTimeMillis());
 						conversationDbService.conversationDao.insert(conversation);
 					}
 					//登录环信
 					attempLoginHuanXin(1);
+				} else {
+					mPasswordView.setError("用户名或密码错误！");
+					mPasswordView.requestFocus();
+					showProgress(false);
 				}
 			} else {
 				mPasswordView.setError("用户名或密码错误！");

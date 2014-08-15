@@ -27,7 +27,6 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TextView.BufferType;
 import android.widget.Toast;
@@ -48,6 +47,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.yixianqian.R;
 import com.yixianqian.Listener.VoicePlayClickListener;
 import com.yixianqian.base.BaseApplication;
+import com.yixianqian.config.Constants;
 import com.yixianqian.customewidget.ChatAlertDialog;
 import com.yixianqian.db.ConversationDbService;
 import com.yixianqian.entities.Conversation;
@@ -61,6 +61,7 @@ import com.yixianqian.utils.ImageCache;
 import com.yixianqian.utils.ImageLoaderTool;
 import com.yixianqian.utils.ImageTools;
 import com.yixianqian.utils.ImageUtils;
+import com.yixianqian.utils.LogTool;
 import com.yixianqian.utils.ToastTool;
 import com.yixianqian.utils.UserPreference;
 
@@ -293,9 +294,9 @@ public class MessageAdapter extends BaseAdapter {
 						// TODO Auto-generated method stub
 						Intent intent = new Intent(context, PersonDetailActivity.class);
 						if (userPreference.getU_stateid() == 3) {//如果是心动
-							intent.putExtra(PersonDetailActivity.PERSON_TYPE, 2);
+							intent.putExtra(PersonDetailActivity.PERSON_TYPE, Constants.PersonDetailType.FLIPPER);
 						} else if (userPreference.getU_stateid() == 2) {//如果是情侣
-							intent.putExtra(PersonDetailActivity.PERSON_TYPE, 3);
+							intent.putExtra(PersonDetailActivity.PERSON_TYPE, Constants.PersonDetailType.LOVER);
 						}
 						context.startActivity(intent);
 						((Activity) context).overridePendingTransition(R.anim.zoomin2, R.anim.zoomout);
@@ -397,7 +398,6 @@ public class MessageAdapter extends BaseAdapter {
 				ImageMessageBody imgBody = (ImageMessageBody) message.getBody();
 				if (imgBody.getLocalUrl() != null) {
 					String filePath = imgBody.getLocalUrl();
-
 					String thumbnailPath = ImageUtils.getThumbnailImagePath(filePath);
 					showImageView(thumbnailPath, holder.iv, filePath, imgBody.getRemoteUrl(), message);
 				}
@@ -797,9 +797,17 @@ public class MessageAdapter extends BaseAdapter {
 		// first check if the thumbnail image already loaded into cache
 		Bitmap bitmap = ImageCache.getInstance().get(thumbernailPath);
 		if (bitmap != null) {
-//			System.out.println("缩放前高度" + bitmap.getHeight());
-//			bitmap = ImageTools.zoomBitmap(bitmap, 3);
-//			System.out.println("缩放后高度" + bitmap.getHeight());
+			//根据大小缩放
+			int height = bitmap.getHeight();
+			if (height < 100) {
+				bitmap = ImageTools.zoomBitmap(bitmap, 4);
+			} else if (height <= 150) {
+				bitmap = ImageTools.zoomBitmap(bitmap, 3);
+			} else if (height <= 200) {
+				bitmap = ImageTools.zoomBitmap(bitmap, 2);
+			} else if (height <= 250) {
+				bitmap = ImageTools.zoomBitmap(bitmap, 1.5f);
+			}
 
 			// thumbnail image is already loaded, reuse the drawable
 			iv.setImageBitmap(bitmap);
@@ -835,6 +843,7 @@ public class MessageAdapter extends BaseAdapter {
 			});
 			return true;
 		} else {
+			LogTool.e("chat", "下载缩略图");
 			new LoadImageTask().execute(thumbernailPath, localFullSizePath, remote, message.getChatType(), iv,
 					activity, message);
 			return true;
@@ -871,6 +880,7 @@ public class MessageAdapter extends BaseAdapter {
 					if (BaseApplication.getInstance().getFaceMap().containsKey(str2)) {
 						int face = BaseApplication.getInstance().getFaceMap().get(str2);
 						Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), face);
+						bitmap = ImageTools.zoomBitmap(bitmap, 0.7f);
 						if (bitmap != null) {
 							ImageSpan localImageSpan = new ImageSpan(context, bitmap, ImageSpan.ALIGN_BASELINE);
 							value.setSpan(localImageSpan, k, m, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);

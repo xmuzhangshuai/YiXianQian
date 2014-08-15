@@ -8,7 +8,6 @@ import java.util.Map;
 
 import org.apache.http.Header;
 
-import u.aly.co;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -32,11 +31,9 @@ import com.easemob.chat.EMConversation;
 import com.easemob.chat.EMMessage;
 import com.easemob.chat.EMNotifier;
 import com.easemob.chat.TextMessageBody;
-import com.easemob.exceptions.EaseMobException;
 import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.TextHttpResponseHandler;
 import com.yixianqian.R;
-import com.yixianqian.baidupush.SendNotifyTask;
 import com.yixianqian.base.BaseApplication;
 import com.yixianqian.base.BaseFragmentActivity;
 import com.yixianqian.config.Constants;
@@ -48,14 +45,13 @@ import com.yixianqian.entities.Flipper;
 import com.yixianqian.jsonobject.JsonFlipperRequest;
 import com.yixianqian.jsonobject.JsonUser;
 import com.yixianqian.table.FlipperRequestTable;
-import com.yixianqian.table.FlipperTable;
-import com.yixianqian.table.LoversTable;
 import com.yixianqian.table.UserTable;
 import com.yixianqian.utils.AsyncHttpClientTool;
 import com.yixianqian.utils.FastJsonTool;
 import com.yixianqian.utils.FriendPreference;
 import com.yixianqian.utils.HttpUtil;
 import com.yixianqian.utils.LogTool;
+import com.yixianqian.utils.NetworkUtils;
 import com.yixianqian.utils.ToastTool;
 import com.yixianqian.utils.UserPreference;
 
@@ -363,10 +359,9 @@ public class MainActivity extends BaseFragmentActivity {
 			//			// 刷新ui
 			//			if (currentTabIndex == 0)
 			//				contactListFragment.refresh();
-			for (String string : usernameList) {
-				System.out.println(string + "添加联系人");
+			for (String username : usernameList) {
+				Log.e("心动请求，", "被" + username + "添加");
 			}
-
 		}
 
 		@Override
@@ -384,9 +379,13 @@ public class MainActivity extends BaseFragmentActivity {
 			//			updateUnreadLabel();
 			Log.e("心动请求，", "以下是被删除：");
 
-			for (String username : usernameList) {
+			for (final String username : usernameList) {
 				Log.e("心动请求，", "被" + username + "删除");
-				showDeletDialog(Integer.parseInt(username));
+				runOnUiThread(new Runnable() {
+					public void run() {
+						showDeletDialog(Integer.parseInt(username));
+					}
+				});
 			}
 		}
 
@@ -399,6 +398,7 @@ public class MainActivity extends BaseFragmentActivity {
 			Map<String, String> map = new HashMap<String, String>();
 			map.put("" + FlipperRequestTable.FR_USERID, "" + userPreference.getU_id());
 			map.put("" + FlipperRequestTable.FR_FLIPPERID, username);
+
 			try {
 				String response = HttpUtil.postRequest("getjsonflipperrequest", map);
 				JsonFlipperRequest fRequest = FastJsonTool.getObject(response, JsonFlipperRequest.class);
@@ -411,21 +411,6 @@ public class MainActivity extends BaseFragmentActivity {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-
-			//			new Thread(new Runnable() {
-			//
-			//				@Override
-			//				public void run() {
-			//					// TODO Auto-generated method stub
-			//					try {
-			//						EMChatManager.getInstance().refuseInvitation(username);
-			//					} catch (EaseMobException e) {
-			//						// TODO Auto-generated catch block
-			//						e.printStackTrace();
-			//					}
-			//				}
-			//			}).start();
-
 		}
 
 		//心动请求被同意
@@ -466,10 +451,30 @@ public class MainActivity extends BaseFragmentActivity {
 		//心动请求被拒绝
 		@Override
 		public void onContactRefused(String username) {
-			Log.d("心动请求，", username + "拒绝");
+			Log.d("心动请求，", "您对" + username + "的心动请求被拒绝");
 			ToastTool.showLong(MainActivity.this, "您对" + username + "的心动请求被拒绝");
-		}
 
+			FlipperDbService flipperDbService = FlipperDbService.getInstance(MainActivity.this);
+			Flipper flipper = flipperDbService.getFlipperByUserId(Integer.parseInt(username));
+			if (flipper != null) {
+				flipper.setStatus(Constants.FlipperStatus.BEREFUSED);
+				flipperDbService.flipperDao.update(flipper);
+			}
+		}
+	}
+
+	/**
+	 * 提示新消息
+	 */
+	private void notifyNewMessage() {
+		// 提示有新消息
+		EMNotifier.getInstance(getApplicationContext()).notifyOnNewMsg();
+		if (currentTabIndex == 0) {
+			// 当前页面如果为聊天历史页面，刷新此页面
+			if (homeFragment != null) {
+				homeFragment.refresh();
+			}
+		}
 	}
 
 	/**
@@ -634,6 +639,7 @@ public class MainActivity extends BaseFragmentActivity {
 		//如果是心动关系
 		if (userPreference.getU_stateid() == 3) {
 			myAlertDialog = new MyAlertDialog(MainActivity.this);
+			myAlertDialog.setShowCancel(false);
 			myAlertDialog.setTitle("提示");
 			myAlertDialog.setMessage(friendpreference.getName() + "解除了和您的心动关系");
 			View.OnClickListener comfirm = new OnClickListener() {

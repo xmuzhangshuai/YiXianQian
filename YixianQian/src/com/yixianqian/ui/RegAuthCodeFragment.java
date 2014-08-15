@@ -30,7 +30,9 @@ import com.yixianqian.base.BaseV4Fragment;
 import com.yixianqian.config.DefaultSetting;
 import com.yixianqian.table.UserTable;
 import com.yixianqian.utils.HttpUtil;
+import com.yixianqian.utils.LogTool;
 import com.yixianqian.utils.MD5For16;
+import com.yixianqian.utils.ToastTool;
 import com.yixianqian.utils.UserPreference;
 
 /**
@@ -200,6 +202,7 @@ public class RegAuthCodeFragment extends BaseV4Fragment {
 	*    
 	*/
 	ProgressDialog dialog;
+
 	public class UserRegisterTask extends AsyncTask<Void, Void, Integer> {
 
 		@Override
@@ -252,16 +255,36 @@ public class RegAuthCodeFragment extends BaseV4Fragment {
 				// 调用环信sdk注册方法
 				huanxinUsername = "" + result;
 				huanxinaPassword = MD5For16.GetMD5CodeToLower(userPreference.getU_password());
-				try {
-					CreateAccountTask task = new CreateAccountTask();
-					task.execute(huanxinUsername, huanxinaPassword);
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+
+				//登录到聊天服务器
+				EMChatManager.getInstance().login(huanxinUsername, huanxinaPassword, new EMCallBack() {
+
+					@Override
+					public void onError(int arg0, final String errorMsg) {
+						LogTool.e("环信", "注册后登录聊天服务器失败");
+					}
+
+					@Override
+					public void onProgress(int arg0, String arg1) {
+					}
+
+					@Override
+					public void onSuccess() {
+						userPreference.setHuanXinUserName(huanxinUsername);
+						userPreference.setHuanXinPassword(huanxinaPassword);
+						userPreference.setUserLogin(true);
+						//						userPreference.setU_password("");//清除密码
+						dialog.dismiss();
+
+						Intent intent = new Intent(getActivity(), HeadImageActivity.class);
+						startActivity(intent);
+						getActivity().overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+						getActivity().finish();
+					}
+				});
 
 			} else {
-				Toast.makeText(getActivity(), "注册失败", 1).show();
+				ToastTool.showLong(getActivity(), "注册失败");
 				dialog.dismiss();
 			}
 		}
@@ -285,11 +308,7 @@ public class RegAuthCodeFragment extends BaseV4Fragment {
 		protected String doInBackground(String... args) {
 			String userid = args[0];
 			String pwd = args[1];
-			try {
-				EMChatManager.getInstance().createAccountOnServer(userid, pwd);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+
 			return userid;
 		}
 
@@ -297,33 +316,6 @@ public class RegAuthCodeFragment extends BaseV4Fragment {
 		protected void onPostExecute(String result) {
 			// TODO Auto-generated method stub
 			super.onPostExecute(result);
-
-			//登录到聊天服务器
-			EMChatManager.getInstance().login(huanxinUsername, huanxinaPassword, new EMCallBack() {
-
-				@Override
-				public void onError(int arg0, final String errorMsg) {
-					Toast.makeText(getActivity(), "登录聊天服务器失败：" + errorMsg, Toast.LENGTH_SHORT).show();
-				}
-
-				@Override
-				public void onProgress(int arg0, String arg1) {
-				}
-
-				@Override
-				public void onSuccess() {
-					userPreference.setHuanXinUserName(huanxinUsername);
-					userPreference.setHuanXinPassword(huanxinaPassword);
-					userPreference.setUserLogin(true);
-//					userPreference.setU_password("");//清除密码
-					dialog.dismiss();
-
-					Intent intent = new Intent(getActivity(), HeadImageActivity.class);
-					startActivity(intent);
-					getActivity().overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
-					getActivity().finish();
-				}
-			});
 		}
 	}
 }

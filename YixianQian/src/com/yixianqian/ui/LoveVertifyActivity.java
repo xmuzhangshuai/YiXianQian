@@ -42,6 +42,7 @@ import com.yixianqian.utils.DateTimeTools;
 import com.yixianqian.utils.FastJsonTool;
 import com.yixianqian.utils.FriendPreference;
 import com.yixianqian.utils.ImageLoaderTool;
+import com.yixianqian.utils.LogTool;
 import com.yixianqian.utils.ToastTool;
 import com.yixianqian.utils.UserPreference;
 
@@ -168,7 +169,14 @@ public class LoveVertifyActivity extends BaseActivity {
 					public void onClick(View v) {
 						// TODO Auto-generated method stub
 						Intent intent = new Intent(LoveVertifyActivity.this, PersonDetailActivity.class);
-						intent.putExtra(PersonDetailActivity.PERSON_TYPE, 1);
+						if (userPreference.getU_stateid() == 3) {
+							intent.putExtra(PersonDetailActivity.PERSON_TYPE, Constants.PersonDetailType.FLIPPER);
+						} else if (userPreference.getU_stateid() == 2) {
+							intent.putExtra(PersonDetailActivity.PERSON_TYPE, Constants.PersonDetailType.LOVER);
+						} else {
+							intent.putExtra(PersonDetailActivity.PERSON_TYPE, Constants.PersonDetailType.SINGLE);
+						}
+
 						intent.putExtra(UserTable.U_ID, flipperList.get(position).getUserID());
 						startActivity(intent);
 						overridePendingTransition(R.anim.zoomin2, R.anim.zoomout);
@@ -203,16 +211,23 @@ public class LoveVertifyActivity extends BaseActivity {
 				info2.setVisibility(View.GONE);
 				flipperBtn.setVisibility(View.GONE);
 				refuseBtn.setVisibility(View.GONE);
-			}else if (status.equals(Constants.FlipperStatus.AGREED)) {//我同意了别人的请求
+			} else if (status.equals(Constants.FlipperStatus.AGREED)) {//我同意了别人的请求
 				nameTextView.setTextColor(Color.BLACK);
 				info.setText("我同意了ta的请求");
 				info.setTextColor(getResources().getColor(R.color.unenable));
 				info2.setVisibility(View.GONE);
 				flipperBtn.setVisibility(View.GONE);
 				refuseBtn.setVisibility(View.GONE);
-			}else if (status.equals(Constants.FlipperStatus.BEAGREED)) {//别人同意了我的请求
+			} else if (status.equals(Constants.FlipperStatus.BEAGREED)) {//别人同意了我的请求
 				nameTextView.setTextColor(Color.BLACK);
 				info.setText("同意了我的请求");
+				info.setTextColor(getResources().getColor(R.color.unenable));
+				info2.setVisibility(View.GONE);
+				flipperBtn.setVisibility(View.GONE);
+				refuseBtn.setVisibility(View.GONE);
+			} else if (status.equals(Constants.FlipperStatus.BEREFUSED)) {//被人拒绝了我的请求
+				nameTextView.setTextColor(getResources().getColor(R.color.unenable));
+				info.setText("您对ta的心动请求被拒绝了");
 				info.setTextColor(getResources().getColor(R.color.unenable));
 				info2.setVisibility(View.GONE);
 				flipperBtn.setVisibility(View.GONE);
@@ -264,9 +279,9 @@ public class LoveVertifyActivity extends BaseActivity {
 							//							flipperDbService.flipperDao.delete(flipper);
 							//							flipperList.remove(position);
 							//							adapter.notifyDataSetChanged();
-							
+
 							try {
-								EMChatManager.getInstance().refuseInvitation(""+flipper.getUserID());
+								EMChatManager.getInstance().refuseInvitation("" + flipper.getUserID());
 							} catch (EaseMobException e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
@@ -317,10 +332,6 @@ public class LoveVertifyActivity extends BaseActivity {
 								flipper.setTime(new Date());
 								flipperDbService.flipperDao.update(flipper);
 								adapter.notifyDataSetChanged();
-
-//								flipperDbService.flipperDao.delete(flipper);
-//								flipperList.remove(position);
-//								adapter.notifyDataSetChanged();
 
 								friendpreference.clear();
 								Map<String, String> map = FastJsonTool.getObject(response, Map.class);
@@ -377,7 +388,8 @@ public class LoveVertifyActivity extends BaseActivity {
 									startActivity(intent);
 									overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
 								} else {
-									ToastTool.showLong(LoveVertifyActivity.this, "map为空");
+									ToastTool.showLong(LoveVertifyActivity.this, "组建心动关系失败");
+									LogTool.e("心动关系", "组建心动关系失败，buildflipper,返回为空");
 								}
 							}
 						}
