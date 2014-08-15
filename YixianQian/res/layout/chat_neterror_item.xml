@@ -20,7 +20,6 @@
         android:layout_centerVertical="true"
         android:layout_marginLeft="4dp"
         android:layout_toRightOf="@id/iv_neterror"
-        android:text="不能连接到服务器"
         android:textColor="#000" />
 
     <!--
@@ -32,6 +31,7 @@
         android:layout_alignParentRight="true"
         android:background="@drawable/ic_preference_single_normal"
         android:textColor="#000"
-        />  -->
+        />
+    -->
 
 </RelativeLayout>

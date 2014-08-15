@@ -51,7 +51,6 @@ import com.yixianqian.utils.FastJsonTool;
 import com.yixianqian.utils.FriendPreference;
 import com.yixianqian.utils.HttpUtil;
 import com.yixianqian.utils.LogTool;
-import com.yixianqian.utils.NetworkUtils;
 import com.yixianqian.utils.ToastTool;
 import com.yixianqian.utils.UserPreference;
 
@@ -281,41 +280,6 @@ public class MainActivity extends BaseFragmentActivity {
 			abortBroadcast();
 		}
 	};
-
-	/**
-	 * 显示帐号在别处登录dialog
-	 */
-	private void showConflictDialog() {
-		isConflictDialogShow = true;
-		BaseApplication.getInstance().logout();
-
-		if (!MainActivity.this.isFinishing()) {
-			// clear up global variables
-			try {
-				if (conflictBuilder == null)
-					conflictBuilder = new android.app.AlertDialog.Builder(MainActivity.this);
-				conflictBuilder.setTitle("下线通知");
-				conflictBuilder.setMessage(R.string.connect_conflict);
-				conflictBuilder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						dialog.dismiss();
-						conflictBuilder = null;
-						finish();
-						startActivity(new Intent(MainActivity.this, LoginActivity.class));
-					}
-				});
-				conflictBuilder.setCancelable(false);
-				conflictBuilder.create().show();
-				isConflict = true;
-			} catch (Exception e) {
-				Log.e("###", "---------color conflictBuilder error" + e.getMessage());
-			}
-
-		}
-
-	}
 
 	/***
 	 * 联系人变化listener
@@ -665,6 +629,39 @@ public class MainActivity extends BaseFragmentActivity {
 			};
 			myAlertDialog.setPositiveButton("确定", comfirm);
 			myAlertDialog.show();
+		}
+	}
+
+	/**
+	 * 显示帐号在别处登录dialog
+	 */
+	private void showConflictDialog() {
+		isConflictDialogShow = true;
+		BaseApplication.getInstance().logout();
+
+		if (!MainActivity.this.isFinishing()) {
+			// clear up global variables
+			try {
+				if (conflictBuilder == null)
+					conflictBuilder = new android.app.AlertDialog.Builder(MainActivity.this);
+				conflictBuilder.setTitle("下线通知");
+				conflictBuilder.setMessage(R.string.connect_conflict);
+				conflictBuilder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss();
+						conflictBuilder = null;
+						finish();
+						startActivity(new Intent(MainActivity.this, LoginActivity.class));
+					}
+				});
+				conflictBuilder.setCancelable(false);
+				conflictBuilder.create().show();
+				isConflict = true;
+			} catch (Exception e) {
+				Log.e("###", "---------color conflictBuilder error" + e.getMessage());
+			}
 		}
 	}
 

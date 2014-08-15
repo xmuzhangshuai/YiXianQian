@@ -64,12 +64,13 @@ public class FaceAdapter extends BaseAdapter {
 		} else {
 			viewHolder = (ViewHolder) convertView.getTag();
 		}
+
 		if (position == DefaultSetting.NUM) {
 			viewHolder.faceIV.setImageResource(R.drawable.emotion_del_selector);
-			viewHolder.faceIV.setBackgroundDrawable(null);;
+			viewHolder.faceIV.setBackgroundDrawable(null);
 		} else {
 			int count = DefaultSetting.NUM * currentPage + position;
-			if (count < 107) {
+			if (count < faceList.size()) {
 				viewHolder.faceIV.setImageResource(faceList.get(count));
 			} else {
 				viewHolder.faceIV.setImageDrawable(null);

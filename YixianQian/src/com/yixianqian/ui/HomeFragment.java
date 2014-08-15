@@ -176,6 +176,7 @@ public class HomeFragment extends BaseV4Fragment {
 				showDeletDialog();
 			}
 		});
+
 	}
 
 	/**
@@ -188,8 +189,8 @@ public class HomeFragment extends BaseV4Fragment {
 				public void run() {
 					conversationList.clear();
 					conversationList.addAll(conversationDbService.conversationDao.loadAll());
-//					mAdapter = new HomeListAdapter(getActivity(), mHomeListView, conversationList);
-//					mHomeListView.setAdapter(mAdapter);
+					//					mAdapter = new HomeListAdapter(getActivity(), mHomeListView, conversationList);
+					//					mHomeListView.setAdapter(mAdapter);
 					mAdapter.notifyDataSetChanged();
 				}
 			});
@@ -225,9 +226,9 @@ public class HomeFragment extends BaseV4Fragment {
 								conversationList.remove(currentItem);
 								mAdapter.notifyDataSetChanged();
 								currentItem = -1;
-//								new SendNotifyTask(userPreference.getName() + "和您解除了心动关系", userPreference.getName(),
-//										friendPreference.getBpush_UserID()).send();
-								
+								//								new SendNotifyTask(userPreference.getName() + "和您解除了心动关系", userPreference.getName(),
+								//										friendPreference.getBpush_UserID()).send();
+
 								//删除会话
 								EMChatManager.getInstance().deleteConversation("" + friendPreference.getF_id());
 								//删除好友

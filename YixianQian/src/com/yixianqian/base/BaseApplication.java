@@ -6,16 +6,11 @@ import java.util.List;
 import java.util.Map;
 
 import android.app.ActivityManager;
-import android.app.Application;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
-import android.os.Build;
-import android.os.StrictMode;
-import android.preference.PreferenceManager;
 
 import com.baidu.frontia.FrontiaApplication;
 import com.easemob.chat.ConnectionListener;
@@ -33,11 +28,9 @@ import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.yixianqian.R;
 import com.yixianqian.baidupush.BaiduPush;
 import com.yixianqian.config.Constants;
-import com.yixianqian.config.Constants.Config;
 import com.yixianqian.dao.DaoMaster;
 import com.yixianqian.dao.DaoMaster.OpenHelper;
 import com.yixianqian.dao.DaoSession;
-import com.yixianqian.jsonobject.JsonUser;
 import com.yixianqian.ui.ChatActivity;
 import com.yixianqian.ui.MainActivity;
 import com.yixianqian.utils.FriendPreference;
@@ -57,7 +50,7 @@ import com.yixianqian.utils.UserPreference;
  * @version    
  *    
  */
-public class BaseApplication extends Application {
+public class BaseApplication extends FrontiaApplication {
 	private static BaseApplication myApplication;
 	private static DaoMaster daoMaster;
 	private static DaoSession daoSession;
@@ -75,23 +68,21 @@ public class BaseApplication extends Application {
 		return myApplication;
 	}
 
-	@SuppressWarnings("unused")
 	@Override
 	public void onCreate() {
 		// TODO Auto-generated method stub
-		if (Config.DEVELOPER_MODE && Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
-			StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectAll().penaltyDialog().build());
-			StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectAll().penaltyDeath().build());
-		}
 		super.onCreate();
+		
+//		if (Config.DEVELOPER_MODE && Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
+//			StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectAll().penaltyDialog().build());
+//			StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectAll().penaltyDeath().build());
+//		}
 
 		applicationContext = this;
 		if (myApplication == null)
 			myApplication = this;
 
 		initImageLoader(getApplicationContext());
-		//使用百度push接口
-		FrontiaApplication.initFrontiaApplication(applicationContext);
 
 		initFaceMap();
 		initData();

@@ -28,14 +28,6 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.TextHttpResponseHandler;
 import com.nostra13.universalimageloader.core.listener.PauseOnScrollListener;
-import com.umeng.socialize.bean.SHARE_MEDIA;
-import com.umeng.socialize.controller.UMServiceFactory;
-import com.umeng.socialize.controller.UMSocialService;
-import com.umeng.socialize.media.UMImage;
-import com.umeng.socialize.sso.QZoneSsoHandler;
-import com.umeng.socialize.sso.UMQQSsoHandler;
-import com.umeng.socialize.sso.UMSsoHandler;
-import com.umeng.socialize.weixin.controller.UMWXHandler;
 import com.yixianqian.R;
 import com.yixianqian.base.AbsListViewBaseActivity;
 import com.yixianqian.base.BaseApplication;
@@ -80,7 +72,6 @@ public class TimeCapsuleActivity extends AbsListViewBaseActivity implements OnCh
 	private LinkedList<JsonLoverTimeCapsule> loverTimeCapsuleList;
 	private TimeCapsuleAdapter timeCapsuleAdapter;
 	private int stateID = 0;
-	final UMSocialService mController = UMServiceFactory.getUMSocialService("com.umeng.share");
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -95,10 +86,6 @@ public class TimeCapsuleActivity extends AbsListViewBaseActivity implements OnCh
 
 		findViewById();
 		initView();
-
-		addWeiXin();
-		addQQFriend();
-		addQQZone();
 
 		//获取数据
 		getDataTask(pageNow);
@@ -181,16 +168,6 @@ public class TimeCapsuleActivity extends AbsListViewBaseActivity implements OnCh
 		// TODO Auto-generated method stub
 		super.onResume();
 		timeCapsuleListview.setOnScrollListener(new PauseOnScrollListener(imageLoader, pauseOnScroll, pauseOnFling));
-	}
-
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-		/**使用SSO授权必须添加如下代码 */
-		UMSsoHandler ssoHandler = mController.getConfig().getSsoHandler(requestCode);
-		if (ssoHandler != null) {
-			ssoHandler.authorizeCallBack(requestCode, resultCode, data);
-		}
 	}
 
 	@Override
@@ -503,60 +480,10 @@ public class TimeCapsuleActivity extends AbsListViewBaseActivity implements OnCh
 		}
 	}
 
-	/**
-	 * 添加微信分享支持
-	 */
-	private void addWeiXin() {
-		String appID = "wx967daebe835fbeac";
-		// 添加微信平台
-		UMWXHandler wxHandler = new UMWXHandler(TimeCapsuleActivity.this, appID);
-		wxHandler.addToSocialSDK();
-		// 支持微信朋友圈
-		UMWXHandler wxCircleHandler = new UMWXHandler(TimeCapsuleActivity.this, appID);
-		wxCircleHandler.setToCircle(true);
-		wxCircleHandler.addToSocialSDK();
-	}
-
-	/**
-	 * 添加QQ好友分享支持
-	 */
-	private void addQQFriend() {
-		//参数1为当前Activity，参数2为开发者在QQ互联申请的APP ID，参数3为开发者在QQ互联申请的APP kEY.
-		UMQQSsoHandler qqSsoHandler = new UMQQSsoHandler(TimeCapsuleActivity.this, "100424468",
-				"c7394704798a158208a74ab60104f0ba");
-		qqSsoHandler.addToSocialSDK();
-	}
-
-	/**
-	 * 添加QQ空间分享支持
-	 */
-	private void addQQZone() {
-		//参数1为当前Activity，参数2为开发者在QQ互联申请的APP ID，参数3为开发者在QQ互联申请的APP kEY.
-		QZoneSsoHandler qZoneSsoHandler = new QZoneSsoHandler(TimeCapsuleActivity.this, "100424468",
-				"c7394704798a158208a74ab60104f0ba");
-		qZoneSsoHandler.addToSocialSDK();
-	}
-
 	@Override
 	public void onShare(int position) {
 		// TODO Auto-generated method stub
-		//分享链接
-		mController.setAppWebSite("http://www.baidu.com");
 
-		// 设置分享内容
-		mController.setShareContent("一线牵，爱的保障");
-
-		if (stateID == 2) {
-			// 设置分享图片, 参数2为图片的url地址
-			mController.setShareMedia(new UMImage(TimeCapsuleActivity.this, AsyncHttpClientImageSound
-					.getAbsoluteUrl(loverTimeCapsuleList.get(position).getLtc_photo())));
-		} else if (stateID == 3 || stateID == 4) {
-			// 设置分享图片, 参数2为图片的url地址
-			mController.setShareMedia(new UMImage(TimeCapsuleActivity.this, AsyncHttpClientImageSound
-					.getAbsoluteUrl(singleTimeCapsuleList.get(position).getStc_photo())));
-		}
-//		mController.getConfig().removePlatform(SHARE_MEDIA.RENREN, SHARE_MEDIA.DOUBAN);
-
-		mController.openShare(TimeCapsuleActivity.this, false);
 	}
+
 }

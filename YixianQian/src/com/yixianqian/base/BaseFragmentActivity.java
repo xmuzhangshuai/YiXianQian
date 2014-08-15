@@ -64,7 +64,6 @@ public abstract class BaseFragmentActivity extends FragmentActivity {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		AppManager.getInstance().addActivity(this);
-		//		PushAgent.getInstance(this).onAppStart();
 		// ÔÚonCreateÖÐ×¢²á¹ã²¥  
 		IntentFilter filter = new IntentFilter();
 		filter.addAction("close");

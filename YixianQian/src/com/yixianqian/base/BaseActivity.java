@@ -13,10 +13,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.widget.Toast;
 
+import com.baidu.android.pushservice.PushManager;
 import com.easemob.chat.EMChatManager;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.yixianqian.R;
-import com.yixianqian.ui.LoginActivity;
 import com.yixianqian.utils.NetworkUtils;
 
 /**

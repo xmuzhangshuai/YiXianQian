@@ -110,7 +110,7 @@ public class ChatActivity extends BaseFragmentActivity implements OnTouchListene
 	public static final int CHATTYPE_SINGLE = 1;
 
 	private MsgListView mMsgListView;
-	private ImageView topNavLeftBtn;//导航条左边按钮
+	private View topNavLeftBtn;//导航条左边按钮
 	private TextView topNavText;//导航条文字
 	private Button sendBtn;//发送按钮
 	private ImageView faceBtn;//表情
@@ -227,7 +227,7 @@ public class ChatActivity extends BaseFragmentActivity implements OnTouchListene
 	protected void findViewById() {
 		// TODO Auto-generated method stub
 		mMsgListView = (MsgListView) findViewById(R.id.msg_listView);
-		topNavLeftBtn = (ImageView) findViewById(R.id.nav_left_btn);
+		topNavLeftBtn = findViewById(R.id.left_btn_bg);
 		topNavText = (TextView) findViewById(R.id.nav_text);
 		sendBtn = (Button) findViewById(R.id.send_btn);
 		faceBtn = (ImageView) findViewById(R.id.face_btn);
@@ -856,7 +856,7 @@ public class ChatActivity extends BaseFragmentActivity implements OnTouchListene
 			sendText(msg);
 			msgEt.setText("");
 			break;
-		case R.id.nav_left_btn:
+		case R.id.left_btn_bg:
 			startActivity(new Intent(ChatActivity.this, MainActivity.class));
 			overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
 			finish();
