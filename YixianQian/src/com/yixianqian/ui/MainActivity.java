@@ -252,7 +252,7 @@ public class MainActivity extends BaseFragmentActivity {
 			if (currentTabIndex == 0) {
 				// 当前页面如果为聊天历史页面，刷新此页面
 				if (homeFragment != null) {
-					homeFragment.refresh();
+					homeFragment.refreshConversation();
 				}
 			}
 			// 注销广播，否则在ChatActivity中会收到这个广播
@@ -356,7 +356,7 @@ public class MainActivity extends BaseFragmentActivity {
 		//收到心动请求
 		@Override
 		public void onContactInvited(final String username, String reason) {
-			Log.e("心动请求，", "收到心动请求，来自" + username + ",reason: " + reason);
+			LogTool.d("心动请求，", "收到心动请求，来自" + username + ",reason: " + reason);
 
 			// 接到邀请的消息，如果不处理(同意或拒绝)，掉线后，服务器会自动再发过来，所以客户端不要重复提醒
 			Map<String, String> map = new HashMap<String, String>();
@@ -428,29 +428,23 @@ public class MainActivity extends BaseFragmentActivity {
 	}
 
 	/**
-	 * 提示新消息
-	 */
-	private void notifyNewMessage() {
-		// 提示有新消息
-		EMNotifier.getInstance(getApplicationContext()).notifyOnNewMsg();
-		if (currentTabIndex == 0) {
-			// 当前页面如果为聊天历史页面，刷新此页面
-			if (homeFragment != null) {
-				homeFragment.refresh();
-			}
-		}
-	}
-
-	/**
 	 * 保存心动请求并提示新消息
 	 * 
 	 * @param msg
 	 */
-	private void notifyNewFlipper(JsonFlipperRequest flipperRequest) {
+	private void notifyNewFlipper(final JsonFlipperRequest flipperRequest) {
 		saveFlipper(flipperRequest);
 		// 提示有新消息
 		EMNotifier.getInstance(getApplicationContext()).notifyOnNewMsg();
-		ToastTool.showShort(getApplicationContext(), flipperRequest.getU_nickname() + "对你怦然心动");
+		runOnUiThread(new Runnable() {
+
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				ToastTool.showShort(getApplicationContext(), flipperRequest.getU_nickname() + "对你怦然心动");
+			}
+		});
+
 		if (currentTabIndex == 0) {
 			// 当前页面如果为聊天历史页面，刷新此页面
 			if (homeFragment != null) {

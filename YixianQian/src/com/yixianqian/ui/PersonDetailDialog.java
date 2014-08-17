@@ -13,8 +13,8 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
@@ -22,11 +22,12 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMContactManager;
+import com.easemob.exceptions.EaseMobException;
 import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.TextHttpResponseHandler;
 import com.yixianqian.R;
-import com.yixianqian.baidupush.SendNotifyTask;
 import com.yixianqian.base.BaseApplication;
 import com.yixianqian.config.Constants;
 import com.yixianqian.customewidget.MyAlertDialog;
@@ -237,10 +238,24 @@ public class PersonDetailDialog extends DialogFragment {
 							// TODO Auto-generated method stub
 							conversationDbService.conversationDao.delete(conversationDbService
 									.getConversationByUser(friendPreference.getF_id()));
-							new SendNotifyTask(userPreference.getName() + "和您解除了心动关系", userPreference.getName(),
-									friendPreference.getBpush_UserID()).send();
+							//								new SendNotifyTask(userPreference.getName() + "和您解除了心动关系", userPreference.getName(),
+							//										friendPreference.getBpush_UserID()).send();
+
+							//删除会话
+							EMChatManager.getInstance().deleteConversation("" + friendPreference.getF_id());
+							//删除好友
+							try {
+								EMContactManager.getInstance().deleteContact("" + friendPreference.getF_id());
+							} catch (EaseMobException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
 							friendPreference.clear();
 							userPreference.setU_stateid(4);
+							PersonDetailDialog.this.dismiss();
+							startActivity(new Intent(getActivity(), MainActivity.class));
+							getActivity().overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
+							getActivity().finish();
 						}
 
 						@Override
@@ -258,7 +273,6 @@ public class PersonDetailDialog extends DialogFragment {
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
 					myAlertDialog.dismiss();
-
 				}
 			};
 			myAlertDialog.setPositiveButton("删除", comfirm);
@@ -285,10 +299,12 @@ public class PersonDetailDialog extends DialogFragment {
 						@Override
 						public void onSuccess(int statusCode, Header[] headers, String response) {
 							// TODO Auto-generated method stub
+							//							new SendNotifyTask(userPreference.getName() + "和您解除了情侣关系", userPreference.getName(),
+							//									friendPreference.getBpush_UserID()).send();
 							conversationDbService.conversationDao.delete(conversationDbService
 									.getConversationByUser(friendPreference.getF_id()));
-							new SendNotifyTask(userPreference.getName() + "和您解除了情侣关系", userPreference.getName(),
-									friendPreference.getBpush_UserID()).send();
+							//删除会话
+							EMChatManager.getInstance().deleteConversation("" + friendPreference.getF_id());
 							friendPreference.clear();
 							userPreference.setU_stateid(4);
 							PersonDetailDialog.this.dismiss();
@@ -301,7 +317,6 @@ public class PersonDetailDialog extends DialogFragment {
 						public void onFailure(int statusCode, Header[] headers, String errorResponse, Throwable e) {
 							// TODO Auto-generated method stub
 							ToastTool.showShort(getActivity(), "解除情侣失败！");
-							PersonDetailDialog.this.dismiss();
 						}
 					};
 					AsyncHttpClientTool.post("deletelover", params, responseHandler);
@@ -313,6 +328,7 @@ public class PersonDetailDialog extends DialogFragment {
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
 					myAlertDialog.dismiss();
+
 				}
 			};
 			myAlertDialog.setPositiveButton("删除", comfirm);
@@ -344,6 +360,15 @@ public class PersonDetailDialog extends DialogFragment {
 				// TODO Auto-generated method stub
 				ToastTool.showLong(getActivity(), "恭喜！您和" + friendPreference.getName() + "成为了情侣！");
 				userPreference.setU_stateid(2);
+
+				//删除心动关系，即环信好友
+				try {
+					EMContactManager.getInstance().deleteContact("" + friendPreference.getF_id());
+				} catch (EaseMobException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
 				PersonDetailDialog.this.dismiss();
 				getActivity().startActivity(new Intent(getActivity(), MainActivity.class));
 				getActivity().overridePendingTransition(R.anim.abc_fade_in, R.anim.push_right_out);

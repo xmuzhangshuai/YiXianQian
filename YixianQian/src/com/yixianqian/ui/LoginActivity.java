@@ -31,6 +31,7 @@ import com.yixianqian.table.UserTable;
 import com.yixianqian.utils.FastJsonTool;
 import com.yixianqian.utils.FriendPreference;
 import com.yixianqian.utils.HttpUtil;
+import com.yixianqian.utils.LogTool;
 import com.yixianqian.utils.MD5For16;
 import com.yixianqian.utils.MD5For32;
 import com.yixianqian.utils.NetworkUtils;
@@ -378,13 +379,17 @@ public class LoginActivity extends BaseActivity {
 						saveUser(jsonUsers.get(0), mPassword);
 						saveFriend(jsonUsers.get(1));
 
-						//创建对话
-						ConversationDbService conversationDbService = ConversationDbService
-								.getInstance(LoginActivity.this);
-						Conversation conversation = new Conversation(null, Long.valueOf(friendpreference.getF_id()),
-								friendpreference.getName(), friendpreference.getF_small_avatar(), "", 0,
-								System.currentTimeMillis());
-						conversationDbService.conversationDao.insert(conversation);
+						if (jsonUsers.get(1) != null) {
+							//创建对话
+							ConversationDbService conversationDbService = ConversationDbService
+									.getInstance(LoginActivity.this);
+							Conversation conversation = new Conversation(null,
+									Long.valueOf(friendpreference.getF_id()), friendpreference.getName(),
+									friendpreference.getF_small_avatar(), "", 0, System.currentTimeMillis());
+							conversationDbService.conversationDao.insert(conversation);
+						}else {
+							LogTool.e("Login", "登录获取两个人，但是第二个为空");
+						}
 					}
 					//登录环信
 					attempLoginHuanXin(1);
