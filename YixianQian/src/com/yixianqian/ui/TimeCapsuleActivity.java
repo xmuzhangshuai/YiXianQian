@@ -364,6 +364,8 @@ public class TimeCapsuleActivity extends AbsListViewBaseActivity implements OnCh
 							TimeCapsuleActivity.this.overridePendingTransition(R.anim.zoomin2, R.anim.zoomout);
 						}
 					});
+				} else {
+					holder.capsuleImage.setVisibility(View.GONE);
 				}
 
 				if (!TextUtils.isEmpty(singleTimeCapsuleList.get(position).getStc_voice())) {
@@ -371,6 +373,8 @@ public class TimeCapsuleActivity extends AbsListViewBaseActivity implements OnCh
 					holder.time.setText(DateTimeTools.DateToString(singleTimeCapsuleList.get(position)
 							.getStc_record_time()));
 					holder.palyView.setVisibility(View.VISIBLE);
+				} else {
+					holder.palyView.setVisibility(View.GONE);
 				}
 			}
 			//ÇéÂÂ
@@ -393,6 +397,8 @@ public class TimeCapsuleActivity extends AbsListViewBaseActivity implements OnCh
 						}
 					});
 
+				} else {
+					holder.capsuleImage.setVisibility(View.GONE);
 				}
 
 				if (!TextUtils.isEmpty(loverTimeCapsuleList.get(position).getLtc_voice())) {
@@ -400,6 +406,8 @@ public class TimeCapsuleActivity extends AbsListViewBaseActivity implements OnCh
 					holder.time.setText(DateTimeTools.DateToString(loverTimeCapsuleList.get(position)
 							.getLtc_record_time()));
 					holder.palyView.setVisibility(View.VISIBLE);
+				} else {
+					holder.palyView.setVisibility(View.GONE);
 				}
 			}
 

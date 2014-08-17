@@ -3,6 +3,7 @@ package com.yixianqian.ui;
 import org.apache.http.Header;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -18,6 +19,8 @@ import com.yixianqian.base.BaseActivity;
 import com.yixianqian.base.BaseApplication;
 import com.yixianqian.table.UserTable;
 import com.yixianqian.utils.AsyncHttpClientTool;
+import com.yixianqian.utils.FriendPreference;
+import com.yixianqian.utils.MD5For32;
 import com.yixianqian.utils.ToastTool;
 import com.yixianqian.utils.UserPreference;
 
@@ -36,6 +39,7 @@ public class ModifyPassActivity extends BaseActivity implements OnClickListener 
 	private EditText mNewPassView;//新密码
 	private EditText mConformPassView;//确认密码
 	private UserPreference userPreference;
+	private FriendPreference friendPreference;
 
 	private String oldPass;
 	private String newPass;
@@ -49,7 +53,7 @@ public class ModifyPassActivity extends BaseActivity implements OnClickListener 
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_modify_pass);
 		userPreference = BaseApplication.getInstance().getUserPreference();
-
+		friendPreference = BaseApplication.getInstance().getFriendPreference();
 		findViewById();
 		initView();
 	}
@@ -124,8 +128,8 @@ public class ModifyPassActivity extends BaseActivity implements OnClickListener 
 		} else {
 			// 没有错误，则修改
 			RequestParams params = new RequestParams();
-			params.put(UserTable.U_PASSWORD, oldPass);
-			params.put(UserTable.U_NEW_PASSWORD, newPass);
+			params.put(UserTable.U_PASSWORD, MD5For32.GetMD5Code(oldPass));
+			params.put(UserTable.U_NEW_PASSWORD, MD5For32.GetMD5Code(newPass));
 			params.put(UserTable.U_ID, userPreference.getU_id());
 			TextHttpResponseHandler responseHandler = new TextHttpResponseHandler() {
 				Dialog dialog;
@@ -150,8 +154,9 @@ public class ModifyPassActivity extends BaseActivity implements OnClickListener 
 					if (arg0 == 200) {
 						if (arg2.equals("1")) {
 							ToastTool.showShort(ModifyPassActivity.this, "修改成功！");
-							userPreference.setU_password(newPass);
-							finish();
+							reLogin();
+//							userPreference.setU_password(newPass);
+//							finish();
 						} else if (arg2.equals("-1")) {
 							mOldPassView.setError("旧密码不正确");
 							focusView = mOldPassView;
@@ -170,6 +175,20 @@ public class ModifyPassActivity extends BaseActivity implements OnClickListener 
 		}
 	}
 
+	/**
+	 * 修改密码后重新登录
+	 */
+	private void reLogin() {
+		//设置用户不曾登录
+		BaseApplication.getInstance().logout();
+		userPreference.clear();
+		friendPreference.clear();
+		Intent intent = new Intent(ModifyPassActivity.this, LoginActivity.class);
+		startActivity(intent);
+//		overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
+		finish();
+	}
+
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
@@ -184,5 +203,4 @@ public class ModifyPassActivity extends BaseActivity implements OnClickListener 
 			break;
 		}
 	}
-
 }

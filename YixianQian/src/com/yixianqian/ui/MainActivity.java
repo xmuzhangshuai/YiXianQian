@@ -451,6 +451,12 @@ public class MainActivity extends BaseFragmentActivity {
 		// 提示有新消息
 		EMNotifier.getInstance(getApplicationContext()).notifyOnNewMsg();
 		ToastTool.showShort(getApplicationContext(), flipperRequest.getU_nickname() + "对你怦然心动");
+		if (currentTabIndex == 0) {
+			// 当前页面如果为聊天历史页面，刷新此页面
+			if (homeFragment != null) {
+				homeFragment.showNewMsgTip(true);
+			}
+		}
 	}
 
 	/**

@@ -29,6 +29,7 @@
         android:layout_width="@dimen/login_register"
         android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
+        android:background="@drawable/sel_nav_leftbtn_bg"
         android:gravity="center"
         android:orientation="vertical"
         android:padding="@dimen/personal_timecapsule_padding" >
@@ -42,7 +43,7 @@
             android:src="@drawable/ic_action_previous_item" />
     </LinearLayout>
 
-    <LinearLayout
+    <FrameLayout
         android:id="@+id/right_btn_bg"
         android:layout_width="@dimen/login_register"
         android:layout_height="match_parent"
@@ -58,7 +59,17 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:includeFontPadding="false"
-            android:src="@drawable/ic_action_accept" />
-    </LinearLayout>
+            android:src="@drawable/ic_action_overflow" />
+
+        <ImageView
+            android:id="@+id/newmsg"
+            android:layout_width="5dp"
+            android:layout_height="5dp"
+            android:layout_gravity="top|right"
+            android:layout_marginRight="3dp"
+            android:layout_marginTop="3dp"
+            android:src="@drawable/new_msg"
+            android:visibility="gone" />
+    </FrameLayout>
 
 </RelativeLayout>

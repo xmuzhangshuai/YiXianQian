@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/system_back"
+    android:orientation="vertical" >
+
+    <include
+        layout="@layout/top_navigation2"
+        android:focusable="true" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fadingEdge="none"
+        android:padding="10dp"
+        android:scrollbars="none" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dip"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="30dip"
+                    android:gravity="bottom|left"
+                    android:paddingLeft="10dip"
+                    android:text="设置"
+                    android:textSize="16sp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dip"
+                    android:background="@color/system_male" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/setting_newmsg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/sel_setting_bg"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="30dip"
+                    android:layout_marginBottom="@dimen/setting_list_margin"
+                    android:layout_marginTop="@dimen/setting_list_margin"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="10dip"
+                    android:text="新消息提醒"
+                    android:textColor="@color/btn_gray_pressed"
+                    android:textSize="14sp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.1dip"
+                    android:background="@color/system_gray" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/setting_chat"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/sel_setting_bg"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="30dip"
+                    android:layout_marginBottom="@dimen/setting_list_margin"
+                    android:layout_marginTop="@dimen/setting_list_margin"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="10dip"
+                    android:text="聊天设置"
+                    android:textColor="@color/btn_gray_pressed"
+                    android:textSize="14sp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.1dip"
+                    android:background="@color/system_gray" />
+            </LinearLayout>
+
+            <RelativeLayout
+                android:id="@+id/setting_clear_cache"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/sel_setting_bg" >
+
+                <TextView
+                    android:id="@+id/clear_cache_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dip"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginBottom="@dimen/setting_list_margin"
+                    android:layout_marginTop="@dimen/setting_list_margin"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="10dip"
+                    android:text="清空缓存"
+                    android:textColor="@color/btn_gray_pressed"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/cache_size"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dip"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginBottom="@dimen/setting_list_margin"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="@dimen/setting_list_margin"
+                    android:gravity="center_vertical"
+                    android:text="21M"
+                    android:textColor="@color/btn_gray_pressed"
+                    android:textSize="12sp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.1dip"
+                    android:layout_below="@+id/clear_cache_text"
+                    android:background="@color/system_gray" />
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dip"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="30dip"
+                    android:gravity="bottom|left"
+                    android:paddingLeft="10dip"
+                    android:text="其他"
+                    android:textSize="16sp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dip"
+                    android:background="@color/system_male" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/setting_feedback"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/sel_setting_bg"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="30dip"
+                    android:layout_marginBottom="@dimen/setting_list_margin"
+                    android:layout_marginTop="@dimen/setting_list_margin"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="10dip"
+                    android:text="意见反馈"
+                    android:textColor="@color/btn_gray_pressed"
+                    android:textSize="14sp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.1dip"
+                    android:background="@color/system_gray" />
+            </LinearLayout>
+
+            <RelativeLayout
+                android:id="@+id/setting_check_update"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/sel_setting_bg" >
+
+                <TextView
+                    android:id="@+id/update_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dip"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginBottom="@dimen/setting_list_margin"
+                    android:layout_marginTop="@dimen/setting_list_margin"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="10dip"
+                    android:text="检查更新"
+                    android:textColor="@color/btn_gray_pressed"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/version"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dip"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginBottom="@dimen/setting_list_margin"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="@dimen/setting_list_margin"
+                    android:gravity="center_vertical"
+                    android:text="v-1.1.2"
+                    android:textColor="@color/btn_gray_pressed"
+                    android:textSize="12sp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.1dip"
+                    android:layout_below="@+id/update_text"
+                    android:background="@color/system_gray" />
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/setting_about"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/sel_setting_bg"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="30dip"
+                    android:layout_marginBottom="@dimen/setting_list_margin"
+                    android:layout_marginTop="@dimen/setting_list_margin"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="10dip"
+                    android:text="关于"
+                    android:textColor="@color/btn_gray_pressed"
+                    android:textSize="14sp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.1dip"
+                    android:background="@color/system_gray" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/setting_logout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/sel_setting_bg"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="30dip"
+                    android:layout_marginBottom="@dimen/setting_list_margin"
+                    android:layout_marginTop="@dimen/setting_list_margin"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="10dip"
+                    android:text="退出"
+                    android:textColor="@color/btn_gray_pressed"
+                    android:textSize="14sp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.1dip"
+                    android:background="@color/system_gray" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

@@ -109,7 +109,7 @@ public class HeadImageActivity extends BaseActivity {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				uploadImage(photoUri.getPath());
-				ServerUtil.getInstance(HeadImageActivity.this).getFlipperAndRecommend(HeadImageActivity.this, true);
+				ServerUtil.getInstance(HeadImageActivity.this).getTodayRecommend(HeadImageActivity.this, true);
 			}
 		});
 	}

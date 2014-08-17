@@ -38,6 +38,7 @@ import com.yixianqian.base.BaseApplication;
 import com.yixianqian.base.BaseV4Fragment;
 import com.yixianqian.customewidget.MyAlertDialog;
 import com.yixianqian.db.ConversationDbService;
+import com.yixianqian.db.FlipperDbService;
 import com.yixianqian.entities.Conversation;
 import com.yixianqian.table.FlipperTable;
 import com.yixianqian.table.LoversTable;
@@ -54,6 +55,7 @@ public class HomeFragment extends BaseV4Fragment {
 	private View rootView;// 根View
 	private ImageView topNavLeftBtn;//导航条左边按钮
 	private ImageView topNavRightBtn;//导航条右边按钮
+	private ImageView newMsg;
 	private View right_btn_bg;
 	private ListView mHomeListView;
 	private TextView mEmpty;
@@ -107,6 +109,7 @@ public class HomeFragment extends BaseV4Fragment {
 		mEmpty = (TextView) rootView.findViewById(R.id.empty);
 		errorItem = (RelativeLayout) rootView.findViewById(R.id.rl_error_item);
 		errorText = (TextView) errorItem.findViewById(R.id.tv_connect_errormsg);
+		newMsg = (ImageView) rootView.findViewById(R.id.newmsg);
 	}
 
 	@Override
@@ -127,6 +130,13 @@ public class HomeFragment extends BaseV4Fragment {
 		//设置点击窗口外边窗口消失 
 		popup.setOutsideTouchable(true);
 		popup.setFocusable(true);
+
+		//如果有未读心动请求，显示红点
+		if (FlipperDbService.getInstance(getActivity()).getFlipperCount() > 0) {
+			showNewMsgTip(true);
+		} else {
+			showNewMsgTip(false);
+		}
 
 		right_btn_bg.setOnClickListener(new OnClickListener() {
 
@@ -319,6 +329,17 @@ public class HomeFragment extends BaseV4Fragment {
 			myAlertDialog.setPositiveButton("删除", comfirm);
 			myAlertDialog.setNegativeButton("取消", cancle);
 			myAlertDialog.show();
+		}
+	}
+
+	/**
+	 * 显示或隐藏新消息提示红点
+	 */
+	public void showNewMsgTip(boolean show) {
+		if (show) {
+			newMsg.setVisibility(View.VISIBLE);
+		} else {
+			newMsg.setVisibility(View.GONE);
 		}
 	}
 

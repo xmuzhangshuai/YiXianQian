@@ -35,6 +35,7 @@ import com.yixianqian.ui.ChatActivity;
 import com.yixianqian.ui.MainActivity;
 import com.yixianqian.utils.FriendPreference;
 import com.yixianqian.utils.LogTool;
+import com.yixianqian.utils.PreferenceUtils;
 import com.yixianqian.utils.UserPreference;
 
 /**   
@@ -72,11 +73,11 @@ public class BaseApplication extends FrontiaApplication {
 	public void onCreate() {
 		// TODO Auto-generated method stub
 		super.onCreate();
-		
-//		if (Config.DEVELOPER_MODE && Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
-//			StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectAll().penaltyDialog().build());
-//			StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectAll().penaltyDeath().build());
-//		}
+
+		//		if (Config.DEVELOPER_MODE && Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
+		//			StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectAll().penaltyDialog().build());
+		//			StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectAll().penaltyDeath().build());
+		//		}
 
 		applicationContext = this;
 		if (myApplication == null)
@@ -108,13 +109,13 @@ public class BaseApplication extends FrontiaApplication {
 		// 默认添加好友时，是不需要验证的，改成需要验证
 		options.setAcceptInvitationAlways(false);
 		// 设置收到消息是否有新消息通知，默认为true
-		options.setNotificationEnable(true);
+		options.setNotificationEnable(PreferenceUtils.getInstance(applicationContext).getSettingMsgNotification());
 		// 设置收到消息是否有声音提示，默认为true
-		options.setNoticeBySound(true);
+		options.setNoticeBySound(PreferenceUtils.getInstance(applicationContext).getSettingMsgSound());
 		// 设置收到消息是否震动 默认为true
-		options.setNoticedByVibrate(false);
+		options.setNoticedByVibrate(PreferenceUtils.getInstance(applicationContext).getSettingMsgVibrate());
 		// 设置语音消息播放是否设置为扬声器播放 默认为true
-		options.setUseSpeaker(true);
+		options.setUseSpeaker(PreferenceUtils.getInstance(applicationContext).getSettingMsgSpeaker());
 
 		//设置notification消息点击时，跳转的intent为自定义的intent
 		options.setOnNotificationClickListener(new OnNotificationClickListener() {

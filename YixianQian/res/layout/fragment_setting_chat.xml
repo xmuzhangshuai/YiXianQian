@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/system_back"
+    android:orientation="vertical" >
+
+    <include
+        layout="@layout/top_navigation2"
+        android:focusable="true" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fadingEdge="none" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="10dp" >
+
+            <RelativeLayout
+                android:id="@+id/rl_switch_speaker"
+                android:layout_width="match_parent"
+                android:layout_height="50dip"
+                android:background="@drawable/sel_setting_bg"
+                android:padding="10dip" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:paddingLeft="10dip"
+                    android:text="使用扬声器播放语音"
+                    android:textColor="@android:color/black"
+                    android:textSize="14sp"
+                    android:typeface="serif" />
+
+                <ImageView
+                    android:id="@+id/iv_switch_open_speaker"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/open_icon"
+                    android:visibility="visible" />
+
+                <ImageView
+                    android:id="@+id/iv_switch_close_speaker"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/close_icon"
+                    android:visibility="invisible" />
+            </RelativeLayout>
+
+            <View
+                android:id="@+id/divider1"
+                android:layout_width="match_parent"
+                android:layout_height="0.1dip"
+                android:background="@color/system_gray" />
+
+            <RelativeLayout
+                android:id="@+id/clear_chat_record"
+                android:layout_width="match_parent"
+                android:layout_height="50dip"
+                android:background="@drawable/sel_setting_bg"
+                android:padding="10dip" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:paddingLeft="10dip"
+                    android:text="清空聊天记录"
+                    android:textColor="@android:color/black"
+                    android:textSize="14sp"
+                    android:typeface="serif" />
+            </RelativeLayout>
+
+            <View
+                android:id="@+id/divider2"
+                android:layout_width="match_parent"
+                android:layout_height="0.1dip"
+                android:background="@color/system_gray" />
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

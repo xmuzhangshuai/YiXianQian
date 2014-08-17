@@ -261,6 +261,12 @@
             android:theme="@style/MyDialogStyle" >
         </activity>
 
+        <!-- 设置页面 -->
+        <activity
+            android:name="com.yixianqian.ui.SettingActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+
         <!-- 测试页面 -->
         <activity android:name="com.yixianqian.test.TestActivity" >
         </activity>

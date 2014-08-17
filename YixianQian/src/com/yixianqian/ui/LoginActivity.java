@@ -294,37 +294,39 @@ public class LoginActivity extends BaseActivity {
 	 * ¥Ê¥¢¡Ì“ª∞Î
 	 */
 	private void saveFriend(JsonUser jsonUser) {
-		if (userPreference.getU_stateid() == 2) {
-			friendpreference.setType(1);
-		} else if (userPreference.getU_stateid() == 3) {
-			friendpreference.setType(0);
-		} else {
-			return;
-		}
+		if (jsonUser != null) {
+			if (userPreference.getU_stateid() == 2) {
+				friendpreference.setType(1);
+			} else if (userPreference.getU_stateid() == 3) {
+				friendpreference.setType(0);
+			} else {
+				return;
+			}
 
-		friendpreference.setBpush_ChannelID(jsonUser.getU_bpush_channel_id());
-		friendpreference.setBpush_UserID(jsonUser.getU_bpush_user_id());
-		friendpreference.setF_address(jsonUser.getU_address());
-		friendpreference.setF_age(jsonUser.getU_age());
-		friendpreference.setF_blood_type(jsonUser.getU_blood_type());
-		friendpreference.setF_constell(jsonUser.getU_constell());
-		friendpreference.setF_email(jsonUser.getU_email());
-		friendpreference.setF_gender(jsonUser.getU_gender());
-		friendpreference.setF_height(jsonUser.getU_height());
-		friendpreference.setF_id(jsonUser.getU_id());
-		friendpreference.setF_introduce(jsonUser.getU_introduce());
-		friendpreference.setF_large_avatar(jsonUser.getU_large_avatar());
-		friendpreference.setF_nickname(jsonUser.getU_nickname());
-		friendpreference.setF_realname(jsonUser.getU_realname());
-		friendpreference.setF_salary(jsonUser.getU_salary());
-		friendpreference.setF_small_avatar(jsonUser.getU_small_avatar());
-		friendpreference.setF_stateid(jsonUser.getU_stateid());
-		friendpreference.setF_tel(jsonUser.getU_tel());
-		friendpreference.setF_vocationid(jsonUser.getU_vocationid());
-		friendpreference.setF_weight(jsonUser.getU_weight());
-		friendpreference.setU_cityid(jsonUser.getU_cityid());
-		friendpreference.setU_provinceid(jsonUser.getU_provinceid());
-		friendpreference.setU_schoolid(jsonUser.getU_schoolid());
+			friendpreference.setBpush_ChannelID(jsonUser.getU_bpush_channel_id());
+			friendpreference.setBpush_UserID(jsonUser.getU_bpush_user_id());
+			friendpreference.setF_address(jsonUser.getU_address());
+			friendpreference.setF_age(jsonUser.getU_age());
+			friendpreference.setF_blood_type(jsonUser.getU_blood_type());
+			friendpreference.setF_constell(jsonUser.getU_constell());
+			friendpreference.setF_email(jsonUser.getU_email());
+			friendpreference.setF_gender(jsonUser.getU_gender());
+			friendpreference.setF_height(jsonUser.getU_height());
+			friendpreference.setF_id(jsonUser.getU_id());
+			friendpreference.setF_introduce(jsonUser.getU_introduce());
+			friendpreference.setF_large_avatar(jsonUser.getU_large_avatar());
+			friendpreference.setF_nickname(jsonUser.getU_nickname());
+			friendpreference.setF_realname(jsonUser.getU_realname());
+			friendpreference.setF_salary(jsonUser.getU_salary());
+			friendpreference.setF_small_avatar(jsonUser.getU_small_avatar());
+			friendpreference.setF_stateid(jsonUser.getU_stateid());
+			friendpreference.setF_tel(jsonUser.getU_tel());
+			friendpreference.setF_vocationid(jsonUser.getU_vocationid());
+			friendpreference.setF_weight(jsonUser.getU_weight());
+			friendpreference.setU_cityid(jsonUser.getU_cityid());
+			friendpreference.setU_provinceid(jsonUser.getU_provinceid());
+			friendpreference.setU_schoolid(jsonUser.getU_schoolid());
+		}
 	}
 
 	/**

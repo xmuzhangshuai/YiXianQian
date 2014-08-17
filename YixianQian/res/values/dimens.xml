@@ -44,4 +44,7 @@
     <dimen name="message_padding">5dp</dimen>
     <dimen name="love_vertify_headimage">70dp</dimen>
 
+    <!-- 设置 -->
+    <dimen name="setting_list_margin">8dp</dimen>
+
 </resources>
