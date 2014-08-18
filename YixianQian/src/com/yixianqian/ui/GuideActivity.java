@@ -1,10 +1,14 @@
 package com.yixianqian.ui;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.TextUtils;
 
 import com.baidu.android.pushservice.PushConstants;
 import com.baidu.android.pushservice.PushManager;
@@ -69,6 +73,13 @@ public class GuideActivity extends BaseActivity {
 				Constants.BaiduPushConfig.API_KEY);
 		// 基于地理位置推送，可以打开支持地理位置的推送的开关
 		PushManager.enableLbs(getApplicationContext());
+		//设置标签
+		List<String> tags = new ArrayList<String>();
+		String gender = userPreference.getU_gender();
+		if (!TextUtils.isEmpty(gender)) {
+			tags.add(gender);
+			PushManager.setTags(this, tags);
+		}
 
 		if (count == 0) {// 如果是第一次登陆，则启动向导页面
 			// 第一次运行拷贝数据库文件

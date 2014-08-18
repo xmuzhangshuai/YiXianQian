@@ -203,7 +203,6 @@ public class TimeCapsuleActivity extends AbsListViewBaseActivity implements OnCh
 								}
 								singleTimeCapsuleList = new LinkedList<JsonSingleTimeCapsule>();
 								for (JsonSingleTimeCapsule jsonSingleTimeCapsule : temp) {
-									System.out.println("…˘“Ù" + jsonSingleTimeCapsule.getStc_voice());
 								}
 								singleTimeCapsuleList.addAll(temp);
 							}

@@ -13,9 +13,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.widget.Toast;
 
-import com.baidu.android.pushservice.PushManager;
 import com.easemob.chat.EMChatManager;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.umeng.analytics.MobclickAgent;
 import com.yixianqian.utils.NetworkUtils;
 
 /**
@@ -97,6 +97,9 @@ public abstract class BaseActivity extends Activity {
 		if (netBroadCastReceiver != null) {
 			BaseActivity.this.unregisterReceiver(netBroadCastReceiver);
 		}
+
+		//友盟统计
+		MobclickAgent.onPause(this);
 	}
 
 	@Override
@@ -107,6 +110,9 @@ public abstract class BaseActivity extends Activity {
 		IntentFilter intentFilter = new IntentFilter();
 		intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
 		BaseActivity.this.registerReceiver(netBroadCastReceiver, intentFilter);
+
+		//友盟统计
+		MobclickAgent.onResume(this);
 		//onresume时，取消notification显示
 		EMChatManager.getInstance().activityResumed();
 	}

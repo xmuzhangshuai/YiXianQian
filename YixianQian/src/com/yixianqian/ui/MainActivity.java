@@ -1,6 +1,5 @@
 package com.yixianqian.ui;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -17,11 +16,11 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 
-import com.baidu.android.pushservice.PushManager;
 import com.easemob.chat.ConnectionListener;
 import com.easemob.chat.EMChat;
 import com.easemob.chat.EMChatManager;
@@ -93,11 +92,6 @@ public class MainActivity extends BaseFragmentActivity {
 		personalFragment = new PersonalFragment();
 		fragments = new Fragment[] { homeFragment, personalFragment };
 
-		//设置标签
-		List<String> tags = new ArrayList<String>();
-		tags.add(userPreference.getU_gender());
-		PushManager.setTags(this, tags);
-
 		findViewById();
 		initView();
 
@@ -148,6 +142,15 @@ public class MainActivity extends BaseFragmentActivity {
 			EMChatManager.getInstance().activityResumed();
 		}
 	}
+//
+//	@Override
+//	public boolean onKeyDown(int keyCode, KeyEvent event) {
+//		if (keyCode == KeyEvent.KEYCODE_BACK) {
+//			moveTaskToBack(false);
+//			return true;
+//		}
+//		return super.onKeyDown(keyCode, event);
+//	}
 
 	@Override
 	protected void onNewIntent(Intent intent) {
@@ -602,7 +605,7 @@ public class MainActivity extends BaseFragmentActivity {
 	private void showDeletDialog(final int userID) {
 		//如果是心动关系
 		if (userPreference.getU_stateid() == 3) {
-			myAlertDialog = new MyAlertDialog(MainActivity.this);
+			myAlertDialog = new MyAlertDialog(BaseApplication.getInstance());
 			myAlertDialog.setShowCancel(false);
 			myAlertDialog.setTitle("提示");
 			myAlertDialog.setMessage(friendpreference.getName() + "解除了和您的心动关系");
@@ -628,6 +631,7 @@ public class MainActivity extends BaseFragmentActivity {
 				}
 			};
 			myAlertDialog.setPositiveButton("确定", comfirm);
+			myAlertDialog.setCancleable(false);
 			myAlertDialog.show();
 		}
 	}

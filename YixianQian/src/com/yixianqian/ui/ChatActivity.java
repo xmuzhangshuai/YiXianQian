@@ -78,6 +78,7 @@ import com.yixianqian.customewidget.JazzyViewPager.TransitionEffect;
 import com.yixianqian.utils.CommonTools;
 import com.yixianqian.utils.DensityUtil;
 import com.yixianqian.utils.FriendPreference;
+import com.yixianqian.utils.LogTool;
 import com.yixianqian.utils.ToastTool;
 import com.yixianqian.utils.UserPreference;
 import com.yixianqian.xlistview.MsgListView;
@@ -172,6 +173,7 @@ public class ChatActivity extends BaseFragmentActivity implements OnTouchListene
 	protected void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
+		adapter.refresh();
 	}
 
 	@Override
@@ -701,9 +703,10 @@ public class ChatActivity extends BaseFragmentActivity implements OnTouchListene
 	@Override
 	public void onBackPressed() {
 		// TODO Auto-generated method stub
+//		super.onBackPressed();
 		startActivity(new Intent(ChatActivity.this, MainActivity.class));
 		overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
-		finish();
+		ChatActivity.this.finish();
 	}
 
 	/**

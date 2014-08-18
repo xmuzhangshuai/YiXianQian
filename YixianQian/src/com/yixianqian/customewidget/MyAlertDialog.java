@@ -16,6 +16,7 @@ public class MyAlertDialog {
 	TextView positiveButton;
 	TextView negativeButton;
 	boolean showCancle = true;
+	boolean cancleable = true;
 
 	public MyAlertDialog(Context context) {
 		// TODO Auto-generated constructor stub
@@ -32,15 +33,16 @@ public class MyAlertDialog {
 	}
 
 	public void setTitle(int resId) {
-		System.out.println(showCancle);
 		if (!showCancle) {
 			titleView.setGravity(Gravity.LEFT);
-			System.out.println("局座");
 		}
 		titleView.setText(resId);
 	}
 
 	public void setTitle(String title) {
+		if (!showCancle) {
+			titleView.setGravity(Gravity.LEFT);
+		}
 		titleView.setText(title);
 	}
 
@@ -56,6 +58,10 @@ public class MyAlertDialog {
 		messageView.setText(message);
 	}
 
+	public void setCancleable(boolean cancleable) {
+		this.cancleable = cancleable;
+	}
+
 	/**
 	 * 设置按钮
 	 * @param text
@@ -64,6 +70,11 @@ public class MyAlertDialog {
 	public void setPositiveButton(String text, final View.OnClickListener listener) {
 		positiveButton.setText(text);
 		positiveButton.setOnClickListener(listener);
+		if (showCancle) {
+			negativeButton.setVisibility(View.VISIBLE);
+		} else {
+			negativeButton.setVisibility(View.GONE);
+		}
 	}
 
 	/**
@@ -72,14 +83,8 @@ public class MyAlertDialog {
 	 * @param listener
 	 */
 	public void setNegativeButton(String text, final View.OnClickListener listener) {
-		if (showCancle) {
-			negativeButton.setText(text);
-			negativeButton.setOnClickListener(listener);
-			negativeButton.setVisibility(View.VISIBLE);
-		} else {
-			negativeButton.setVisibility(View.GONE);
-			System.out.println("不见");
-		}
+		negativeButton.setText(text);
+		negativeButton.setOnClickListener(listener);
 	}
 
 	/**
@@ -90,6 +95,7 @@ public class MyAlertDialog {
 	}
 
 	public void show() {
+		ad.setCancelable(cancleable);
 		ad.show();
 	}
 }

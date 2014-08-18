@@ -90,6 +90,20 @@ public class ConversationDbService {
 	}
 
 	/**
+	 * 判断会话是否存在
+	 * @param userID
+	 * @return
+	 */
+	public boolean isConversationExist(int userID) {
+		Conversation conversation = conversationDao.queryBuilder().where(Properties.UserID.eq(userID)).unique();
+		if (conversation != null) {
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
 	 * 通过user获得对话
 	 * @return
 	 */

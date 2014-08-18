@@ -217,6 +217,12 @@ public class LoginActivity extends BaseActivity {
 					@Override
 					public void onSuccess() {
 						userPreference.setUserLogin(true);
+						runOnUiThread(new Runnable() {
+							public void run() {
+								ServerUtil.getInstance(LoginActivity.this).getTodayRecommend(LoginActivity.this, true);
+								showProgress(false);
+							}
+						});
 					}
 
 					@Override
@@ -225,11 +231,17 @@ public class LoginActivity extends BaseActivity {
 
 					@Override
 					public void onError(int code, final String message) {
+						LogTool.e("登录环信", "code:" + code + "   message:" + message);
 						userPreference.clear();
+						runOnUiThread(new Runnable() {
+							public void run() {
+								ToastTool.showShort(LoginActivity.this, "登录聊天服务器失败");
+								showProgress(false);
+							}
+						});
 					}
 				});
-		ServerUtil.getInstance(LoginActivity.this).getTodayRecommend(LoginActivity.this, true);
-		showProgress(false);
+
 	}
 
 	/**
@@ -250,11 +262,10 @@ public class LoginActivity extends BaseActivity {
 		} else {
 			if (time == 1) {
 				userPreference.setHuanXinUserName("" + userPreference.getU_id());
-				userPreference.setHuanXinPassword(MD5For16.GetMD5Code(userPreference.getU_password()));
+				userPreference.setHuanXinPassword(MD5For16.GetMD5CodeToLower(userPreference.getU_password()));
 				attempLoginHuanXin(2);
 			} else {
 				showProgress(false);
-				ToastTool.showShort(LoginActivity.this, "登录聊天服务器失败");
 			}
 		}
 	}
@@ -262,7 +273,8 @@ public class LoginActivity extends BaseActivity {
 	/**
 	 * 存储自己的信息
 	 */
-	private void saveUser(JsonUser user, String password) {
+	private void saveUser(final JsonUser user, final String password) {
+		// TODO Auto-generated method stub
 		userPreference.clear();
 		userPreference.setU_birthday(user.getU_birthday());
 		userPreference.setU_blood_type(user.getU_blood_type());
@@ -286,15 +298,15 @@ public class LoginActivity extends BaseActivity {
 		userPreference.setU_tel(user.getU_tel());
 		userPreference.setU_vocationid(user.getU_vocationid());
 		userPreference.setU_weight(user.getU_weight());
-		userPreference.setU_password(MD5For32.GetMD5Code(password));
+		userPreference.setU_password(password);
 		userPreference.setHuanXinUserName("" + user.getU_id());
-		userPreference.setHuanXinPassword(MD5For16.GetMD5Code(password));
+		userPreference.setHuanXinPassword(MD5For16.GetMD5CodeToLower(password));
 	}
 
 	/**
 	 * 存储另一半
 	 */
-	private void saveFriend(JsonUser jsonUser) {
+	private void saveFriend(final JsonUser jsonUser) {
 		if (jsonUser != null) {
 			if (userPreference.getU_stateid() == 2) {
 				friendpreference.setType(1);
@@ -304,6 +316,7 @@ public class LoginActivity extends BaseActivity {
 				return;
 			}
 
+			// TODO Auto-generated method stub
 			friendpreference.setBpush_ChannelID(jsonUser.getU_bpush_channel_id());
 			friendpreference.setBpush_UserID(jsonUser.getU_bpush_user_id());
 			friendpreference.setF_address(jsonUser.getU_address());
@@ -383,11 +396,14 @@ public class LoginActivity extends BaseActivity {
 							//创建对话
 							ConversationDbService conversationDbService = ConversationDbService
 									.getInstance(LoginActivity.this);
-							Conversation conversation = new Conversation(null,
-									Long.valueOf(friendpreference.getF_id()), friendpreference.getName(),
-									friendpreference.getF_small_avatar(), "", 0, System.currentTimeMillis());
-							conversationDbService.conversationDao.insert(conversation);
-						}else {
+
+							if (!conversationDbService.isConversationExist(friendpreference.getF_id())) {
+								Conversation conversation = new Conversation(null, Long.valueOf(friendpreference
+										.getF_id()), friendpreference.getName(), friendpreference.getF_small_avatar(),
+										"", 0, System.currentTimeMillis());
+								conversationDbService.conversationDao.insert(conversation);
+							}
+						} else {
 							LogTool.e("Login", "登录获取两个人，但是第二个为空");
 						}
 					}

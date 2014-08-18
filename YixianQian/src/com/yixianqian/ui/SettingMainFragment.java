@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.yixianqian.R;
 import com.yixianqian.base.BaseApplication;
 import com.yixianqian.base.BaseV4Fragment;
+import com.yixianqian.db.FlipperDbService;
 import com.yixianqian.utils.FriendPreference;
 import com.yixianqian.utils.UserPreference;
 
@@ -113,6 +114,8 @@ public class SettingMainFragment extends BaseV4Fragment implements OnClickListen
 		BaseApplication.getInstance().logout();
 		userPreference.clear();
 		friendPreference.clear();
+		FlipperDbService flipperDbService = FlipperDbService.getInstance(getActivity());
+		flipperDbService.flipperDao.deleteAll();
 		intent = new Intent(getActivity(), LoginOrRegisterActivity.class);
 		getActivity().startActivity(intent);
 		getActivity().finish();
