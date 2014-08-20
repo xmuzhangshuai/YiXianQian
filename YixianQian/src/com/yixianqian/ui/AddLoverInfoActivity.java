@@ -13,8 +13,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.easemob.chat.EMContactManager;
-import com.easemob.exceptions.EaseMobException;
 import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.TextHttpResponseHandler;
 import com.yixianqian.R;
@@ -187,15 +185,14 @@ public class AddLoverInfoActivity extends BaseActivity {
 										jsonUser.getU_bpush_user_id()).send();
 								userPreference.setLoveRequest(true);
 								saveLoverInfo();
-								
-								
-//								try {
-//									EMContactManager.getInstance().addContact(""+jsonUser.getU_id(), "加好友");
-//								} catch (EaseMobException e) {
-//									// TODO Auto-generated catch block
-//									e.printStackTrace();
-//								}
-								
+
+								//								try {
+								//									EMContactManager.getInstance().addContact(""+jsonUser.getU_id(), "加好友");
+								//								} catch (EaseMobException e) {
+								//									// TODO Auto-generated catch block
+								//									e.printStackTrace();
+								//								}
+
 								Intent intent = new Intent(AddLoverInfoActivity.this, WaitActivity.class);
 								startActivity(intent);
 								overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);

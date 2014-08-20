@@ -16,7 +16,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -30,6 +29,7 @@ import com.easemob.chat.EMConversation;
 import com.easemob.chat.EMMessage;
 import com.easemob.chat.EMNotifier;
 import com.easemob.chat.TextMessageBody;
+import com.easemob.exceptions.EaseMobException;
 import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.TextHttpResponseHandler;
 import com.yixianqian.R;
@@ -79,6 +79,7 @@ public class MainActivity extends BaseFragmentActivity {
 	private JsonUser jsonUser;
 	private MyAlertDialog myAlertDialog;
 	private ConversationDbService conversationDbService;
+	static boolean active = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -138,19 +139,39 @@ public class MainActivity extends BaseFragmentActivity {
 	protected void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
+		if (homeFragment.isVisible() && personalFragment.isVisible()) {
+			getSupportFragmentManager().beginTransaction().hide(personalFragment).commit();
+			currentTabIndex = 0;
+		}
+
 		if (!isConflict) {
 			EMChatManager.getInstance().activityResumed();
 		}
 	}
-//
-//	@Override
-//	public boolean onKeyDown(int keyCode, KeyEvent event) {
-//		if (keyCode == KeyEvent.KEYCODE_BACK) {
-//			moveTaskToBack(false);
-//			return true;
-//		}
-//		return super.onKeyDown(keyCode, event);
-//	}
+
+	@Override
+	protected void onStart() {
+		// TODO Auto-generated method stub
+		super.onStart();
+		active = true;
+	}
+
+	@Override
+	protected void onStop() {
+		// TODO Auto-generated method stub
+		super.onStop();
+		active = false;
+	}
+
+	//
+	//	@Override
+	//	public boolean onKeyDown(int keyCode, KeyEvent event) {
+	//		if (keyCode == KeyEvent.KEYCODE_BACK) {
+	//			moveTaskToBack(false);
+	//			return true;
+	//		}
+	//		return super.onKeyDown(keyCode, event);
+	//	}
 
 	@Override
 	protected void onNewIntent(Intent intent) {
@@ -185,7 +206,6 @@ public class MainActivity extends BaseFragmentActivity {
 		myAlertDialog.setPositiveButton("确定", comfirm);
 		myAlertDialog.setNegativeButton("取消", cancle);
 		myAlertDialog.show();
-
 	}
 
 	@Override
@@ -293,39 +313,6 @@ public class MainActivity extends BaseFragmentActivity {
 		@Override
 		public void onContactAdded(List<String> usernameList) {
 			// 保存增加的联系人
-			//			Map<String, User> localUsers = DemoApplication.getInstance().getContactList();
-			//			Map<String, User> toAddUsers = new HashMap<String, User>();
-			//			for (String username : usernameList) {
-			//				User user = new User();
-			//				user.setUsername(username);
-			//				String headerName = null;
-			//				if (!TextUtils.isEmpty(user.getNick())) {
-			//					headerName = user.getNick();
-			//				} else {
-			//					headerName = user.getUsername();
-			//				}
-			//				if (username.equals(Constant.NEW_FRIENDS_USERNAME)) {
-			//					user.setHeader("");
-			//				} else if (Character.isDigit(headerName.charAt(0))) {
-			//					user.setHeader("#");
-			//				} else {
-			//					user.setHeader(HanziToPinyin.getInstance().get(headerName.substring(0, 1)).get(0).target.substring(
-			//							0, 1).toUpperCase());
-			//					char header = user.getHeader().toLowerCase().charAt(0);
-			//					if (header < 'a' || header > 'z') {
-			//						user.setHeader("#");
-			//					}
-			//				}
-			//				// 暂时有个bug，添加好友时可能会回调added方法两次
-			//				if (!localUsers.containsKey(username)) {
-			//					userDao.saveContact(user);
-			//				}
-			//				toAddUsers.put(username, user);
-			//			}
-			//			localUsers.putAll(toAddUsers);
-			//			// 刷新ui
-			//			if (currentTabIndex == 0)
-			//				contactListFragment.refresh();
 			for (String username : usernameList) {
 				Log.e("心动请求，", "被" + username + "添加");
 			}
@@ -334,17 +321,6 @@ public class MainActivity extends BaseFragmentActivity {
 		@Override
 		public void onContactDeleted(List<String> usernameList) {
 			// 被删除
-			//			Map<String, User> localUsers = DemoApplication.getInstance().getContactList();
-			//			for (String username : usernameList) {
-			//				localUsers.remove(username);
-			//				userDao.deleteContact(username);
-			//				inviteMessgeDao.deleteMessage(username);
-			//			}
-			//			// 刷新ui
-			//			if (currentTabIndex == 1)
-			//				contactListFragment.refresh();
-			//			updateUnreadLabel();
-			Log.e("心动请求，", "以下是被删除：");
 
 			for (final String username : usernameList) {
 				Log.e("心动请求，", "被" + username + "删除");
@@ -359,7 +335,7 @@ public class MainActivity extends BaseFragmentActivity {
 		//收到心动请求
 		@Override
 		public void onContactInvited(final String username, String reason) {
-			LogTool.d("心动请求，", "收到心动请求，来自" + username + ",reason: " + reason);
+			LogTool.e("心动请求，", "收到心动请求，来自" + username + ",reason: " + reason);
 
 			// 接到邀请的消息，如果不处理(同意或拒绝)，掉线后，服务器会自动再发过来，所以客户端不要重复提醒
 			Map<String, String> map = new HashMap<String, String>();
@@ -373,6 +349,16 @@ public class MainActivity extends BaseFragmentActivity {
 					notifyNewFlipper(fRequest);
 				} else {
 					LogTool.e("心动请求", "JsonFlipperRequest为空");
+					runOnUiThread(new Runnable() {
+						public void run() {
+							try {
+								EMChatManager.getInstance().refuseInvitation(username);
+							} catch (EaseMobException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+						}
+					});
 				}
 			} catch (Exception e1) {
 				// TODO Auto-generated catch block
@@ -383,25 +369,7 @@ public class MainActivity extends BaseFragmentActivity {
 		//心动请求被同意
 		@Override
 		public void onContactAgreed(String username) {
-			//			List<InviteMessage> msgs = inviteMessgeDao.getMessagesList();
-			//			for (InviteMessage inviteMessage : msgs) {
-			//				if (inviteMessage.getFrom().equals(username)) {
-			//					return;
-			//				}
-			//			}
-			//			// 自己封装的javabean
-			//			InviteMessage msg = new InviteMessage();
-			//			msg.setFrom(username);
-			//			msg.setTime(System.currentTimeMillis());
-			//			Log.d(TAG, username + "同意了你的好友请求");
-			//			msg.setStatus(InviteMesageStatus.BEAGREED);
-			//			notifyNewIviteMessage(msg);
-			//			if (!TextUtils.isEmpty(username)) {
-			//				FlipperDbService flipperDbService = FlipperDbService.getInstance(MainActivity.this);
-			//				Flipper flipper = flipperDbService.getFlipperByUserId(Integer.parseInt(username));
-			//				flipper.setStatus(Constants.FlipperStatus.BEAGREED);
-			//			}
-			Log.d("心动请求，", username + "被同意");
+			Log.e("心动请求，", username + "被同意");
 			ToastTool.showLong(MainActivity.this, "您对" + username + "的心动请求已经被同意");
 
 			FlipperDbService flipperDbService = FlipperDbService.getInstance(MainActivity.this);
@@ -418,8 +386,8 @@ public class MainActivity extends BaseFragmentActivity {
 		//心动请求被拒绝
 		@Override
 		public void onContactRefused(String username) {
-			Log.d("心动请求，", "您对" + username + "的心动请求被拒绝");
-			ToastTool.showLong(MainActivity.this, "您对" + username + "的心动请求被拒绝");
+			Log.e("心动请求，", "您对" + username + "的心动请求被拒绝");
+			//			ToastTool.showLong(MainActivity.this, "您对" + username + "的心动请求被拒绝");
 
 			FlipperDbService flipperDbService = FlipperDbService.getInstance(MainActivity.this);
 			Flipper flipper = flipperDbService.getFlipperByUserId(Integer.parseInt(username));
@@ -604,8 +572,8 @@ public class MainActivity extends BaseFragmentActivity {
 	//显示删除心动或情侣对话窗口
 	private void showDeletDialog(final int userID) {
 		//如果是心动关系
-		if (userPreference.getU_stateid() == 3) {
-			myAlertDialog = new MyAlertDialog(BaseApplication.getInstance());
+		if (userPreference.getU_stateid() == 3 && homeFragment != null && active) {
+			myAlertDialog = new MyAlertDialog(MainActivity.this);
 			myAlertDialog.setShowCancel(false);
 			myAlertDialog.setTitle("提示");
 			myAlertDialog.setMessage(friendpreference.getName() + "解除了和您的心动关系");

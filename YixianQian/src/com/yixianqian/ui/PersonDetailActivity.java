@@ -1,5 +1,7 @@
 package com.yixianqian.ui;
 
+import java.util.Date;
+
 import org.apache.http.Header;
 
 import android.content.Intent;
@@ -13,6 +15,7 @@ import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.easemob.chat.EMContactManager;
 import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.TextHttpResponseHandler;
 import com.yixianqian.R;
@@ -20,8 +23,10 @@ import com.yixianqian.base.BaseApplication;
 import com.yixianqian.base.BaseFragmentActivity;
 import com.yixianqian.config.Constants;
 import com.yixianqian.customewidget.MyAlertDialog;
+import com.yixianqian.db.FlipperDbService;
 import com.yixianqian.db.ProvinceDbService;
 import com.yixianqian.db.SchoolDbService;
+import com.yixianqian.entities.Flipper;
 import com.yixianqian.jsonobject.JsonUser;
 import com.yixianqian.table.FlipperRequestTable;
 import com.yixianqian.table.UserTable;
@@ -282,7 +287,7 @@ public class PersonDetailActivity extends BaseFragmentActivity implements OnClic
 	 * 异步发送爱情验证
 	 * @param userID
 	 */
-	private void sendLoveReuest(int filpperId) {
+	private void sendLoveReuest(final int filpperId) {
 		if (filpperId > 0) {
 			String url = "addflipperrequest";
 			RequestParams params = new RequestParams();
@@ -292,22 +297,111 @@ public class PersonDetailActivity extends BaseFragmentActivity implements OnClic
 			TextHttpResponseHandler responseHandler = new TextHttpResponseHandler() {
 
 				@Override
-				public void onSuccess(int statusCode, Header[] headers, String response) {
+				public void onFailure(int arg0, Header[] arg1, String arg2, Throwable arg3) {
 					// TODO Auto-generated method stub
-					ToastTool.showLong(PersonDetailActivity.this, "爱情验证已发送！");
-					PersonDetailActivity.this.startActivity(new Intent(PersonDetailActivity.this, MainActivity.class));
-					PersonDetailActivity.this.overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
-					PersonDetailActivity.this.finish();
+					ToastTool.showLong(PersonDetailActivity.this, arg2);
 				}
 
 				@Override
-				public void onFailure(int statusCode, Header[] headers, String errorResponse, Throwable e) {
+				public void onSuccess(int arg0, Header[] arg1, String arg2) {
 					// TODO Auto-generated method stub
-					ToastTool.showLong(PersonDetailActivity.this, errorResponse);
+					addContact(filpperId);
+					finish();
+				}
+
+				@Override
+				public void onFinish() {
+					// TODO Auto-generated method stub
+					super.onFinish();
 				}
 			};
 			AsyncHttpClientTool.post(PersonDetailActivity.this, url, params, responseHandler);
 		}
+	}
+
+	/**
+	 *  添加contact
+	 * @param view
+	 */
+	public void addContact(final int flipperId) {
+
+		new Thread(new Runnable() {
+			public void run() {
+				try {
+					//添加好友
+					EMContactManager.getInstance().addContact("" + flipperId, userPreference.getName() + "对您砰然心动！");
+
+					PersonDetailActivity.this.runOnUiThread(new Runnable() {
+						public void run() {
+							saveFlipper(flipperId);
+							ToastTool.showLong(PersonDetailActivity.this, "爱情验证已发送！等待对方同意");
+						}
+					});
+				} catch (final Exception e) {
+					PersonDetailActivity.this.runOnUiThread(new Runnable() {
+						public void run() {
+							ToastTool.showLong(PersonDetailActivity.this, "爱情验证发送失败:" + e.getMessage());
+						}
+					});
+				}
+			}
+		}).start();
+	}
+
+	/**
+	 * 存储到数据库，已经同意
+	 */
+	public void saveFlipper(final int flipperId) {
+		FlipperDbService flipperDbService = FlipperDbService.getInstance(PersonDetailActivity.this);
+		Flipper flipper = flipperDbService.getFlipperByUserId(flipperId);
+		//如果数据库中存在该用户的请求，则更新状态
+		if (flipper != null) {
+			flipper.setIsRead(true);
+			flipper.setTime(new Date());
+			flipper.setStatus(Constants.FlipperStatus.INVITE);
+			flipper.setType(Constants.FlipperType.TO);
+			flipperDbService.flipperDao.update(flipper);
+		} else {
+			getUser(flipperId);
+		}
+	}
+
+	/**
+	 * 	网络获取User信息
+	 */
+	private void getUser(int userId) {
+		RequestParams params = new RequestParams();
+		params.put(UserTable.U_ID, userId);
+
+		TextHttpResponseHandler responseHandler = new TextHttpResponseHandler("utf-8") {
+			@Override
+			public void onSuccess(int statusCode, Header[] headers, String response) {
+				// TODO Auto-generated method stub
+				if (statusCode == 200) {
+					jsonUser = FastJsonTool.getObject(response, JsonUser.class);
+					if (jsonUser != null) {
+						FlipperDbService flipperDbService = FlipperDbService.getInstance(PersonDetailActivity.this);
+						Flipper flipper = new Flipper(null, jsonUser.getU_id(), jsonUser.getU_bpush_user_id(),
+								jsonUser.getU_bpush_channel_id(), jsonUser.getU_nickname(), jsonUser.getU_realname(),
+								jsonUser.getU_gender(), jsonUser.getU_email(), jsonUser.getU_large_avatar(),
+								jsonUser.getU_small_avatar(), jsonUser.getU_blood_type(), jsonUser.getU_constell(),
+								jsonUser.getU_introduce(), jsonUser.getU_birthday(), new Date(), jsonUser.getU_age(),
+								jsonUser.getU_vocationid(), jsonUser.getU_stateid(), jsonUser.getU_provinceid(),
+								jsonUser.getU_cityid(), jsonUser.getU_schoolid(), jsonUser.getU_height(),
+								jsonUser.getU_weight(), jsonUser.getU_image_pass(), jsonUser.getU_salary(), true,
+								jsonUser.getU_tel(), Constants.FlipperStatus.INVITE, Constants.FlipperType.TO);
+						flipperDbService.flipperDao.insert(flipper);
+					}
+				}
+			}
+
+			@Override
+			public void onFailure(int statusCode, Header[] headers, String errorResponse, Throwable e) {
+				// TODO Auto-generated method stub
+				ToastTool.showLong(PersonDetailActivity.this, "服务器错误");
+			}
+		};
+		AsyncHttpClientTool.post(PersonDetailActivity.this, "getuserbyid", params, responseHandler);
 	}
 
 	@Override

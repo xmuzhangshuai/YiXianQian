@@ -20,13 +20,13 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.easemob.EMCallBack;
 import com.easemob.chat.EMChatManager;
 import com.yixianqian.R;
 import com.yixianqian.base.BaseApplication;
 import com.yixianqian.base.BaseV4Fragment;
+import com.yixianqian.config.Constants;
 import com.yixianqian.config.DefaultSetting;
 import com.yixianqian.table.UserTable;
 import com.yixianqian.utils.HttpUtil;
@@ -210,7 +210,7 @@ public class RegAuthCodeFragment extends BaseV4Fragment {
 			// TODO Auto-generated method stub
 			super.onPreExecute();
 			dialog = new ProgressDialog(getActivity());
-			dialog.setMessage("请稍后");
+			dialog.setMessage("正在注册...");
 			dialog.setCancelable(false);
 			dialog.show();
 		}
@@ -223,7 +223,7 @@ public class RegAuthCodeFragment extends BaseV4Fragment {
 				Map<String, String> map = new HashMap<String, String>();
 				map.put(UserTable.U_TEL, userPreference.getU_tel());
 				map.put(UserTable.U_PASSWORD, userPreference.getU_password());
-				map.put(UserTable.U_STATEID, String.valueOf(userPreference.getU_stateid()));
+				map.put(UserTable.U_STATEID, "" + Constants.UserStateType.SINGLE);
 				map.put(UserTable.U_GENDER, userPreference.getU_gender());
 				map.put(UserTable.U_SCHOOLID, String.valueOf(userPreference.getU_schoolid()));
 				map.put(UserTable.U_CITYID, String.valueOf(userPreference.getU_cityid()));
@@ -250,6 +250,7 @@ public class RegAuthCodeFragment extends BaseV4Fragment {
 			mRegisterTask = null;
 
 			if (result > -1) {
+				dialog.setMessage("正在登录...");
 				userPreference.setU_id(result);
 
 				// 调用环信sdk注册方法
@@ -262,6 +263,8 @@ public class RegAuthCodeFragment extends BaseV4Fragment {
 					@Override
 					public void onError(int arg0, final String errorMsg) {
 						LogTool.e("环信", "注册后登录聊天服务器失败");
+						ToastTool.showLong(getActivity(), "登录失败");
+						dialog.dismiss();
 					}
 
 					@Override
@@ -293,29 +296,6 @@ public class RegAuthCodeFragment extends BaseV4Fragment {
 		protected void onCancelled() {
 			mRegisterTask = null;
 			dialog.dismiss();
-		}
-	}
-
-	/**
-	 * 
-	 * 类名称：CreateAccountTask
-	 * 类描述：注册环信账号异步任务
-	 * 创建人： 张帅
-	 * 创建时间：2014年8月11日 下午9:04:00
-	 *
-	 */
-	private class CreateAccountTask extends AsyncTask<String, Void, String> {
-		protected String doInBackground(String... args) {
-			String userid = args[0];
-			String pwd = args[1];
-
-			return userid;
-		}
-
-		@Override
-		protected void onPostExecute(String result) {
-			// TODO Auto-generated method stub
-			super.onPostExecute(result);
 		}
 	}
 }

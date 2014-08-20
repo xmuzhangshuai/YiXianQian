@@ -703,7 +703,7 @@ public class ChatActivity extends BaseFragmentActivity implements OnTouchListene
 	@Override
 	public void onBackPressed() {
 		// TODO Auto-generated method stub
-//		super.onBackPressed();
+		//		super.onBackPressed();
 		startActivity(new Intent(ChatActivity.this, MainActivity.class));
 		overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
 		ChatActivity.this.finish();
@@ -970,14 +970,15 @@ public class ChatActivity extends BaseFragmentActivity implements OnTouchListene
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			String username = intent.getStringExtra("from");
-			String msgid = intent.getStringExtra("msgid");
+//			String msgid = intent.getStringExtra("msgid");
 			// 收到这个广播的时候，message已经在db和内存里了，可以通过id获取mesage对象
-			EMMessage message = EMChatManager.getInstance().getMessage(msgid);
+//			EMMessage message = EMChatManager.getInstance().getMessage(msgid);
 
 			if (!username.equals(toChatUsername)) {
 				// 消息不是发给当前会话，return
 				return;
 			}
+
 			// conversation =
 			// EMChatManager.getInstance().getConversation(toChatUsername);
 			// 通知adapter有新消息，更新ui

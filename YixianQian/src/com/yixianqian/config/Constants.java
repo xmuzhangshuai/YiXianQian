@@ -14,6 +14,17 @@ public class Constants {
 
 	}
 
+	public static class UserStateType {
+		//单身
+		public static final int SINGLE = 4;
+		//心动
+		public static final int FLIPPER = 3;
+		//情侣
+		public static final int LOVER = 2;
+		//冻结
+		public static final int FREEZE = 1;
+	}
+
 	public static class BaiduPushConfig {
 		public final static String API_KEY = "bcB8dCkZh0GVtMTdpyTTabj3";
 		public final static String SECRIT_KEY = "y75ge4lbEEGth1nwbTveiGr7yHARKnm2";
@@ -41,7 +52,6 @@ public class Constants {
 		return tList;
 	}
 
-
 	public static class PersonDetailType {
 		//心动
 		public static final int SINGLE = 1;
@@ -51,7 +61,6 @@ public class Constants {
 		public static final int LOVER = 3;
 	}
 
-	
 	public static class MessageType {
 		//心动
 		public static final int MESSAGE_TYPE_FLIPPER_REQUEEST = 6;

@@ -31,8 +31,10 @@ import com.yixianqian.config.Constants;
 import com.yixianqian.dao.DaoMaster;
 import com.yixianqian.dao.DaoMaster.OpenHelper;
 import com.yixianqian.dao.DaoSession;
+import com.yixianqian.ui.AddLoverActivity;
 import com.yixianqian.ui.ChatActivity;
 import com.yixianqian.ui.MainActivity;
+import com.yixianqian.ui.WaitActivity;
 import com.yixianqian.utils.FriendPreference;
 import com.yixianqian.utils.LogTool;
 import com.yixianqian.utils.PreferenceUtils;
@@ -122,11 +124,18 @@ public class BaseApplication extends FrontiaApplication {
 
 			@Override
 			public Intent onNotificationClick(EMMessage message) {
-				Intent intent = new Intent(applicationContext, ChatActivity.class);
-				ChatType chatType = message.getChatType();
-				if (chatType == ChatType.Chat) { //单聊信息
-					intent.putExtra("userId", message.getFrom());
-					intent.putExtra("chatType", ChatActivity.CHATTYPE_SINGLE);
+				Intent intent;
+				if (userPreference.getLoveRequest()) {//如果请求了添加情侣，则直接跳转到等待页面
+					intent = new Intent(applicationContext, WaitActivity.class);
+				} else if (userPreference.getU_stateid() == 2 && friendSharePreference.getF_id() == -1) {//如果是情侣状态，但是还没有添加情侣
+					intent = new Intent(applicationContext, AddLoverActivity.class);
+				} else {
+					intent = new Intent(applicationContext, ChatActivity.class);
+					ChatType chatType = message.getChatType();
+					if (chatType == ChatType.Chat) { //单聊信息
+						intent.putExtra("userId", message.getFrom());
+						intent.putExtra("chatType", ChatActivity.CHATTYPE_SINGLE);
+					}
 				}
 				return intent;
 			}

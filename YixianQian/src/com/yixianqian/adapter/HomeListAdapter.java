@@ -16,7 +16,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.TextView.BufferType;
 
@@ -33,6 +32,7 @@ import com.yixianqian.entities.Conversation;
 import com.yixianqian.utils.AsyncHttpClientImageSound;
 import com.yixianqian.utils.ImageLoaderTool;
 import com.yixianqian.utils.ImageTools;
+import com.yixianqian.utils.LogTool;
 
 public class HomeListAdapter extends BaseAdapter {
 	private LayoutInflater mInflater;
@@ -40,7 +40,7 @@ public class HomeListAdapter extends BaseAdapter {
 	private Context mContext;
 	public static final Pattern EMOTION_URL = Pattern.compile("\\[(\\S+?)\\]");
 
-	public HomeListAdapter(Context context, ListView listview, LinkedList<Conversation> cList) {
+	public HomeListAdapter(Context context, LinkedList<Conversation> cList) {
 		this.mContext = context;
 		this.mInflater = LayoutInflater.from(context);
 		this.conversationList = cList;
@@ -82,20 +82,23 @@ public class HomeListAdapter extends BaseAdapter {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		// TODO Auto-generated method stub
+		LogTool.e("½øÈëgetView");
 
 		if (convertView == null) {
-			convertView = mInflater.inflate(R.layout.home_list_item, null);
+			convertView = mInflater.inflate(R.layout.home_list_item, parent, false);
 		}
 
-		ViewHolder holder = new ViewHolder();
+		ViewHolder holder = (ViewHolder) convertView.getTag();
 
-		if (holder != null) {
+		if (holder == null) {
+			holder = new ViewHolder();
 			holder.name = (TextView) convertView.findViewById(R.id.recent_list_item_name);
 			holder.message = (TextView) convertView.findViewById(R.id.recent_list_item_msg);
 			holder.unreadLabel = (TextView) convertView.findViewById(R.id.unreadmsg);
 			holder.time = (TextView) convertView.findViewById(R.id.recent_list_item_time);
 			holder.avatar = (ImageView) convertView.findViewById(R.id.icon);
 			holder.msgState = convertView.findViewById(R.id.msg_state);
+			convertView.setTag(holder);
 		}
 
 		Conversation conversation = conversationList.get(position);

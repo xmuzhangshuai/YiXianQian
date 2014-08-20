@@ -31,6 +31,7 @@ import com.yixianqian.base.BaseApplication;
 import com.yixianqian.server.ServerUtil;
 import com.yixianqian.table.UserTable;
 import com.yixianqian.utils.AsyncHttpClientImageSound;
+import com.yixianqian.utils.FriendPreference;
 import com.yixianqian.utils.ImageTools;
 import com.yixianqian.utils.ToastTool;
 import com.yixianqian.utils.UserPreference;
@@ -51,6 +52,7 @@ public class HeadImageActivity extends BaseActivity {
 	private ImageView headImage;// 头像
 	private ImageView camera_image;//相机图标
 	private UserPreference userPreference;
+	private FriendPreference friendPreference;
 
 	private File picFile;
 	private Uri photoUri;
@@ -64,6 +66,7 @@ public class HeadImageActivity extends BaseActivity {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_head_image);
 		userPreference = BaseApplication.getInstance().getUserPreference();
+		friendPreference = BaseApplication.getInstance().getFriendPreference();
 
 		findViewById();
 		initView();
@@ -109,7 +112,15 @@ public class HeadImageActivity extends BaseActivity {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				uploadImage(photoUri.getPath());
-				ServerUtil.getInstance(HeadImageActivity.this).getTodayRecommend(HeadImageActivity.this, true);
+				if (userPreference.getU_stateid() == 4) {
+					ServerUtil.getInstance(HeadImageActivity.this).getTodayRecommend(HeadImageActivity.this, true);
+				} else if (userPreference.getU_stateid() == 2 && friendPreference.getF_id() == -1) {
+					startActivity(new Intent(HeadImageActivity.this, AddLoverActivity.class));
+					overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+				} else {
+					startActivity(new Intent(HeadImageActivity.this, MainActivity.class));
+					overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+				}
 			}
 		});
 	}

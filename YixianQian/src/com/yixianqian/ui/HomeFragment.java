@@ -44,6 +44,7 @@ import com.yixianqian.table.FlipperTable;
 import com.yixianqian.table.LoversTable;
 import com.yixianqian.utils.AsyncHttpClientTool;
 import com.yixianqian.utils.FriendPreference;
+import com.yixianqian.utils.LogTool;
 import com.yixianqian.utils.ToastTool;
 import com.yixianqian.utils.UserPreference;
 
@@ -94,7 +95,7 @@ public class HomeFragment extends BaseV4Fragment {
 		findViewById();// 初始化views
 		initView();
 
-		mAdapter = new HomeListAdapter(getActivity(), mHomeListView, conversationList);
+		mAdapter = new HomeListAdapter(getActivity(), conversationList);
 		mHomeListView.setAdapter(mAdapter);
 		return rootView;
 	}
@@ -218,7 +219,8 @@ public class HomeFragment extends BaseV4Fragment {
 	 * 更新对话列表
 	 */
 	public void refreshConversation() {
-		mAdapter = new HomeListAdapter(getActivity(), mHomeListView, conversationList);
+		LogTool.e("刷新");
+		mAdapter = new HomeListAdapter(getActivity(), conversationList);
 		mHomeListView.setAdapter(mAdapter);
 		mAdapter.notifyDataSetChanged();
 	}
@@ -253,8 +255,6 @@ public class HomeFragment extends BaseV4Fragment {
 								//								new SendNotifyTask(userPreference.getName() + "和您解除了心动关系", userPreference.getName(),
 								//										friendPreference.getBpush_UserID()).send();
 
-								//删除会话
-								EMChatManager.getInstance().deleteConversation("" + friendPreference.getF_id());
 								//删除好友
 								try {
 									EMContactManager.getInstance().deleteContact("" + friendPreference.getF_id());
@@ -262,6 +262,9 @@ public class HomeFragment extends BaseV4Fragment {
 									// TODO Auto-generated catch block
 									e.printStackTrace();
 								}
+								//删除会话
+								EMChatManager.getInstance().deleteConversation("" + friendPreference.getF_id());
+
 								friendPreference.clear();
 								userPreference.setU_stateid(4);
 							}

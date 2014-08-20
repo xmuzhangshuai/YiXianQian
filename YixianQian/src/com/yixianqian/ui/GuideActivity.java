@@ -25,6 +25,7 @@ import com.yixianqian.config.Constants;
 import com.yixianqian.config.DefaultKeys;
 import com.yixianqian.db.CopyDataBase;
 import com.yixianqian.server.ServerUtil;
+import com.yixianqian.utils.FriendPreference;
 import com.yixianqian.utils.NetworkUtils;
 import com.yixianqian.utils.SharePreferenceUtil;
 import com.yixianqian.utils.UserPreference;
@@ -49,6 +50,7 @@ public class GuideActivity extends BaseActivity {
 	SharedPreferences.Editor locationEditor;
 	private SharePreferenceUtil sharePreferenceUtil;
 	private UserPreference userPreference;
+	private FriendPreference friendPreference;
 	private String province;//省份
 	private String city;//城市
 	private String detailLocation;//详细地址
@@ -62,6 +64,7 @@ public class GuideActivity extends BaseActivity {
 		sharePreferenceUtil = new SharePreferenceUtil(this, SharePreferenceUtil.USE_COUNT);
 		int count = sharePreferenceUtil.getUseCount();
 		userPreference = BaseApplication.getInstance().getUserPreference();
+		friendPreference = BaseApplication.getInstance().getFriendPreference();
 
 		/************初始化友盟服务**************/
 		MobclickAgent.updateOnlineConfig(this);
@@ -93,6 +96,8 @@ public class GuideActivity extends BaseActivity {
 				if (NetworkUtils.isNetworkAvailable(GuideActivity.this)) {//如果网络可用
 					if (userPreference.getLoveRequest()) {//如果请求了添加情侣，则直接跳转到等待页面
 						startActivity(new Intent(GuideActivity.this, WaitActivity.class));
+					} else if (userPreference.getU_stateid() == 2 && friendPreference.getF_id() == -1) {//如果是情侣状态，但是还没有添加情侣
+						startActivity(new Intent(GuideActivity.this, AddLoverActivity.class));
 					} else {
 						setContentView(R.layout.activity_guide);
 						findViewById();
