@@ -12,7 +12,9 @@ import android.widget.TextView;
 import com.yixianqian.R;
 import com.yixianqian.base.BaseApplication;
 import com.yixianqian.base.BaseV4Fragment;
+import com.yixianqian.customewidget.MyAlertDialog;
 import com.yixianqian.db.FlipperDbService;
+import com.yixianqian.utils.FileSizeUtil;
 import com.yixianqian.utils.FriendPreference;
 import com.yixianqian.utils.UserPreference;
 
@@ -40,6 +42,7 @@ public class SettingMainFragment extends BaseV4Fragment implements OnClickListen
 	private FragmentTransaction transaction;
 	private UserPreference userPreference;
 	private FriendPreference friendPreference;
+	private TextView cacheSize;
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
@@ -80,6 +83,7 @@ public class SettingMainFragment extends BaseV4Fragment implements OnClickListen
 		settingCheckUpdate = rootView.findViewById(R.id.setting_check_update);
 		settingAbout = rootView.findViewById(R.id.setting_about);
 		settingLogout = rootView.findViewById(R.id.setting_logout);
+		cacheSize = (TextView) rootView.findViewById(R.id.cache_size);
 	}
 
 	@Override
@@ -96,6 +100,10 @@ public class SettingMainFragment extends BaseV4Fragment implements OnClickListen
 			}
 		});
 
+		cacheSize.setText(""
+				+ FileSizeUtil.getFileOrFilesSize(imageLoader.getDiskCache().getDirectory().getAbsolutePath(),
+						FileSizeUtil.SIZETYPE_MB) + "MB");
+
 		settingNewMsg.setOnClickListener(this);
 		settingChat.setOnClickListener(this);
 		settingClearCache.setOnClickListener(this);
@@ -110,15 +118,74 @@ public class SettingMainFragment extends BaseV4Fragment implements OnClickListen
 	 */
 	private void logout() {
 		//设置用户不曾登录
-		Intent intent;
-		BaseApplication.getInstance().logout();
-		userPreference.clear();
-		friendPreference.clear();
-		FlipperDbService flipperDbService = FlipperDbService.getInstance(getActivity());
-		flipperDbService.flipperDao.deleteAll();
-		intent = new Intent(getActivity(), LoginOrRegisterActivity.class);
-		getActivity().startActivity(intent);
-		getActivity().finish();
+
+		final MyAlertDialog myAlertDialog = new MyAlertDialog(getActivity());
+		myAlertDialog.setTitle("提示");
+		myAlertDialog.setMessage("是否注销用户？");
+		View.OnClickListener comfirm = new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				myAlertDialog.dismiss();
+
+				Intent intent;
+				BaseApplication.getInstance().logout();
+				userPreference.clear();
+				friendPreference.clear();
+				FlipperDbService flipperDbService = FlipperDbService.getInstance(getActivity());
+				flipperDbService.flipperDao.deleteAll();
+				intent = new Intent(getActivity(), LoginOrRegisterActivity.class);
+				getActivity().startActivity(intent);
+				getActivity().finish();
+			}
+		};
+		View.OnClickListener cancle = new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				myAlertDialog.dismiss();
+			}
+		};
+		myAlertDialog.setPositiveButton("确定", comfirm);
+		myAlertDialog.setNegativeButton("取消", cancle);
+		myAlertDialog.show();
+
+	}
+
+	/**
+	 * 清楚缓存
+	 */
+	private void clearCache() {
+
+		final MyAlertDialog myAlertDialog = new MyAlertDialog(getActivity());
+		myAlertDialog.setTitle("提示");
+		myAlertDialog.setMessage("是否清除缓存？");
+		View.OnClickListener comfirm = new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				myAlertDialog.dismiss();
+				imageLoader.clearMemoryCache();
+				imageLoader.clearDiskCache();
+				cacheSize.setText(""
+						+ FileSizeUtil.getFileOrFilesSize(imageLoader.getDiskCache().getDirectory().getAbsolutePath(),
+								FileSizeUtil.SIZETYPE_MB) + "MB");
+			}
+		};
+		View.OnClickListener cancle = new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				myAlertDialog.dismiss();
+			}
+		};
+		myAlertDialog.setPositiveButton("确定", comfirm);
+		myAlertDialog.setNegativeButton("取消", cancle);
+		myAlertDialog.show();
 	}
 
 	@Override
@@ -138,7 +205,7 @@ public class SettingMainFragment extends BaseV4Fragment implements OnClickListen
 			transaction.commit();
 			break;
 		case R.id.setting_clear_cache:
-
+			clearCache();
 			break;
 		case R.id.setting_feedback:
 
