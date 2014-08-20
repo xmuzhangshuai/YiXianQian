@@ -962,6 +962,10 @@ public class ChatActivity extends BaseFragmentActivity implements OnTouchListene
 		faceBtn.setVisibility(View.VISIBLE);
 	}
 
+	public String getToChatUsername() {
+		return toChatUsername;
+	}
+
 	/**
 	 * 消息广播接收者
 	 * 
@@ -970,9 +974,9 @@ public class ChatActivity extends BaseFragmentActivity implements OnTouchListene
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			String username = intent.getStringExtra("from");
-//			String msgid = intent.getStringExtra("msgid");
+			//			String msgid = intent.getStringExtra("msgid");
 			// 收到这个广播的时候，message已经在db和内存里了，可以通过id获取mesage对象
-//			EMMessage message = EMChatManager.getInstance().getMessage(msgid);
+			//			EMMessage message = EMChatManager.getInstance().getMessage(msgid);
 
 			if (!username.equals(toChatUsername)) {
 				// 消息不是发给当前会话，return

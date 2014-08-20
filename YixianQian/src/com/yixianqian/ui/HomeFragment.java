@@ -248,6 +248,10 @@ public class HomeFragment extends BaseV4Fragment {
 							@Override
 							public void onSuccess(int statusCode, Header[] headers, String response) {
 								// TODO Auto-generated method stub
+								FlipperDbService flipperDbService = FlipperDbService.getInstance(getActivity());
+								flipperDbService.deleteFlipperByUserId(conversationList.get(currentItem).getUserID()
+										.intValue());
+
 								conversationDbService.conversationDao.delete(conversationList.get(currentItem));
 								conversationList.remove(currentItem);
 								mAdapter.notifyDataSetChanged();

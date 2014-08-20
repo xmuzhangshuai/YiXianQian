@@ -71,6 +71,7 @@ public class Constants {
 	}
 
 	public static class FlipperStatus {
+
 		/**ÎÒÑûÇë**/
 		public static final String INVITE = "INVITE";
 

@@ -57,6 +57,18 @@ public class FlipperDbService {
 	}
 
 	/**
+	 * 根据请求者的ID删除Flipper
+	 * @param userId
+	 * @return
+	 */
+	public void deleteFlipperByUserId(int userID) {
+		Flipper flipper = getFlipperByUserId(userID);
+		if (flipper != null) {
+			flipperDao.delete(flipper);
+		}
+	}
+
+	/**
 	 * 根据请求者的ID获取Flipper
 	 * @param userId
 	 * @return

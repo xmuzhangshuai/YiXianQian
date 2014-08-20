@@ -454,8 +454,8 @@ public class PersonDetailDialog extends DialogFragment {
 						public void run() {
 							saveFlipper(flipperId);
 							progressDialog.dismiss();
-							getActivity().finish();
 							ToastTool.showLong(getActivity(), "爱情验证已发送！等待对方同意");
+							getActivity().finish();
 						}
 					});
 				} catch (final Exception e) {

@@ -30,6 +30,7 @@ import com.easemob.chat.EMMessage;
 import com.easemob.chat.EMNotifier;
 import com.easemob.chat.TextMessageBody;
 import com.easemob.exceptions.EaseMobException;
+import com.easemob.util.NetUtils;
 import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.TextHttpResponseHandler;
 import com.yixianqian.R;
@@ -77,9 +78,8 @@ public class MainActivity extends BaseFragmentActivity {
 	private int currentTabIndex;
 	private Fragment[] fragments;
 	private JsonUser jsonUser;
-	private MyAlertDialog myAlertDialog;
 	private ConversationDbService conversationDbService;
-	static boolean active = false;
+	FlipperDbService flipperDbService;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -89,16 +89,13 @@ public class MainActivity extends BaseFragmentActivity {
 		userPreference = BaseApplication.getInstance().getUserPreference();
 		friendpreference = BaseApplication.getInstance().getFriendPreference();
 		conversationDbService = ConversationDbService.getInstance(MainActivity.this);
+		flipperDbService = FlipperDbService.getInstance(MainActivity.this);
 		homeFragment = new HomeFragment();
 		personalFragment = new PersonalFragment();
 		fragments = new Fragment[] { homeFragment, personalFragment };
 
 		findViewById();
 		initView();
-
-		// 添加显示第一个fragment
-		getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, homeFragment)
-				.add(R.id.fragment_container, personalFragment).hide(personalFragment).show(homeFragment).commit();
 
 		// 注册一个接收消息的BroadcastReceiver
 		msgReceiver = new NewMessageBroadcastReceiver();
@@ -111,6 +108,11 @@ public class MainActivity extends BaseFragmentActivity {
 				.getAckMessageBroadcastAction());
 		ackMessageIntentFilter.setPriority(3);
 		registerReceiver(ackMessageReceiver, ackMessageIntentFilter);
+
+		// 注册一个离线消息的BroadcastReceiver
+		IntentFilter offlineMessageIntentFilter = new IntentFilter(EMChatManager.getInstance()
+				.getOfflineMessageBroadcastAction());
+		registerReceiver(offlineMessageReceiver, offlineMessageIntentFilter);
 
 		// setContactListener监听联系人的变化等
 		EMContactManager.getInstance().setContactListener(new MyContactListener());
@@ -133,45 +135,31 @@ public class MainActivity extends BaseFragmentActivity {
 	@Override
 	protected void initView() {
 		// TODO Auto-generated method stub
+		// 添加显示第一个fragment
+		getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, homeFragment)
+				.add(R.id.fragment_container, personalFragment).hide(personalFragment).show(homeFragment).commit();
 	}
 
 	@Override
 	protected void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
-		if (homeFragment.isVisible() && personalFragment.isVisible()) {
-			getSupportFragmentManager().beginTransaction().hide(personalFragment).commit();
-			currentTabIndex = 0;
-		}
+
+		//		LogTool.e("" + homeFragment.isAdded());
+		//		LogTool.e("" + personalFragment.isAdded());
+		//		if (homeFragment.isVisible() && personalFragment.isVisible()) {
+		//			homeFragment = new HomeFragment();
+		//			personalFragment = new PersonalFragment();
+		//			fragments = new Fragment[] { homeFragment, personalFragment };
+		//			getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, homeFragment)
+		//					.add(R.id.fragment_container, personalFragment).hide(personalFragment).show(homeFragment).commit();
+		//			currentTabIndex = 0;
+		//		}
 
 		if (!isConflict) {
 			EMChatManager.getInstance().activityResumed();
 		}
 	}
-
-	@Override
-	protected void onStart() {
-		// TODO Auto-generated method stub
-		super.onStart();
-		active = true;
-	}
-
-	@Override
-	protected void onStop() {
-		// TODO Auto-generated method stub
-		super.onStop();
-		active = false;
-	}
-
-	//
-	//	@Override
-	//	public boolean onKeyDown(int keyCode, KeyEvent event) {
-	//		if (keyCode == KeyEvent.KEYCODE_BACK) {
-	//			moveTaskToBack(false);
-	//			return true;
-	//		}
-	//		return super.onKeyDown(keyCode, event);
-	//	}
 
 	@Override
 	protected void onNewIntent(Intent intent) {
@@ -304,6 +292,25 @@ public class MainActivity extends BaseFragmentActivity {
 		}
 	};
 
+	/**
+	 * 离线消息BroadcastReceiver
+	 * sdk 登录后，服务器会推送离线消息到client，这个receiver，是通知UI 有哪些人发来了离线消息
+	 * UI 可以做相应的操作，比如下载用户信息
+	 */
+	private BroadcastReceiver offlineMessageReceiver = new BroadcastReceiver() {
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			String[] users = intent.getStringArrayExtra("fromuser");
+			if (users != null) {
+				for (String user : users) {
+					LogTool.e("收到user离线消息：" + user);
+				}
+			}
+			abortBroadcast();
+		}
+	};
+
 	/***
 	 * 联系人变化listener
 	 * 
@@ -319,17 +326,30 @@ public class MainActivity extends BaseFragmentActivity {
 		}
 
 		@Override
-		public void onContactDeleted(List<String> usernameList) {
+		public void onContactDeleted(final List<String> usernameList) {
 			// 被删除
-
 			for (final String username : usernameList) {
-				Log.e("心动请求，", "被" + username + "删除");
-				runOnUiThread(new Runnable() {
-					public void run() {
-						showDeletDialog(Integer.parseInt(username));
-					}
-				});
+				removeUser(Integer.parseInt(username));
+				LogTool.e("心动请求，", "被" + username + "删除");
+				flipperDbService.deleteFlipperByUserId(Integer.parseInt(username));
 			}
+			runOnUiThread(new Runnable() {
+				public void run() {
+					//如果正在与此用户的聊天页面
+					if (ChatActivity.activityInstance != null
+							&& usernameList.contains(ChatActivity.activityInstance.getToChatUsername())) {
+						ChatActivity.activityInstance.finish();
+						if (currentTabIndex == 0) {
+							// 当前页面如果为聊天历史页面，刷新此页面
+							if (homeFragment != null) {
+								homeFragment.refresh();
+							}
+						}
+						ToastTool.showLong(MainActivity.this, ChatActivity.activityInstance.getToChatUsername()
+								+ "和你解除心动关系");
+					}
+				}
+			});
 		}
 
 		//收到心动请求
@@ -346,7 +366,7 @@ public class MainActivity extends BaseFragmentActivity {
 				String response = HttpUtil.postRequest("getjsonflipperrequest", map);
 				JsonFlipperRequest fRequest = FastJsonTool.getObject(response, JsonFlipperRequest.class);
 				if (fRequest != null) {
-					notifyNewFlipper(fRequest);
+					notifyNewFlipper(saveFlipper(fRequest));
 				} else {
 					LogTool.e("心动请求", "JsonFlipperRequest为空");
 					runOnUiThread(new Runnable() {
@@ -369,15 +389,16 @@ public class MainActivity extends BaseFragmentActivity {
 		//心动请求被同意
 		@Override
 		public void onContactAgreed(String username) {
-			Log.e("心动请求，", username + "被同意");
-			ToastTool.showLong(MainActivity.this, "您对" + username + "的心动请求已经被同意");
+			LogTool.e("心动请求，", username + "被同意");
 
-			FlipperDbService flipperDbService = FlipperDbService.getInstance(MainActivity.this);
 			Flipper flipper = flipperDbService.getFlipperByUserId(Integer.parseInt(username));
 			if (flipper != null) {
-				flipper.setStatus(Constants.FlipperStatus.BEAGREED);
-				flipperDbService.flipperDao.update(flipper);
-				saveFlipperRelation(flipper);
+				if (flipper.getStatus() != Constants.FlipperStatus.BEAGREED) {
+					flipper.setStatus(Constants.FlipperStatus.BEAGREED);
+					flipperDbService.flipperDao.update(flipper);
+					saveFlipperRelation(flipper);
+					notifyNewFlipper(flipper);
+				}
 			} else {
 				saveFlipperRealitionById(Integer.parseInt(username));
 			}
@@ -387,13 +408,12 @@ public class MainActivity extends BaseFragmentActivity {
 		@Override
 		public void onContactRefused(String username) {
 			Log.e("心动请求，", "您对" + username + "的心动请求被拒绝");
-			//			ToastTool.showLong(MainActivity.this, "您对" + username + "的心动请求被拒绝");
 
-			FlipperDbService flipperDbService = FlipperDbService.getInstance(MainActivity.this);
 			Flipper flipper = flipperDbService.getFlipperByUserId(Integer.parseInt(username));
 			if (flipper != null) {
 				flipper.setStatus(Constants.FlipperStatus.BEREFUSED);
 				flipperDbService.flipperDao.update(flipper);
+				notifyNewFlipper(flipper);
 			}
 		}
 	}
@@ -403,23 +423,15 @@ public class MainActivity extends BaseFragmentActivity {
 	 * 
 	 * @param msg
 	 */
-	private void notifyNewFlipper(final JsonFlipperRequest flipperRequest) {
-		saveFlipper(flipperRequest);
+	private void notifyNewFlipper(final Flipper flipper) {
 		// 提示有新消息
 		EMNotifier.getInstance(getApplicationContext()).notifyOnNewMsg();
-		runOnUiThread(new Runnable() {
-
-			@Override
-			public void run() {
-				// TODO Auto-generated method stub
-				ToastTool.showShort(getApplicationContext(), flipperRequest.getU_nickname() + "对你怦然心动");
-			}
-		});
 
 		if (currentTabIndex == 0) {
 			// 当前页面如果为聊天历史页面，刷新此页面
 			if (homeFragment != null) {
 				homeFragment.showNewMsgTip(true);
+				homeFragment.refresh();
 			}
 		}
 	}
@@ -428,8 +440,7 @@ public class MainActivity extends BaseFragmentActivity {
 	 * 保存请求
 	 * @param flipper
 	 */
-	private void saveFlipper(JsonFlipperRequest fRequest) {
-		FlipperDbService flipperDbService = FlipperDbService.getInstance(MainActivity.this);
+	private Flipper saveFlipper(JsonFlipperRequest fRequest) {
 		Flipper flipper = flipperDbService.getFlipperByUserId(fRequest.getU_id());
 		//如果数据库中存在该用户的请求，则更新状态
 		if (flipper != null) {
@@ -450,7 +461,7 @@ public class MainActivity extends BaseFragmentActivity {
 					Constants.FlipperStatus.BEINVITEED, Constants.FlipperType.FROM);
 			flipperDbService.flipperDao.insert(flipper);
 		}
-
+		return flipper;
 	}
 
 	/**
@@ -480,13 +491,13 @@ public class MainActivity extends BaseFragmentActivity {
 		friendpreference.setU_cityid(flipper.getCityID());
 		friendpreference.setU_provinceid(flipper.getProvinceID());
 		friendpreference.setU_schoolid(flipper.getSchoolID());
-		creatConversation();
+		creatConversation(flipper.getUserID());
 	}
 
 	/**
 	 * 	网络获取User信息
 	 */
-	private void saveFlipperRealitionById(int userId) {
+	private void saveFlipperRealitionById(final int userId) {
 		jsonUser = new JsonUser();
 		RequestParams params = new RequestParams();
 		params.put(UserTable.U_ID, userId);
@@ -524,7 +535,7 @@ public class MainActivity extends BaseFragmentActivity {
 						friendpreference.setU_provinceid(jsonUser.getU_provinceid());
 						friendpreference.setU_schoolid(jsonUser.getU_schoolid());
 
-						creatConversation();
+						creatConversation(userId);
 					}
 				}
 			}
@@ -541,66 +552,49 @@ public class MainActivity extends BaseFragmentActivity {
 	/**
 	 * 创建会话
 	 */
-	private void creatConversation() {
-		conversationDbService.conversationDao.deleteAll();
-		Conversation conversation = new Conversation(null, Long.valueOf(friendpreference.getF_id()),
-				friendpreference.getName(), friendpreference.getF_small_avatar(), "", 0, System.currentTimeMillis());
-		conversationDbService.conversationDao.insert(conversation);
+	private void creatConversation(int userID) {
+		Conversation conversation = conversationDbService.getConversationByUser(userID);
+		if (conversation == null) {
+			conversation = new Conversation(null, Long.valueOf(userID), friendpreference.getName(),
+					friendpreference.getF_small_avatar(), "", 0, System.currentTimeMillis());
+			conversationDbService.conversationDao.insert(conversation);
 
-		//给对方发送一条消息
-		String msg = "我和你一见钟情，开始聊天吧~！";
-		//获取到与聊天人的会话对象。参数username为聊天人的userid或者groupid，后文中的username皆是如此
-		EMConversation emConversation = EMChatManager.getInstance().getConversation("" + friendpreference.getF_id());
-		//创建一条文本消息
-		EMMessage message = EMMessage.createSendMessage(EMMessage.Type.TXT);
-		//设置消息body
-		TextMessageBody txtBody = new TextMessageBody(msg);
-		message.addBody(txtBody);
-		//设置接收人
-		message.setReceipt("" + friendpreference.getF_id());
-		//把消息加入到此会话对象中
-		emConversation.addMessage(message);
-
-		if (currentTabIndex == 0) {
-			// 当前页面如果为聊天历史页面，刷新此页面
-			if (homeFragment != null) {
-				homeFragment.refresh();
-			}
+			//给对方发送一条消息
+			String msg = "我和你一见钟情，开始聊天吧~！";
+			//获取到与聊天人的会话对象。参数username为聊天人的userid或者groupid，后文中的username皆是如此
+			EMConversation emConversation = EMChatManager.getInstance()
+					.getConversation("" + friendpreference.getF_id());
+			//创建一条文本消息
+			EMMessage message = EMMessage.createSendMessage(EMMessage.Type.TXT);
+			//设置消息body
+			TextMessageBody txtBody = new TextMessageBody(msg);
+			message.addBody(txtBody);
+			//设置接收人
+			message.setReceipt("" + friendpreference.getF_id());
+			//把消息加入到此会话对象中
+			emConversation.addMessage(message);
 		}
 	}
 
 	//显示删除心动或情侣对话窗口
-	private void showDeletDialog(final int userID) {
+	private void removeUser(final int userID) {
 		//如果是心动关系
-		if (userPreference.getU_stateid() == 3 && homeFragment != null && active) {
-			myAlertDialog = new MyAlertDialog(MainActivity.this);
-			myAlertDialog.setShowCancel(false);
-			myAlertDialog.setTitle("提示");
-			myAlertDialog.setMessage(friendpreference.getName() + "解除了和您的心动关系");
-			View.OnClickListener comfirm = new OnClickListener() {
-
-				@Override
-				public void onClick(View v) {
-					// TODO Auto-generated method stub
-					myAlertDialog.dismiss();
-					conversationDbService.conversationDao.delete(conversationDbService.getConversationByUser(userID));
-
-					if (currentTabIndex == 0) {
-						// 当前页面如果为聊天历史页面，刷新此页面
-						if (homeFragment != null) {
-							homeFragment.refresh();
-						}
+		if (userPreference.getU_stateid() == 3) {
+			Conversation conversation = conversationDbService.getConversationByUser(userID);
+			if (conversation != null) {
+				conversationDbService.conversationDao.delete(conversationDbService.getConversationByUser(userID));
+				if (currentTabIndex == 0) {
+					// 当前页面如果为聊天历史页面，刷新此页面
+					if (homeFragment != null) {
+						homeFragment.refresh();
 					}
-
-					//删除会话
-					EMChatManager.getInstance().deleteConversation("" + friendpreference.getF_id());
-					friendpreference.clear();
-					userPreference.setU_stateid(4);
 				}
-			};
-			myAlertDialog.setPositiveButton("确定", comfirm);
-			myAlertDialog.setCancleable(false);
-			myAlertDialog.show();
+
+				//删除会话
+				EMChatManager.getInstance().deleteConversation("" + friendpreference.getF_id());
+				friendpreference.clear();
+				userPreference.setU_stateid(4);
+			}
 		}
 	}
 
@@ -655,7 +649,11 @@ public class MainActivity extends BaseFragmentActivity {
 				showConflictDialog();
 			} else {
 				homeFragment.errorItem.setVisibility(View.VISIBLE);
-				homeFragment.errorText.setText("连接不到聊天服务器");
+				if (NetUtils.hasNetwork(MainActivity.this))
+					homeFragment.errorText.setText("连接不到聊天服务器");
+				else
+					homeFragment.errorText.setText("当前网络不可用，请检查网络设置");
+
 			}
 		}
 
