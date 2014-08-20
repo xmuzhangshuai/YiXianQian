@@ -52,6 +52,7 @@ import com.yixianqian.customewidget.ChatAlertDialog;
 import com.yixianqian.db.ConversationDbService;
 import com.yixianqian.entities.Conversation;
 import com.yixianqian.task.LoadImageTask;
+import com.yixianqian.ui.BaiduMapActivity;
 import com.yixianqian.ui.ChatActivity;
 import com.yixianqian.ui.ContextMenu;
 import com.yixianqian.ui.PersonDetailActivity;
@@ -65,6 +66,13 @@ import com.yixianqian.utils.LogTool;
 import com.yixianqian.utils.ToastTool;
 import com.yixianqian.utils.UserPreference;
 
+/**
+ * 类名称：MessageAdapter
+ * 类描述：消息适配器
+ * 创建人： 张帅
+ * 创建时间：2014年8月20日 下午9:47:55
+ *
+ */
 public class MessageAdapter extends BaseAdapter {
 
 	private final static String TAG = "msg";
@@ -80,7 +88,6 @@ public class MessageAdapter extends BaseAdapter {
 
 	public static final String IMAGE_DIR = "chat/image/";
 	public static final String VOICE_DIR = "chat/audio/";
-	public static final String VIDEO_DIR = "chat/video";
 
 	private String username;
 	private LayoutInflater inflater;
@@ -598,6 +605,7 @@ public class MessageAdapter extends BaseAdapter {
 			holder.staus_iv.setVisibility(View.VISIBLE);
 			break;
 		case INPROGRESS:
+			holder.pb.setVisibility(View.VISIBLE);
 			break;
 		default:
 			sendMsgInBackground(message, holder);
@@ -925,14 +933,13 @@ public class MessageAdapter extends BaseAdapter {
 
 		@Override
 		public void onClick(View v) {
-			//			Intent intent;
-			//			intent = new Intent(context, BaiduMapActivity.class);
-			//			intent.putExtra("latitude", location.latitude);
-			//			intent.putExtra("longitude", location.longitude);
-			//			intent.putExtra("address", address);
-			//			activity.startActivity(intent);
+			Intent intent;
+			intent = new Intent(context, BaiduMapActivity.class);
+			intent.putExtra("latitude", location.latitude);
+			intent.putExtra("longitude", location.longitude);
+			intent.putExtra("address", address);
+			activity.startActivity(intent);
+			activity.overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
 		}
-
 	}
-
 }

@@ -60,6 +60,7 @@ import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMConversation;
 import com.easemob.chat.EMMessage;
 import com.easemob.chat.ImageMessageBody;
+import com.easemob.chat.LocationMessageBody;
 import com.easemob.chat.TextMessageBody;
 import com.easemob.chat.VoiceMessageBody;
 import com.easemob.util.PathUtil;
@@ -83,6 +84,13 @@ import com.yixianqian.utils.UserPreference;
 import com.yixianqian.xlistview.MsgListView;
 import com.yixianqian.xlistview.MsgListView.IXListViewListener;
 
+/**
+ * 类名称：ChatActivity
+ * 类描述：聊天界面
+ * 创建人： 张帅
+ * 创建时间：2014年8月20日 下午9:09:16
+ *
+ */
 public class ChatActivity extends BaseFragmentActivity implements OnTouchListener, IXListViewListener, OnClickListener {
 	/*************VIEWS*****************/
 	private static final int REQUEST_CODE_EMPTY_HISTORY = 2;
@@ -417,21 +425,18 @@ public class ChatActivity extends BaseFragmentActivity implements OnTouchListene
 						sendPicByUri(selectedImage);
 					}
 				}
-			}
-			//			else if (requestCode == REQUEST_CODE_MAP) { // 地图
-			//				double latitude = data.getDoubleExtra("latitude", 0);
-			//				double longitude = data.getDoubleExtra("longitude", 0);
-			//				String locationAddress = data.getStringExtra("address");
-			//				if (locationAddress != null && !locationAddress.equals("")) {
-			//					more(more);
-			//					sendLocationMsg(latitude, longitude, "", locationAddress);
-			//				} else {
-			//					Toast.makeText(this, "无法获取到您的位置信息！", 0).show();
-			//				}
-			//				// 重发消息
-			//			} 
-
-			else if (requestCode == REQUEST_CODE_TEXT) {
+			} else if (requestCode == REQUEST_CODE_MAP) { // 地图
+				double latitude = data.getDoubleExtra("latitude", 0);
+				double longitude = data.getDoubleExtra("longitude", 0);
+				String locationAddress = data.getStringExtra("address");
+				if (locationAddress != null && !locationAddress.equals("")) {
+					//					more(more);
+					sendLocationMsg(latitude, longitude, "", locationAddress);
+				} else {
+					ToastTool.showLong(this, "无法获取到您的位置信息！");
+				}
+				// 重发消息
+			} else if (requestCode == REQUEST_CODE_TEXT) {
 				resendMessage();
 			} else if (requestCode == REQUEST_CODE_VOICE) {
 				resendMessage();
@@ -464,8 +469,6 @@ public class ChatActivity extends BaseFragmentActivity implements OnTouchListene
 			return;
 		}
 
-		//		System.out.println(PathUtil.getInstance().getImagePath() + "   " + userPreference.getU_id()
-		//				+ System.currentTimeMillis() + ".jpg");
 		cameraFile = new File(PathUtil.getInstance().getImagePath(), "" + userPreference.getU_id()
 				+ System.currentTimeMillis() + ".jpg");
 		cameraFile.getParentFile().mkdirs();
@@ -497,11 +500,12 @@ public class ChatActivity extends BaseFragmentActivity implements OnTouchListene
 	}
 
 	/**
-	 * 初始化发送图片等窗口
+	 * 初始化更多等窗口
 	 */
 	private void initMorePage() {
-		int[] imageIds = new int[] { R.drawable.sel_chat_take_photo, R.drawable.sel_chat_choose_photo };
-		String[] names = new String[] { "拍照", "相册" };
+		int[] imageIds = new int[] { R.drawable.sel_chat_take_photo, R.drawable.sel_chat_choose_photo,
+				R.drawable.sel_chat_location };
+		String[] names = new String[] { "拍照", "相册", "位置" };
 		List<Map<String, Object>> listItems = new ArrayList<Map<String, Object>>();
 		for (int i = 0; i < imageIds.length; i++) {
 			Map<String, Object> listItem = new HashMap<String, Object>();
@@ -523,6 +527,10 @@ public class ChatActivity extends BaseFragmentActivity implements OnTouchListene
 					break;
 				case 1:
 					selectPicFromLocal(); // 点击图片图标
+					break;
+				case 2://点击位置图标
+					startActivityForResult(new Intent(ChatActivity.this, BaiduMapActivity.class), REQUEST_CODE_MAP);
+					overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
 					break;
 				default:
 					break;
@@ -755,6 +763,26 @@ public class ChatActivity extends BaseFragmentActivity implements OnTouchListene
 				}
 			}.execute();
 		}
+	}
+
+	/**
+	 * 发送位置信息
+	 * 
+	 * @param latitude
+	 * @param longitude
+	 * @param imagePath
+	 * @param locationAddress
+	 */
+	private void sendLocationMsg(double latitude, double longitude, String imagePath, String locationAddress) {
+		EMMessage message = EMMessage.createSendMessage(EMMessage.Type.LOCATION);
+		LocationMessageBody locBody = new LocationMessageBody(locationAddress, latitude, longitude);
+		message.addBody(locBody);
+		message.setReceipt(toChatUsername);
+		emConversation.addMessage(message);
+		mMsgListView.setAdapter(adapter);
+		adapter.notifyDataSetChanged();
+		mMsgListView.setSelection(mMsgListView.getCount() - 1);
+		setResult(RESULT_OK);
 	}
 
 	/**
