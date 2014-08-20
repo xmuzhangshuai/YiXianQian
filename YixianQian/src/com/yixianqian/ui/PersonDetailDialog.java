@@ -88,10 +88,10 @@ public class PersonDetailDialog extends DialogFragment {
 		strangerList.add("屏蔽用户");
 		strangerList.add("怦然心动");
 
-		flipperList.add("解除关系");
+		flipperList.add("解除心动关系");
 		flipperList.add("成为情侣");
 
-		loverList.add("解除关系");
+		loverList.add("解除情侣关系");
 	}
 
 	@Override

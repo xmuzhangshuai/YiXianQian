@@ -82,7 +82,6 @@ public class HomeListAdapter extends BaseAdapter {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		// TODO Auto-generated method stub
-		LogTool.e("½øÈëgetView");
 
 		if (convertView == null) {
 			convertView = mInflater.inflate(R.layout.home_list_item, parent, false);

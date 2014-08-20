@@ -145,6 +145,12 @@ public class MainActivity extends BaseFragmentActivity {
 		// TODO Auto-generated method stub
 		super.onResume();
 
+		if (currentTabIndex == 0) {
+			// 当前页面如果为聊天历史页面，刷新此页面
+			if (homeFragment != null) {
+				homeFragment.refreshConversation();
+			}
+		}
 		//		LogTool.e("" + homeFragment.isAdded());
 		//		LogTool.e("" + personalFragment.isAdded());
 		//		if (homeFragment.isVisible() && personalFragment.isVisible()) {
@@ -253,13 +259,11 @@ public class MainActivity extends BaseFragmentActivity {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			// 消息id
-			String msgId = intent.getStringExtra("msgid");
+			//			String msgId = intent.getStringExtra("msgid");
 			// 收到这个广播的时候，message已经在db和内存里了，可以通过id获取mesage对象
 			// EMMessage message =
 			// EMChatManager.getInstance().getMessage(msgId);
 
-			// 刷新bottom bar消息未读数
-			//			updateUnreadLabel();
 			if (currentTabIndex == 0) {
 				// 当前页面如果为聊天历史页面，刷新此页面
 				if (homeFragment != null) {

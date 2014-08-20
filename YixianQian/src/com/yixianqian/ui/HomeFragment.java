@@ -44,7 +44,6 @@ import com.yixianqian.table.FlipperTable;
 import com.yixianqian.table.LoversTable;
 import com.yixianqian.utils.AsyncHttpClientTool;
 import com.yixianqian.utils.FriendPreference;
-import com.yixianqian.utils.LogTool;
 import com.yixianqian.utils.ToastTool;
 import com.yixianqian.utils.UserPreference;
 
@@ -56,6 +55,7 @@ public class HomeFragment extends BaseV4Fragment {
 	private View rootView;// 根View
 	private ImageView topNavLeftBtn;//导航条左边按钮
 	private ImageView topNavRightBtn;//导航条右边按钮
+	private TextView topNavText;//导航条文字
 	private ImageView newMsg;
 	private View right_btn_bg;
 	private ListView mHomeListView;
@@ -120,6 +120,7 @@ public class HomeFragment extends BaseV4Fragment {
 		right_btn_bg = (View) rootView.findViewById(R.id.right_btn_bg);
 		mHomeListView = (ListView) rootView.findViewById(R.id.recent_listview);
 		mEmpty = (TextView) rootView.findViewById(R.id.empty);
+		topNavText = (TextView) rootView.findViewById(R.id.nav_text);
 		errorItem = (RelativeLayout) rootView.findViewById(R.id.rl_error_item);
 		errorText = (TextView) errorItem.findViewById(R.id.tv_connect_errormsg);
 		newMsg = (ImageView) rootView.findViewById(R.id.newmsg);
@@ -128,6 +129,7 @@ public class HomeFragment extends BaseV4Fragment {
 	@Override
 	protected void initView() {
 		// TODO Auto-generated method stub
+		topNavText.setText("会话");
 		//如果没有对话
 		if (conversationList.size() < 1) {
 			mEmpty.setVisibility(View.VISIBLE);
@@ -219,7 +221,6 @@ public class HomeFragment extends BaseV4Fragment {
 	 * 更新对话列表
 	 */
 	public void refreshConversation() {
-		LogTool.e("刷新");
 		mAdapter = new HomeListAdapter(getActivity(), conversationList);
 		mHomeListView.setAdapter(mAdapter);
 		mAdapter.notifyDataSetChanged();
