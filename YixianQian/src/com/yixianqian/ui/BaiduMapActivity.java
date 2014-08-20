@@ -74,7 +74,7 @@ public class BaiduMapActivity extends BaseActivity {
 
 	// for baidu map
 	public BMapManager mBMapManager = null;
-	public static final String strKey = "bcB8dCkZh0GVtMTdpyTTabj3";
+	public static final String strKey = "575EA7C9A16973077FD89C494CDD2733F66ED875";
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {

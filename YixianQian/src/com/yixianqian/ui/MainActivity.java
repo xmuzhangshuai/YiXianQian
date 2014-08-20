@@ -215,6 +215,10 @@ public class MainActivity extends BaseFragmentActivity {
 			unregisterReceiver(ackMessageReceiver);
 		} catch (Exception e) {
 		}
+		try {
+			unregisterReceiver(offlineMessageReceiver);
+		} catch (Exception e) {
+		}
 
 		if (conflictBuilder != null) {
 			conflictBuilder.create().dismiss();
