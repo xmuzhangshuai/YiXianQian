@@ -392,46 +392,57 @@ public class ModifyDataActivity extends BaseFragmentActivity implements OnClickL
 	 * 上传头像
 	 * @param filePath
 	 */
-	public void uploadImage(String filePath) {
+	public void uploadImage(final String filePath) {
 		final Bitmap largeAvatar = BitmapFactory.decodeFile(filePath);
-		final Bitmap smallBitmap = ImageTools.zoomBitmap(largeAvatar, largeAvatar.getWidth() / 4,
-				largeAvatar.getHeight() / 4);
-		String smallAvatarPath = Environment.getExternalStorageDirectory() + "/yixianqian/image";
+		if (largeAvatar != null) {
+			final Bitmap smallBitmap = ImageTools.zoomBitmap(largeAvatar, largeAvatar.getWidth() / 4,
+					largeAvatar.getHeight() / 4);
+			final String smallAvatarPath = Environment.getExternalStorageDirectory() + "/yixianqian/image";
 
-		RequestParams params = new RequestParams();
-		int userId = userPreference.getU_id();
-		if (userId > -1) {
-			params.put(UserTable.U_ID, String.valueOf(userId));
-			try {
-				params.put("large_avatar", picFile);
-				params.put("small_avatar",
-						ImageTools.savePhotoToSDCard(smallBitmap, smallAvatarPath, "smallAvatar.jpeg", 100));
-			} catch (FileNotFoundException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-			TextHttpResponseHandler responseHandler = new TextHttpResponseHandler() {
-				@Override
-				public void onSuccess(int statusCode, Header[] headers, String response) {
-					// TODO Auto-generated method stub
-					if (statusCode == 200) {
-						ToastTool.showLong(ModifyDataActivity.this, "头像上传成功！请等待审核");
-						largeAvatar.recycle();
-						smallBitmap.recycle();
-						//设置头像已改变
-						userPreference.setHeadImageChanged(true);
-						//获取新头像地址
-						ServerUtil.getInstance(ModifyDataActivity.this).getHeadImage(headImage, waitCheckView);
+			RequestParams params = new RequestParams();
+			int userId = userPreference.getU_id();
+			if (userId > -1) {
+				params.put(UserTable.U_ID, String.valueOf(userId));
+				try {
+					params.put("large_avatar", picFile);
+					params.put("small_avatar",
+							ImageTools.savePhotoToSDCard(smallBitmap, smallAvatarPath, "smallAvatar.jpeg", 100));
+				} catch (FileNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				TextHttpResponseHandler responseHandler = new TextHttpResponseHandler() {
+					@Override
+					public void onSuccess(int statusCode, Header[] headers, String response) {
+						// TODO Auto-generated method stub
+						if (statusCode == 200) {
+							ToastTool.showLong(ModifyDataActivity.this, "头像上传成功！请等待审核");
+							largeAvatar.recycle();
+							smallBitmap.recycle();
+							//设置头像已改变
+							userPreference.setHeadImageChanged(true);
+							userPreference.setHeadImagePassed(0);
+							//删除本地头像
+							ImageTools.deleteImageByPath(filePath);
+							ImageTools.deletePhotoAtPathAndName(smallAvatarPath, "smallAvatar.jpeg");
+							//获取新头像地址
+							ServerUtil.getInstance(ModifyDataActivity.this).getHeadImage(headImage, waitCheckView);
+						}
 					}
-				}
 
-				@Override
-				public void onFailure(int statusCode, Header[] headers, String errorResponse, Throwable e) {
-					// TODO Auto-generated method stub
-					ToastTool.showLong(ModifyDataActivity.this, "头像上传失败！" + errorResponse);
-				}
-			};
-			AsyncHttpClientImageSound.post(AsyncHttpClientImageSound.HEADIMAGE_URL, params, responseHandler);
+					@Override
+					public void onFailure(int statusCode, Header[] headers, String errorResponse, Throwable e) {
+						// TODO Auto-generated method stub
+						ToastTool.showLong(ModifyDataActivity.this, "头像上传失败！" + errorResponse);
+						//删除本地头像
+						ImageTools.deleteImageByPath(filePath);
+						ImageTools.deletePhotoAtPathAndName(smallAvatarPath, "smallAvatar.jpeg");
+					}
+				};
+				AsyncHttpClientImageSound.post(AsyncHttpClientImageSound.HEADIMAGE_URL, params, responseHandler);
+			}
+		} else {
+			ImageTools.deleteImageByPath(filePath);
 		}
 	}
 

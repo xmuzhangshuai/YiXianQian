@@ -11,6 +11,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
+import android.os.Build;
+import android.os.StrictMode;
 
 import com.baidu.frontia.FrontiaApplication;
 import com.easemob.chat.ConnectionListener;
@@ -25,10 +27,10 @@ import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
-import com.nostra13.universalimageloader.utils.StorageUtils;
 import com.yixianqian.R;
 import com.yixianqian.baidupush.BaiduPush;
 import com.yixianqian.config.Constants;
+import com.yixianqian.config.Constants.Config;
 import com.yixianqian.dao.DaoMaster;
 import com.yixianqian.dao.DaoMaster.OpenHelper;
 import com.yixianqian.dao.DaoSession;
@@ -77,10 +79,10 @@ public class BaseApplication extends FrontiaApplication {
 		// TODO Auto-generated method stub
 		super.onCreate();
 
-		//		if (Config.DEVELOPER_MODE && Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
-		//			StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectAll().penaltyDialog().build());
-		//			StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectAll().penaltyDeath().build());
-		//		}
+//		if (Config.DEVELOPER_MODE && Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
+//			StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectAll().penaltyDialog().build());
+//			StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectAll().penaltyDeath().build());
+//		}
 
 		applicationContext = this;
 		if (myApplication == null)

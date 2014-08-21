@@ -29,6 +29,7 @@
         android:layout_width="@dimen/login_register"
         android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
+        android:background="@drawable/sel_timecapsule_left_btn_bg"
         android:gravity="center"
         android:orientation="vertical" >
 

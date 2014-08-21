@@ -32,8 +32,6 @@ public class ConversationDao extends AbstractDao<Conversation, Long> {
         public final static Property Time = new Property(6, Long.class, "time", false, "TIME");
     };
 
-    private DaoSession daoSession;
-
 
     public ConversationDao(DaoConfig config) {
         super(config);
@@ -41,7 +39,6 @@ public class ConversationDao extends AbstractDao<Conversation, Long> {
     
     public ConversationDao(DaoConfig config, DaoSession daoSession) {
         super(config, daoSession);
-        this.daoSession = daoSession;
     }
 
     /** Creates the underlying database table. */
@@ -102,12 +99,6 @@ public class ConversationDao extends AbstractDao<Conversation, Long> {
         if (time != null) {
             stmt.bindLong(7, time);
         }
-    }
-
-    @Override
-    protected void attachEntity(Conversation entity) {
-        super.attachEntity(entity);
-        entity.__setDaoSession(daoSession);
     }
 
     /** @inheritdoc */

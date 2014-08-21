@@ -63,7 +63,7 @@ public class TimeCapsuleActivity extends AbsListViewBaseActivity implements OnCh
 	private TextView name;//我的姓名
 	private ImageView headImage2;//情侣的头像
 	private TextView name2;//情侣的姓名
-	private ImageView topNavLeftBtn;//导航条左边按钮
+	private View left_btn_bg;//导航条左边按钮
 	private TextView topNavText;//导航条文字
 	private UserPreference userPreference;
 	private FriendPreference friendPreference;
@@ -105,7 +105,7 @@ public class TimeCapsuleActivity extends AbsListViewBaseActivity implements OnCh
 		headImage2 = (ImageView) headView.findViewById(R.id.female_headimage);
 		name = (TextView) headView.findViewById(R.id.male_name);
 		name2 = (TextView) headView.findViewById(R.id.female_name);
-		topNavLeftBtn = (ImageView) findViewById(R.id.nav_left_btn);
+		left_btn_bg = findViewById(R.id.left_btn_bg);
 		topNavText = (TextView) findViewById(R.id.nav_text);
 	}
 
@@ -113,12 +113,13 @@ public class TimeCapsuleActivity extends AbsListViewBaseActivity implements OnCh
 	protected void initView() {
 		// TODO Auto-generated method stub
 		topNavText.setText("时间胶囊");
-		topNavLeftBtn.setOnClickListener(new OnClickListener() {
+		left_btn_bg.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				finish();
+				overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
 			}
 		});
 		//设置头像
@@ -174,6 +175,7 @@ public class TimeCapsuleActivity extends AbsListViewBaseActivity implements OnCh
 	public void onBackPressed() {
 		imageLoader.clearMemoryCache();
 		super.onBackPressed();
+		overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
 	}
 
 	/**
@@ -367,10 +369,11 @@ public class TimeCapsuleActivity extends AbsListViewBaseActivity implements OnCh
 					holder.capsuleImage.setVisibility(View.GONE);
 				}
 
+				holder.timespan.setText("" + singleTimeCapsuleList.get(position).getStc_voice_length() + "\"");
+				holder.time.setText(DateTimeTools
+						.DateToString(singleTimeCapsuleList.get(position).getStc_record_time()));
+
 				if (!TextUtils.isEmpty(singleTimeCapsuleList.get(position).getStc_voice())) {
-					holder.timespan.setText("" + singleTimeCapsuleList.get(position).getStc_voice_length() + "\"");
-					holder.time.setText(DateTimeTools.DateToString(singleTimeCapsuleList.get(position)
-							.getStc_record_time()));
 					holder.palyView.setVisibility(View.VISIBLE);
 				} else {
 					holder.palyView.setVisibility(View.GONE);
@@ -400,10 +403,11 @@ public class TimeCapsuleActivity extends AbsListViewBaseActivity implements OnCh
 					holder.capsuleImage.setVisibility(View.GONE);
 				}
 
+				holder.timespan.setText("" + loverTimeCapsuleList.get(position).getLtc_voice_length() + "s");
+				holder.time
+						.setText(DateTimeTools.DateToString(loverTimeCapsuleList.get(position).getLtc_record_time()));
+
 				if (!TextUtils.isEmpty(loverTimeCapsuleList.get(position).getLtc_voice())) {
-					holder.timespan.setText("" + loverTimeCapsuleList.get(position).getLtc_voice_length() + "s");
-					holder.time.setText(DateTimeTools.DateToString(loverTimeCapsuleList.get(position)
-							.getLtc_record_time()));
 					holder.palyView.setVisibility(View.VISIBLE);
 				} else {
 					holder.palyView.setVisibility(View.GONE);

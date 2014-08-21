@@ -39,6 +39,7 @@ import com.yixianqian.R;
 import com.yixianqian.base.BaseActivity;
 import com.yixianqian.base.BaseApplication;
 import com.yixianqian.config.DefaultKeys;
+import com.yixianqian.customewidget.MyAlertDialog;
 import com.yixianqian.table.LoverTimeCapsuleTable;
 import com.yixianqian.table.UserTable;
 import com.yixianqian.utils.AsyncHttpClientImageSound;
@@ -54,13 +55,13 @@ public class PublishTimeCapActivity extends BaseActivity {
 	private View tapeView;//旋转磁带
 	private ImageView progressImage1;
 	private ImageView progressImage2;
-	private ImageView topNavLeftBtn;//导航条左边按钮
 	private View nullImage;
 	private ImageView play;
 	private TextView tip;
 	private View record_view;//录音
 	private TextView recordTime;//音频时间
 	private View right_btn_bg;
+	private View left_btn_bg;
 	private String type;//类型，用于判断先拍照还是先录音
 	private String audioPath;//音频路径
 	private String photoUri;//图片地址
@@ -105,10 +106,16 @@ public class PublishTimeCapActivity extends BaseActivity {
 	}
 
 	@Override
+	public void onBackPressed() {
+		// TODO Auto-generated method stub
+		giveUpPublish();
+	}
+
+	@Override
 	protected void findViewById() {
 		// TODO Auto-generated method stub
 		capsuleImage = (ImageView) findViewById(R.id.capsule_image);
-		topNavLeftBtn = (ImageView) findViewById(R.id.nav_left_btn);
+		left_btn_bg = findViewById(R.id.left_btn_bg);
 		progressImage1 = (ImageView) findViewById(R.id.progressimage1);
 		progressImage2 = (ImageView) findViewById(R.id.progressimage2);
 		right_btn_bg = (View) findViewById(R.id.right_btn_bg);
@@ -213,12 +220,12 @@ public class PublishTimeCapActivity extends BaseActivity {
 			}
 		});
 
-		topNavLeftBtn.setOnClickListener(new OnClickListener() {
+		left_btn_bg.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				finish();
+				giveUpPublish();
 			}
 		});
 
@@ -253,6 +260,36 @@ public class PublishTimeCapActivity extends BaseActivity {
 			mRecorder = null;
 		}
 		super.onDestroy();
+	}
+
+	/**
+	 * 放弃发布
+	 */
+	private void giveUpPublish() {
+		final MyAlertDialog myAlertDialog = new MyAlertDialog(this);
+		myAlertDialog.setTitle("提示");
+		myAlertDialog.setMessage("放弃发布时间胶囊？");
+		View.OnClickListener comfirm = new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				myAlertDialog.dismiss();
+				finish();
+				overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
+			}
+		};
+		View.OnClickListener cancle = new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				myAlertDialog.dismiss();
+			}
+		};
+		myAlertDialog.setPositiveButton("确定", comfirm);
+		myAlertDialog.setNegativeButton("取消", cancle);
+		myAlertDialog.show();
 	}
 
 	/**
@@ -493,7 +530,9 @@ public class PublishTimeCapActivity extends BaseActivity {
 			public void onSuccess(int statusCode, Header[] headers, String response) {
 				// TODO Auto-generated method stub
 				if (statusCode == 200) {
-					ToastTool.showShort(PublishTimeCapActivity.this, "成功！");
+					ToastTool.showShort(PublishTimeCapActivity.this, "发布成功！");
+					startActivity(new Intent(PublishTimeCapActivity.this, TimeCapsuleActivity.class));
+					overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
 					finish();
 				}
 			}

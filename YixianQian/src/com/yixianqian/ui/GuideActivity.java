@@ -26,6 +26,7 @@ import com.yixianqian.config.DefaultKeys;
 import com.yixianqian.db.CopyDataBase;
 import com.yixianqian.server.ServerUtil;
 import com.yixianqian.utils.FriendPreference;
+import com.yixianqian.utils.LogTool;
 import com.yixianqian.utils.NetworkUtils;
 import com.yixianqian.utils.SharePreferenceUtil;
 import com.yixianqian.utils.UserPreference;
@@ -102,8 +103,8 @@ public class GuideActivity extends BaseActivity {
 						setContentView(R.layout.activity_guide);
 						findViewById();
 						initView();
-						ServerUtil.getInstance(GuideActivity.this).initUserData(GuideActivity.this, false);
 						ServerUtil.getInstance(GuideActivity.this).getHeadImagePass();
+						ServerUtil.getInstance(GuideActivity.this).initUserData(GuideActivity.this, false);
 					}
 				} else {
 					startActivity(new Intent(GuideActivity.this, MainActivity.class));

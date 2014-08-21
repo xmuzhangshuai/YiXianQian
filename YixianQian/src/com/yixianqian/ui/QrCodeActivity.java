@@ -30,7 +30,7 @@ public class QrCodeActivity extends BaseActivity {
 	private ImageView qrImageView;
 	private UserPreference userPreference;
 	Bitmap qrCodeBitmap = null;
-	private ImageView topNavLeftBtn;//导航条左边按钮
+	private View left_btn_bg;//导航条左边按钮
 	private TextView topNavText;//导航条文字
 	private View right_btn_bg;
 	private ImageView headImageView;//头像
@@ -55,7 +55,7 @@ public class QrCodeActivity extends BaseActivity {
 	protected void findViewById() {
 		// TODO Auto-generated method stub
 		qrImageView = (ImageView) findViewById(R.id.qrcode);
-		topNavLeftBtn = (ImageView) findViewById(R.id.nav_left_btn);
+		left_btn_bg = findViewById(R.id.left_btn_bg);
 		right_btn_bg = (View) findViewById(R.id.right_btn_bg);
 		topNavText = (TextView) findViewById(R.id.nav_text);
 		headImageView = (ImageView) findViewById(R.id.head_image);
@@ -110,7 +110,7 @@ public class QrCodeActivity extends BaseActivity {
 		provinceTextView.setText(userPreference.getProvinceName());
 		schoolTextView.setText(userPreference.getSchoolName());
 
-		topNavLeftBtn.setOnClickListener(new OnClickListener() {
+		left_btn_bg.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {

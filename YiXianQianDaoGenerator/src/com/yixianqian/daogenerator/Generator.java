@@ -91,21 +91,6 @@ public class Generator {
 		conversationEntity.addStringProperty("lastMessage");
 		conversationEntity.addIntProperty("newNum");
 		conversationEntity.addLongProperty("time");
-
-		/******消息元数据*****/
-		Entity messageItemEntity = schema.addEntity("MessageItem");
-		messageItemEntity.addIdProperty().autoincrement();
-		messageItemEntity.addIntProperty("messageType");
-		messageItemEntity.addStringProperty("msgContent");
-		messageItemEntity.addLongProperty("time");
-		messageItemEntity.addBooleanProperty("sendState");
-		messageItemEntity.addBooleanProperty("isCome");
-		messageItemEntity.addBooleanProperty("isNew");
-		//对话外键
-		Property messageItem_conversation = messageItemEntity.addLongProperty("conversationID").notNull().getProperty();
-		messageItemEntity.addToOne(conversationEntity, messageItem_conversation);
-		ToMany conversationToMessageItem = conversationEntity.addToMany(messageItemEntity, messageItem_conversation);
-		conversationToMessageItem.setName("messageItemList");
 		
 		
 		/******心动请求*****/

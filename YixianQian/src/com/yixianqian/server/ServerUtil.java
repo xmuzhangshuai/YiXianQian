@@ -20,6 +20,7 @@ import com.loopj.android.http.TextHttpResponseHandler;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.yixianqian.R;
 import com.yixianqian.base.BaseApplication;
+import com.yixianqian.config.Constants.Config;
 import com.yixianqian.db.TodayRecommendDbService;
 import com.yixianqian.entities.TodayRecommend;
 import com.yixianqian.jsonobject.JsonTodayRecommend;
@@ -32,6 +33,7 @@ import com.yixianqian.utils.DateTimeTools;
 import com.yixianqian.utils.FastJsonTool;
 import com.yixianqian.utils.FriendPreference;
 import com.yixianqian.utils.ImageLoaderTool;
+import com.yixianqian.utils.LogTool;
 import com.yixianqian.utils.SharePreferenceUtil;
 import com.yixianqian.utils.UserPreference;
 
@@ -105,57 +107,57 @@ public class ServerUtil {
 	/**
 	 * 获取心动请求
 	 */
-//	public void getFlipperAndRecommend(final Context context, final boolean isFinished) {
-//		//如果是单身，请求心动和今日推荐
-//		if (userPreference.getU_stateid() == 4) {
-//			final FlipperDbService flipperDbService = FlipperDbService.getInstance(context);
-//			RequestParams params = new RequestParams();
-//			params.put(UserTable.U_ID, userPreference.getU_id());
-//
-//			TextHttpResponseHandler responseHandler = new TextHttpResponseHandler("utf-8") {
-//				@Override
-//				public void onSuccess(int statusCode, Header[] headers, String response) {
-//					// TODO Auto-generated method stub
-//					if (statusCode == 200) {
-//						List<JsonFlipperRequest> jsonFlipperRequests = FastJsonTool.getObjectList(response,
-//								JsonFlipperRequest.class);
-//						if (jsonFlipperRequests != null && jsonFlipperRequests.size() > 0) {
-//							for (JsonFlipperRequest fRequest : jsonFlipperRequests) {
-//								Flipper flipper = new Flipper(null, fRequest.getU_id(), fRequest.getU_bpush_user_id(),
-//										fRequest.getU_bpush_channel_id(), fRequest.getU_nickname(),
-//										fRequest.getU_realname(), fRequest.getU_gender(), fRequest.getU_email(),
-//										fRequest.getU_large_avatar(), fRequest.getU_small_avatar(),
-//										fRequest.getU_blood_type(), fRequest.getU_constell(),
-//										fRequest.getU_introduce(), fRequest.getU_birthday(), fRequest.getTime(),
-//										fRequest.getU_age(), fRequest.getU_vocationid(), fRequest.getU_stateid(),
-//										fRequest.getU_provinceid(), fRequest.getU_cityid(), fRequest.getU_schoolid(),
-//										fRequest.getU_height(), fRequest.getU_weight(), fRequest.getU_image_pass(),
-//										fRequest.getU_salary(), false, fRequest.getU_tel(),
-//										Constants.FlipperStatus.BEINVITEED, Constants.FlipperType.FROM);
-//								flipperDbService.flipperDao.insert(flipper);
-//							}
-//						}
-//					}
-//					getTodayRecommend(context, isFinished);
-//				}
-//
-//				@Override
-//				public void onFailure(int statusCode, Header[] headers, String errorResponse, Throwable e) {
-//					// TODO Auto-generated method stub
-//					getTodayRecommend(context, isFinished);
-//				}
-//
-//			};
-//			AsyncHttpClientTool.post(context, "getflipperrequest", params, responseHandler);
-//		} else {
-//			Intent intent = new Intent(context, MainActivity.class);
-//			context.startActivity(intent);
-//			((Activity) context).overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
-//			if (isFinished) {
-//				((Activity) context).finish();
-//			}
-//		}
-//	}
+	//	public void getFlipperAndRecommend(final Context context, final boolean isFinished) {
+	//		//如果是单身，请求心动和今日推荐
+	//		if (userPreference.getU_stateid() == 4) {
+	//			final FlipperDbService flipperDbService = FlipperDbService.getInstance(context);
+	//			RequestParams params = new RequestParams();
+	//			params.put(UserTable.U_ID, userPreference.getU_id());
+	//
+	//			TextHttpResponseHandler responseHandler = new TextHttpResponseHandler("utf-8") {
+	//				@Override
+	//				public void onSuccess(int statusCode, Header[] headers, String response) {
+	//					// TODO Auto-generated method stub
+	//					if (statusCode == 200) {
+	//						List<JsonFlipperRequest> jsonFlipperRequests = FastJsonTool.getObjectList(response,
+	//								JsonFlipperRequest.class);
+	//						if (jsonFlipperRequests != null && jsonFlipperRequests.size() > 0) {
+	//							for (JsonFlipperRequest fRequest : jsonFlipperRequests) {
+	//								Flipper flipper = new Flipper(null, fRequest.getU_id(), fRequest.getU_bpush_user_id(),
+	//										fRequest.getU_bpush_channel_id(), fRequest.getU_nickname(),
+	//										fRequest.getU_realname(), fRequest.getU_gender(), fRequest.getU_email(),
+	//										fRequest.getU_large_avatar(), fRequest.getU_small_avatar(),
+	//										fRequest.getU_blood_type(), fRequest.getU_constell(),
+	//										fRequest.getU_introduce(), fRequest.getU_birthday(), fRequest.getTime(),
+	//										fRequest.getU_age(), fRequest.getU_vocationid(), fRequest.getU_stateid(),
+	//										fRequest.getU_provinceid(), fRequest.getU_cityid(), fRequest.getU_schoolid(),
+	//										fRequest.getU_height(), fRequest.getU_weight(), fRequest.getU_image_pass(),
+	//										fRequest.getU_salary(), false, fRequest.getU_tel(),
+	//										Constants.FlipperStatus.BEINVITEED, Constants.FlipperType.FROM);
+	//								flipperDbService.flipperDao.insert(flipper);
+	//							}
+	//						}
+	//					}
+	//					getTodayRecommend(context, isFinished);
+	//				}
+	//
+	//				@Override
+	//				public void onFailure(int statusCode, Header[] headers, String errorResponse, Throwable e) {
+	//					// TODO Auto-generated method stub
+	//					getTodayRecommend(context, isFinished);
+	//				}
+	//
+	//			};
+	//			AsyncHttpClientTool.post(context, "getflipperrequest", params, responseHandler);
+	//		} else {
+	//			Intent intent = new Intent(context, MainActivity.class);
+	//			context.startActivity(intent);
+	//			((Activity) context).overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+	//			if (isFinished) {
+	//				((Activity) context).finish();
+	//			}
+	//		}
+	//	}
 
 	/**
 	 * 获取今日推荐
@@ -238,6 +240,8 @@ public class ServerUtil {
 	 * @param context
 	 */
 	public void getHeadImage(final ImageView imageView, final TextView textView) {
+		LogTool.d("ServerUtil" + "获取头像地址");
+
 		RequestParams params = new RequestParams();
 		params.put(UserTable.U_ID, userPreference.getU_id());
 
@@ -259,13 +263,8 @@ public class ServerUtil {
 								userPreference.setHeadImagePassed(-1);
 							}
 						}
-						if (!TextUtils.isEmpty(map.get(UserTable.U_LARGE_AVATAR))
-								&& !TextUtils.isEmpty(map.get(UserTable.U_SMALL_AVATAR))) {
-							userPreference.setHeadImageChanged(false);
-						}
 						//显示头像
 						disPlayHeadImage(imageView, textView);
-
 					}
 				}
 			}
@@ -290,6 +289,8 @@ public class ServerUtil {
 		//如果为待审核
 		if (state == 0) {
 			textView.setVisibility(View.VISIBLE);
+			textView.setText("待审核");
+			textView.setTextColor(Color.BLACK);
 		} else if (state == -1) {
 			textView.setVisibility(View.VISIBLE);
 			textView.setText("未通过");
@@ -311,12 +312,14 @@ public class ServerUtil {
 				public void onSuccess(int statusCode, Header[] headers, String response) {
 					// TODO Auto-generated method stub
 					if (statusCode == 200) {
-						if (response.equals("1")) {
+						if (response.equals("1")) {//通过
 							userPreference.setHeadImagePassed(1);
-						} else if (response.equals("0")) {
+							userPreference.setHeadImageChanged(false);
+						} else if (response.equals("0")) {//待审核
 							userPreference.setHeadImagePassed(0);
-						} else if (response.equals("-1")) {
+						} else if (response.equals("-1")) {//未通过
 							userPreference.setHeadImagePassed(-1);
+							userPreference.setHeadImageChanged(false);
 						}
 					}
 				}
@@ -328,7 +331,6 @@ public class ServerUtil {
 			};
 			AsyncHttpClientTool.post("getuserimagepass", params, responseHandler);
 		}
-
 	}
 
 }

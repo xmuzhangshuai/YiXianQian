@@ -23,5 +23,5 @@ public class DefaultSetting {
 	public static int PAGE_NUM = 20;
 
 	//聊天每次刷新纪录条数
-	public static int LOAD_MESSAGE_COUNT = 3;
+	public static int LOAD_MESSAGE_COUNT = 20;
 }

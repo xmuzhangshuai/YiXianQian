@@ -691,10 +691,9 @@ public class ChatActivity extends BaseFragmentActivity implements OnTouchListene
 	@Override
 	public void onRefresh() {
 		// TODO Auto-generated method stub
-		List<EMMessage> messages;
 		int position = adapter.getCount();
 		if (position > 0) {
-			messages = emConversation.loadMoreMsgFromDB(adapter.getItem(0).getMsgId(), DefaultSetting.PAGE_NUM);
+			emConversation.loadMoreMsgFromDB(adapter.getItem(0).getMsgId(), DefaultSetting.LOAD_MESSAGE_COUNT);
 			adapter.notifyDataSetChanged();
 			mMsgListView.setSelection(adapter.getCount() - position - 1);
 		}

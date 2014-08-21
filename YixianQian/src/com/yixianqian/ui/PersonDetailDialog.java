@@ -361,14 +361,6 @@ public class PersonDetailDialog extends DialogFragment {
 				ToastTool.showLong(getActivity(), "恭喜！您和" + friendPreference.getName() + "成为了情侣！");
 				userPreference.setU_stateid(2);
 
-				//删除心动关系，即环信好友
-				try {
-					EMContactManager.getInstance().deleteContact("" + friendPreference.getF_id());
-				} catch (EaseMobException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-
 				PersonDetailDialog.this.dismiss();
 				getActivity().startActivity(new Intent(getActivity(), MainActivity.class));
 				getActivity().overridePendingTransition(R.anim.abc_fade_in, R.anim.push_right_out);

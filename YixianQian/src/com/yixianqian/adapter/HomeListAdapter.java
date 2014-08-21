@@ -32,7 +32,6 @@ import com.yixianqian.entities.Conversation;
 import com.yixianqian.utils.AsyncHttpClientImageSound;
 import com.yixianqian.utils.ImageLoaderTool;
 import com.yixianqian.utils.ImageTools;
-import com.yixianqian.utils.LogTool;
 
 public class HomeListAdapter extends BaseAdapter {
 	private LayoutInflater mInflater;

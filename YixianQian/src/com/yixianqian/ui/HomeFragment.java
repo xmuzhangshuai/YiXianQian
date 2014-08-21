@@ -26,7 +26,6 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMContactManager;
 import com.easemob.exceptions.EaseMobException;
 import com.loopj.android.http.RequestParams;
@@ -268,7 +267,7 @@ public class HomeFragment extends BaseV4Fragment {
 									e.printStackTrace();
 								}
 								//删除会话
-								EMChatManager.getInstance().deleteConversation("" + friendPreference.getF_id());
+								//								EMChatManager.getInstance().deleteConversation("" + friendPreference.getF_id());
 
 								friendPreference.clear();
 								userPreference.setU_stateid(4);
@@ -323,8 +322,17 @@ public class HomeFragment extends BaseV4Fragment {
 								currentItem = -1;
 								new SendNotifyTask(userPreference.getName() + "和您解除了情侣关系", userPreference.getName(),
 										friendPreference.getBpush_UserID()).send();
+
+								//删除好友
+								try {
+									EMContactManager.getInstance().deleteContact("" + friendPreference.getF_id());
+								} catch (EaseMobException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
+
 								//删除会话
-								EMChatManager.getInstance().deleteConversation("" + friendPreference.getF_id());
+								//EMChatManager.getInstance().deleteConversation("" + friendPreference.getF_id());
 								friendPreference.clear();
 								userPreference.setU_stateid(4);
 							}
