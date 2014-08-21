@@ -175,7 +175,7 @@
         <!-- 自定义的alertdialog -->
         <activity
             android:name="com.yixianqian.customewidget.ChatAlertDialog"
-            android:theme="@style/MyDialogStyle" >
+            android:theme="@style/ChatDialogStyle" >
         </activity>
 
         <!-- 显示下载大图页面 -->
@@ -270,7 +270,7 @@
             android:screenOrientation="portrait" >
         </activity>
 
-        <!-- 设置页面 -->
+        <!-- 百度地图页面 -->
         <activity
             android:name="com.yixianqian.ui.BaiduMapActivity"
             android:screenOrientation="portrait" >

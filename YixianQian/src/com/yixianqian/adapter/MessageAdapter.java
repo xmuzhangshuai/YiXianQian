@@ -152,6 +152,7 @@ public class MessageAdapter extends BaseAdapter {
 		return 12;
 	}
 
+	@SuppressLint("InflateParams")
 	private View createViewByMessage(EMMessage message, int position) {
 		switch (message.getType()) {
 		case LOCATION:
