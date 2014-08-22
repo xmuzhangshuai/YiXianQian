@@ -30,7 +30,7 @@ import com.yixianqian.R;
 import com.yixianqian.base.AbsListViewBaseActivity;
 import com.yixianqian.base.BaseApplication;
 import com.yixianqian.config.Constants;
-import com.yixianqian.config.DefaultSetting;
+import com.yixianqian.config.Constants.Config;
 import com.yixianqian.jsonobject.JsonSingleTimeCapsule;
 import com.yixianqian.jsonobject.JsonUser;
 import com.yixianqian.table.SingleTimeCapsuleTable;
@@ -198,7 +198,7 @@ public class PersonTimeCapsuleActivity extends AbsListViewBaseActivity {
 					if (temp != null) {
 						//如果是首次获取数据
 						if (page == 0) {
-							if (temp.size() < DefaultSetting.PAGE_NUM) {
+							if (temp.size() < Config.PAGE_NUM) {
 								pageNow = -1;
 							}
 							singleTimeCapsuleList = new LinkedList<JsonSingleTimeCapsule>();
@@ -206,7 +206,7 @@ public class PersonTimeCapsuleActivity extends AbsListViewBaseActivity {
 						}
 						//如果是获取更多
 						else if (page > 0) {
-							if (temp.size() < DefaultSetting.PAGE_NUM) {
+							if (temp.size() < Config.PAGE_NUM) {
 								pageNow = -1;
 								ToastTool.showShort(PersonTimeCapsuleActivity.this, "没有更多了！");
 							}

@@ -16,12 +16,12 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 
-import com.yixianqian.config.DefaultSetting;
+import com.yixianqian.config.Constants;
 
 public class HttpUtil {
 	// 创建HttpClient对象
 	public static HttpClient httpClient;;
-	public static final String BASE_URL = DefaultSetting.DoMainName + "YXQServer/";
+	public static final String BASE_URL = Constants.DoMainName + "YXQServer/";
 
 	/**
 	 *

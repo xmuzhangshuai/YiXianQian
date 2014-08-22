@@ -109,6 +109,8 @@ public class HomeFragment extends BaseV4Fragment {
 		} else {
 			showNewMsgTip(false);
 		}
+
+		refresh();
 	}
 
 	@Override
@@ -197,7 +199,7 @@ public class HomeFragment extends BaseV4Fragment {
 	}
 
 	/**
-	 * 刷新页面
+	 * 刷新对话列表
 	 */
 	public void refresh() {
 		try {
@@ -206,9 +208,12 @@ public class HomeFragment extends BaseV4Fragment {
 				public void run() {
 					conversationList.clear();
 					conversationList.addAll(conversationDbService.conversationDao.loadAll());
-					//					mAdapter = new HomeListAdapter(getActivity(), mHomeListView, conversationList);
-					//					mHomeListView.setAdapter(mAdapter);
 					mAdapter.notifyDataSetChanged();
+					if (conversationList.size() < 1) {
+						mEmpty.setVisibility(View.VISIBLE);
+					} else {
+						mEmpty.setVisibility(View.GONE);
+					}
 				}
 			});
 		} catch (Exception e) {
@@ -217,7 +222,7 @@ public class HomeFragment extends BaseV4Fragment {
 	}
 
 	/**
-	 * 更新对话列表
+	 * 更新对话列表内容
 	 */
 	public void refreshConversation() {
 		mAdapter = new HomeListAdapter(getActivity(), conversationList);
@@ -320,6 +325,7 @@ public class HomeFragment extends BaseV4Fragment {
 								conversationList.remove(currentItem);
 								mAdapter.notifyDataSetChanged();
 								currentItem = -1;
+
 								new SendNotifyTask(userPreference.getName() + "和您解除了情侣关系", userPreference.getName(),
 										friendPreference.getBpush_UserID()).send();
 

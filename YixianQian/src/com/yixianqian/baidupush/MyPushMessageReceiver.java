@@ -1,15 +1,14 @@
 package com.yixianqian.baidupush;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import org.apache.http.Header;
 
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Handler;
-import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.text.TextUtils;
@@ -17,17 +16,23 @@ import android.text.TextUtils;
 import com.baidu.android.pushservice.PushConstants;
 import com.baidu.android.pushservice.PushManager;
 import com.baidu.frontia.api.FrontiaPushMessageReceiver;
+import com.loopj.android.http.RequestParams;
+import com.loopj.android.http.TextHttpResponseHandler;
 import com.yixianqian.R;
 import com.yixianqian.base.BaseApplication;
 import com.yixianqian.config.Constants;
 import com.yixianqian.db.ConversationDbService;
 import com.yixianqian.jsonobject.JsonMessage;
+import com.yixianqian.table.UserTable;
 import com.yixianqian.ui.MainActivity;
 import com.yixianqian.ui.VertifyToChatActivity;
+import com.yixianqian.utils.AsyncHttpClientTool;
+import com.yixianqian.utils.CommonTools;
 import com.yixianqian.utils.FastJsonTool;
 import com.yixianqian.utils.FriendPreference;
 import com.yixianqian.utils.LogTool;
 import com.yixianqian.utils.NetworkUtils;
+import com.yixianqian.utils.PreferenceUtils;
 import com.yixianqian.utils.ToastTool;
 import com.yixianqian.utils.UserPreference;
 
@@ -37,16 +42,9 @@ public class MyPushMessageReceiver extends FrontiaPushMessageReceiver {
 	public static final String MESSAGE_TYPE = "messageType";
 	public static final int NOTIFY_ID = 0x000;
 	public static final String RESPONSE = "response";
-	public static ArrayList<EventHandler> ehList = new ArrayList<EventHandler>();
 	private UserPreference userPreference;
 	private FriendPreference friendPreference;
 	private ConversationDbService conversationDbService;
-
-	public static abstract interface EventHandler {
-		public abstract void onMessage(JsonMessage jsonMessage);
-
-		public abstract void onNotify(String title, String content);
-	}
 
 	/**
 	 * 调用PushManager.startWork后，sdk将对push
@@ -103,7 +101,7 @@ public class MyPushMessageReceiver extends FrontiaPushMessageReceiver {
 
 		JsonMessage jsonMessage = FastJsonTool.getObject(message, JsonMessage.class);
 		if (jsonMessage != null) {
-			parseMessage(jsonMessage);
+			parseMessage(jsonMessage, context);
 		}
 	}
 
@@ -111,45 +109,51 @@ public class MyPushMessageReceiver extends FrontiaPushMessageReceiver {
 	 * 装换消息
 	 * @param msg
 	 */
-	private void parseMessage(JsonMessage msg) {
+	private void parseMessage(JsonMessage msg, Context context) {
 		//判断是否开启声音
-		SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(BaseApplication
-				.getInstance());
-		boolean messageSound = sharedPreferences.getBoolean("messageSound", true);
-		if (messageSound) {
+		if (PreferenceUtils.getInstance(BaseApplication.getInstance()).getSettingMsgSound()) {
 			BaseApplication.getInstance().getMessagePlayer().start();
 		}
-
 		int type = msg.getType();
 		switch (type) {
-		//		//普通消息
-		//		case Constants.MessageType.MESSAGE_TYPE_TEXT:
-		//			chatMessage(msg);
-		//			break;
-		//		//图片
-		//		case Constants.MessageType.MESSAGE_TYPE_IMG:
-		//
-		//			break;
-		//		//声音
-		//		case Constants.MessageType.MESSAGE_TYPE_SOUND:
-		//
-		//			break;
 		//心动请求
 		case Constants.MessageType.MESSAGE_TYPE_FLIPPER_REQUEEST:
-
+			handleFlipperRequest(context, msg.getMessageContent());
 			break;
 		//也心动
 		case Constants.MessageType.MESSAGE_TYPE_FLIPPER_TO:
 			flipperTo(msg.getMessageContent());
 			break;
 		//情侣请求
-		case Constants.MessageType.MESSAGE_TYPE_LOVER:
+		case Constants.MessageType.MESSAGE_TYPE_LOVE_REQUEST:
 			buildLove(msg.getMessageContent());
 			break;
 		default:
 			break;
 		}
 
+	}
+
+	/**
+	 * 处理心动请求
+	 */
+	private void handleFlipperRequest(Context context, String msgContent) {
+		BaseApplication application = BaseApplication.getInstance();
+
+		//如果程序没有在运行，则显示通知
+		if (!CommonTools.isAppRunning(context)) {
+			//通知
+			NotificationCompat.Builder builder = new NotificationCompat.Builder(application);
+			builder.setSmallIcon(R.drawable.ic_launcher).setContentTitle("怦然心动").setContentText("有人对你砰然心动，快来看看是谁吧~")
+					.setAutoCancel(true).setTicker("怦然心动！").setDefaults(Notification.DEFAULT_ALL);
+			Intent resultIntent = new Intent(application, MainActivity.class);
+			TaskStackBuilder stackBuilder = TaskStackBuilder.create(application);
+			stackBuilder.addParentStack(MainActivity.class);
+			stackBuilder.addNextIntent(resultIntent);
+			PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+			builder.setContentIntent(resultPendingIntent);
+			application.getNotificationManager().notify(NOTIFY_ID, builder.build());// 通知一下
+		}
 	}
 
 	/**
@@ -223,12 +227,13 @@ public class MyPushMessageReceiver extends FrontiaPushMessageReceiver {
 		// TODO Auto-generated method stub
 		if (errorCode == 0) {
 			userPreference = BaseApplication.getInstance().getUserPreference();
-			if (!TextUtils.isEmpty(userId) && !TextUtils.isEmpty(channelId) && !TextUtils.isEmpty(appid)) {
+			if (!userPreference.getBpush_UserID().equals(userId)) {
 				userPreference.setAppID(appid);
 				userPreference.setBpush_ChannelID(channelId);
 				userPreference.setBpush_UserID(userId);
-			}
 
+				updateBpush(userId, channelId);
+			}
 		} else {
 			if (NetworkUtils.isNetworkAvailable(context)) {
 				if (errorCode == 30607) {
@@ -252,6 +257,40 @@ public class MyPushMessageReceiver extends FrontiaPushMessageReceiver {
 			} else {
 				ToastTool.showLong(context, "网络异常");
 			}
+		}
+	}
+
+	/**
+	 * 更新百度推送参数
+	 */
+	private void updateBpush(String userID, String channelID) {
+		if (!TextUtils.isEmpty(userPreference.getU_password()) && userPreference.getU_id() != -1) {
+			RequestParams params = new RequestParams();
+			params.put(UserTable.U_ID, userPreference.getU_id());
+			params.put(UserTable.U_PASSWORD, userPreference.getU_password());
+			params.put(UserTable.U_BPUSH_USER_ID, userID);
+			params.put(UserTable.U_BPUSH_CHANNEL_ID, channelID);
+			TextHttpResponseHandler responseHandler = new TextHttpResponseHandler() {
+
+				@Override
+				public void onSuccess(int statusCode, Header[] headers, String response) {
+					// TODO Auto-generated method stub
+					if (response.endsWith("-1")) {
+						LogTool.e("修改百度推送参数", "服务器错误");
+					} else if (response.endsWith("1")) {
+						LogTool.d("修改百度推送参数", "修改成功");
+					} else if (response.endsWith("2")) {
+						LogTool.e("修改百度推送参数", "密码不正确");
+					}
+				}
+
+				@Override
+				public void onFailure(int statusCode, Header[] headers, String errorResponse, Throwable e) {
+					// TODO Auto-generated method stub
+					LogTool.e("修改百度推送参数", "服务器错误");
+				}
+			};
+			AsyncHttpClientTool.post("updateuserbc", params, responseHandler);
 		}
 	}
 

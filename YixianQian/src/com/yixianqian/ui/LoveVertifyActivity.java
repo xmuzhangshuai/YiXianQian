@@ -336,11 +336,6 @@ public class LoveVertifyActivity extends BaseActivity {
 								friendpreference.clear();
 								Map<String, String> map = FastJsonTool.getObject(response, Map.class);
 								if (map != null) {
-									//通知对方
-									//	JsonMessage jsonMessage = new JsonMessage(userPreference.getU_tel(),
-									//	Constants.MessageType.MESSAGE_TYPE_FLIPPER_TO);
-									//	new SendMsgAsyncTask(FastJsonTool.createJsonString(jsonMessage),
-									//	map.get(UserTable.U_BPUSH_USER_ID)).send();
 
 									//同意username的好友请求
 									try {

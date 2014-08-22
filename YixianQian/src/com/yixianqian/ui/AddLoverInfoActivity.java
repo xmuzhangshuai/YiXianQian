@@ -180,7 +180,7 @@ public class AddLoverInfoActivity extends BaseActivity {
 							} else {
 								//给对方发送消息
 								JsonMessage jsonMessage = new JsonMessage(userPreference.getU_tel(),
-										Constants.MessageType.MESSAGE_TYPE_LOVER);
+										Constants.MessageType.MESSAGE_TYPE_LOVE_REQUEST);
 								new SendMsgAsyncTask(FastJsonTool.createJsonString(jsonMessage),
 										jsonUser.getU_bpush_user_id()).send();
 								userPreference.setLoveRequest(true);

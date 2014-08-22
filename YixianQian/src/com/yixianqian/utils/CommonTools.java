@@ -15,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.yixianqian.R;
+import com.yixianqian.config.Constants;
 import com.yixianqian.config.DefaultKeys;
 
 /**   
@@ -31,6 +32,27 @@ import com.yixianqian.config.DefaultKeys;
 *    
 */
 public class CommonTools {
+
+	/**
+	* 判断程序是否在运行
+	* @param context
+	* @return
+	*/
+	public static boolean isAppRunning(Context context) {
+		boolean isAppRunning = false;
+		ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+		List<RunningTaskInfo> list = am.getRunningTasks(100);
+		for (RunningTaskInfo info : list) {
+			if (info.topActivity.getPackageName().equals(Constants.PACKAGENAME)
+					&& info.baseActivity.getPackageName().equals(Constants.PACKAGENAME)) {
+				isAppRunning = true;
+				//find it, break 
+				break;
+			}
+		}
+		return isAppRunning;
+	}
+
 	/**
 	 * 检测Sdcard是否存在
 	 * 

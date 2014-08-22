@@ -89,8 +89,14 @@ public class LoginActivity extends BaseActivity {
 	@Override
 	protected void initView() {
 		// TODO Auto-generated method stub
-		SIMCardInfo siminfo = new SIMCardInfo(LoginActivity.this);
-		mPhoneView.setText(siminfo.getNativePhoneNumber());
+		String loginedPhone = userPreference.getU_tel();
+		if (!TextUtils.isEmpty(loginedPhone)) {
+			mPhoneView.setText(loginedPhone);
+		} else {
+			SIMCardInfo siminfo = new SIMCardInfo(LoginActivity.this);
+			String number = siminfo.getNativePhoneNumber();
+			mPhoneView.setText(number);
+		}
 
 		topNavigation.setText("µÇÂ¼");
 		leftImageButton.setOnClickListener(new OnClickListener() {

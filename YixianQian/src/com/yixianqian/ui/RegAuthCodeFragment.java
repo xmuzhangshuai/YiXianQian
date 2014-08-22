@@ -27,7 +27,7 @@ import com.yixianqian.R;
 import com.yixianqian.base.BaseApplication;
 import com.yixianqian.base.BaseV4Fragment;
 import com.yixianqian.config.Constants;
-import com.yixianqian.config.DefaultSetting;
+import com.yixianqian.config.Constants.Config;
 import com.yixianqian.table.UserTable;
 import com.yixianqian.utils.HttpUtil;
 import com.yixianqian.utils.LogTool;
@@ -94,7 +94,7 @@ public class RegAuthCodeFragment extends BaseV4Fragment {
 	protected void initView() {
 		// TODO Auto-generated method stub
 		topNavigation.setText("ÃÓ–¥—È÷§¬Î");
-		recLen = DefaultSetting.AUTN_CODE_TIME;
+		recLen = Config.AUTN_CODE_TIME;
 		authCodeButton.setEnabled(false);
 		rightImageButton.setEnabled(false);
 

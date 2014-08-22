@@ -5,10 +5,10 @@ import android.content.Context;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
-import com.yixianqian.config.DefaultSetting;
+import com.yixianqian.config.Constants;
 
 public class AsyncHttpClientTool {
-	private static final String BASE_URL = DefaultSetting.DoMainName+"YXQServer/";
+	private static final String BASE_URL = Constants.DoMainName+"YXQServer/";
 
 	private static AsyncHttpClient client = new AsyncHttpClient();
 

@@ -72,7 +72,7 @@ import com.yixianqian.adapter.FacePageAdeapter;
 import com.yixianqian.adapter.MessageAdapter;
 import com.yixianqian.base.BaseApplication;
 import com.yixianqian.base.BaseFragmentActivity;
-import com.yixianqian.config.DefaultSetting;
+import com.yixianqian.config.Constants.Config;
 import com.yixianqian.customewidget.CirclePageIndicator;
 import com.yixianqian.customewidget.JazzyViewPager;
 import com.yixianqian.customewidget.JazzyViewPager.TransitionEffect;
@@ -545,7 +545,7 @@ public class ChatActivity extends BaseFragmentActivity implements OnTouchListene
 	private void initFacePage() {
 		// TODO Auto-generated method stub
 		List<View> lv = new ArrayList<View>();
-		for (int i = 0; i < DefaultSetting.NUM_PAGE; ++i)
+		for (int i = 0; i < Config.NUM_PAGE; ++i)
 			lv.add(getGridView(i));
 		FacePageAdeapter adapter = new FacePageAdeapter(lv, faceViewPager);
 		faceViewPager.setAdapter(adapter);
@@ -599,7 +599,7 @@ public class ChatActivity extends BaseFragmentActivity implements OnTouchListene
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 				// TODO Auto-generated method stub
-				if (arg2 == DefaultSetting.NUM) {// 删除键的位置
+				if (arg2 == Config.NUM) {// 删除键的位置
 					int selection = msgEt.getSelectionStart();
 					String text = msgEt.getText().toString();
 					if (selection > 0) {
@@ -613,7 +613,7 @@ public class ChatActivity extends BaseFragmentActivity implements OnTouchListene
 						msgEt.getText().delete(selection - 1, selection);
 					}
 				} else {
-					int count = currentPage * DefaultSetting.NUM + arg2;
+					int count = currentPage * Config.NUM + arg2;
 					// 注释的部分，在EditText中显示字符串
 					// String ori = msgEt.getText().toString();
 					// int index = msgEt.getSelectionStart();
@@ -693,7 +693,7 @@ public class ChatActivity extends BaseFragmentActivity implements OnTouchListene
 		// TODO Auto-generated method stub
 		int position = adapter.getCount();
 		if (position > 0) {
-			emConversation.loadMoreMsgFromDB(adapter.getItem(0).getMsgId(), DefaultSetting.LOAD_MESSAGE_COUNT);
+			emConversation.loadMoreMsgFromDB(adapter.getItem(0).getMsgId(), Config.LOAD_MESSAGE_COUNT);
 			adapter.notifyDataSetChanged();
 			mMsgListView.setSelection(adapter.getCount() - position - 1);
 		}

@@ -5,12 +5,36 @@ import java.util.List;
 
 public class Constants {
 
-	/**
-	 ******************************************* 参数设置信息结束 ******************************************
-	 */
+	//包名
+	public static final String PACKAGENAME = "com.yixianqian";
+
+	//域名或者是IP
+	public static String DoMainName = "http://192.168.1.102/";
 
 	public static class Config {
+		//是否处于开发模式
 		public static final boolean DEVELOPER_MODE = true;
+
+		//默认每天推荐用户数量
+		public static int RECOMMEND_COUNT = 4;
+
+		//接受验证码时间为90s
+		public static int AUTN_CODE_TIME = 10;
+
+		//照片缩小比例
+		public static final int SCALE = 5;
+
+		// 总共有多少页
+		public static final int NUM_PAGE = 6;
+
+		// 每页20个表情,还有最后一个删除button
+		public static int NUM = 20;
+
+		//时间胶囊每页显示条数
+		public static int PAGE_NUM = 20;
+
+		//聊天每次刷新纪录条数
+		public static int LOAD_MESSAGE_COUNT = 20;
 	}
 
 	public static class UserStateType {
@@ -62,11 +86,11 @@ public class Constants {
 
 	public static class MessageType {
 		//心动
-		public static final int MESSAGE_TYPE_FLIPPER_REQUEEST = 6;
+		public static final int MESSAGE_TYPE_FLIPPER_REQUEEST = 1;
 		//同意心动
-		public static final int MESSAGE_TYPE_FLIPPER_TO = 7;
+		public static final int MESSAGE_TYPE_FLIPPER_TO = 2;
 		//情侣
-		public static final int MESSAGE_TYPE_LOVER = 8;
+		public static final int MESSAGE_TYPE_LOVE_REQUEST = 3;
 	}
 
 	public static class FlipperStatus {

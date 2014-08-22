@@ -4,16 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import com.yixianqian.R;
-import com.yixianqian.base.BaseApplication;
-import com.yixianqian.config.DefaultSetting;
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+
+import com.yixianqian.R;
+import com.yixianqian.base.BaseApplication;
+import com.yixianqian.config.Constants.Config;
 
 public class FaceAdapter extends BaseAdapter {
 
@@ -38,7 +38,7 @@ public class FaceAdapter extends BaseAdapter {
 
 	@Override
 	public int getCount() {
-		return DefaultSetting.NUM + 1;
+		return Config.NUM + 1;
 	}
 
 	@Override
@@ -65,11 +65,11 @@ public class FaceAdapter extends BaseAdapter {
 			viewHolder = (ViewHolder) convertView.getTag();
 		}
 
-		if (position == DefaultSetting.NUM) {
+		if (position == Config.NUM) {
 			viewHolder.faceIV.setImageResource(R.drawable.emotion_del_selector);
 			viewHolder.faceIV.setBackgroundDrawable(null);
 		} else {
-			int count = DefaultSetting.NUM * currentPage + position;
+			int count = Config.NUM * currentPage + position;
 			if (count < faceList.size()) {
 				viewHolder.faceIV.setImageResource(faceList.get(count));
 			} else {

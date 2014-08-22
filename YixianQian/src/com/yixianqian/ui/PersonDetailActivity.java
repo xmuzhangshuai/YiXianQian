@@ -19,14 +19,17 @@ import com.easemob.chat.EMContactManager;
 import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.TextHttpResponseHandler;
 import com.yixianqian.R;
+import com.yixianqian.baidupush.SendMsgAsyncTask;
 import com.yixianqian.base.BaseApplication;
 import com.yixianqian.base.BaseFragmentActivity;
 import com.yixianqian.config.Constants;
+import com.yixianqian.config.Constants.MessageType;
 import com.yixianqian.customewidget.MyAlertDialog;
 import com.yixianqian.db.FlipperDbService;
 import com.yixianqian.db.ProvinceDbService;
 import com.yixianqian.db.SchoolDbService;
 import com.yixianqian.entities.Flipper;
+import com.yixianqian.jsonobject.JsonMessage;
 import com.yixianqian.jsonobject.JsonUser;
 import com.yixianqian.table.FlipperRequestTable;
 import com.yixianqian.table.UserTable;
@@ -361,6 +364,11 @@ public class PersonDetailActivity extends BaseFragmentActivity implements OnClic
 			flipper.setStatus(Constants.FlipperStatus.INVITE);
 			flipper.setType(Constants.FlipperType.TO);
 			flipperDbService.flipperDao.update(flipper);
+
+			//发给对方通知
+			JsonMessage jsonMessage = new JsonMessage(userPreference.getName() + "对您怦然心动",
+					MessageType.MESSAGE_TYPE_FLIPPER_REQUEEST);
+			new SendMsgAsyncTask(FastJsonTool.createJsonString(jsonMessage), flipper.getBpushUserID()).send();
 		} else {
 			getUser(flipperId);
 		}
@@ -391,6 +399,12 @@ public class PersonDetailActivity extends BaseFragmentActivity implements OnClic
 								jsonUser.getU_weight(), jsonUser.getU_image_pass(), jsonUser.getU_salary(), true,
 								jsonUser.getU_tel(), Constants.FlipperStatus.INVITE, Constants.FlipperType.TO);
 						flipperDbService.flipperDao.insert(flipper);
+
+						//发给对方通知
+						JsonMessage jsonMessage = new JsonMessage(userPreference.getName() + "对您怦然心动",
+								MessageType.MESSAGE_TYPE_FLIPPER_REQUEEST);
+						new SendMsgAsyncTask(FastJsonTool.createJsonString(jsonMessage), flipper.getBpushUserID())
+								.send();
 					}
 				}
 			}

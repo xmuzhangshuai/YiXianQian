@@ -22,7 +22,7 @@ import com.loopj.android.http.TextHttpResponseHandler;
 import com.yixianqian.R;
 import com.yixianqian.base.BaseActivity;
 import com.yixianqian.base.BaseApplication;
-import com.yixianqian.config.DefaultSetting;
+import com.yixianqian.config.Constants.Config;
 import com.yixianqian.table.UserTable;
 import com.yixianqian.utils.AsyncHttpClientTool;
 import com.yixianqian.utils.ToastTool;
@@ -77,7 +77,7 @@ public class AuthCodeActivity extends BaseActivity {
 	protected void initView() {
 		// TODO Auto-generated method stub
 		topNavigation.setText("ÃÓ–¥—È÷§¬Î");
-		recLen = DefaultSetting.AUTN_CODE_TIME;
+		recLen = Config.AUTN_CODE_TIME;
 		authCodeButton.setEnabled(false);
 		rightImageButton.setEnabled(false);
 		leftImageButton.setOnClickListener(new OnClickListener() {
