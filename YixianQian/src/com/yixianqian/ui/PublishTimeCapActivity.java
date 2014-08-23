@@ -43,6 +43,7 @@ import com.yixianqian.customewidget.MyAlertDialog;
 import com.yixianqian.table.LoverTimeCapsuleTable;
 import com.yixianqian.table.UserTable;
 import com.yixianqian.utils.AsyncHttpClientImageSound;
+import com.yixianqian.utils.FileSizeUtil;
 import com.yixianqian.utils.FriendPreference;
 import com.yixianqian.utils.ImageTools;
 import com.yixianqian.utils.LogTool;
@@ -328,22 +329,13 @@ public class PublishTimeCapActivity extends BaseActivity {
 	 * 显示图片
 	 */
 	public void showPicture() {
-		/** 
-		 * 获取图片的旋转角度，有些系统把拍照的图片旋转了，有的没有旋转 
-		 */
-		int degree = ImageTools.readPictureDegree(photoUri);
-
-		//获取缩略图显示到屏幕上
-		BitmapFactory.Options opts = new BitmapFactory.Options();
-		opts.inSampleSize = 2;
-		Bitmap bitmap = BitmapFactory.decodeFile(photoUri, opts);
-		//把图片旋转为正的方向
-		bitmap = ImageTools.rotaingImageView(degree, bitmap);
-		capsuleImage.setImageBitmap(bitmap);
-
 		String tempPath = Environment.getExternalStorageDirectory() + "/yixianqian/image";
 		String photoName = "timeCapsule.jpeg";
-		File file = ImageTools.savePhotoToSDCard(bitmap, tempPath, photoName, 20);
+		File file = ImageTools.compressForFile(tempPath, photoName, photoUri, 100);
+
+		Bitmap uploadBitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
+		capsuleImage.setImageBitmap(uploadBitmap);
+
 		if (file != null) {
 			photoUri = file.getAbsolutePath();
 		}
@@ -512,6 +504,7 @@ public class PublishTimeCapActivity extends BaseActivity {
 		}
 		if (!TextUtils.isEmpty(photoUri)) {
 			photoFile = new File(photoUri);
+			LogTool.e("时间胶囊图片大小", "" + FileSizeUtil.getFileOrFilesSize(photoUri, FileSizeUtil.SIZETYPE_KB) + "KB");
 		}
 
 		RequestParams params = new RequestParams();
