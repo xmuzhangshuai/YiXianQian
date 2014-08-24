@@ -68,6 +68,7 @@ public class GuideActivity extends BaseActivity {
 
 		/************初始化友盟服务**************/
 		MobclickAgent.updateOnlineConfig(this);
+		BaseApplication.getInstance().getFeedbackAgent(this).sync();
 
 		//获取定位
 		initLocation();

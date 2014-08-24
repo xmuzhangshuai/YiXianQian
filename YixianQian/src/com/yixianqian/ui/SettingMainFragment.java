@@ -9,6 +9,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.umeng.fb.FeedbackAgent;
 import com.yixianqian.R;
 import com.yixianqian.base.BaseApplication;
 import com.yixianqian.base.BaseV4Fragment;
@@ -43,6 +44,7 @@ public class SettingMainFragment extends BaseV4Fragment implements OnClickListen
 	private UserPreference userPreference;
 	private FriendPreference friendPreference;
 	private TextView cacheSize;
+	FeedbackAgent agent;
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
@@ -208,7 +210,9 @@ public class SettingMainFragment extends BaseV4Fragment implements OnClickListen
 			clearCache();
 			break;
 		case R.id.setting_feedback:
-
+			agent = BaseApplication.getInstance().getFeedbackAgent(getActivity());
+			agent.startFeedbackActivity();
+			getActivity().overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
 			break;
 		case R.id.setting_check_update:
 
