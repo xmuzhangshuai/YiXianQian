@@ -67,7 +67,6 @@ public class BaseApplication extends FrontiaApplication {
 	public static Context applicationContext;
 	private String huanXinUserName;
 	private String huanxinPassword;
-	private FeedbackAgent agent;
 
 	public synchronized static BaseApplication getInstance() {
 		return myApplication;
@@ -200,13 +199,6 @@ public class BaseApplication extends FrontiaApplication {
 			}
 		}
 		return processName;
-	}
-
-	public FeedbackAgent getFeedbackAgent(Context context) {
-		if (agent == null) {
-			agent = new FeedbackAgent(context);
-		}
-		return agent;
 	}
 
 	/**

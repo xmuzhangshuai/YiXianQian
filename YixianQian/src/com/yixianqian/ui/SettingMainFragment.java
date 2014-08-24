@@ -1,6 +1,8 @@
 package com.yixianqian.ui;
 
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
@@ -10,6 +12,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.umeng.fb.FeedbackAgent;
+import com.umeng.update.UmengUpdateAgent;
+import com.umeng.update.UmengUpdateListener;
+import com.umeng.update.UpdateResponse;
+import com.umeng.update.UpdateStatus;
 import com.yixianqian.R;
 import com.yixianqian.base.BaseApplication;
 import com.yixianqian.base.BaseV4Fragment;
@@ -17,6 +23,7 @@ import com.yixianqian.customewidget.MyAlertDialog;
 import com.yixianqian.db.FlipperDbService;
 import com.yixianqian.utils.FileSizeUtil;
 import com.yixianqian.utils.FriendPreference;
+import com.yixianqian.utils.ToastTool;
 import com.yixianqian.utils.UserPreference;
 
 /**
@@ -44,6 +51,7 @@ public class SettingMainFragment extends BaseV4Fragment implements OnClickListen
 	private UserPreference userPreference;
 	private FriendPreference friendPreference;
 	private TextView cacheSize;
+	private TextView version;
 	FeedbackAgent agent;
 
 	@Override
@@ -86,6 +94,7 @@ public class SettingMainFragment extends BaseV4Fragment implements OnClickListen
 		settingAbout = rootView.findViewById(R.id.setting_about);
 		settingLogout = rootView.findViewById(R.id.setting_logout);
 		cacheSize = (TextView) rootView.findViewById(R.id.cache_size);
+		version = (TextView) rootView.findViewById(R.id.version);
 	}
 
 	@Override
@@ -105,6 +114,8 @@ public class SettingMainFragment extends BaseV4Fragment implements OnClickListen
 		cacheSize.setText(""
 				+ FileSizeUtil.getFileOrFilesSize(imageLoader.getDiskCache().getDirectory().getAbsolutePath(),
 						FileSizeUtil.SIZETYPE_MB) + "MB");
+
+		version.setText(getVersion());
 
 		settingNewMsg.setOnClickListener(this);
 		settingChat.setOnClickListener(this);
@@ -190,6 +201,27 @@ public class SettingMainFragment extends BaseV4Fragment implements OnClickListen
 		myAlertDialog.show();
 	}
 
+	/**
+	 * 获取本部名称
+	 * @return
+	 * @throws Exception
+	 */
+	/**
+	 * 获取版本号
+	 * @return 当前应用的版本号
+	 */
+	public String getVersion() {
+		try {
+			PackageManager manager = getActivity().getPackageManager();
+			PackageInfo info = manager.getPackageInfo(getActivity().getPackageName(), 0);
+			String version = info.versionName;
+			return this.getString(R.string.version_name) + version;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return this.getString(R.string.can_not_find_version_name);
+		}
+	}
+
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
@@ -210,12 +242,32 @@ public class SettingMainFragment extends BaseV4Fragment implements OnClickListen
 			clearCache();
 			break;
 		case R.id.setting_feedback:
-			agent = BaseApplication.getInstance().getFeedbackAgent(getActivity());
+			agent = new FeedbackAgent(getActivity());
 			agent.startFeedbackActivity();
 			getActivity().overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
 			break;
 		case R.id.setting_check_update:
-
+			/**********友盟自动更新组件**************/
+			UmengUpdateAgent.setUpdateListener(new UmengUpdateListener() {
+				@Override
+				public void onUpdateReturned(int updateStatus, UpdateResponse updateInfo) {
+					switch (updateStatus) {
+					case UpdateStatus.Yes: // has update
+						UmengUpdateAgent.showUpdateDialog(getActivity(), updateInfo);
+						break;
+					case UpdateStatus.No: // has no update
+						ToastTool.showShort(getActivity(), "当前是最新版本");
+						break;
+					case UpdateStatus.NoneWifi: // none wifi
+						ToastTool.showShort(getActivity(), "没有wifi连接， 只在wifi下更新");
+						break;
+					case UpdateStatus.Timeout: // time out
+						ToastTool.showShort(getActivity(), "超时");
+						break;
+					}
+				}
+			});
+			UmengUpdateAgent.forceUpdate(getActivity());
 			break;
 		case R.id.setting_about:
 

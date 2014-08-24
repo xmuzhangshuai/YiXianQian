@@ -33,6 +33,7 @@ import com.easemob.exceptions.EaseMobException;
 import com.easemob.util.NetUtils;
 import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.TextHttpResponseHandler;
+import com.umeng.update.UmengUpdateAgent;
 import com.yixianqian.R;
 import com.yixianqian.base.BaseApplication;
 import com.yixianqian.base.BaseFragmentActivity;
@@ -86,6 +87,10 @@ public class MainActivity extends BaseFragmentActivity {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_main);
+
+	    /*********开启友盟自动更新服务***********/
+		UmengUpdateAgent.update(this);
+
 		userPreference = BaseApplication.getInstance().getUserPreference();
 		friendpreference = BaseApplication.getInstance().getFriendPreference();
 		conversationDbService = ConversationDbService.getInstance(MainActivity.this);

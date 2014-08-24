@@ -18,6 +18,7 @@ import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.baidu.location.LocationClientOption.LocationMode;
 import com.umeng.analytics.MobclickAgent;
+import com.umeng.fb.FeedbackAgent;
 import com.yixianqian.R;
 import com.yixianqian.base.BaseActivity;
 import com.yixianqian.base.BaseApplication;
@@ -68,7 +69,7 @@ public class GuideActivity extends BaseActivity {
 
 		/************初始化友盟服务**************/
 		MobclickAgent.updateOnlineConfig(this);
-		BaseApplication.getInstance().getFeedbackAgent(this).sync();
+		new FeedbackAgent(this).sync();
 
 		//获取定位
 		initLocation();

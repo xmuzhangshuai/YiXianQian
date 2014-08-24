@@ -276,8 +276,8 @@
             android:name="com.yixianqian.ui.BaiduMapActivity"
             android:screenOrientation="portrait" >
         </activity>
-        
-         <!-- 友盟反馈 -->
+
+        <!-- 友盟反馈 -->
         <activity
             android:name="com.umeng.fb.ConversationActivity"
             android:theme="@android:style/Theme.NoTitleBar" />
@@ -308,6 +308,17 @@
             android:enabled="true"
             android:process=":remote" >
         </service>
+        
+        <!-- 自动更新 -->
+        <service
+            android:name="com.umeng.update.net.DownloadingService"
+            android:process=":DownloadingService" >
+        </service>
+
+        <activity
+            android:name="com.umeng.update.UpdateDialogActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" >
+        </activity>
 
         <!-- 百度推送 -->
         <receiver android:name="com.yixianqian.baidupush.MyPushMessageReceiver" >
