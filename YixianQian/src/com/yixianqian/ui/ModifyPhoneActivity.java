@@ -18,6 +18,7 @@ import com.yixianqian.base.BaseActivity;
 import com.yixianqian.config.DefaultKeys;
 import com.yixianqian.table.UserTable;
 import com.yixianqian.utils.AsyncHttpClientTool;
+import com.yixianqian.utils.LogTool;
 import com.yixianqian.utils.ToastTool;
 
 /**
@@ -96,12 +97,7 @@ public class ModifyPhoneActivity extends BaseActivity implements OnClickListener
 							cancel = true;
 							focusView.requestFocus();
 						} else {
-							ToastTool.showShort(ModifyPhoneActivity.this, "验证码已发送");
-							Intent intent = new Intent(ModifyPhoneActivity.this, AuthCodeActivity.class);
-							intent.putExtra(UserTable.U_TEL, mPhone);
-							startActivity(intent);
-							overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
-							finish();
+							getAuthCode();
 						}
 					}
 				}
@@ -121,12 +117,72 @@ public class ModifyPhoneActivity extends BaseActivity implements OnClickListener
 		}
 	}
 
+	/**
+	 * 获取验证码
+	 * @return
+	 */
+	private void getAuthCode() {
+		RequestParams params = new RequestParams();
+		params.put(UserTable.U_TEL, mPhone);
+		TextHttpResponseHandler responseHandler = new TextHttpResponseHandler() {
+			@Override
+			public void onStart() {
+				// TODO Auto-generated method stub
+				super.onStart();
+			}
+
+			@Override
+			public void onSuccess(int statusCode, Header[] headers, String response) {
+				// TODO Auto-generated method stub
+
+				LogTool.e("验证码", response);
+				if (response.length() == 6) {
+					ToastTool.showShort(ModifyPhoneActivity.this, "验证码已发送");
+					Intent intent = new Intent(ModifyPhoneActivity.this, AuthCodeActivity.class);
+					intent.putExtra(UserTable.U_TEL, mPhone);
+					intent.putExtra(RegAuthCodeFragment.AUTHCODE, response);
+					startActivity(intent);
+					overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+					finish();
+				} else if (response.endsWith("-1")) {
+					ToastTool.showShort(ModifyPhoneActivity.this, "服务器错误");
+				} else if (response.endsWith("1")) {
+					ToastTool.showShort(ModifyPhoneActivity.this, "手机号码为空");
+				} else {
+					ToastTool.showShort(ModifyPhoneActivity.this, "服务器错误");
+				}
+			}
+
+			@Override
+			public void onFailure(int statusCode, Header[] headers, String errorResponse, Throwable e) {
+				// TODO Auto-generated method stub
+				ToastTool.showShort(ModifyPhoneActivity.this, "服务器错误");
+				LogTool.e("验证码", "服务器错误,错误代码" + statusCode + "，  原因" + errorResponse);
+			}
+
+			@Override
+			public void onFinish() {
+				// TODO Auto-generated method stub
+				super.onFinish();
+			}
+		};
+		AsyncHttpClientTool.post("getmessage", params, responseHandler);
+	}
+
+	@Override
+	public void onBackPressed() {
+		// TODO Auto-generated method stub
+		super.onBackPressed();
+		overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
+	}
+
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
 		case R.id.left_btn_bg:
 			finish();
+			overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
 			break;
 		case R.id.right_btn_bg:
 			attemptPhone();

@@ -155,8 +155,8 @@ public class ModifyPassActivity extends BaseActivity implements OnClickListener 
 						if (arg2.equals("1")) {
 							ToastTool.showShort(ModifyPassActivity.this, "修改成功！");
 							reLogin();
-//							userPreference.setU_password(newPass);
-//							finish();
+							//							userPreference.setU_password(newPass);
+							//							finish();
 						} else if (arg2.equals("-1")) {
 							mOldPassView.setError("旧密码不正确");
 							focusView = mOldPassView;
@@ -185,8 +185,15 @@ public class ModifyPassActivity extends BaseActivity implements OnClickListener 
 		friendPreference.clear();
 		Intent intent = new Intent(ModifyPassActivity.this, LoginActivity.class);
 		startActivity(intent);
-//		overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
 		finish();
+		overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
+	}
+
+	@Override
+	public void onBackPressed() {
+		// TODO Auto-generated method stub
+		super.onBackPressed();
+		overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
 	}
 
 	@Override

@@ -3,8 +3,13 @@ package com.yixianqian.ui;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.http.Header;
+
+import android.content.BroadcastReceiver;
+import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -15,16 +20,20 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.loopj.android.http.RequestParams;
+import com.loopj.android.http.TextHttpResponseHandler;
 import com.yixianqian.R;
 import com.yixianqian.base.BaseApplication;
 import com.yixianqian.base.BaseV4Fragment;
 import com.yixianqian.config.DefaultKeys;
 import com.yixianqian.table.UserTable;
+import com.yixianqian.utils.AsyncHttpClientTool;
 import com.yixianqian.utils.HttpUtil;
+import com.yixianqian.utils.LogTool;
 import com.yixianqian.utils.MD5For32;
 import com.yixianqian.utils.SIMCardInfo;
+import com.yixianqian.utils.ToastTool;
 import com.yixianqian.utils.UserPreference;
 
 /**
@@ -205,19 +214,71 @@ public class RegPhoneFragment extends BaseV4Fragment {
 			// 如果错误，则提示错误
 			focusView.requestFocus();
 		} else {
-			// 没有错误，则注册
+			//获取验证码
+			getAuthCode();
+
+			// 没有错误，则存储值
 			userPreference.setU_tel(mPhone);
 			userPreference.setU_password(MD5For32.GetMD5Code(mPassword));
 			userPreference.setU_nickname(mName);
 
-			RegAuthCodeFragment fragment = new RegAuthCodeFragment();
-			FragmentTransaction transaction = getFragmentManager().beginTransaction();
-			transaction.setCustomAnimations(R.anim.push_left_in, R.anim.push_left_out, R.anim.push_right_in,
-					R.anim.push_right_out);
-			transaction.replace(R.id.fragment_container, fragment);
-			transaction.commit();
-			Toast.makeText(getActivity(), "验证码已发送", 1).show();
 		}
+	}
+
+	/**
+	 * 获取验证码
+	 * @return
+	 */
+	private void getAuthCode() {
+		RequestParams params = new RequestParams();
+		params.put(UserTable.U_TEL, mPhone);
+		TextHttpResponseHandler responseHandler = new TextHttpResponseHandler() {
+			@Override
+			public void onStart() {
+				// TODO Auto-generated method stub
+				super.onStart();
+			}
+
+			@Override
+			public void onSuccess(int statusCode, Header[] headers, String response) {
+				// TODO Auto-generated method stub
+
+				LogTool.e("验证码", response);
+				if (response.length() == 6) {
+					RegAuthCodeFragment fragment = new RegAuthCodeFragment();
+					Bundle bundle = new Bundle();
+					bundle.putString(RegAuthCodeFragment.AUTHCODE, response);
+					fragment.setArguments(bundle);
+					FragmentTransaction transaction = getFragmentManager().beginTransaction();
+					transaction.setCustomAnimations(R.anim.push_left_in, R.anim.push_left_out, R.anim.push_right_in,
+							R.anim.push_right_out);
+					transaction.replace(R.id.fragment_container, fragment);
+					transaction.commit();
+					ToastTool.showShort(RegPhoneFragment.this.getActivity(), "验证码已发送");
+
+				} else if (response.endsWith("-1")) {
+					ToastTool.showShort(RegPhoneFragment.this.getActivity(), "服务器错误");
+				} else if (response.endsWith("1")) {
+					ToastTool.showShort(RegPhoneFragment.this.getActivity(), "手机号码为空");
+				} else {
+					ToastTool.showShort(RegPhoneFragment.this.getActivity(), "服务器错误");
+				}
+			}
+
+			@Override
+			public void onFailure(int statusCode, Header[] headers, String errorResponse, Throwable e) {
+				// TODO Auto-generated method stub
+				ToastTool.showShort(RegPhoneFragment.this.getActivity(), "服务器错误");
+				LogTool.e("验证码", "服务器错误,错误代码" + statusCode + "，  原因" + errorResponse);
+			}
+
+			@Override
+			public void onFinish() {
+				// TODO Auto-generated method stub
+				super.onFinish();
+			}
+		};
+		AsyncHttpClientTool.post("getmessage", params, responseHandler);
 	}
 
 	/**

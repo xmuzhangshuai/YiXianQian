@@ -2,13 +2,22 @@ package com.yixianqian.ui;
 
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.http.Header;
 
+import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.telephony.SmsMessage;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -25,6 +34,7 @@ import com.yixianqian.base.BaseApplication;
 import com.yixianqian.config.Constants.Config;
 import com.yixianqian.table.UserTable;
 import com.yixianqian.utils.AsyncHttpClientTool;
+import com.yixianqian.utils.LogTool;
 import com.yixianqian.utils.ToastTool;
 import com.yixianqian.utils.UserPreference;
 
@@ -36,15 +46,23 @@ import com.yixianqian.utils.UserPreference;
  *
  */
 public class AuthCodeActivity extends BaseActivity {
+	/*************Views************/
 	private TextView topNavigation;
 	private View leftImageButton;
 	private View rightImageButton;
 	private int recLen;
 	private Button authCodeButton;
-	private EditText authCode;
+	private EditText authCodeView;
 	private Timer timer;
+	ProgressDialog dialog;
+	private BroadcastReceiver smsReceiver;
+	private IntentFilter filter2;
+	private Handler handler;
+	private String strContent;
+	private String patternCoder = "(?<!\\d)\\d{6}(?!\\d)";
 	private UserPreference userPreference;
 	private String mPhone;
+	private String authcode;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +72,7 @@ public class AuthCodeActivity extends BaseActivity {
 		setContentView(R.layout.activity_auth_code);
 
 		mPhone = getIntent().getStringExtra(UserTable.U_TEL);
+		authcode = getIntent().getStringExtra(RegAuthCodeFragment.AUTHCODE);
 		userPreference = BaseApplication.getInstance().getUserPreference();
 
 		findViewById();
@@ -61,6 +80,53 @@ public class AuthCodeActivity extends BaseActivity {
 
 		timer = new Timer();
 		timer.schedule(task, 1000, 1000);
+
+		handler = new Handler() {
+			public void handleMessage(android.os.Message msg) {
+				authCodeView.setText(strContent);
+			};
+		};
+
+		filter2 = new IntentFilter();
+		filter2.addAction("android.provider.Telephony.SMS_RECEIVED");
+		filter2.setPriority(Integer.MAX_VALUE);
+		smsReceiver = new BroadcastReceiver() {
+			@Override
+			public void onReceive(Context context, Intent intent) {
+				Object[] objs = (Object[]) intent.getExtras().get("pdus");
+				for (Object obj : objs) {
+					byte[] pdu = (byte[]) obj;
+					SmsMessage sms = SmsMessage.createFromPdu(pdu);
+					// 短信的内容
+					String message = sms.getMessageBody();
+					LogTool.d("验证码", "message     " + message);
+					// 短息的手机号。。+86开头？
+					String from = sms.getOriginatingAddress();
+					LogTool.d("验证码", "from     " + from);
+					// Time time = new Time();
+					// time.set(sms.getTimestampMillis());
+					// String time2 = time.format3339(true);
+					// Log.d("logo", from + "   " + message + "  " + time2);
+					// strContent = from + "   " + message;
+					// handler.sendEmptyMessage(1);
+					if (!TextUtils.isEmpty(from)) {
+						String code = patternCode(message);
+						if (!TextUtils.isEmpty(code)) {
+							strContent = code;
+							handler.sendEmptyMessage(1);
+						}
+					}
+				}
+			}
+		};
+		registerReceiver(smsReceiver, filter2);
+	}
+
+	@Override
+	public void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+		unregisterReceiver(smsReceiver);
 	}
 
 	@Override
@@ -70,7 +136,7 @@ public class AuthCodeActivity extends BaseActivity {
 		leftImageButton = (View) findViewById(R.id.left_btn_bg);
 		rightImageButton = (View) findViewById(R.id.right_btn_bg);
 		authCodeButton = (Button) findViewById(R.id.again_authcode);
-		authCode = (EditText) findViewById(R.id.autncode);
+		authCodeView = (EditText) findViewById(R.id.autncode);
 	}
 
 	@Override
@@ -88,11 +154,34 @@ public class AuthCodeActivity extends BaseActivity {
 			}
 		});
 
+		authCodeButton.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				recLen = Config.AUTN_CODE_TIME;
+				authCodeButton.setEnabled(false);
+				getAuthCode();
+				timer = new Timer();
+				timer.schedule(new TimerTask() {
+
+					@Override
+					public void run() {
+						// TODO Auto-generated method stub
+						recLen--;
+						Message message = new Message();
+						message.what = 1;
+						timeHandler.sendMessage(message);
+					}
+				}, 1000, 1000);
+			}
+		});
+
 		rightImageButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				if (vertifyAuthCode()) {
+				if (vertifyAuthCode(authCodeView.getText().toString())) {
 
 					RequestParams params = new RequestParams();
 					params.put(UserTable.U_TEL, mPhone);
@@ -106,6 +195,7 @@ public class AuthCodeActivity extends BaseActivity {
 									userPreference.setU_tel(mPhone);
 									ToastTool.showLong(AuthCodeActivity.this, "修改手机号码成功");
 									finish();
+									overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
 								} else {
 									ToastTool.showLong(AuthCodeActivity.this, "修改手机号码失败");
 								}
@@ -119,12 +209,15 @@ public class AuthCodeActivity extends BaseActivity {
 						}
 					};
 					AsyncHttpClientTool.post("updateusertel", params, responseHandler);
+				} else {
+					authCodeView.setError("验证码错误");
+					authCodeView.requestFocus();
 				}
 			}
 		});
 
 		//输入验证码时事件
-		authCode.addTextChangedListener(new TextWatcher() {
+		authCodeView.addTextChangedListener(new TextWatcher() {
 
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -141,7 +234,7 @@ public class AuthCodeActivity extends BaseActivity {
 			@Override
 			public void afterTextChanged(Editable s) {
 				// TODO Auto-generated method stub
-				String content = authCode.getText().toString();
+				String content = authCodeView.getText().toString();
 				if (content != null) {
 					if (content.length() > 0) {
 						rightImageButton.setEnabled(true);
@@ -156,7 +249,7 @@ public class AuthCodeActivity extends BaseActivity {
 	/**
 	 * 控制计时
 	 */
-	final Handler handler = new Handler() {
+	final Handler timeHandler = new Handler() {
 		@Override
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
@@ -166,6 +259,7 @@ public class AuthCodeActivity extends BaseActivity {
 					timer.cancel();
 					authCodeButton.setText("重新获取验证码");
 					authCodeButton.setEnabled(true);
+					rightImageButton.setEnabled(false);
 				}
 			}
 		}
@@ -175,13 +269,12 @@ public class AuthCodeActivity extends BaseActivity {
 	 * 计时器
 	 */
 	TimerTask task = new TimerTask() {
-
 		@Override
 		public void run() {
 			recLen--;
 			Message message = new Message();
 			message.what = 1;
-			handler.sendMessage(message);
+			timeHandler.sendMessage(message);
 		}
 	};
 
@@ -189,8 +282,80 @@ public class AuthCodeActivity extends BaseActivity {
 	 * 验证验证码
 	 * @return
 	 */
-	private boolean vertifyAuthCode() {
-		return true;
+	private boolean vertifyAuthCode(String code) {
+		if (!TextUtils.isEmpty(authcode)) {
+			if (authcode.equals(code)) {
+				return true;
+			} else {
+				return false;
+			}
+		} else {
+			return false;
+		}
 	}
 
+	/**
+	 * 匹配短信中间的6个数字（验证码等）
+	 * 
+	 * @param patternContent
+	 * @return
+	 */
+	private String patternCode(String patternContent) {
+		if (TextUtils.isEmpty(patternContent)) {
+			return null;
+		}
+		Pattern p = Pattern.compile(patternCoder);
+		Matcher matcher = p.matcher(patternContent);
+		if (matcher.find()) {
+			return matcher.group();
+		}
+		return null;
+	}
+
+	/**
+	 * 获取验证码
+	 * @return
+	 */
+	private void getAuthCode() {
+		RequestParams params = new RequestParams();
+		params.put(UserTable.U_TEL, mPhone);
+		TextHttpResponseHandler responseHandler = new TextHttpResponseHandler() {
+			@Override
+			public void onStart() {
+				// TODO Auto-generated method stub
+				super.onStart();
+			}
+
+			@Override
+			public void onSuccess(int statusCode, Header[] headers, String response) {
+				// TODO Auto-generated method stub
+
+				LogTool.e("验证码", response);
+				if (response.length() == 6) {
+					authcode = response;
+					ToastTool.showShort(AuthCodeActivity.this, "验证码已发送");
+				} else if (response.endsWith("-1")) {
+					ToastTool.showShort(AuthCodeActivity.this, "服务器错误");
+				} else if (response.endsWith("1")) {
+					ToastTool.showShort(AuthCodeActivity.this, "手机号码为空");
+				} else {
+					ToastTool.showShort(AuthCodeActivity.this, "服务器错误");
+				}
+			}
+
+			@Override
+			public void onFailure(int statusCode, Header[] headers, String errorResponse, Throwable e) {
+				// TODO Auto-generated method stub
+				ToastTool.showShort(AuthCodeActivity.this, "服务器错误");
+				LogTool.e("验证码", "服务器错误,错误代码" + statusCode + "，  原因" + errorResponse);
+			}
+
+			@Override
+			public void onFinish() {
+				// TODO Auto-generated method stub
+				super.onFinish();
+			}
+		};
+		AsyncHttpClientTool.post("getmessage", params, responseHandler);
+	}
 }

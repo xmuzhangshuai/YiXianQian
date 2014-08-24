@@ -3,6 +3,7 @@ package com.yixianqian.utils;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -74,10 +75,7 @@ public final class ImageTools {
 			image.compress(Bitmap.CompressFormat.JPEG, options, baos);//这里压缩options%，把压缩后的数据存放到baos中
 		}
 
-		ByteArrayInputStream isBm = new ByteArrayInputStream(baos.toByteArray());//把压缩后的数据baos存放到ByteArrayInputStream中
-		Bitmap bitmap = BitmapFactory.decodeStream(isBm, null, null);//把ByteArrayInputStream数据生成图片
-
-		return savePhotoToSDCard(bitmap, path, photoName, options);
+		return FileUtil.getFileFromBytes(baos.toByteArray(), path + "/" + photoName);
 	}
 
 	/**

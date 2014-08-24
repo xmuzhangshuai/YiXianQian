@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.apache.http.Header;
 
-import android.R.integer;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
