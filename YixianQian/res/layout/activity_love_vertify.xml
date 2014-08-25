@@ -18,7 +18,7 @@
         <ListView
             android:id="@+id/love_vertify_list"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:descendantFocusability="blocksDescendants"
             android:scrollbars="none" >
         </ListView>

@@ -1,0 +1,403 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.yixianqian"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="10"
+        android:targetSdkVersion="19" />
+
+    <!-- ###################声明SDK使用的相关权限###################### -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
+    <uses-permission android:name="android.permission.FLASHLIGHT" />
+    <uses-permission android:name="android.permission.GET_TASKS" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.REORDER_TASKS" />
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.READ_LOGS" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.BAIDU_LOCATION_SERVICE" />
+
+    <permission android:name="android.permission.BAIDU_LOCATION_SERVICE" />
+
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+
+    <supports-screens
+        android:anyDensity="true"
+        android:largeScreens="true"
+        android:normalScreens="true"
+        android:smallScreens="true"
+        android:xlargeScreens="true" />
+
+    <application
+        android:name="com.yixianqian.base.BaseApplication"
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        <activity
+            android:name="com.yixianqian.ui.GuideActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <uses-library android:name="android.test.runner" />
+
+        <!-- 注册或登录页面 -->
+        <activity
+            android:name="com.yixianqian.ui.LoginOrRegisterActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
+        </activity>
+
+        <!-- 首次安装运行页面 -->
+        <activity
+            android:name="com.yixianqian.ui.GuidePagerActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
+        </activity>
+
+        <!-- 登录页面 -->
+        <activity
+            android:name="com.yixianqian.ui.LoginActivity"
+            android:label="@string/title_activity_login"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize|stateVisible" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.yixianqian.ui.LoginOrRegisterActivity" />
+
+            <intent-filter>
+                <action android:name="com.yixianqian.loginorregister" />
+            </intent-filter>
+        </activity>
+
+        <!-- 注册页面 -->
+        <activity
+            android:name="com.yixianqian.ui.RegisterActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+
+        <!-- 主页面 -->
+        <activity
+            android:name="com.yixianqian.ui.MainActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+
+        <!-- 每日推荐页面 -->
+        <activity
+            android:name="com.yixianqian.ui.DayRecommendActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+
+        <!-- 每日推荐帮助页面 -->
+        <activity
+            android:name="com.yixianqian.ui.RecommendHelpActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+
+        <!-- 上传头像页面 -->
+        <activity
+            android:name="com.yixianqian.ui.HeadImageActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+
+        <!-- 时间胶囊页面 -->
+        <activity
+            android:name="com.yixianqian.ui.TimeCapsuleActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+
+        <!-- 发布记录页面 -->
+        <activity
+            android:name="com.yixianqian.ui.PublishTimeCapActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+
+        <!-- 爱情验证页面 -->
+        <activity
+            android:name="com.yixianqian.ui.LoveVertifyActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+
+        <!-- 聊天页面 -->
+        <activity
+            android:name="com.yixianqian.ui.ChatActivity"
+            android:alwaysRetainTaskState="true"
+            android:configChanges="locale|keyboardHidden|orientation"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustResize" >
+        </activity>
+
+        <!-- 二维码扫描页面 -->
+        <activity
+            android:name="com.yixianqian.ui.CaptureActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+            android:windowSoftInputMode="stateAlwaysHidden" >
+        </activity>
+
+        <!-- 显示高清图片 -->
+        <activity
+            android:name="com.yixianqian.ui.ImageShowerActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+
+        <!-- 自定义的alertdialog -->
+        <activity
+            android:name="com.yixianqian.customewidget.ChatAlertDialog"
+            android:theme="@style/ChatDialogStyle" >
+        </activity>
+
+        <!-- 显示下载大图页面 -->
+        <activity
+            android:name="com.yixianqian.ui.ShowBigImage"
+            android:screenOrientation="portrait"
+            android:theme="@style/horizontal_slide" >
+        </activity>
+
+        <!-- 我的二维码 -->
+        <activity
+            android:name="com.yixianqian.ui.QrCodeActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+
+        <!-- 添加情侣 -->
+        <activity
+            android:name="com.yixianqian.ui.AddLoverActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+
+        <!-- 添加情侣个人资料页面 -->
+        <activity
+            android:name="com.yixianqian.ui.AddLoverInfoActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+
+        <!-- 确认聊天页面 -->
+        <activity
+            android:name="com.yixianqian.ui.VertifyToChatActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+
+        <!-- 修改个人资料页面 -->
+        <activity
+            android:name="com.yixianqian.ui.ModifyDataActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+
+        <!-- 修改手机号页面 -->
+        <activity
+            android:name="com.yixianqian.ui.ModifyPhoneActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+
+        <!-- 填写验证码页面 -->
+        <activity
+            android:name="com.yixianqian.ui.AuthCodeActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+
+        <!-- 修改密码页面 -->
+        <activity
+            android:name="com.yixianqian.ui.ModifyPassActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+
+        <!-- 修改密码页面 -->
+        <activity
+            android:name="com.yixianqian.ui.WaitActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+
+        <!-- 修改密码页面 -->
+        <activity
+            android:name="com.yixianqian.ui.AlreadyInviteActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+
+        <!-- 个人详细资料页面 -->
+        <activity
+            android:name="com.yixianqian.ui.PersonDetailActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+
+        <!-- 个人时间胶囊页面 -->
+        <activity
+            android:name="com.yixianqian.ui.PersonTimeCapsuleActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+
+        <!-- 菜单页面 -->
+        <activity
+            android:name="com.yixianqian.ui.ContextMenu"
+            android:screenOrientation="portrait"
+            android:theme="@style/MyDialogStyle" >
+        </activity>
+
+        <!-- 设置页面 -->
+        <activity
+            android:name="com.yixianqian.ui.SettingActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+
+        <!-- 分享面板页面 -->
+        <activity
+            android:name="com.yixianqian.ui.SharePanelActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/MyDialogStyle" >
+        </activity>
+
+        <!-- 百度地图页面 -->
+        <activity
+            android:name="com.yixianqian.ui.BaiduMapActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+
+        <!-- 友盟反馈 -->
+        <activity
+            android:name="com.umeng.fb.ConversationActivity"
+            android:theme="@android:style/Theme.NoTitleBar" />
+        <activity
+            android:name="com.umeng.fb.ContactActivity"
+            android:theme="@android:style/Theme.NoTitleBar" />
+
+        <!-- 百度推送富媒体 -->
+        <activity
+            android:name="com.baidu.android.pushservice.richmedia.MediaViewActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:label="MediaViewActivity" >
+        </activity>
+        <activity
+            android:name="com.baidu.android.pushservice.richmedia.MediaListActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:label="MediaListActivity"
+            android:launchMode="singleTask" >
+        </activity>
+
+        <!-- 百度定位 -->
+        <service
+            android:name="com.baidu.location.f"
+            android:enabled="true"
+            android:process=":remote" >
+        </service>
+
+        <!-- 自动更新 -->
+        <service
+            android:name="com.umeng.update.net.DownloadingService"
+            android:process=":DownloadingService" >
+        </service>
+
+        <activity
+            android:name="com.umeng.update.UpdateDialogActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" >
+        </activity>
+
+        <!-- 百度推送 -->
+        <receiver android:name="com.yixianqian.baidupush.MyPushMessageReceiver" >
+            <intent-filter>
+
+                <!-- 接收push消息 -->
+                <action android:name="com.baidu.android.pushservice.action.MESSAGE" />
+                <!-- 接收bind、setTags等method的返回结果 -->
+                <action android:name="com.baidu.android.pushservice.action.RECEIVE" />
+                <!-- 可选。接受通知点击事件，和通知自定义内容 -->
+                <action android:name="com.baidu.android.pushservice.action.notification.CLICK" />
+            </intent-filter>
+        </receiver>
+
+        <!-- push service start -->
+        <!-- 用于接收系统消息以保证PushService正常运行 -->
+        <receiver
+            android:name="com.baidu.android.pushservice.PushServiceReceiver"
+            android:process=":bdservice_v1" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+                <action android:name="com.baidu.android.pushservice.action.notification.SHOW" />
+                <action android:name="com.baidu.android.pushservice.action.media.CLICK" />
+            </intent-filter>
+        </receiver>
+        <!-- Push服务接收客户端发送的各种请求 -->
+        <receiver
+            android:name="com.baidu.android.pushservice.RegistrationReceiver"
+            android:process=":bdservice_v1" >
+            <intent-filter>
+                <action android:name="com.baidu.android.pushservice.action.METHOD" />
+                <action android:name="com.baidu.android.pushservice.action.BIND_SYNC" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.PACKAGE_REMOVED" />
+
+                <data android:scheme="package" />
+            </intent-filter>
+        </receiver>
+        <!-- Push 服务 -->
+        <service
+            android:name="com.baidu.android.pushservice.PushService"
+            android:exported="true"
+            android:process=":bdservice_v1" >
+            <intent-filter>
+                <action android:name="com.baidu.android.pushservice.action.PUSH_SERVICE" />
+            </intent-filter>
+        </service>
+        <!-- push service end -->
+
+
+        <!-- 开机自启动服务 -->
+        <receiver android:name="com.easemob.chat.StartServiceReceiver" >
+            <intent-filter android:priority="1000" >
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </receiver>
+        <!-- 设置环信应用的appkey -->
+        <meta-data
+            android:name="EASEMOB_APPKEY"
+            android:value="yixianqian#yixianqian" />
+        <!-- 声明sdk所需的service -->
+        <service android:name="com.easemob.chat.EMChatService" />
+
+        <!-- ###########百度定位Appkey############## -->
+        <meta-data
+            android:name="com.baidu.lbsapi.API_KEY"
+            android:value="bcB8dCkZh0GVtMTdpyTTabj3" />
+
+        <!-- ###########友盟############## -->
+        <meta-data
+            android:name="UMENG_APPKEY"
+            android:value="53ea0fd9fd98c5e5090075e5" >
+        </meta-data>
+        <meta-data
+            android:name="UMENG_CHANNEL"
+            android:value="Official Website" />
+    </application>
+
+</manifest>

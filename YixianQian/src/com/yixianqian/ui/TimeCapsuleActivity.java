@@ -173,12 +173,11 @@ public class TimeCapsuleActivity extends AbsListViewBaseActivity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		// TODO Auto-generated method stub
-		LogTool.e("" + requestCode + "   " + resultCode + "   ");
 		super.onActivityResult(requestCode, resultCode, data);
 		if (requestCode == SharePanelActivity.REQUEST_CODE_SHAREPANEL) {
 			switch (resultCode) {
 			case SharePanelActivity.RESULT_CODE_DELETE: // 删除记录
-				LogTool.e("删除");
+				LogTool.d("时间胶囊", "删除时间胶囊成功");
 				int position = data.getIntExtra("position", -1);
 				if (stateID == 2 && position > -1) {
 					loverTimeCapsuleList.remove(position);
@@ -468,7 +467,26 @@ public class TimeCapsuleActivity extends AbsListViewBaseActivity {
 				@Override
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
-					showMoreDialog(position);
+					if (stateID == 3 || stateID == 4) {
+						if (!TextUtils.isEmpty(singleTimeCapsuleList.get(position).getStc_photo())) {
+							showMoreDialog(position, AsyncHttpClientImageSound.getAbsoluteUrl(singleTimeCapsuleList
+									.get(position).getStc_photo()), true);
+						} else {
+							showMoreDialog(position, AsyncHttpClientImageSound.getAbsoluteUrl(singleTimeCapsuleList
+									.get(position).getStc_photo()), false);
+						}
+
+					} else if (stateID == 2) {
+						if (!TextUtils.isEmpty(loverTimeCapsuleList.get(position).getLtc_photo())) {
+							showMoreDialog(position, AsyncHttpClientImageSound.getAbsoluteUrl(loverTimeCapsuleList.get(
+									position).getLtc_photo()), true);
+						} else {
+							showMoreDialog(position, AsyncHttpClientImageSound.getAbsoluteUrl(loverTimeCapsuleList.get(
+									position).getLtc_photo()), false);
+						}
+
+					}
+
 				}
 			});
 			return view;
@@ -478,9 +496,12 @@ public class TimeCapsuleActivity extends AbsListViewBaseActivity {
 	/**
 	 * 显示更多
 	 */
-	private void showMoreDialog(int position) {
+	private void showMoreDialog(int position, String imageUrl, boolean showShare) {
+
 		Intent intent = new Intent(TimeCapsuleActivity.this, SharePanelActivity.class);
 		intent.putExtra("position", position);
+		intent.putExtra(SharePanelActivity.IMAGE_URL, imageUrl);
+		intent.putExtra("showShare", showShare);
 		if (stateID == 2) {
 			intent.putExtra(LoverTimeCapsuleTable.LTC_USERID, loverTimeCapsuleList.get(position).getLtc_userid());
 			intent.putExtra(LoverTimeCapsuleTable.LTC_LOVERID, loverTimeCapsuleList.get(position).getLtc_loverid());
