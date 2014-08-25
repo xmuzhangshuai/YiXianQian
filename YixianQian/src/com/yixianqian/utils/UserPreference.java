@@ -30,12 +30,8 @@ public class UserPreference {
 	 * Çå¿ÕÊý¾Ý
 	 */
 	public void clear() {
-		String pushUserId = getBpush_UserID();
-		String pushChannelId = getBpush_ChannelID();
 		String tel = getU_tel();
 		editor.clear();
-		setBpush_UserID(pushUserId);
-		setBpush_ChannelID(pushChannelId);
 		setU_tel(tel);
 		editor.commit();
 	}

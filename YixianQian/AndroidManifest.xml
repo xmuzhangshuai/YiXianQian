@@ -271,6 +271,13 @@
             android:screenOrientation="portrait" >
         </activity>
 
+        <!-- 分享面板页面 -->
+        <activity
+            android:name="com.yixianqian.ui.SharePanelActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/MyDialogStyle" >
+        </activity>
+
         <!-- 百度地图页面 -->
         <activity
             android:name="com.yixianqian.ui.BaiduMapActivity"
@@ -308,7 +315,7 @@
             android:enabled="true"
             android:process=":remote" >
         </service>
-        
+
         <!-- 自动更新 -->
         <service
             android:name="com.umeng.update.net.DownloadingService"

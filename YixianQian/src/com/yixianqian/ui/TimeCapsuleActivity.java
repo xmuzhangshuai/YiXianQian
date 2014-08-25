@@ -7,8 +7,6 @@ import org.apache.http.Header;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
@@ -36,7 +34,6 @@ import com.yixianqian.jsonobject.JsonLoverTimeCapsule;
 import com.yixianqian.jsonobject.JsonSingleTimeCapsule;
 import com.yixianqian.table.LoverTimeCapsuleTable;
 import com.yixianqian.table.SingleTimeCapsuleTable;
-import com.yixianqian.ui.MoreDialogFragment.OnChooseMenuListener;
 import com.yixianqian.utils.AsyncHttpClientImageSound;
 import com.yixianqian.utils.AsyncHttpClientTool;
 import com.yixianqian.utils.DateTimeTools;
@@ -44,6 +41,7 @@ import com.yixianqian.utils.DensityUtil;
 import com.yixianqian.utils.FastJsonTool;
 import com.yixianqian.utils.FriendPreference;
 import com.yixianqian.utils.ImageLoaderTool;
+import com.yixianqian.utils.LogTool;
 import com.yixianqian.utils.SoundLoader;
 import com.yixianqian.utils.ToastTool;
 import com.yixianqian.utils.UserPreference;
@@ -55,7 +53,8 @@ import com.yixianqian.utils.UserPreference;
  * 创建时间：2014年7月9日 下午9:33:16
  *
  */
-public class TimeCapsuleActivity extends AbsListViewBaseActivity implements OnChooseMenuListener {
+public class TimeCapsuleActivity extends AbsListViewBaseActivity {
+
 	private PullToRefreshListView timeCapsuleListview;
 
 	private View headView;//用户头像区域
@@ -169,6 +168,31 @@ public class TimeCapsuleActivity extends AbsListViewBaseActivity implements OnCh
 		// TODO Auto-generated method stub
 		super.onResume();
 		timeCapsuleListview.setOnScrollListener(new PauseOnScrollListener(imageLoader, pauseOnScroll, pauseOnFling));
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		// TODO Auto-generated method stub
+		LogTool.e("" + requestCode + "   " + resultCode + "   ");
+		super.onActivityResult(requestCode, resultCode, data);
+		if (requestCode == SharePanelActivity.REQUEST_CODE_SHAREPANEL) {
+			switch (resultCode) {
+			case SharePanelActivity.RESULT_CODE_DELETE: // 删除记录
+				LogTool.e("删除");
+				int position = data.getIntExtra("position", -1);
+				if (stateID == 2 && position > -1) {
+					loverTimeCapsuleList.remove(position);
+					timeCapsuleAdapter.notifyDataSetChanged();
+				} else if ((stateID == 3 || stateID == 4) && position > -1) {
+					singleTimeCapsuleList.remove(position);
+					timeCapsuleAdapter.notifyDataSetChanged();
+				}
+				break;
+
+			default:
+				break;
+			}
+		}
 	}
 
 	@Override
@@ -454,47 +478,18 @@ public class TimeCapsuleActivity extends AbsListViewBaseActivity implements OnCh
 	/**
 	 * 显示更多
 	 */
-	void showMoreDialog(int position) {
-		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		Fragment fragment = getSupportFragmentManager().findFragmentByTag("more");
-		if (fragment != null) {
-			ft.remove(fragment);
-		}
-		ft.addToBackStack(null);
-
-		// Create and show the dialog.
-		MoreDialogFragment newFragment = MoreDialogFragment.newInstance();
-		Bundle bundle = new Bundle();
-		bundle.putInt("position", position);
+	private void showMoreDialog(int position) {
+		Intent intent = new Intent(TimeCapsuleActivity.this, SharePanelActivity.class);
+		intent.putExtra("position", position);
 		if (stateID == 2) {
-			bundle.putInt(LoverTimeCapsuleTable.LTC_USERID, loverTimeCapsuleList.get(position).getLtc_userid());
-			bundle.putInt(LoverTimeCapsuleTable.LTC_LOVERID, loverTimeCapsuleList.get(position).getLtc_loverid());
-			bundle.putInt(LoverTimeCapsuleTable.LTC_MSGID, loverTimeCapsuleList.get(position).getLtc_msgid());
+			intent.putExtra(LoverTimeCapsuleTable.LTC_USERID, loverTimeCapsuleList.get(position).getLtc_userid());
+			intent.putExtra(LoverTimeCapsuleTable.LTC_LOVERID, loverTimeCapsuleList.get(position).getLtc_loverid());
+			intent.putExtra(LoverTimeCapsuleTable.LTC_MSGID, loverTimeCapsuleList.get(position).getLtc_msgid());
 		} else if (stateID == 3 || stateID == 4) {
-			bundle.putInt(SingleTimeCapsuleTable.STC_USERID, singleTimeCapsuleList.get(position).getStc_userid());
-			bundle.putInt(SingleTimeCapsuleTable.STC_MSGID, singleTimeCapsuleList.get(position).getStc_msgid());
+			intent.putExtra(SingleTimeCapsuleTable.STC_USERID, singleTimeCapsuleList.get(position).getStc_userid());
+			intent.putExtra(SingleTimeCapsuleTable.STC_MSGID, singleTimeCapsuleList.get(position).getStc_msgid());
 		}
-
-		newFragment.setArguments(bundle);
-		newFragment.show(ft, "more");
-	}
-
-	@Override
-	public void onDelete(int position) {
-		// TODO Auto-generated method stub
-		if (stateID == 2) {
-			loverTimeCapsuleList.remove(position);
-			timeCapsuleAdapter.notifyDataSetChanged();
-		} else if (stateID == 3 || stateID == 4) {
-			singleTimeCapsuleList.remove(position);
-			timeCapsuleAdapter.notifyDataSetChanged();
-		}
-	}
-
-	@Override
-	public void onShare(int position) {
-		// TODO Auto-generated method stub
-
+		startActivityForResult(intent, SharePanelActivity.REQUEST_CODE_SHAREPANEL);
 	}
 
 }
