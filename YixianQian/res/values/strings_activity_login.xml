@@ -14,13 +14,17 @@
     <string name="error_field_conform_pass">两次输入的密码不一致</string>
     <string name="register_phone_info">一线牵会向您发送一次性短消息，来验证您的电话号码</string>
     <string name="register_school_info">选择学校后不可更改</string>
+    <string name="forget_password">忘记密码？</string>
+
     <!-- 注册 -->
     <string name="choose_gender_tip">请问您现在的状态是？</string>
     <string name="choose_state_error">请选择您的状态</string>
     <string name="choose_gender_error">请选择性别</string>
     <string name="error_phone">手机号码格式不对</string>
+    <string name="no_reg_phone">该手机号码没有被注册</string>
     <string name="province">省份</string>
     <string name="city">城市</string>
     <string name="school">学校</string>
+    <string name="reg_now">立即注册>></string>
 
 </resources>

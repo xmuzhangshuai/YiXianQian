@@ -7,6 +7,7 @@ import java.util.Map;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -61,6 +62,7 @@ public class LoginActivity extends BaseActivity {
 	private View rightImageButton;//µº∫Ω¿∏”“≤‡∞¥≈•
 	private UserPreference userPreference;
 	private FriendPreference friendpreference;
+	private TextView forgetPassword;//Õ¸º«√‹¬Î
 	List<JsonUser> jsonUsers;
 
 	@Override
@@ -84,6 +86,7 @@ public class LoginActivity extends BaseActivity {
 		topNavigation = (TextView) findViewById(R.id.nav_text);
 		leftImageButton = (View) findViewById(R.id.left_btn_bg);
 		rightImageButton = (View) findViewById(R.id.right_btn_bg);
+		forgetPassword = (TextView) findViewById(R.id.forget_password);
 	}
 
 	@Override
@@ -112,6 +115,17 @@ public class LoginActivity extends BaseActivity {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				attemptLogin();
+			}
+		});
+
+		forgetPassword.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Intent intent = new Intent(LoginActivity.this,ForgetPassActivity.class);
+				startActivity(intent);
+				overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
 			}
 		});
 	}

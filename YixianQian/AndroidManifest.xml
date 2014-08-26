@@ -265,6 +265,18 @@
             android:name="com.yixianqian.ui.SettingActivity"
             android:screenOrientation="portrait" >
         </activity>
+        
+         <!-- 忘记密码页面 -->
+        <activity
+            android:name="com.yixianqian.ui.ForgetPassActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        
+         <!-- 重置页面 -->
+        <activity
+            android:name="com.yixianqian.ui.ResetPassActivity"
+            android:screenOrientation="portrait" >
+        </activity>
 
         <!-- 分享面板页面 -->
         <activity
