@@ -20,7 +20,6 @@ import com.loopj.android.http.TextHttpResponseHandler;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.yixianqian.R;
 import com.yixianqian.base.BaseApplication;
-import com.yixianqian.config.Constants.Config;
 import com.yixianqian.db.TodayRecommendDbService;
 import com.yixianqian.entities.TodayRecommend;
 import com.yixianqian.jsonobject.JsonTodayRecommend;

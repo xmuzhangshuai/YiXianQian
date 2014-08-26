@@ -9,7 +9,6 @@ import org.apache.http.Header;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -28,6 +27,10 @@ import com.umeng.socialize.controller.UMSocialService;
 import com.umeng.socialize.controller.listener.SocializeListeners.SnsPostListener;
 import com.umeng.socialize.controller.listener.SocializeListeners.UMAuthListener;
 import com.umeng.socialize.exception.SocializeException;
+import com.umeng.socialize.media.QQShareContent;
+import com.umeng.socialize.media.QZoneShareContent;
+import com.umeng.socialize.media.SinaShareContent;
+import com.umeng.socialize.media.TencentWbShareContent;
 import com.umeng.socialize.media.UMImage;
 import com.umeng.socialize.sso.EmailHandler;
 import com.umeng.socialize.sso.QZoneSsoHandler;
@@ -36,7 +39,6 @@ import com.umeng.socialize.sso.TencentWBSsoHandler;
 import com.umeng.socialize.sso.UMQQSsoHandler;
 import com.umeng.socialize.sso.UMSsoHandler;
 import com.umeng.socialize.utils.OauthHelper;
-import com.umeng.socialize.weixin.controller.UMWXHandler;
 import com.yixianqian.R;
 import com.yixianqian.base.BaseActivity;
 import com.yixianqian.base.BaseApplication;
@@ -87,6 +89,7 @@ public class SharePanelActivity extends BaseActivity {
 		stateID = userPreference.getU_stateid();
 		timeCapsulePosition = getIntent().getIntExtra("position", -1);
 		showShare = getIntent().getBooleanExtra("showShare", false);
+		imageUrl = getIntent().getStringExtra(IMAGE_URL);
 		if (stateID == 2) {
 			msgID = getIntent().getIntExtra(LoverTimeCapsuleTable.LTC_MSGID, -1);
 			userID = getIntent().getIntExtra(LoverTimeCapsuleTable.LTC_USERID, -1);
@@ -212,53 +215,74 @@ public class SharePanelActivity extends BaseActivity {
 				}
 			}
 		});
-
-		// wx967daebe835fbeac是你在微信开发平台注册应用的AppID, 这里需要替换成你注册的AppID
-		String appID = "wx967daebe835fbeac";
-		// 添加微信平台
-		UMWXHandler wxHandler = new UMWXHandler(this, appID);
-		wxHandler.addToSocialSDK();
-		// 支持微信朋友圈
-		UMWXHandler wxCircleHandler = new UMWXHandler(this, appID);
-		wxCircleHandler.setToCircle(true);
-		wxCircleHandler.addToSocialSDK();
-
-		//参数1为当前Activity，参数2为开发者在QQ互联申请的APP ID，参数3为开发者在QQ互联申请的APP kEY.
-		UMQQSsoHandler qqSsoHandler = new UMQQSsoHandler(this, "100424468", "c7394704798a158208a74ab60104f0ba");
-		qqSsoHandler.addToSocialSDK();
-
-		//参数1为当前Activity，参数2为开发者在QQ互联申请的APP ID，参数3为开发者在QQ互联申请的APP kEY.
-		QZoneSsoHandler qZoneSsoHandler = new QZoneSsoHandler(this, "100424468", "c7394704798a158208a74ab60104f0ba");
-		qZoneSsoHandler.addToSocialSDK();
-
-		//设置新浪SSO handler
-		mController.getConfig().setSsoHandler(new SinaSsoHandler());
-
-		//设置腾讯微博SSO handler
-		mController.getConfig().setSsoHandler(new TencentWBSsoHandler());
-
-		// 添加email
-		EmailHandler emailHandler = new EmailHandler();
-		emailHandler.addToSocialSDK();
 	}
 
 	/**
 	 * 初始化分享内容
 	 */
 	private void initShareContent() {
-		imageUrl = getIntent().getStringExtra(imageUrl);
-		if (!TextUtils.isEmpty(imageUrl)) {
-			// 设置分享内容
-			mController.setShareContent("友盟社会化组件（SDK）让移动应用快速整合社交分享功能，http://www.umeng.com/social");
-			// 设置分享图片, 参数2为图片的url地址
-			mController.setShareMedia(new UMImage(SharePanelActivity.this, imageUrl));
-		}
+
+		//参数1为当前Activity， 参数2为开发者在QQ互联申请的APP ID，
+		//参数3为开发者在QQ互联申请的APP kEY.
+		UMQQSsoHandler qqSsoHandler = new UMQQSsoHandler(this, "100424468", "c7394704798a158208a74ab60104f0ba");
+		qqSsoHandler.addToSocialSDK();
+		QQShareContent qqShareContent = new QQShareContent();
+		qqShareContent.setShareContent("一线牵，爱的保障,分享给QQ好友");
+		qqShareContent.setTitle("一线牵");
+		qqShareContent.setShareImage(new UMImage(this, imageUrl));
+		qqShareContent.setTargetUrl("http://www.yixianqian.me");
+		qqShareContent.setAppWebSite("http://www.yixianqian.me");
+		mController.setShareMedia(qqShareContent);
+
+		//参数1为当前Activity， 参数2为开发者在QQ互联申请的APP ID，
+		//参数3为开发者在QQ互联申请的APP kEY.
+		QZoneSsoHandler qZoneSsoHandler = new QZoneSsoHandler(this, "100424468", "c7394704798a158208a74ab60104f0ba");
+		qZoneSsoHandler.addToSocialSDK();
+		QZoneShareContent qzone = new QZoneShareContent();
+		qzone.setShareContent("一线牵，爱的保障,分享给QQ空间");
+		qzone.setTargetUrl("http://www.yixianqian.me");
+		qzone.setAppWebSite("http://www.yixianqian.me");
+		qzone.setTitle("一线牵");
+		qzone.setShareImage(new UMImage(this, imageUrl));
+		mController.setShareMedia(qzone);
+
+		//设置新浪SSO handler
+		mController.getConfig().setSsoHandler(new SinaSsoHandler());
+		SinaShareContent sinaShareContent = new SinaShareContent();
+		sinaShareContent.setShareContent("一线牵，爱的保障，分享到新浪微博");
+		sinaShareContent.setTargetUrl("http://www.yixianqian.me");
+		sinaShareContent.setAppWebSite("http://www.yixianqian.me");
+		sinaShareContent.setTitle("一线牵");
+		sinaShareContent.setShareImage(new UMImage(this, imageUrl));
+		mController.setShareMedia(sinaShareContent);
+
+		//设置腾讯微博SSO handler
+		mController.getConfig().setSsoHandler(new TencentWBSsoHandler());
+		TencentWbShareContent tencentContent = new TencentWbShareContent();
+		// 设置分享到腾讯微博的文字内容
+		tencentContent.setShareContent("一线牵，爱的保障，分享到腾讯微博");
+		tencentContent.setTitle("一线牵");
+		tencentContent.setTargetUrl("http://www.yixianqian.me");
+		tencentContent.setAppWebSite("http://www.yixianqian.me");
+		tencentContent.setShareImage(new UMImage(this, imageUrl));
+		// 设置分享到腾讯微博的多媒体内容
+		mController.setShareMedia(tencentContent);
+
+		// 添加email
+		EmailHandler emailHandler = new EmailHandler();
+		emailHandler.addToSocialSDK();
+
+		// 设置分享内容
+		mController.setShareContent("一线牵，爱的保障，http://www.yixianqian.me");
+		// 设置分享图片, 参数2为图片的url地址
+		mController.setShareMedia(new UMImage(SharePanelActivity.this, imageUrl));
 	}
 
 	/**
 	 * 分享到新浪微博
 	 */
 	private void shareToSina() {
+
 		if (OauthHelper.isAuthenticated(SharePanelActivity.this, SHARE_MEDIA.SINA)) {
 			//直接分享
 			mController.directShare(SharePanelActivity.this, SHARE_MEDIA.SINA, new SnsPostListener() {
@@ -272,6 +296,7 @@ public class SharePanelActivity extends BaseActivity {
 				public void onComplete(SHARE_MEDIA platform, int eCode, SocializeEntity entity) {
 					if (eCode == StatusCode.ST_CODE_SUCCESSED) {
 						LogTool.d("share", "SINA分享成功");
+						ToastTool.showShort(SharePanelActivity.this, "已经分享到新浪微博");
 					} else {
 						LogTool.e("share", "SINA分享失败");
 					}
@@ -310,6 +335,7 @@ public class SharePanelActivity extends BaseActivity {
 	 * 分享到QQ好友
 	 */
 	private void shareToQQ() {
+
 		if (OauthHelper.isAuthenticated(SharePanelActivity.this, SHARE_MEDIA.QQ)) {
 			//直接分享
 			mController.directShare(SharePanelActivity.this, SHARE_MEDIA.QQ, new SnsPostListener() {
@@ -361,6 +387,7 @@ public class SharePanelActivity extends BaseActivity {
 	 * 分享到QQ空间
 	 */
 	private void shareToQZone() {
+
 		if (OauthHelper.isAuthenticated(SharePanelActivity.this, SHARE_MEDIA.QZONE)) {
 			//直接分享
 			mController.directShare(SharePanelActivity.this, SHARE_MEDIA.QZONE, new SnsPostListener() {
@@ -412,6 +439,7 @@ public class SharePanelActivity extends BaseActivity {
 	 * 分享到腾讯微博
 	 */
 	private void shareToTengXunWB() {
+
 		if (OauthHelper.isAuthenticated(SharePanelActivity.this, SHARE_MEDIA.TENCENT)) {
 			//直接分享
 			mController.directShare(SharePanelActivity.this, SHARE_MEDIA.TENCENT, new SnsPostListener() {
@@ -463,52 +491,27 @@ public class SharePanelActivity extends BaseActivity {
 	 * 分享到邮件
 	 */
 	private void shareToMail() {
+
 		// 参数1为Context类型对象， 参数2为要分享到的目标平台， 参数3为分享操作的回调接口
-		if (OauthHelper.isAuthenticated(SharePanelActivity.this, SHARE_MEDIA.EMAIL)) {
-			//直接分享
-			mController.directShare(SharePanelActivity.this, SHARE_MEDIA.EMAIL, new SnsPostListener() {
+		mController.postShare(this, SHARE_MEDIA.EMAIL, new SnsPostListener() {
+			@Override
+			public void onStart() {
+				LogTool.d("share", "EMAIL开始分享");
+			}
 
-				@Override
-				public void onStart() {
-					LogTool.d("share", "EMAIL分享开始");
-				}
-
-				@Override
-				public void onComplete(SHARE_MEDIA platform, int eCode, SocializeEntity entity) {
-					if (eCode == StatusCode.ST_CODE_SUCCESSED) {
-						LogTool.d("share", "EMAIL分享成功");
-					} else {
-						LogTool.e("share", "EMAIL分享失败");
+			@Override
+			public void onComplete(SHARE_MEDIA platform, int eCode, SocializeEntity entity) {
+				if (eCode == 200) {
+					LogTool.d("share", "EMAIL分享成功");
+				} else {
+					String eMsg = "";
+					if (eCode == -101) {
+						eMsg = "没有授权";
 					}
+					LogTool.e("share", "分享失败[" + eCode + "] " + eMsg);
 				}
-			});
-		} else {
-			//取得授权
-			mController.doOauthVerify(SharePanelActivity.this, SHARE_MEDIA.EMAIL, new UMAuthListener() {
-				@Override
-				public void onStart(SHARE_MEDIA platform) {
-					LogTool.d("share", "EMAIL授权开始");
-				}
-
-				@Override
-				public void onError(SocializeException e, SHARE_MEDIA platform) {
-					LogTool.e("share", "EMAIL授权错误");
-				}
-
-				@Override
-				public void onComplete(Bundle value, SHARE_MEDIA platform) {
-					LogTool.d("share", "EMAIL授权完成");
-					//获取相关授权信息或者跳转到自定义的分享编辑页面
-					String uid = value.getString("uid");
-					shareToMail();
-				}
-
-				@Override
-				public void onCancel(SHARE_MEDIA platform) {
-					LogTool.d("share", "EMAIL授权取消");
-				}
-			});
-		}
+			}
+		});
 	}
 
 	/**
