@@ -61,8 +61,9 @@ public class LoveVertifyActivity extends BaseActivity {
 	private LoveVertifyAdapter adapter;
 	private FriendPreference friendpreference;
 	private UserPreference userPreference;
-	private ImageView leftBtn;
+	private View leftBtn;
 	private TextView mEmpty;
+	private TextView navText;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -83,16 +84,26 @@ public class LoveVertifyActivity extends BaseActivity {
 	}
 
 	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		flipperList = flipperDbService.getFlipperList();
+		adapter.notifyDataSetChanged();
+	}
+
+	@Override
 	protected void findViewById() {
 		// TODO Auto-generated method stub
 		loveVertifyList = (ListView) findViewById(R.id.love_vertify_list);
 		mEmpty = (TextView) findViewById(R.id.empty);
-		leftBtn = (ImageView) findViewById(R.id.nav_left_btn);
+		leftBtn = findViewById(R.id.left_btn_bg);
+		navText = (TextView) findViewById(R.id.nav_text);
 	}
 
 	@Override
 	protected void initView() {
 		// TODO Auto-generated method stub
+		navText.setText("心动历史");
 		if (flipperList.size() == 0) {
 			mEmpty.setVisibility(View.VISIBLE);
 		}

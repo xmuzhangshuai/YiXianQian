@@ -28,12 +28,16 @@ import com.easemob.exceptions.EaseMobException;
 import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.TextHttpResponseHandler;
 import com.yixianqian.R;
+import com.yixianqian.baidupush.SendMsgAsyncTask;
 import com.yixianqian.base.BaseApplication;
 import com.yixianqian.config.Constants;
+import com.yixianqian.config.Constants.FlipperType;
+import com.yixianqian.config.Constants.MessageType;
 import com.yixianqian.customewidget.MyAlertDialog;
 import com.yixianqian.db.ConversationDbService;
 import com.yixianqian.db.FlipperDbService;
 import com.yixianqian.entities.Flipper;
+import com.yixianqian.jsonobject.JsonMessage;
 import com.yixianqian.jsonobject.JsonUser;
 import com.yixianqian.table.FlipperRequestTable;
 import com.yixianqian.table.FlipperTable;
@@ -43,6 +47,7 @@ import com.yixianqian.table.UserTable;
 import com.yixianqian.utils.AsyncHttpClientTool;
 import com.yixianqian.utils.FastJsonTool;
 import com.yixianqian.utils.FriendPreference;
+import com.yixianqian.utils.LogTool;
 import com.yixianqian.utils.ToastTool;
 import com.yixianqian.utils.UserPreference;
 
@@ -410,20 +415,23 @@ public class PersonDetailDialog extends DialogFragment {
 				public void onFailure(int arg0, Header[] arg1, String arg2, Throwable arg3) {
 					// TODO Auto-generated method stub
 					ToastTool.showLong(getActivity(), arg2);
-					PersonDetailDialog.this.dismiss();
+					getActivity().finish();
 				}
 
 				@Override
 				public void onSuccess(int arg0, Header[] arg1, String arg2) {
 					// TODO Auto-generated method stub
-					addContact(filpperId);
-					PersonDetailDialog.this.dismiss();
+					//					addContact(filpperId);
+					ToastTool.showLong(getActivity(), "爱情验证已发送！等待对方同意");
+					saveFlipper(filpperId);
+					getActivity().finish();
 				}
 
 				@Override
 				public void onFinish() {
 					// TODO Auto-generated method stub
 					super.onFinish();
+					progressDialog.dismiss();
 				}
 			};
 			AsyncHttpClientTool.post(getActivity(), url, params, responseHandler);
@@ -435,28 +443,13 @@ public class PersonDetailDialog extends DialogFragment {
 	 * @param view
 	 */
 	public void addContact(final int flipperId) {
-
+		LogTool.i("dayRecommend", "环信添加好友");
 		new Thread(new Runnable() {
 			public void run() {
 				try {
 					//添加好友
 					EMContactManager.getInstance().addContact("" + flipperId, userPreference.getName() + "对您砰然心动！");
-
-					getActivity().runOnUiThread(new Runnable() {
-						public void run() {
-							saveFlipper(flipperId);
-							progressDialog.dismiss();
-							ToastTool.showLong(getActivity(), "爱情验证已发送！等待对方同意");
-							getActivity().finish();
-						}
-					});
 				} catch (final Exception e) {
-					getActivity().runOnUiThread(new Runnable() {
-						public void run() {
-							progressDialog.dismiss();
-							ToastTool.showLong(getActivity(), "爱情验证发送失败:" + e.getMessage());
-						}
-					});
 				}
 			}
 		}).start();
@@ -470,12 +463,19 @@ public class PersonDetailDialog extends DialogFragment {
 		Flipper flipper = flipperDbService.getFlipperByUserId(flipperId);
 		//如果数据库中存在该用户的请求，则更新状态
 		if (flipper != null) {
+			LogTool.i("dayRecommend", "flipper已经存在，更新");
 			flipper.setIsRead(true);
 			flipper.setTime(new Date());
+			flipper.setType(FlipperType.TO);
 			flipper.setStatus(Constants.FlipperStatus.INVITE);
-			flipper.setType(Constants.FlipperType.TO);
 			flipperDbService.flipperDao.update(flipper);
+
+			//发给对方通知
+			JsonMessage jsonMessage = new JsonMessage(userPreference.getName() + "对您怦然心动",
+					MessageType.MESSAGE_TYPE_FLIPPER_REQUEEST);
+			new SendMsgAsyncTask(FastJsonTool.createJsonString(jsonMessage), flipper.getBpushUserID()).send();
 		} else {
+			addContact(flipperId);
 			getUser(flipperId);
 		}
 	}
@@ -505,6 +505,12 @@ public class PersonDetailDialog extends DialogFragment {
 								jsonUser.getU_weight(), jsonUser.getU_image_pass(), jsonUser.getU_salary(), true,
 								jsonUser.getU_tel(), Constants.FlipperStatus.INVITE, Constants.FlipperType.TO);
 						flipperDbService.flipperDao.insert(flipper);
+
+						//发给对方通知
+						JsonMessage jsonMessage = new JsonMessage(userPreference.getName() + "对您怦然心动",
+								MessageType.MESSAGE_TYPE_FLIPPER_REQUEEST);
+						new SendMsgAsyncTask(FastJsonTool.createJsonString(jsonMessage), flipper.getBpushUserID())
+								.send();
 					}
 				}
 			}

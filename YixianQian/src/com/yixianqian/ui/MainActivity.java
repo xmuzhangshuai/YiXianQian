@@ -88,7 +88,7 @@ public class MainActivity extends BaseFragmentActivity {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_main);
 
-	    /*********开启友盟自动更新服务***********/
+		/*********开启友盟自动更新服务***********/
 		UmengUpdateAgent.update(this);
 
 		userPreference = BaseApplication.getInstance().getUserPreference();
@@ -156,16 +156,6 @@ public class MainActivity extends BaseFragmentActivity {
 				homeFragment.refreshConversation();
 			}
 		}
-		//		LogTool.e("" + homeFragment.isAdded());
-		//		LogTool.e("" + personalFragment.isAdded());
-		//		if (homeFragment.isVisible() && personalFragment.isVisible()) {
-		//			homeFragment = new HomeFragment();
-		//			personalFragment = new PersonalFragment();
-		//			fragments = new Fragment[] { homeFragment, personalFragment };
-		//			getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, homeFragment)
-		//					.add(R.id.fragment_container, personalFragment).hide(personalFragment).show(homeFragment).commit();
-		//			currentTabIndex = 0;
-		//		}
 
 		if (!isConflict) {
 			EMChatManager.getInstance().activityResumed();
@@ -568,6 +558,7 @@ public class MainActivity extends BaseFragmentActivity {
 	private void creatConversation(int userID) {
 		Conversation conversation = conversationDbService.getConversationByUser(userID);
 		if (conversation == null) {
+			LogTool.d("MainActivity", "创建会话");
 			conversation = new Conversation(null, Long.valueOf(userID), friendpreference.getName(),
 					friendpreference.getF_small_avatar(), "", 0, System.currentTimeMillis());
 			conversationDbService.conversationDao.insert(conversation);

@@ -34,6 +34,7 @@ import com.yixianqian.baidupush.SendMsgAsyncTask;
 import com.yixianqian.base.BaseApplication;
 import com.yixianqian.base.BaseFragmentActivity;
 import com.yixianqian.config.Constants;
+import com.yixianqian.config.Constants.FlipperType;
 import com.yixianqian.config.Constants.MessageType;
 import com.yixianqian.db.FlipperDbService;
 import com.yixianqian.db.TodayRecommendDbService;
@@ -48,6 +49,7 @@ import com.yixianqian.utils.AsyncHttpClientTool;
 import com.yixianqian.utils.DensityUtil;
 import com.yixianqian.utils.FastJsonTool;
 import com.yixianqian.utils.ImageLoaderTool;
+import com.yixianqian.utils.LogTool;
 import com.yixianqian.utils.ToastTool;
 import com.yixianqian.utils.UserPreference;
 
@@ -208,8 +210,9 @@ public class DayRecommendActivity extends BaseFragmentActivity {
 				@Override
 				public void onSuccess(int arg0, Header[] arg1, String arg2) {
 					// TODO Auto-generated method stub
-					addContact(filpperId);
-
+					//					addContact(filpperId);
+					ToastTool.showLong(getApplicationContext(), "爱情验证已发送！等待对方同意");
+					saveFlipper(filpperId);
 					DayRecommendActivity.this.finish();
 				}
 
@@ -217,6 +220,7 @@ public class DayRecommendActivity extends BaseFragmentActivity {
 				public void onFinish() {
 					// TODO Auto-generated method stub
 					super.onFinish();
+					progressDialog.dismiss();
 				}
 			};
 			AsyncHttpClientTool.post(DayRecommendActivity.this, url, params, responseHandler);
@@ -228,27 +232,13 @@ public class DayRecommendActivity extends BaseFragmentActivity {
 	 * @param view
 	 */
 	public void addContact(final int flipperId) {
-
+		LogTool.i("dayRecommend", "环信添加好友");
 		new Thread(new Runnable() {
 			public void run() {
 				try {
 					//添加好友
 					EMContactManager.getInstance().addContact("" + flipperId, userPreference.getName() + "对您砰然心动！");
-
-					runOnUiThread(new Runnable() {
-						public void run() {
-							saveFlipper(flipperId);
-							progressDialog.dismiss();
-							ToastTool.showLong(getApplicationContext(), "爱情验证已发送！等待对方同意");
-						}
-					});
 				} catch (final Exception e) {
-					runOnUiThread(new Runnable() {
-						public void run() {
-							progressDialog.dismiss();
-							ToastTool.showLong(getApplicationContext(), "爱情验证发送失败:" + e.getMessage());
-						}
-					});
 				}
 			}
 		}).start();
@@ -262,18 +252,19 @@ public class DayRecommendActivity extends BaseFragmentActivity {
 		Flipper flipper = flipperDbService.getFlipperByUserId(flipperId);
 		//如果数据库中存在该用户的请求，则更新状态
 		if (flipper != null) {
+			LogTool.i("dayRecommend", "flipper已经存在，更新");
 			flipper.setIsRead(true);
 			flipper.setTime(new Date());
+			flipper.setType(FlipperType.TO);
 			flipper.setStatus(Constants.FlipperStatus.INVITE);
-			flipper.setType(Constants.FlipperType.TO);
 			flipperDbService.flipperDao.update(flipper);
 
 			//发给对方通知
 			JsonMessage jsonMessage = new JsonMessage(userPreference.getName() + "对您怦然心动",
 					MessageType.MESSAGE_TYPE_FLIPPER_REQUEEST);
 			new SendMsgAsyncTask(FastJsonTool.createJsonString(jsonMessage), flipper.getBpushUserID()).send();
-
 		} else {
+			addContact(flipperId);
 			getUser(flipperId);
 		}
 	}

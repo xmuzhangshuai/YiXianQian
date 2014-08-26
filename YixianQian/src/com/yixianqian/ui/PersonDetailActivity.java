@@ -23,6 +23,7 @@ import com.yixianqian.baidupush.SendMsgAsyncTask;
 import com.yixianqian.base.BaseApplication;
 import com.yixianqian.base.BaseFragmentActivity;
 import com.yixianqian.config.Constants;
+import com.yixianqian.config.Constants.FlipperType;
 import com.yixianqian.config.Constants.MessageType;
 import com.yixianqian.customewidget.MyAlertDialog;
 import com.yixianqian.db.FlipperDbService;
@@ -38,6 +39,7 @@ import com.yixianqian.utils.AsyncHttpClientTool;
 import com.yixianqian.utils.FastJsonTool;
 import com.yixianqian.utils.FriendPreference;
 import com.yixianqian.utils.ImageLoaderTool;
+import com.yixianqian.utils.LogTool;
 import com.yixianqian.utils.ToastTool;
 import com.yixianqian.utils.UserPreference;
 
@@ -298,18 +300,25 @@ public class PersonDetailActivity extends BaseFragmentActivity implements OnClic
 			params.put(FlipperRequestTable.FR_USERID, myUserID);
 			params.put(FlipperRequestTable.FR_FLIPPERID, filpperId);
 			TextHttpResponseHandler responseHandler = new TextHttpResponseHandler() {
+				@Override
+				public void onStart() {
+					// TODO Auto-generated method stub
+					super.onStart();
+				}
 
 				@Override
 				public void onFailure(int arg0, Header[] arg1, String arg2, Throwable arg3) {
 					// TODO Auto-generated method stub
 					ToastTool.showLong(PersonDetailActivity.this, arg2);
+					PersonDetailActivity.this.finish();
 				}
 
 				@Override
 				public void onSuccess(int arg0, Header[] arg1, String arg2) {
 					// TODO Auto-generated method stub
-					addContact(filpperId);
-					finish();
+					ToastTool.showLong(getApplicationContext(), "爱情验证已发送！等待对方同意");
+					saveFlipper(filpperId);
+					PersonDetailActivity.this.finish();
 				}
 
 				@Override
@@ -327,25 +336,13 @@ public class PersonDetailActivity extends BaseFragmentActivity implements OnClic
 	 * @param view
 	 */
 	public void addContact(final int flipperId) {
-
+		LogTool.i("PersonDetailActivity", "环信添加好友");
 		new Thread(new Runnable() {
 			public void run() {
 				try {
 					//添加好友
 					EMContactManager.getInstance().addContact("" + flipperId, userPreference.getName() + "对您砰然心动！");
-
-					PersonDetailActivity.this.runOnUiThread(new Runnable() {
-						public void run() {
-							saveFlipper(flipperId);
-							ToastTool.showLong(PersonDetailActivity.this, "爱情验证已发送！等待对方同意");
-						}
-					});
 				} catch (final Exception e) {
-					PersonDetailActivity.this.runOnUiThread(new Runnable() {
-						public void run() {
-							ToastTool.showLong(PersonDetailActivity.this, "爱情验证发送失败:" + e.getMessage());
-						}
-					});
 				}
 			}
 		}).start();
@@ -359,10 +356,11 @@ public class PersonDetailActivity extends BaseFragmentActivity implements OnClic
 		Flipper flipper = flipperDbService.getFlipperByUserId(flipperId);
 		//如果数据库中存在该用户的请求，则更新状态
 		if (flipper != null) {
+			LogTool.i("PersonDetailActivity", "flipper已经存在，更新");
 			flipper.setIsRead(true);
 			flipper.setTime(new Date());
+			flipper.setType(FlipperType.TO);
 			flipper.setStatus(Constants.FlipperStatus.INVITE);
-			flipper.setType(Constants.FlipperType.TO);
 			flipperDbService.flipperDao.update(flipper);
 
 			//发给对方通知
@@ -370,6 +368,7 @@ public class PersonDetailActivity extends BaseFragmentActivity implements OnClic
 					MessageType.MESSAGE_TYPE_FLIPPER_REQUEEST);
 			new SendMsgAsyncTask(FastJsonTool.createJsonString(jsonMessage), flipper.getBpushUserID()).send();
 		} else {
+			addContact(flipperId);
 			getUser(flipperId);
 		}
 	}
