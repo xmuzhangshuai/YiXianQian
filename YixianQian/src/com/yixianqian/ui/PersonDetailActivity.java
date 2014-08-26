@@ -53,7 +53,7 @@ import com.yixianqian.utils.UserPreference;
  */
 public class PersonDetailActivity extends BaseFragmentActivity implements OnClickListener {
 	public static final String PERSON_TYPE = "person_type";
-	private ImageView topNavLeftBtn;//导航条左边按钮
+	private View topNavLeftBtn;//导航条左边按钮
 	private TextView topNavText;//导航条文字
 	private View right_btn_bg;
 	private ImageView topNavRightBtn;
@@ -94,7 +94,7 @@ public class PersonDetailActivity extends BaseFragmentActivity implements OnClic
 	@Override
 	protected void findViewById() {
 		// TODO Auto-generated method stub
-		topNavLeftBtn = (ImageView) findViewById(R.id.nav_left_btn);
+		topNavLeftBtn = findViewById(R.id.left_btn_bg);
 		right_btn_bg = (View) findViewById(R.id.right_btn_bg);
 		topNavText = (TextView) findViewById(R.id.nav_text);
 		topNavRightBtn = (ImageView) findViewById(R.id.nav_right_btn);
@@ -426,7 +426,7 @@ public class PersonDetailActivity extends BaseFragmentActivity implements OnClic
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
-		case R.id.nav_left_btn:
+		case R.id.left_btn_bg:
 			finish();
 			break;
 		case R.id.right_btn_bg:

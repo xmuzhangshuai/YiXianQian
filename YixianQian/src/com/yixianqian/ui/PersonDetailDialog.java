@@ -29,6 +29,7 @@ import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.TextHttpResponseHandler;
 import com.yixianqian.R;
 import com.yixianqian.baidupush.SendMsgAsyncTask;
+import com.yixianqian.baidupush.SendNotifyTask;
 import com.yixianqian.base.BaseApplication;
 import com.yixianqian.config.Constants;
 import com.yixianqian.config.Constants.FlipperStatus;
@@ -305,12 +306,19 @@ public class PersonDetailDialog extends DialogFragment {
 						@Override
 						public void onSuccess(int statusCode, Header[] headers, String response) {
 							// TODO Auto-generated method stub
-							//							new SendNotifyTask(userPreference.getName() + "和您解除了情侣关系", userPreference.getName(),
-							//									friendPreference.getBpush_UserID()).send();
+							new SendNotifyTask(userPreference.getName() + "和您解除了情侣关系", userPreference.getName(),
+									friendPreference.getBpush_UserID()).send();
 							conversationDbService.conversationDao.delete(conversationDbService
 									.getConversationByUser(friendPreference.getF_id()));
 							//删除会话
 							EMChatManager.getInstance().deleteConversation("" + friendPreference.getF_id());
+							//删除好友
+							try {
+								EMContactManager.getInstance().deleteContact("" + friendPreference.getF_id());
+							} catch (EaseMobException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
 							friendPreference.clear();
 							userPreference.setU_stateid(4);
 							PersonDetailDialog.this.dismiss();

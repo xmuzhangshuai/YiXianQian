@@ -21,7 +21,6 @@ import com.loopj.android.http.TextHttpResponseHandler;
 import com.yixianqian.R;
 import com.yixianqian.base.BaseApplication;
 import com.yixianqian.config.Constants;
-import com.yixianqian.db.ConversationDbService;
 import com.yixianqian.jsonobject.JsonMessage;
 import com.yixianqian.table.UserTable;
 import com.yixianqian.ui.MainActivity;
@@ -29,7 +28,6 @@ import com.yixianqian.ui.VertifyToChatActivity;
 import com.yixianqian.utils.AsyncHttpClientTool;
 import com.yixianqian.utils.CommonTools;
 import com.yixianqian.utils.FastJsonTool;
-import com.yixianqian.utils.FriendPreference;
 import com.yixianqian.utils.LogTool;
 import com.yixianqian.utils.NetworkUtils;
 import com.yixianqian.utils.PreferenceUtils;
@@ -43,8 +41,6 @@ public class MyPushMessageReceiver extends FrontiaPushMessageReceiver {
 	public static final int NOTIFY_ID = 0x000;
 	public static final String RESPONSE = "response";
 	private UserPreference userPreference;
-	private FriendPreference friendPreference;
-	private ConversationDbService conversationDbService;
 
 	/**
 	 * 调用PushManager.startWork后，sdk将对push
@@ -106,7 +102,7 @@ public class MyPushMessageReceiver extends FrontiaPushMessageReceiver {
 	}
 
 	/**
-	 * 装换消息
+	 * 转换消息
 	 * @param msg
 	 */
 	private void parseMessage(JsonMessage msg, Context context) {
@@ -139,6 +135,7 @@ public class MyPushMessageReceiver extends FrontiaPushMessageReceiver {
 	 */
 	private void handleFlipperRequest(Context context, String msgContent) {
 		BaseApplication application = BaseApplication.getInstance();
+		LogTool.i("MyPushMessageReceiver", "接收到心动请求");
 
 		//如果程序没有在运行，则显示通知
 		if (!CommonTools.isAppRunning(context)) {
@@ -162,7 +159,7 @@ public class MyPushMessageReceiver extends FrontiaPushMessageReceiver {
 	 */
 	private void buildLove(String phone) {
 		BaseApplication application = BaseApplication.getInstance();
-		friendPreference = application.getFriendPreference();
+		LogTool.i("MyPushMessageReceiver", "添加情侣请求");
 
 		//通知
 		NotificationCompat.Builder builder = new NotificationCompat.Builder(application);
@@ -183,7 +180,7 @@ public class MyPushMessageReceiver extends FrontiaPushMessageReceiver {
 	 * 处理也心动,在爱情验证页面，对某个人也心动，推送本用户ID到这个人的终端
 	 */
 	private void flipperTo(String phone) {
-		friendPreference = BaseApplication.getInstance().getFriendPreference();
+		LogTool.i("MyPushMessageReceiver", "也心动");
 		BaseApplication application = BaseApplication.getInstance();
 
 		//通知
@@ -228,11 +225,12 @@ public class MyPushMessageReceiver extends FrontiaPushMessageReceiver {
 		if (errorCode == 0) {
 			userPreference = BaseApplication.getInstance().getUserPreference();
 			if (!userPreference.getBpush_UserID().equals(userId)) {
-				userPreference.setAppID(appid);
-				userPreference.setBpush_ChannelID(channelId);
-				userPreference.setBpush_UserID(userId);
-
-				updateBpush(userId, channelId);
+				if (!TextUtils.isEmpty(userId) && !TextUtils.isEmpty(channelId)) {
+					updateBpush(userId, channelId);
+					userPreference.setAppID(appid);
+					userPreference.setBpush_ChannelID(channelId);
+					userPreference.setBpush_UserID(userId);
+				}
 			}
 		} else {
 			if (NetworkUtils.isNetworkAvailable(context)) {
