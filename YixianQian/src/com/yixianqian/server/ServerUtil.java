@@ -20,7 +20,9 @@ import com.loopj.android.http.TextHttpResponseHandler;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.yixianqian.R;
 import com.yixianqian.base.BaseApplication;
+import com.yixianqian.db.ConversationDbService;
 import com.yixianqian.db.TodayRecommendDbService;
+import com.yixianqian.entities.Conversation;
 import com.yixianqian.entities.TodayRecommend;
 import com.yixianqian.jsonobject.JsonTodayRecommend;
 import com.yixianqian.table.UserTable;
@@ -86,9 +88,22 @@ public class ServerUtil {
 							//如果由情侣或心动变为单身
 							if ((oldState == 2 || oldState == 3) && newState == 4) {
 								//删除会话
-								EMChatManager.getInstance().deleteConversation("" + friendPreference.getF_id());
+								//如果由情侣或心动变为单身
+								if ((oldState == 2 || oldState == 3) && newState == 4) {
+									ConversationDbService conversationDbService = ConversationDbService
+											.getInstance(context);
+									//删除会话
+									Conversation conversation = conversationDbService
+											.getConversationByUser(friendPreference.getF_id());
+									if (conversation != null) {
+										conversationDbService.conversationDao.delete(conversation);
+										//删除会话
+										EMChatManager.getInstance().deleteConversation("" + friendPreference.getF_id());
+										friendPreference.clear();
+										userPreference.setU_stateid(4);
+									}
+								}
 							}
-							//							getFlipperAndRecommend(context, isFinished);
 							getTodayRecommend(context, isFinished);
 						}
 					}

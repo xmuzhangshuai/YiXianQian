@@ -13,6 +13,7 @@
             android:focusable="true" />
 
         <RelativeLayout
+            android:id="@+id/singel_panel"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="3"
@@ -71,6 +72,46 @@
                 android:layout_marginRight="20dp"
                 android:textColor="@color/system_gray"
                 android:textSize="@dimen/day_recommend_user_font" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/lover_panel"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="3"
+            android:background="@color/system_personal_back"
+            android:padding="@dimen/time_capsule20"
+            android:visibility="gone" >
+
+            <ImageView
+                android:id="@+id/male_headiamge"
+                android:layout_width="@dimen/get_image_btn_padding"
+                android:layout_height="@dimen/get_image_btn_padding"
+                android:layout_alignParentLeft="true" />
+
+            <ImageView
+                android:id="@+id/female_headimage"
+                android:layout_width="@dimen/get_image_btn_padding"
+                android:layout_height="@dimen/get_image_btn_padding"
+                android:layout_alignParentRight="true" />
+
+            <TextView
+                android:id="@+id/male_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/male_headiamge"
+                android:layout_below="@+id/male_headiamge"
+                android:layout_marginTop="@dimen/day_recommend_dot_space"
+                android:textSize="@dimen/day_recommend_help_font" />
+
+            <TextView
+                android:id="@+id/female_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignRight="@+id/female_headimage"
+                android:layout_below="@+id/female_headimage"
+                android:layout_marginTop="@dimen/day_recommend_dot_space"
+                android:textSize="@dimen/day_recommend_help_font" />
         </RelativeLayout>
 
         <LinearLayout

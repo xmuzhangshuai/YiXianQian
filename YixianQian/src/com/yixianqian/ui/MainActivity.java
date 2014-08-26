@@ -586,14 +586,13 @@ public class MainActivity extends BaseFragmentActivity {
 		if (userPreference.getU_stateid() == 3) {
 			Conversation conversation = conversationDbService.getConversationByUser(userID);
 			if (conversation != null) {
-				conversationDbService.conversationDao.delete(conversationDbService.getConversationByUser(userID));
+				conversationDbService.conversationDao.delete(conversation);
 				if (currentTabIndex == 0) {
 					// 当前页面如果为聊天历史页面，刷新此页面
 					if (homeFragment != null) {
 						homeFragment.refresh();
 					}
 				}
-
 				//删除会话
 				EMChatManager.getInstance().deleteConversation("" + friendpreference.getF_id());
 				friendpreference.clear();

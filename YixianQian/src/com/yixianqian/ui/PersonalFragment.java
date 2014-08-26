@@ -32,9 +32,12 @@ import com.yixianqian.R;
 import com.yixianqian.base.BaseApplication;
 import com.yixianqian.base.BaseV4Fragment;
 import com.yixianqian.config.Constants.UserStateType;
+import com.yixianqian.config.Constants;
 import com.yixianqian.config.DefaultKeys;
 import com.yixianqian.server.ServerUtil;
 import com.yixianqian.utils.AsyncHttpClientImageSound;
+import com.yixianqian.utils.FriendPreference;
+import com.yixianqian.utils.ImageLoaderTool;
 import com.yixianqian.utils.UserPreference;
 
 /**
@@ -57,26 +60,43 @@ public class PersonalFragment extends BaseV4Fragment {
 	private View tapeView;//旋转磁带
 	private ImageView progressImage1;
 	private ImageView progressImage2;
-	private ImageView headImageView;//头像
-	private TextView nameTextView;//姓名
+	private ImageView smHeadImageView;//单身时我的头像
+	private TextView smNnameTextView;//单身时我的姓名
+	private ImageView lmHeadImageView;//恋爱史我的头像
+	private TextView lmNameTextView;//恋爱时我的姓名
+	private ImageView lHeadImageView;//情侣头像
+	private TextView lNameTextView;//情侣姓名
 	private TextView provinceTextView;//省份
 	private TextView schoolTextView;//学校
+
 	private TextView waitCheckView;
 	private Uri takePhotoUri;
 	private String takePhotoPath;
 	private UserPreference userPreference;
+	private FriendPreference friendPreference;
+	private View SinglePanel;
+	private View LoverPanel;
 
 	private File soundFileDir;//文件目录
 	private File soundFile;//录音文件
 	private String soundName = "audio";//文件名称
 	private MediaRecorder mRecorder;
 	private boolean recording = false;//是否正在录音
+	private int state;
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		super.onCreate(savedInstanceState);
+		userPreference = BaseApplication.getInstance().getUserPreference();
+		friendPreference = BaseApplication.getInstance().getFriendPreference();
+		state = userPreference.getU_stateid();
+	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		rootView = inflater.inflate(R.layout.fragment_personal, container, false);
-		userPreference = BaseApplication.getInstance().getUserPreference();
 		mRecorder = new MediaRecorder();
 		findViewById();// 初始化views
 		initView();
@@ -87,31 +107,9 @@ public class PersonalFragment extends BaseV4Fragment {
 	public void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
-		//设置头像
-		if (!TextUtils.isEmpty(userPreference.getU_small_avatar())) {
-			ServerUtil.getInstance(getActivity()).disPlayHeadImage(headImageView, waitCheckView);
-		} else {
-			//获取新头像地址
-			ServerUtil.getInstance(getActivity()).getHeadImage(headImageView, waitCheckView);
-		}
-
-		if (!TextUtils.isEmpty(userPreference.getU_small_avatar())) {
-			//点击显示高清头像
-			headImageView.setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					// TODO Auto-generated method stub
-					Intent intent = new Intent(getActivity(), ImageShowerActivity.class);
-					intent.putExtra(ImageShowerActivity.SHOW_BIG_IMAGE,
-							AsyncHttpClientImageSound.getAbsoluteUrl(userPreference.getU_large_avatar()));
-					startActivity(intent);
-					getActivity().overridePendingTransition(R.anim.zoomin, R.anim.zoomout);
-				}
-			});
-		}
 		recording = false;
-
 		refreshPersonStatue();
+		refreshPersonData();
 	}
 
 	@Override
@@ -127,8 +125,14 @@ public class PersonalFragment extends BaseV4Fragment {
 		progressImage1 = (ImageView) rootView.findViewById(R.id.progressimage1);
 		progressImage2 = (ImageView) rootView.findViewById(R.id.progressimage2);
 		tapeView = (View) rootView.findViewById(R.id.tape_view);
-		headImageView = (ImageView) rootView.findViewById(R.id.head_image);
-		nameTextView = (TextView) rootView.findViewById(R.id.name);
+		SinglePanel = rootView.findViewById(R.id.singel_panel);
+		LoverPanel = rootView.findViewById(R.id.lover_panel);
+		lmHeadImageView = (ImageView) rootView.findViewById(R.id.male_headiamge);
+		lmNameTextView = (TextView) rootView.findViewById(R.id.male_name);
+		lHeadImageView = (ImageView) rootView.findViewById(R.id.female_headimage);
+		lNameTextView = (TextView) rootView.findViewById(R.id.female_name);
+		smHeadImageView = (ImageView) rootView.findViewById(R.id.head_image);
+		smNnameTextView = (TextView) rootView.findViewById(R.id.name);
 		provinceTextView = (TextView) rootView.findViewById(R.id.province);
 		schoolTextView = (TextView) rootView.findViewById(R.id.school);
 		waitCheckView = (TextView) rootView.findViewById(R.id.waitcheck);
@@ -140,12 +144,6 @@ public class PersonalFragment extends BaseV4Fragment {
 		topNavLeftBtn.setImageResource(R.drawable.home);
 		topNavRightBtn.setImageResource(R.drawable.ic_action_overflow);
 		right_btn_bg.setBackgroundResource(R.drawable.sel_topnav_btn_bg);
-
-		//设置姓名、省份、及学校
-		//优先显示真实姓名
-		nameTextView.setText(userPreference.getName());
-		provinceTextView.setText(userPreference.getProvinceName());
-		schoolTextView.setText(userPreference.getSchoolName());
 
 		//导航条右侧按钮
 		right_btn_bg.setOnClickListener(new OnClickListener() {
@@ -206,6 +204,95 @@ public class PersonalFragment extends BaseV4Fragment {
 
 			}
 		});
+	}
+
+	/**
+	 * 更新个人资料
+	 */
+	private void refreshPersonData() {
+		if (state == UserStateType.LOVER) {
+			SinglePanel.setVisibility(View.GONE);
+			LoverPanel.setVisibility(View.VISIBLE);
+			//设置头像
+			if (!TextUtils.isEmpty(userPreference.getU_small_avatar())) {
+				ServerUtil.getInstance(getActivity()).disPlayHeadImage(lmHeadImageView, waitCheckView);
+			} else {
+				//获取新头像地址
+				ServerUtil.getInstance(getActivity()).getHeadImage(lmHeadImageView, waitCheckView);
+			}
+
+			if (!TextUtils.isEmpty(userPreference.getU_small_avatar())) {
+				//点击显示高清头像
+				lmHeadImageView.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						// TODO Auto-generated method stub
+						Intent intent = new Intent(getActivity(), ImageShowerActivity.class);
+						intent.putExtra(ImageShowerActivity.SHOW_BIG_IMAGE,
+								AsyncHttpClientImageSound.getAbsoluteUrl(userPreference.getU_large_avatar()));
+						startActivity(intent);
+						getActivity().overridePendingTransition(R.anim.zoomin, R.anim.zoomout);
+					}
+				});
+			}
+			lmNameTextView.setText(userPreference.getName());//恋爱时我的姓名
+			lNameTextView.setText(friendPreference.getName());//恋爱时情侣姓名
+			//设置头像
+			if (!TextUtils.isEmpty(friendPreference.getF_small_avatar())) {
+				imageLoader.displayImage(
+						AsyncHttpClientImageSound.getAbsoluteUrl(friendPreference.getF_small_avatar()), lHeadImageView,
+						ImageLoaderTool.getHeadImageOptions(10));
+
+				//点击显示高清头像
+				lHeadImageView.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						// TODO Auto-generated method stub
+						Intent intent = new Intent(getActivity(), PersonDetailActivity.class);
+						if (userPreference.getU_stateid() == 3) {//如果是心动
+							intent.putExtra(PersonDetailActivity.PERSON_TYPE, Constants.PersonDetailType.FLIPPER);
+						} else if (userPreference.getU_stateid() == 2) {//如果是情侣
+							intent.putExtra(PersonDetailActivity.PERSON_TYPE, Constants.PersonDetailType.LOVER);
+						}
+						getActivity().startActivity(intent);
+						getActivity().overridePendingTransition(R.anim.zoomin2, R.anim.zoomout);
+					}
+				});
+			}
+
+		} else {
+			SinglePanel.setVisibility(View.VISIBLE);
+			LoverPanel.setVisibility(View.GONE);
+
+			//设置姓名、省份、及学校
+			//优先显示真实姓名
+			smNnameTextView.setText(userPreference.getName());
+			provinceTextView.setText(userPreference.getProvinceName());
+			schoolTextView.setText(userPreference.getSchoolName());
+
+			//设置头像
+			if (!TextUtils.isEmpty(userPreference.getU_small_avatar())) {
+				ServerUtil.getInstance(getActivity()).disPlayHeadImage(smHeadImageView, waitCheckView);
+			} else {
+				//获取新头像地址
+				ServerUtil.getInstance(getActivity()).getHeadImage(smHeadImageView, waitCheckView);
+			}
+
+			if (!TextUtils.isEmpty(userPreference.getU_small_avatar())) {
+				//点击显示高清头像
+				smHeadImageView.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						// TODO Auto-generated method stub
+						Intent intent = new Intent(getActivity(), ImageShowerActivity.class);
+						intent.putExtra(ImageShowerActivity.SHOW_BIG_IMAGE,
+								AsyncHttpClientImageSound.getAbsoluteUrl(userPreference.getU_large_avatar()));
+						startActivity(intent);
+						getActivity().overridePendingTransition(R.anim.zoomin, R.anim.zoomout);
+					}
+				});
+			}
+		}
 	}
 
 	/**
