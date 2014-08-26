@@ -12,8 +12,13 @@ import android.widget.TextView;
 import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMChatOptions;
 import com.yixianqian.R;
+import com.yixianqian.base.BaseApplication;
 import com.yixianqian.base.BaseV4Fragment;
+import com.yixianqian.customewidget.MyAlertDialog;
+import com.yixianqian.utils.FriendPreference;
+import com.yixianqian.utils.LogTool;
 import com.yixianqian.utils.PreferenceUtils;
+import com.yixianqian.utils.ToastTool;
 
 /**
  * 类名称：SettingChatFragment
@@ -32,6 +37,14 @@ public class SettingChatFragment extends BaseV4Fragment implements OnClickListen
 	private RelativeLayout rl_switch_speaker;//设置扬声器布局
 	private View clearChatRedcord;//清空聊天记录
 	private EMChatOptions chatOptions;
+	private FriendPreference friendPreference;
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		super.onCreate(savedInstanceState);
+		friendPreference = BaseApplication.getInstance().getFriendPreference();
+	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -60,7 +73,7 @@ public class SettingChatFragment extends BaseV4Fragment implements OnClickListen
 		// TODO Auto-generated method stub
 		topNavigation.setText("聊天设置");
 		rightBtnBg.setVisibility(View.GONE);
-		leftImageButton.setOnClickListener(this);
+		leftImageButton.setVisibility(View.GONE);
 		clearChatRedcord.setOnClickListener(this);
 		rl_switch_speaker.setOnClickListener(this);
 
@@ -72,6 +85,45 @@ public class SettingChatFragment extends BaseV4Fragment implements OnClickListen
 			iv_switch_open_speaker.setVisibility(View.INVISIBLE);
 			iv_switch_close_speaker.setVisibility(View.VISIBLE);
 		}
+	}
+
+	/**
+	 * 清空聊天记录
+	 */
+	private void clearChatRecord() {
+		final MyAlertDialog myAlertDialog = new MyAlertDialog(getActivity());
+		myAlertDialog.setTitle("提示");
+		myAlertDialog.setMessage("是否清除聊天记录？");
+		View.OnClickListener comfirm = new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				myAlertDialog.dismiss();
+				int userId = friendPreference.getF_id();
+				if (userId > -1) {
+					if (EMChatManager.getInstance().getConversation("" + userId) != null) {
+						EMChatManager.getInstance().clearConversation("" + userId);
+						ToastTool.showShort(getActivity(), "清除聊天记录成功！");
+					} else {
+						LogTool.i("settingChatFragment", "会话为null");
+					}
+				} else {
+					LogTool.i("settingChatFragment", "另一半不存在");
+				}
+			}
+		};
+		View.OnClickListener cancle = new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				myAlertDialog.dismiss();
+			}
+		};
+		myAlertDialog.setPositiveButton("确定", comfirm);
+		myAlertDialog.setNegativeButton("取消", cancle);
+		myAlertDialog.show();
 	}
 
 	@Override
@@ -94,8 +146,7 @@ public class SettingChatFragment extends BaseV4Fragment implements OnClickListen
 			}
 			break;
 		case R.id.clear_chat_record:
-			break;
-		case R.id.left_btn_bg:
+			clearChatRecord();
 			break;
 		default:
 			break;

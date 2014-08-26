@@ -31,6 +31,7 @@ import com.yixianqian.R;
 import com.yixianqian.baidupush.SendMsgAsyncTask;
 import com.yixianqian.base.BaseApplication;
 import com.yixianqian.config.Constants;
+import com.yixianqian.config.Constants.FlipperStatus;
 import com.yixianqian.config.Constants.FlipperType;
 import com.yixianqian.config.Constants.MessageType;
 import com.yixianqian.customewidget.MyAlertDialog;
@@ -443,7 +444,7 @@ public class PersonDetailDialog extends DialogFragment {
 	 * @param view
 	 */
 	public void addContact(final int flipperId) {
-		LogTool.i("dayRecommend", "环信添加好友");
+		LogTool.i("personDetailDialog", "环信添加好友");
 		new Thread(new Runnable() {
 			public void run() {
 				try {
@@ -463,7 +464,11 @@ public class PersonDetailDialog extends DialogFragment {
 		Flipper flipper = flipperDbService.getFlipperByUserId(flipperId);
 		//如果数据库中存在该用户的请求，则更新状态
 		if (flipper != null) {
-			LogTool.i("dayRecommend", "flipper已经存在，更新");
+			if (flipper.getStatus() == FlipperStatus.BEREFUSED) {//如果被拒绝了
+				addContact(flipperId);
+				LogTool.i("personDetailDialog", "被拒绝之后环信添加好友");
+			}
+			LogTool.i("personDetailDialog", "flipper已经存在，更新");
 			flipper.setIsRead(true);
 			flipper.setTime(new Date());
 			flipper.setType(FlipperType.TO);

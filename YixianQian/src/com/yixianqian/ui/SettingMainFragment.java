@@ -202,11 +202,6 @@ public class SettingMainFragment extends BaseV4Fragment implements OnClickListen
 	}
 
 	/**
-	 * 获取本部名称
-	 * @return
-	 * @throws Exception
-	 */
-	/**
 	 * 获取版本号
 	 * @return 当前应用的版本号
 	 */

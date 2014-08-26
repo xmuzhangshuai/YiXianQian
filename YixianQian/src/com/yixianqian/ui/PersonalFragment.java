@@ -31,6 +31,7 @@ import android.widget.TextView;
 import com.yixianqian.R;
 import com.yixianqian.base.BaseApplication;
 import com.yixianqian.base.BaseV4Fragment;
+import com.yixianqian.config.Constants.UserStateType;
 import com.yixianqian.config.DefaultKeys;
 import com.yixianqian.server.ServerUtil;
 import com.yixianqian.utils.AsyncHttpClientImageSound;
@@ -109,7 +110,8 @@ public class PersonalFragment extends BaseV4Fragment {
 			});
 		}
 		recording = false;
-		//		initRecorder();
+
+		refreshPersonStatue();
 	}
 
 	@Override
@@ -138,7 +140,6 @@ public class PersonalFragment extends BaseV4Fragment {
 		topNavLeftBtn.setImageResource(R.drawable.home);
 		topNavRightBtn.setImageResource(R.drawable.ic_action_overflow);
 		right_btn_bg.setBackgroundResource(R.drawable.sel_topnav_btn_bg);
-		topNavText.setText("个人信息");
 
 		//设置姓名、省份、及学校
 		//优先显示真实姓名
@@ -205,6 +206,29 @@ public class PersonalFragment extends BaseV4Fragment {
 
 			}
 		});
+	}
+
+	/**
+	 * 更新顶部用户状态
+	 */
+	private void refreshPersonStatue() {
+		int state = userPreference.getU_stateid();
+		switch (state) {
+		case UserStateType.SINGLE:
+			topNavText.setText("当前状态：单身");
+			break;
+		case UserStateType.FLIPPER:
+			topNavText.setText("当前状态：心动");
+			break;
+		case UserStateType.LOVER:
+			topNavText.setText("当前状态：恋爱");
+			break;
+		case UserStateType.FREEZE:
+			topNavText.setText("当前状态：冻结");
+			break;
+		default:
+			break;
+		}
 	}
 
 	@Override

@@ -78,13 +78,7 @@ public class SettingNewMsgFragment extends BaseV4Fragment implements OnClickList
 		// TODO Auto-generated method stub
 		topNavigation.setText("新消息提醒");
 		rightBtnBg.setVisibility(View.GONE);
-		leftImageButton.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-			}
-		});
+		leftImageButton.setVisibility(View.GONE);
 
 		rl_switch_notification.setOnClickListener(this);
 		rl_switch_sound.setOnClickListener(this);
