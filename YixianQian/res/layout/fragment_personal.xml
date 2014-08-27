@@ -101,7 +101,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignLeft="@+id/male_headiamge"
                 android:layout_below="@+id/male_headiamge"
-                android:layout_marginTop="@dimen/day_recommend_dot_space"
+                android:layout_marginTop="@dimen/day_recommend_viewpager_padding_top"
                 android:textSize="@dimen/day_recommend_help_font" />
 
             <TextView
@@ -110,7 +110,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignRight="@+id/female_headimage"
                 android:layout_below="@+id/female_headimage"
-                android:layout_marginTop="@dimen/day_recommend_dot_space"
+                android:layout_marginTop="@dimen/day_recommend_viewpager_padding_top"
                 android:textSize="@dimen/day_recommend_help_font" />
         </RelativeLayout>
 

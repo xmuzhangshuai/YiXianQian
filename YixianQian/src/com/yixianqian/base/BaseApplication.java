@@ -106,7 +106,6 @@ public class BaseApplication extends FrontiaApplication {
 
 		// 初始化环信SDK,一定要先调用init()
 		EMChat.getInstance().init(applicationContext);
-		EMChat.getInstance().setDebugMode(true);
 		// 获取到EMChatOptions对象
 		EMChatOptions options = EMChatManager.getInstance().getChatOptions();
 		// 默认添加好友时，是不需要验证的，改成需要验证

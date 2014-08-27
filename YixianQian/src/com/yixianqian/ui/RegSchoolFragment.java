@@ -67,7 +67,7 @@ public class RegSchoolFragment extends BaseV4Fragment {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		userPreference = BaseApplication.getInstance().getUserPreference();
-		
+
 		//获取用户位置
 		locationPreferences = getActivity().getSharedPreferences("location", Context.MODE_PRIVATE);
 		mProvince = locationPreferences.getString(DefaultKeys.USER_PROVINCE, "");
@@ -284,7 +284,7 @@ public class RegSchoolFragment extends BaseV4Fragment {
 			transaction.setCustomAnimations(R.anim.push_left_in, R.anim.push_left_out, R.anim.push_right_in,
 					R.anim.push_right_out);
 			transaction.replace(R.id.fragment_container, phoneFragment);
-			//			transaction.addToBackStack(null);
+			transaction.addToBackStack(null);
 			transaction.commit();
 		}
 	}

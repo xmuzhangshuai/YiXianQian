@@ -15,6 +15,7 @@ import com.yixianqian.R;
 import com.yixianqian.base.BaseApplication;
 import com.yixianqian.base.BaseV4Fragment;
 import com.yixianqian.config.Constants;
+import com.yixianqian.customewidget.MyAlertDialog;
 import com.yixianqian.utils.UserPreference;
 
 /**
@@ -83,7 +84,7 @@ public class RegGenderFragment extends BaseV4Fragment implements OnCheckedChange
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				getActivity().finish();
+				vertifyToTerminate();
 			}
 		});
 		rightImageButton.setOnClickListener(new OnClickListener() {
@@ -98,6 +99,35 @@ public class RegGenderFragment extends BaseV4Fragment implements OnCheckedChange
 		mLoveView.setOnCheckedChangeListener(this);
 		mMale.setOnCheckedChangeListener(this);
 		mFemale.setOnCheckedChangeListener(this);
+	}
+
+	/**
+	 * 确认终止注册
+	 */
+	private void vertifyToTerminate() {
+		final MyAlertDialog dialog = new MyAlertDialog(getActivity());
+		dialog.setTitle("提示");
+		dialog.setMessage("注册过程中退出，信息将不能保存。是否继续退出？");
+		View.OnClickListener comfirm = new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				dialog.dismiss();
+				getActivity().finish();
+			}
+		};
+		View.OnClickListener cancle = new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				dialog.dismiss();
+			}
+		};
+		dialog.setPositiveButton("确定", comfirm);
+		dialog.setNegativeButton("取消", cancle);
+		dialog.show();
 	}
 
 	/**
@@ -141,6 +171,7 @@ public class RegGenderFragment extends BaseV4Fragment implements OnCheckedChange
 		transaction.setCustomAnimations(R.anim.push_left_in, R.anim.push_left_out, R.anim.push_right_in,
 				R.anim.push_right_out);
 		transaction.replace(R.id.fragment_container, regSchoolFragment);
+		transaction.addToBackStack(null);
 		transaction.commit();
 	}
 

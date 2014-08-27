@@ -5,11 +5,8 @@ import java.util.Map;
 
 import org.apache.http.Header;
 
-import android.content.BroadcastReceiver;
-import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -253,6 +250,7 @@ public class RegPhoneFragment extends BaseV4Fragment {
 					transaction.setCustomAnimations(R.anim.push_left_in, R.anim.push_left_out, R.anim.push_right_in,
 							R.anim.push_right_out);
 					transaction.replace(R.id.fragment_container, fragment);
+					getFragmentManager().popBackStack();
 					transaction.commit();
 					ToastTool.showShort(RegPhoneFragment.this.getActivity(), "验证码已发送");
 
