@@ -123,7 +123,7 @@ public class LoginActivity extends BaseActivity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				Intent intent = new Intent(LoginActivity.this,ForgetPassActivity.class);
+				Intent intent = new Intent(LoginActivity.this, ForgetPassActivity.class);
 				startActivity(intent);
 				overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
 			}
@@ -321,6 +321,7 @@ public class LoginActivity extends BaseActivity {
 		userPreference.setU_password(password);
 		userPreference.setHuanXinUserName("" + user.getU_id());
 		userPreference.setHuanXinPassword(MD5For16.GetMD5CodeToLower(password));
+		userPreference.setHeadImagePassed(user.getU_image_pass());
 	}
 
 	/**

@@ -254,7 +254,7 @@ public class ServerUtil {
 	 * @param context
 	 */
 	public void getHeadImage(final ImageView imageView, final TextView textView) {
-		LogTool.d("ServerUtil" + "获取头像地址");
+		LogTool.i("ServerUtil" + "获取头像地址");
 
 		RequestParams params = new RequestParams();
 		params.put(UserTable.U_ID, userPreference.getU_id());

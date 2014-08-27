@@ -586,6 +586,7 @@ public class MainActivity extends BaseFragmentActivity {
 		if (userPreference.getU_stateid() == 3) {
 			Conversation conversation = conversationDbService.getConversationByUser(userID);
 			if (conversation != null) {
+				LogTool.e("MainActivity", "删除会话");
 				conversationDbService.conversationDao.delete(conversation);
 				if (currentTabIndex == 0) {
 					// 当前页面如果为聊天历史页面，刷新此页面

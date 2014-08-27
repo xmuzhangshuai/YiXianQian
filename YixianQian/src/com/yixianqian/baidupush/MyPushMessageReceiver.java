@@ -92,9 +92,6 @@ public class MyPushMessageReceiver extends FrontiaPushMessageReceiver {
 	 */
 	@Override
 	public void onMessage(Context context, String message, String customContentString) {
-		String messageString = "透传消息 message=" + message + " customContentString=" + customContentString;
-		LogTool.d(TAG, messageString);
-
 		JsonMessage jsonMessage = FastJsonTool.getObject(message, JsonMessage.class);
 		if (jsonMessage != null) {
 			parseMessage(jsonMessage, context);
@@ -135,7 +132,7 @@ public class MyPushMessageReceiver extends FrontiaPushMessageReceiver {
 	 */
 	private void handleFlipperRequest(Context context, String msgContent) {
 		BaseApplication application = BaseApplication.getInstance();
-		LogTool.i("MyPushMessageReceiver", "接收到心动请求");
+		LogTool.i("MyPushMessageReceiver", "接收到心动请求" + msgContent);
 
 		//如果程序没有在运行，则显示通知
 		if (!CommonTools.isAppRunning(context)) {
