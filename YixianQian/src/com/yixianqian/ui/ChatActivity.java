@@ -119,6 +119,8 @@ public class ChatActivity extends BaseFragmentActivity implements OnTouchListene
 
 	private MsgListView mMsgListView;
 	private View topNavLeftBtn;//导航条左边按钮
+	private View topNavRightBtn;//导航条右边按钮，
+	private ImageView topNavRightImage;
 	private TextView topNavText;//导航条文字
 	private Button sendBtn;//发送按钮
 	private ImageView faceBtn;//表情
@@ -237,6 +239,8 @@ public class ChatActivity extends BaseFragmentActivity implements OnTouchListene
 		// TODO Auto-generated method stub
 		mMsgListView = (MsgListView) findViewById(R.id.msg_listView);
 		topNavLeftBtn = findViewById(R.id.left_btn_bg);
+		topNavRightBtn = findViewById(R.id.right_btn_bg);
+		topNavRightImage= (ImageView) findViewById(R.id.nav_right_btn);
 		topNavText = (TextView) findViewById(R.id.nav_text);
 		sendBtn = (Button) findViewById(R.id.send_btn);
 		faceBtn = (ImageView) findViewById(R.id.face_btn);
@@ -295,6 +299,7 @@ public class ChatActivity extends BaseFragmentActivity implements OnTouchListene
 	protected void initView() {
 		// TODO Auto-generated method stub
 		topNavText.setText(friendPreference.getName());
+		topNavRightImage.setImageResource(R.drawable.icon_persional);
 		inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
 		params = getWindow().getAttributes();
 
@@ -310,6 +315,7 @@ public class ChatActivity extends BaseFragmentActivity implements OnTouchListene
 		mMsgListView.setSelection(adapter.getCount() - 1);
 
 		topNavLeftBtn.setOnClickListener(this);
+		topNavRightBtn.setOnClickListener(this);
 
 		buttonPressToSpeak.setOnTouchListener(new PressToSpeakListen());
 
@@ -896,6 +902,10 @@ public class ChatActivity extends BaseFragmentActivity implements OnTouchListene
 			break;
 		case R.id.btn_set_mode_keyboard:
 			setModeKeyboard();
+			break;
+		case R.id.right_btn_bg:
+			startActivity(new Intent(ChatActivity.this,ChatInfoActivity.class));
+			overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
 			break;
 		default:
 			break;

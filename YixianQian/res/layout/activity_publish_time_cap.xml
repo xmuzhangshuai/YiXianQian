@@ -21,7 +21,6 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/time_capsule_220"
             android:scaleType="fitCenter"
-            android:src="@drawable/logorreg_bg"
             android:visibility="gone" />
 
         <LinearLayout

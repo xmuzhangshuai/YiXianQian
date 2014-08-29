@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical" >
+
+    <include
+        layout="@layout/publish_capsule_topnav"
+        android:focusable="true" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/time_capsule20"
+        android:paddingRight="@dimen/time_capsule20"
+        android:paddingTop="@dimen/day_recommend_padding" >
+
+        <ImageView
+            android:id="@+id/com_image"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/headiamge_height"
+            android:scaleType="fitCenter" />
+    </LinearLayout>
+
+</LinearLayout>

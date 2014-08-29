@@ -48,6 +48,7 @@
         android:layout_width="@dimen/login_register"
         android:layout_height="match_parent"
         android:layout_alignParentRight="true"
+        android:background="@drawable/sel_nav_leftbtn_bg"
         android:gravity="center"
         android:orientation="vertical"
         android:padding="@dimen/day_recommend_dot_space" >

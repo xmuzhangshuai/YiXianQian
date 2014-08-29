@@ -265,14 +265,14 @@
             android:name="com.yixianqian.ui.SettingActivity"
             android:screenOrientation="portrait" >
         </activity>
-        
-         <!-- 忘记密码页面 -->
+
+        <!-- 忘记密码页面 -->
         <activity
             android:name="com.yixianqian.ui.ForgetPassActivity"
             android:screenOrientation="portrait" >
         </activity>
-        
-         <!-- 重置页面 -->
+
+        <!-- 重置密码页面 -->
         <activity
             android:name="com.yixianqian.ui.ResetPassActivity"
             android:screenOrientation="portrait" >
@@ -283,6 +283,18 @@
             android:name="com.yixianqian.ui.SharePanelActivity"
             android:screenOrientation="portrait"
             android:theme="@style/MyDialogStyle" >
+        </activity>
+
+        <!-- 聊天信息页面 -->
+        <activity
+            android:name="com.yixianqian.ui.ChatInfoActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+
+        <!-- 处理投诉页面 -->
+        <activity
+            android:name="com.yixianqian.ui.HandleComplainActivity"
+            android:screenOrientation="portrait" >
         </activity>
 
         <!-- 百度地图页面 -->
