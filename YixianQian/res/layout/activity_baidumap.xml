@@ -38,7 +38,7 @@
             android:background="@drawable/sel_nav_leftbtn_bg"
             android:gravity="center"
             android:orientation="vertical"
-            android:padding="@dimen/personal_timecapsule_padding" >
+            android:padding="@dimen/day_recommend_help_font_space" >
 
             <ImageView
                 android:id="@+id/nav_left_btn"
