@@ -17,6 +17,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -109,7 +111,7 @@ public class LoveVertifyActivity extends BaseActivity {
 	protected void initView() {
 		// TODO Auto-generated method stub
 		navText.setText("心动历史");
-		//		rightImage.setImageResource(R.drawable.delete_white);
+		rightImage.setImageResource(R.drawable.delete_white);
 
 		if (flipperList.size() == 0) {
 			mEmpty.setVisibility(View.VISIBLE);
@@ -124,14 +126,34 @@ public class LoveVertifyActivity extends BaseActivity {
 			}
 		});
 
-		//		deleteBtn.setOnClickListener(new OnClickListener() {
-		//
-		//			@Override
-		//			public void onClick(View v) {
-		//				// TODO Auto-generated method stub
-		//				deleteHistroy();
-		//			}
-		//		});
+		deleteBtn.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				deleteHistroy();
+			}
+		});
+
+		loveVertifyList.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				// TODO Auto-generated method stub
+				Intent intent = new Intent(LoveVertifyActivity.this, PersonDetailActivity.class);
+				if (userPreference.getU_stateid() == 3) {
+					intent.putExtra(PersonDetailActivity.PERSON_TYPE, Constants.PersonDetailType.FLIPPER);
+				} else if (userPreference.getU_stateid() == 2) {
+					intent.putExtra(PersonDetailActivity.PERSON_TYPE, Constants.PersonDetailType.LOVER);
+				} else {
+					intent.putExtra(PersonDetailActivity.PERSON_TYPE, Constants.PersonDetailType.SINGLE);
+				}
+
+				intent.putExtra(UserTable.U_ID, flipperList.get(position).getUserID());
+				startActivity(intent);
+				overridePendingTransition(R.anim.zoomin2, R.anim.zoomout);
+			}
+		});
 	}
 
 	/**
@@ -200,7 +222,7 @@ public class LoveVertifyActivity extends BaseActivity {
 			// TODO Auto-generated method stub
 
 			//标记本心动请求已读
-			Flipper flipper = flipperList.get(position);
+			final Flipper flipper = flipperList.get(position);
 			if (flipper != null) {
 				flipper.setIsRead(true);
 				flipperDbService.flipperDao.update(flipper);
@@ -221,7 +243,7 @@ public class LoveVertifyActivity extends BaseActivity {
 			TextView info2 = (TextView) view.findViewById(R.id.info2);
 
 			timeTextView.setText(DateTimeTools.DateToString(flipper.getTime()));
-			if (!TextUtils.isEmpty(flipperList.get(position).getSamllAvatar())) {
+			if (!TextUtils.isEmpty(flipper.getSamllAvatar())) {
 				imageLoader.displayImage(AsyncHttpClientImageSound.getAbsoluteUrl(flipper.getSamllAvatar()),
 						headImageView, ImageLoaderTool.getHeadImageOptions(10));
 				headImageView.setOnClickListener(new OnClickListener() {
@@ -229,18 +251,12 @@ public class LoveVertifyActivity extends BaseActivity {
 					@Override
 					public void onClick(View v) {
 						// TODO Auto-generated method stub
-						Intent intent = new Intent(LoveVertifyActivity.this, PersonDetailActivity.class);
-						if (userPreference.getU_stateid() == 3) {
-							intent.putExtra(PersonDetailActivity.PERSON_TYPE, Constants.PersonDetailType.FLIPPER);
-						} else if (userPreference.getU_stateid() == 2) {
-							intent.putExtra(PersonDetailActivity.PERSON_TYPE, Constants.PersonDetailType.LOVER);
-						} else {
-							intent.putExtra(PersonDetailActivity.PERSON_TYPE, Constants.PersonDetailType.SINGLE);
-						}
-
-						intent.putExtra(UserTable.U_ID, flipperList.get(position).getUserID());
+						Intent intent = new Intent(LoveVertifyActivity.this, ImageShowerActivity.class);
+						intent.putExtra(ImageShowerActivity.SHOW_BIG_IMAGE,
+								AsyncHttpClientImageSound.getAbsoluteUrl(flipper.getLargeAvatar()));
 						startActivity(intent);
-						overridePendingTransition(R.anim.zoomin2, R.anim.zoomout);
+						LoveVertifyActivity.this.overridePendingTransition(R.anim.zoomin, R.anim.zoomout);
+
 					}
 				});
 			}

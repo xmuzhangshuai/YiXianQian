@@ -253,10 +253,7 @@ public class DayRecommendActivity extends BaseFragmentActivity {
 		Flipper flipper = flipperDbService.getFlipperByUserId(flipperId);
 		//如果数据库中存在该用户的请求，则更新状态
 		if (flipper != null) {
-			if (flipper.getStatus() == FlipperStatus.BEREFUSED) {//如果被拒绝了
-				addContact(flipperId);
-				LogTool.i("dayRecommend", "被拒绝之后环信添加好友");
-			}
+			addContact(flipperId);
 			LogTool.i("dayRecommend", "flipper已经存在，更新");
 			flipper.setIsRead(true);
 			flipper.setTime(new Date());

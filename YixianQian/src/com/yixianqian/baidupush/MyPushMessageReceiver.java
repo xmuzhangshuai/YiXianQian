@@ -30,7 +30,6 @@ import com.yixianqian.utils.CommonTools;
 import com.yixianqian.utils.FastJsonTool;
 import com.yixianqian.utils.LogTool;
 import com.yixianqian.utils.NetworkUtils;
-import com.yixianqian.utils.PreferenceUtils;
 import com.yixianqian.utils.ToastTool;
 import com.yixianqian.utils.UserPreference;
 
@@ -103,10 +102,10 @@ public class MyPushMessageReceiver extends FrontiaPushMessageReceiver {
 	 * @param msg
 	 */
 	private void parseMessage(JsonMessage msg, Context context) {
-		//判断是否开启声音
-		if (PreferenceUtils.getInstance(BaseApplication.getInstance()).getSettingMsgSound()) {
-			BaseApplication.getInstance().getMessagePlayer().start();
-		}
+		//		//判断是否开启声音
+		//		if (PreferenceUtils.getInstance(BaseApplication.getInstance()).getSettingMsgSound()) {
+		//			BaseApplication.getInstance().getMessagePlayer().start();
+		//		}
 		int type = msg.getType();
 		switch (type) {
 		//心动请求
@@ -132,7 +131,7 @@ public class MyPushMessageReceiver extends FrontiaPushMessageReceiver {
 	 */
 	private void handleFlipperRequest(Context context, String msgContent) {
 		BaseApplication application = BaseApplication.getInstance();
-		LogTool.i("MyPushMessageReceiver", "百度推送接收到心动请求" + msgContent);
+		LogTool.i("MyPushMessageReceiver", "百度推送   接收到心动请求" + msgContent);
 
 		//如果程序没有在运行，则显示通知
 		if (!CommonTools.isAppRunning(context)) {
