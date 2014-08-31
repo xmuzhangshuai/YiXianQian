@@ -37,6 +37,7 @@ import com.yixianqian.config.Constants;
 import com.yixianqian.config.Constants.FlipperStatus;
 import com.yixianqian.config.Constants.FlipperType;
 import com.yixianqian.config.Constants.MessageType;
+import com.yixianqian.customewidget.MyAlertDialog;
 import com.yixianqian.db.FlipperDbService;
 import com.yixianqian.db.TodayRecommendDbService;
 import com.yixianqian.entities.Flipper;
@@ -170,9 +171,9 @@ public class DayRecommendActivity extends BaseFragmentActivity {
 					TodayRecommend todayRecommend = todayRecommendList.get(currentLike);
 					if (todayRecommend != null) {
 						sendLoveReuest(todayRecommendList.get(currentLike).getUserID());
-						Intent intent = new Intent(DayRecommendActivity.this, MainActivity.class);
-						startActivity(intent);
-						overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+						//												Intent intent = new Intent(DayRecommendActivity.this, MainActivity.class);
+						//												startActivity(intent);
+						//												overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
 					}
 				}
 			}
@@ -185,46 +186,77 @@ public class DayRecommendActivity extends BaseFragmentActivity {
 	 */
 	private void sendLoveReuest(final int filpperId) {
 		if (filpperId > 0) {
-			String url = "addflipperrequest";
-			RequestParams params = new RequestParams();
-			int myUserID = userPreference.getU_id();
-			params.put(FlipperRequestTable.FR_USERID, myUserID);
-			params.put(FlipperRequestTable.FR_FLIPPERID, filpperId);
-			TextHttpResponseHandler responseHandler = new TextHttpResponseHandler() {
-				@Override
-				public void onStart() {
-					// TODO Auto-generated method stub
-					super.onStart();
-					progressDialog = new ProgressDialog(DayRecommendActivity.this);
-					progressDialog.setMessage("正在发送请求...");
-					progressDialog.setCanceledOnTouchOutside(false);
-					progressDialog.show();
+			FlipperDbService flipperDbService = FlipperDbService.getInstance(DayRecommendActivity.this);
+			Flipper flipper = flipperDbService.getFlipperByUserId(filpperId);
+			if (flipper != null && flipper.getStatus().equals(FlipperStatus.BEINVITEED)) {//如果被邀请过
+				LogTool.e("PersonDetailActivity", "已经被邀请过了");
+				String name = flipper.getNickname();
+				if (!TextUtils.isEmpty(flipper.getRealname())) {
+					name = flipper.getRealname();
 				}
+				final MyAlertDialog myAlertDialog = new MyAlertDialog(this);
+				myAlertDialog.setShowCancel(false);
+				myAlertDialog.setTitle("提示");
+				myAlertDialog.setMessage("您已经被 " + name + " 邀请过，可以在爱情验证页面点击“我也对他砰然心动”来成为心动关系");
+				View.OnClickListener comfirm = new OnClickListener() {
 
-				@Override
-				public void onFailure(int arg0, Header[] arg1, String arg2, Throwable arg3) {
-					// TODO Auto-generated method stub
-					ToastTool.showLong(DayRecommendActivity.this, arg2);
-					DayRecommendActivity.this.finish();
-				}
+					@Override
+					public void onClick(View v) {
+						// TODO Auto-generated method stub
+						myAlertDialog.dismiss();
+						Intent intent = new Intent(DayRecommendActivity.this, MainActivity.class);
+						startActivity(intent);
+						overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+					}
+				};
+				myAlertDialog.setPositiveButton("确定", comfirm);
+				myAlertDialog.show();
+			} else {
+				LogTool.e("dayRecommend", "发送爱情验证");
+				String url = "addflipperrequest";
+				RequestParams params = new RequestParams();
+				int myUserID = userPreference.getU_id();
+				params.put(FlipperRequestTable.FR_USERID, myUserID);
+				params.put(FlipperRequestTable.FR_FLIPPERID, filpperId);
+				TextHttpResponseHandler responseHandler = new TextHttpResponseHandler() {
+					@Override
+					public void onStart() {
+						// TODO Auto-generated method stub
+						super.onStart();
+						progressDialog = new ProgressDialog(DayRecommendActivity.this);
+						progressDialog.setMessage("正在发送请求...");
+						progressDialog.setCanceledOnTouchOutside(false);
+						progressDialog.show();
+					}
 
-				@Override
-				public void onSuccess(int arg0, Header[] arg1, String arg2) {
-					// TODO Auto-generated method stub
-					//					addContact(filpperId);
-					ToastTool.showLong(getApplicationContext(), "爱情验证已发送！等待对方同意");
-					saveFlipper(filpperId);
-					DayRecommendActivity.this.finish();
-				}
+					@Override
+					public void onFailure(int statusCode, Header[] headers, String errorResponse, Throwable e) {
+						// TODO Auto-generated method stub
+						LogTool.e("DayRecommendActivity", "错误原因" + errorResponse);
+						DayRecommendActivity.this.finish();
+					}
 
-				@Override
-				public void onFinish() {
-					// TODO Auto-generated method stub
-					super.onFinish();
-					progressDialog.dismiss();
-				}
-			};
-			AsyncHttpClientTool.post(DayRecommendActivity.this, url, params, responseHandler);
+					@Override
+					public void onSuccess(int statusCode, Header[] headers, String response) {
+						// TODO Auto-generated method stub
+						ToastTool.showLong(getApplicationContext(), "爱情验证已发送！等待对方同意");
+						saveFlipper(filpperId);
+
+						Intent intent = new Intent(DayRecommendActivity.this, MainActivity.class);
+						startActivity(intent);
+						overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+						DayRecommendActivity.this.finish();
+					}
+
+					@Override
+					public void onFinish() {
+						// TODO Auto-generated method stub
+						super.onFinish();
+						progressDialog.dismiss();
+					}
+				};
+				AsyncHttpClientTool.post(DayRecommendActivity.this, url, params, responseHandler);
+			}
 		}
 	}
 
@@ -253,7 +285,10 @@ public class DayRecommendActivity extends BaseFragmentActivity {
 		Flipper flipper = flipperDbService.getFlipperByUserId(flipperId);
 		//如果数据库中存在该用户的请求，则更新状态
 		if (flipper != null) {
-			addContact(flipperId);
+			if (!flipper.getStatus().equals(FlipperStatus.INVITE)) {//如果已经请求过，则不再请求
+				addContact(flipperId);
+			}
+
 			LogTool.i("dayRecommend", "flipper已经存在，更新");
 			flipper.setIsRead(true);
 			flipper.setTime(new Date());
@@ -275,6 +310,7 @@ public class DayRecommendActivity extends BaseFragmentActivity {
 	 * 	网络获取User信息
 	 */
 	private void getUser(int userId) {
+		LogTool.e("DayRecommendActivity", "网络获取USER信息");
 		RequestParams params = new RequestParams();
 		params.put(UserTable.U_ID, userId);
 

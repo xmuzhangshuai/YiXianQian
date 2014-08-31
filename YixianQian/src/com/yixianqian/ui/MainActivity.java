@@ -338,18 +338,18 @@ public class MainActivity extends BaseFragmentActivity {
 			}
 			runOnUiThread(new Runnable() {
 				public void run() {
+					if (currentTabIndex == 0) {
+						// 当前页面如果为聊天历史页面，刷新此页面
+						if (homeFragment != null) {
+							homeFragment.refresh();
+						}
+					}
 					//如果正在与此用户的聊天页面
 					if (ChatActivity.activityInstance != null
 							&& usernameList.contains(ChatActivity.activityInstance.getToChatUsername())) {
 						ChatActivity.activityInstance.finish();
-						if (currentTabIndex == 0) {
-							// 当前页面如果为聊天历史页面，刷新此页面
-							if (homeFragment != null) {
-								homeFragment.refresh();
-							}
-						}
 						ToastTool.showLong(MainActivity.this, ChatActivity.activityInstance.getToChatUsername()
-								+ "和你解除心动关系");
+								+ "和你解除关系");
 					}
 				}
 			});

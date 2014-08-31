@@ -67,10 +67,6 @@ public class GuideActivity extends BaseActivity {
 		userPreference = BaseApplication.getInstance().getUserPreference();
 		friendPreference = BaseApplication.getInstance().getFriendPreference();
 
-		/************初始化友盟服务**************/
-		MobclickAgent.updateOnlineConfig(this);
-		new FeedbackAgent(this).sync();
-
 		//获取定位
 		initLocation();
 		//开启百度推送服务
@@ -81,10 +77,15 @@ public class GuideActivity extends BaseActivity {
 		//设置标签
 		List<String> tags = new ArrayList<String>();
 		String gender = userPreference.getU_gender();
+
 		if (!TextUtils.isEmpty(gender)) {
 			tags.add(gender);
 			PushManager.setTags(this, tags);
 		}
+
+		/************初始化友盟服务**************/
+		MobclickAgent.updateOnlineConfig(this);
+		new FeedbackAgent(this).sync();
 
 		if (count == 0) {// 如果是第一次登陆，则启动向导页面
 			// 第一次运行拷贝数据库文件
