@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -18,11 +19,15 @@ import com.easemob.chat.EMChatOptions;
 import com.yixianqian.R;
 import com.yixianqian.base.BaseActivity;
 import com.yixianqian.base.BaseApplication;
+import com.yixianqian.config.Constants;
 import com.yixianqian.customewidget.MyAlertDialog;
+import com.yixianqian.utils.AsyncHttpClientImageSound;
 import com.yixianqian.utils.FriendPreference;
+import com.yixianqian.utils.ImageLoaderTool;
 import com.yixianqian.utils.LogTool;
 import com.yixianqian.utils.PreferenceUtils;
 import com.yixianqian.utils.ToastTool;
+import com.yixianqian.utils.UserPreference;
 
 /**
  * 类名称：ChatInfoActivity
@@ -35,6 +40,10 @@ public class ChatInfoActivity extends BaseActivity implements OnClickListener {
 	private TextView topNavigation;//导航栏文字
 	private View leftImageButton;//导航栏左侧按钮
 	private View rightBtnBg;//导航栏右侧按钮
+	private ImageView headImageView;
+	private TextView nameTextView;//情侣姓名
+	private TextView provinceTextView;//省份
+	private TextView schoolTextView;//学校
 	private RelativeLayout rl_switch_notification;// 设置新消息通知布局
 	private RelativeLayout rl_switch_sound;//设置声音布局
 	private RelativeLayout rl_switch_vibrate;// 设置震动布局
@@ -53,6 +62,7 @@ public class ChatInfoActivity extends BaseActivity implements OnClickListener {
 	private View divider1, divider2, divider3;
 	private EMChatOptions chatOptions;
 	private FriendPreference friendPreference;
+	private UserPreference userPreference;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +72,7 @@ public class ChatInfoActivity extends BaseActivity implements OnClickListener {
 		setContentView(R.layout.activity_chat_info);
 
 		friendPreference = BaseApplication.getInstance().getFriendPreference();
+		userPreference = BaseApplication.getInstance().getUserPreference();
 
 		findViewById();
 		initView();
@@ -91,6 +102,10 @@ public class ChatInfoActivity extends BaseActivity implements OnClickListener {
 		topNavigation = (TextView) findViewById(R.id.nav_text);
 		leftImageButton = (View) findViewById(R.id.left_btn_bg);
 		rightBtnBg = (View) findViewById(R.id.right_btn_bg);
+		nameTextView = (TextView) findViewById(R.id.name);
+		provinceTextView = (TextView) findViewById(R.id.province);
+		schoolTextView = (TextView) findViewById(R.id.school);
+		headImageView = (ImageView) findViewById(R.id.head_image);
 	}
 
 	@Override
@@ -98,6 +113,30 @@ public class ChatInfoActivity extends BaseActivity implements OnClickListener {
 		// TODO Auto-generated method stub
 		topNavigation.setText("聊天信息");
 		rightBtnBg.setVisibility(View.GONE);
+		//设置头像
+		if (!TextUtils.isEmpty(friendPreference.getF_small_avatar())) {
+			imageLoader.displayImage(AsyncHttpClientImageSound.getAbsoluteUrl(friendPreference.getF_small_avatar()),
+					headImageView, ImageLoaderTool.getHeadImageOptions(10));
+
+			//点击进入详情
+			headImageView.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+					Intent intent = new Intent(ChatInfoActivity.this, PersonDetailActivity.class);
+					if (userPreference.getU_stateid() == 3) {//如果是心动
+						intent.putExtra(PersonDetailActivity.PERSON_TYPE, Constants.PersonDetailType.FLIPPER);
+					} else if (userPreference.getU_stateid() == 2) {//如果是情侣
+						intent.putExtra(PersonDetailActivity.PERSON_TYPE, Constants.PersonDetailType.LOVER);
+					}
+					ChatInfoActivity.this.startActivity(intent);
+					ChatInfoActivity.this.overridePendingTransition(R.anim.zoomin2, R.anim.zoomout);
+				}
+			});
+		}
+		nameTextView.setText(friendPreference.getName());
+		schoolTextView.setText(friendPreference.getSchoolName());
+		provinceTextView.setText(friendPreference.getProvinceName());
 
 		rl_switch_notification.setOnClickListener(this);
 		rl_switch_sound.setOnClickListener(this);
