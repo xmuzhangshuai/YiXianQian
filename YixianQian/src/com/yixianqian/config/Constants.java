@@ -101,20 +101,17 @@ public class Constants {
 		/**被邀请*/
 		public static final String BEINVITEED = "BEINVITEED";
 
+		/**我拒绝了对方的请求*/
+		public static final String REFUSED = "REFUSED";
+
 		/**被拒绝*/
 		public static final String BEREFUSED = "BEREFUSED";
-
-		/**对方同意*/
-		public static final String BEAGREED = "BEAGREED";
-
-		/**对方申请*/
-		public static final String BEAPPLYED = "BEAPPLYED";
 
 		/**我同意了对方的请求*/
 		public static final String AGREED = "AGREED";
 
-		/**我拒绝了对方的请求*/
-		public static final String REFUSED = "REFUSED";
+		/**对方同意*/
+		public static final String BEAGREED = "BEAGREED";
 
 	}
 

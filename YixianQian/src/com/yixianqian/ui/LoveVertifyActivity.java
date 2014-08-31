@@ -109,7 +109,7 @@ public class LoveVertifyActivity extends BaseActivity {
 	protected void initView() {
 		// TODO Auto-generated method stub
 		navText.setText("心动历史");
-		rightImage.setImageResource(R.drawable.delete_white);
+		//		rightImage.setImageResource(R.drawable.delete_white);
 
 		if (flipperList.size() == 0) {
 			mEmpty.setVisibility(View.VISIBLE);
@@ -124,14 +124,14 @@ public class LoveVertifyActivity extends BaseActivity {
 			}
 		});
 
-		deleteBtn.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				deleteHistroy();
-			}
-		});
+		//		deleteBtn.setOnClickListener(new OnClickListener() {
+		//
+		//			@Override
+		//			public void onClick(View v) {
+		//				// TODO Auto-generated method stub
+		//				deleteHistroy();
+		//			}
+		//		});
 	}
 
 	/**
@@ -253,7 +253,7 @@ public class LoveVertifyActivity extends BaseActivity {
 
 			if (status.equals(Constants.FlipperStatus.REFUSED)) {//被我拒绝的心动请求
 				nameTextView.setTextColor(getResources().getColor(R.color.unenable));
-				info.setText("您已经拒绝");
+				info.setText("您已经拒绝了ta");
 				info.setTextColor(getResources().getColor(R.color.unenable));
 				info2.setVisibility(View.GONE);
 				flipperBtn.setVisibility(View.GONE);
@@ -343,6 +343,7 @@ public class LoveVertifyActivity extends BaseActivity {
 
 							try {
 								EMChatManager.getInstance().refuseInvitation("" + flipper.getUserID());
+								LogTool.e("LoverVertifyActivity", "我拒绝了 " + flipper.getUserID() + " 的请求");
 							} catch (EaseMobException e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
@@ -401,6 +402,7 @@ public class LoveVertifyActivity extends BaseActivity {
 									//同意username的好友请求
 									try {
 										EMChatManager.getInstance().acceptInvitation("" + flipper.getUserID());
+										LogTool.e("LoverVertifyActivity", "我同意了 " + flipper.getUserID() + " 的请求");
 									} catch (EaseMobException e) {
 										// TODO Auto-generated catch block
 										e.printStackTrace();
