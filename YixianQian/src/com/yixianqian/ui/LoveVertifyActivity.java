@@ -30,6 +30,7 @@ import com.yixianqian.R;
 import com.yixianqian.base.BaseActivity;
 import com.yixianqian.base.BaseApplication;
 import com.yixianqian.config.Constants;
+import com.yixianqian.customewidget.MyAlertDialog;
 import com.yixianqian.db.ConversationDbService;
 import com.yixianqian.db.FlipperDbService;
 import com.yixianqian.entities.Conversation;
@@ -62,6 +63,8 @@ public class LoveVertifyActivity extends BaseActivity {
 	private FriendPreference friendpreference;
 	private UserPreference userPreference;
 	private View leftBtn;
+	private View deleteBtn;
+	private ImageView rightImage;
 	private TextView mEmpty;
 	private TextView navText;
 
@@ -98,12 +101,16 @@ public class LoveVertifyActivity extends BaseActivity {
 		mEmpty = (TextView) findViewById(R.id.empty);
 		leftBtn = findViewById(R.id.left_btn_bg);
 		navText = (TextView) findViewById(R.id.nav_text);
+		deleteBtn = findViewById(R.id.right_btn_bg);
+		rightImage = (ImageView) findViewById(R.id.nav_right_btn);
 	}
 
 	@Override
 	protected void initView() {
 		// TODO Auto-generated method stub
 		navText.setText("心动历史");
+		rightImage.setImageResource(R.drawable.delete_white);
+
 		if (flipperList.size() == 0) {
 			mEmpty.setVisibility(View.VISIBLE);
 		}
@@ -116,6 +123,49 @@ public class LoveVertifyActivity extends BaseActivity {
 				finish();
 			}
 		});
+
+		deleteBtn.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				deleteHistroy();
+			}
+		});
+	}
+
+	/**
+	 * 删除心动历史
+	 */
+	private void deleteHistroy() {
+		final MyAlertDialog myAlertDialog = new MyAlertDialog(this);
+		myAlertDialog.setTitle("提示");
+		myAlertDialog.setMessage("清空心动历史？");
+		View.OnClickListener comfirm = new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				myAlertDialog.dismiss();
+				flipperDbService.flipperDao.deleteAll();
+				flipperList = flipperDbService.getFlipperList();
+				adapter.notifyDataSetChanged();
+				if (flipperList.size() == 0) {
+					mEmpty.setVisibility(View.VISIBLE);
+				}
+			}
+		};
+		View.OnClickListener cancle = new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				myAlertDialog.dismiss();
+			}
+		};
+		myAlertDialog.setPositiveButton("确定", comfirm);
+		myAlertDialog.setNegativeButton("取消", cancle);
+		myAlertDialog.show();
 	}
 
 	/**

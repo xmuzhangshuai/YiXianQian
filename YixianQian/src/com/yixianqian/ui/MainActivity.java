@@ -358,7 +358,7 @@ public class MainActivity extends BaseFragmentActivity {
 		//收到心动请求
 		@Override
 		public void onContactInvited(final String username, String reason) {
-			LogTool.e("心动请求，", "收到心动请求，来自" + username + ",reason: " + reason);
+			LogTool.e("心动请求，", "环信收到心动请求，来自" + username + ",reason: " + reason);
 
 			// 接到邀请的消息，如果不处理(同意或拒绝)，掉线后，服务器会自动再发过来，所以客户端不要重复提醒
 			Map<String, String> map = new HashMap<String, String>();

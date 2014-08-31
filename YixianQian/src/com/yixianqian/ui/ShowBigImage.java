@@ -14,11 +14,12 @@ import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
 import android.view.View.OnClickListener;
+import android.view.Window;
 import android.widget.ProgressBar;
 
 import com.easemob.chat.EMChatConfig;
+import com.easemob.chat.EMChatManager;
 import com.easemob.cloud.CloudOperationCallback;
 import com.easemob.cloud.HttpFileManager;
 import com.easemob.util.ImageUtils;
@@ -88,7 +89,7 @@ public class ShowBigImage extends BaseActivity {
 		} else if (remotepath != null) {
 			System.err.println("download remote image");
 			Map<String, String> maps = new HashMap<String, String>();
-			maps.put("Authorization", "Bearer " + EMChatConfig.getInstance().AccessToken);
+			maps.put("Authorization", "Bearer " + EMChatManager.getInstance().getAccessToken());
 			if (!TextUtils.isEmpty(secret)) {
 				maps.put("share-secret", secret);
 			}

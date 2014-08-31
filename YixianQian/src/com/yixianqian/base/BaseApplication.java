@@ -25,7 +25,6 @@ import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
-import com.umeng.fb.FeedbackAgent;
 import com.yixianqian.R;
 import com.yixianqian.baidupush.BaiduPush;
 import com.yixianqian.config.Constants;
@@ -156,6 +155,12 @@ public class BaseApplication extends FrontiaApplication {
 			@Override
 			public String onLatestMessageNotify(EMMessage message, int fromUsersNum, int messageNum) {
 				return fromUsersNum + "个人，发来了" + messageNum + "条消息";
+			}
+
+			@Override
+			public String onSetNotificationTitle(EMMessage arg0) {
+				// TODO Auto-generated method stub
+				return "新消息";
 			}
 		});
 	}

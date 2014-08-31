@@ -70,9 +70,9 @@ public class SendNotifyTask {
 		@Override
 		protected String doInBackground(Void... message) {
 			String result = "";
-			if (TextUtils.isEmpty(mUserId))
-				result = mBaiduPush.PushNotifyAll(mTitle, mMessage);
-			else
+			if (!TextUtils.isEmpty(mUserId))
+				//				result = mBaiduPush.PushNotifyAll(mTitle, mMessage);
+				//			else
 				result = mBaiduPush.PushNotify(mTitle, mMessage, mUserId);
 			return result;
 		}

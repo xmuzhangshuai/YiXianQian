@@ -261,8 +261,8 @@ public class PersonDetailDialog extends DialogFragment {
 							userPreference.setU_stateid(4);
 							PersonDetailDialog.this.dismiss();
 							startActivity(new Intent(getActivity(), MainActivity.class));
-							getActivity().overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
 							getActivity().finish();
+							getActivity().overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
 						}
 
 						@Override
@@ -308,6 +308,7 @@ public class PersonDetailDialog extends DialogFragment {
 							// TODO Auto-generated method stub
 							new SendNotifyTask(userPreference.getName() + "和您解除了情侣关系", userPreference.getName(),
 									friendPreference.getBpush_UserID()).send();
+
 							conversationDbService.conversationDao.delete(conversationDbService
 									.getConversationByUser(friendPreference.getF_id()));
 							//删除会话
@@ -323,8 +324,8 @@ public class PersonDetailDialog extends DialogFragment {
 							userPreference.setU_stateid(4);
 							PersonDetailDialog.this.dismiss();
 							startActivity(new Intent(getActivity(), MainActivity.class));
-							getActivity().overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
 							getActivity().finish();
+							getActivity().overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
 						}
 
 						@Override
@@ -377,8 +378,8 @@ public class PersonDetailDialog extends DialogFragment {
 
 				PersonDetailDialog.this.dismiss();
 				getActivity().startActivity(new Intent(getActivity(), MainActivity.class));
-				getActivity().overridePendingTransition(R.anim.abc_fade_in, R.anim.push_right_out);
 				getActivity().finish();
+				getActivity().overridePendingTransition(R.anim.abc_fade_in, R.anim.push_right_out);
 			}
 
 			@Override
@@ -433,7 +434,9 @@ public class PersonDetailDialog extends DialogFragment {
 					//					addContact(filpperId);
 					ToastTool.showLong(getActivity(), "爱情验证已发送！等待对方同意");
 					saveFlipper(filpperId);
+					startActivity(new Intent(getActivity(), MainActivity.class));
 					getActivity().finish();
+					getActivity().overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
 				}
 
 				@Override

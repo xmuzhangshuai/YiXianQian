@@ -91,8 +91,7 @@ public class Generator {
 		conversationEntity.addStringProperty("lastMessage");
 		conversationEntity.addIntProperty("newNum");
 		conversationEntity.addLongProperty("time");
-		
-		
+
 		/******心动请求*****/
 		Entity flipperEntity = schema.addEntity("Flipper");
 		flipperEntity.addIdProperty().autoincrement();
@@ -124,6 +123,40 @@ public class Generator {
 		flipperEntity.addStringProperty("tel");
 		flipperEntity.addStringProperty("status");//状态
 		flipperEntity.addIntProperty("type");//类型
-	}
 
+		/***********用户*************/
+		Entity userEntity = schema.addEntity("User");
+		userEntity.addLongProperty("userID");
+		userEntity.addStringProperty("bpushUserID");
+		userEntity.addStringProperty("bpushChannelID");
+		userEntity.addStringProperty("nickname");
+		userEntity.addStringProperty("realname");
+		userEntity.addStringProperty("password");
+		userEntity.addStringProperty("gender");
+		userEntity.addStringProperty("tel");
+		userEntity.addStringProperty("email");
+		userEntity.addStringProperty("large_avatar");
+		userEntity.addStringProperty("small_avatar");
+		userEntity.addStringProperty("address");
+		userEntity.addStringProperty("blood_type");
+		userEntity.addStringProperty("constell");
+		userEntity.addStringProperty("introduce");
+		userEntity.addIntProperty("age");
+		userEntity.addIntProperty("vocationid");
+		userEntity.addIntProperty("stateid");
+		userEntity.addIntProperty("height");
+		userEntity.addIntProperty("weight");
+		userEntity.addIntProperty("image_pass");//头像审核的字段
+		userEntity.addDoubleProperty("salary");
+		userEntity.addDateProperty("birthday");
+		//学校外键
+		Property user_school = userEntity.addLongProperty("schoolID").notNull().getProperty();
+		userEntity.addToOne(schoolEntity, user_school);
+		//城市外键
+		Property user_city = userEntity.addLongProperty("cityID").notNull().getProperty();
+		userEntity.addToOne(cityEntity, user_city);
+		//省份外键
+		Property user_pro = userEntity.addLongProperty("provinceID").notNull().getProperty();
+		userEntity.addToOne(provinceEntity, user_pro);
+	}
 }

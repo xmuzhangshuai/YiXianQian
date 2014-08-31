@@ -40,7 +40,7 @@ public class MyPushMessageReceiver extends FrontiaPushMessageReceiver {
 	public static final String MESSAGE_TYPE = "messageType";
 	public static final int NOTIFY_ID = 0x000;
 	public static final String RESPONSE = "response";
-	private UserPreference userPreference;
+	private UserPreference userPreference = BaseApplication.getInstance().getUserPreference();
 
 	/**
 	 * 调用PushManager.startWork后，sdk将对push
@@ -132,7 +132,7 @@ public class MyPushMessageReceiver extends FrontiaPushMessageReceiver {
 	 */
 	private void handleFlipperRequest(Context context, String msgContent) {
 		BaseApplication application = BaseApplication.getInstance();
-		LogTool.i("MyPushMessageReceiver", "接收到心动请求" + msgContent);
+		LogTool.i("MyPushMessageReceiver", "百度推送接收到心动请求" + msgContent);
 
 		//如果程序没有在运行，则显示通知
 		if (!CommonTools.isAppRunning(context)) {
@@ -156,7 +156,7 @@ public class MyPushMessageReceiver extends FrontiaPushMessageReceiver {
 	 */
 	private void buildLove(String phone) {
 		BaseApplication application = BaseApplication.getInstance();
-		LogTool.i("MyPushMessageReceiver", "添加情侣请求");
+		LogTool.i("MyPushMessageReceiver", "百度推送添加情侣请求");
 
 		//通知
 		NotificationCompat.Builder builder = new NotificationCompat.Builder(application);
@@ -177,7 +177,7 @@ public class MyPushMessageReceiver extends FrontiaPushMessageReceiver {
 	 * 处理也心动,在爱情验证页面，对某个人也心动，推送本用户ID到这个人的终端
 	 */
 	private void flipperTo(String phone) {
-		LogTool.i("MyPushMessageReceiver", "也心动");
+		LogTool.i("MyPushMessageReceiver", "百度推送也心动");
 		BaseApplication application = BaseApplication.getInstance();
 
 		//通知
@@ -219,6 +219,9 @@ public class MyPushMessageReceiver extends FrontiaPushMessageReceiver {
 	 */
 	private void paraseContent(final Context context, int errorCode, String appid, String userId, String channelId) {
 		// TODO Auto-generated method stub
+		LogTool.i("MyPushMessageReceiver", "绑定userID: " + userId);
+		LogTool.i("MyPushMessageReceiver", "userpreference userID: " + userPreference.getBpush_UserID());
+
 		if (errorCode == 0) {
 			userPreference = BaseApplication.getInstance().getUserPreference();
 			if (!userPreference.getBpush_UserID().equals(userId)) {
