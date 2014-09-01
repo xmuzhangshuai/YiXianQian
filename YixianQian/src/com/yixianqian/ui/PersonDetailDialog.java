@@ -447,18 +447,18 @@ public class PersonDetailDialog extends DialogFragment {
 					}
 
 					@Override
-					public void onFailure(int arg0, Header[] arg1, String arg2, Throwable arg3) {
+					public void onFailure(int statusCode, Header[] headers, String errorResponse, Throwable e) {
 						// TODO Auto-generated method stub
-						ToastTool.showLong(getActivity(), arg2);
+						LogTool.e("DayRecommendActivity", "错误原因" + errorResponse);
 						getActivity().finish();
 					}
 
 					@Override
-					public void onSuccess(int arg0, Header[] arg1, String arg2) {
+					public void onSuccess(int statusCode, Header[] headers, String response) {
 						// TODO Auto-generated method stub
-						//					addContact(filpperId);
 						ToastTool.showLong(getActivity(), "爱情验证已发送！等待对方同意");
-						saveFlipper(filpperId);
+						saveFlipper(filpperId, response);
+						
 						startActivity(new Intent(getActivity(), MainActivity.class));
 						getActivity().finish();
 						getActivity().overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
@@ -496,7 +496,7 @@ public class PersonDetailDialog extends DialogFragment {
 	/**
 	 * 存储到数据库，已经同意
 	 */
-	public void saveFlipper(final int flipperId) {
+	public void saveFlipper(final int flipperId, String response) {
 		FlipperDbService flipperDbService = FlipperDbService.getInstance(getActivity());
 		Flipper flipper = flipperDbService.getFlipperByUserId(flipperId);
 		//如果数据库中存在该用户的请求，则更新状态
@@ -517,7 +517,10 @@ public class PersonDetailDialog extends DialogFragment {
 					MessageType.MESSAGE_TYPE_FLIPPER_REQUEEST);
 			new SendMsgAsyncTask(FastJsonTool.createJsonString(jsonMessage), flipper.getBpushUserID()).send();
 		} else {
-			addContact(flipperId);
+			//如果网络端不是未推送状态，则添加环信好友
+			if (response.equals("1")) {
+				addContact(flipperId);
+			}
 			getUser(flipperId);
 		}
 	}

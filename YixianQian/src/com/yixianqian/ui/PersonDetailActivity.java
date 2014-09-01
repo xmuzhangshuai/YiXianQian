@@ -342,7 +342,7 @@ public class PersonDetailActivity extends BaseFragmentActivity implements OnClic
 					public void onSuccess(int statusCode, Header[] headers, String response) {
 						// TODO Auto-generated method stub
 						ToastTool.showLong(getApplicationContext(), "爱情验证已发送！等待对方同意");
-						saveFlipper(filpperId);
+						saveFlipper(filpperId, response);
 						PersonDetailActivity.this.finish();
 					}
 
@@ -377,7 +377,7 @@ public class PersonDetailActivity extends BaseFragmentActivity implements OnClic
 	/**
 	 * 存储到数据库，已经同意
 	 */
-	public void saveFlipper(final int flipperId) {
+	public void saveFlipper(final int flipperId, String response) {
 		FlipperDbService flipperDbService = FlipperDbService.getInstance(PersonDetailActivity.this);
 		Flipper flipper = flipperDbService.getFlipperByUserId(flipperId);
 		//如果数据库中存在该用户的请求，则更新状态
@@ -398,7 +398,10 @@ public class PersonDetailActivity extends BaseFragmentActivity implements OnClic
 					MessageType.MESSAGE_TYPE_FLIPPER_REQUEEST);
 			new SendMsgAsyncTask(FastJsonTool.createJsonString(jsonMessage), flipper.getBpushUserID()).send();
 		} else {
-			addContact(flipperId);
+			//如果网络端不是未推送状态，则添加环信好友
+			if (response.equals("1")) {
+				addContact(flipperId);
+			}
 			getUser(flipperId);
 		}
 	}

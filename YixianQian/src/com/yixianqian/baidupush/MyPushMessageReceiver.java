@@ -131,7 +131,7 @@ public class MyPushMessageReceiver extends FrontiaPushMessageReceiver {
 	 */
 	private void handleFlipperRequest(Context context, String msgContent) {
 		BaseApplication application = BaseApplication.getInstance();
-		LogTool.i("MyPushMessageReceiver", "百度推送   接收到心动请求" + msgContent);
+		LogTool.i("MyPushMessageReceiver", "百度推送   接收到心动请求   " + msgContent);
 
 		//如果程序没有在运行，则显示通知
 		if (!CommonTools.isAppRunning(context)) {
