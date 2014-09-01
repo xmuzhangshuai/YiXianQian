@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.text.TextUtils;
 
 import com.yixianqian.base.BaseApplication;
+import com.yixianqian.utils.LogTool;
 import com.yixianqian.utils.NetworkUtils;
 
 public class SendNotifyTask {
@@ -74,6 +75,9 @@ public class SendNotifyTask {
 				//				result = mBaiduPush.PushNotifyAll(mTitle, mMessage);
 				//			else
 				result = mBaiduPush.PushNotify(mTitle, mMessage, mUserId);
+			else {
+				LogTool.e("SendNofifyTask", "userIDÎª¿Õ");
+			}
 			return result;
 		}
 

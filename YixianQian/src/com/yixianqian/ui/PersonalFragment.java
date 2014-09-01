@@ -108,6 +108,7 @@ public class PersonalFragment extends BaseV4Fragment {
 		// TODO Auto-generated method stub
 		super.onResume();
 		recording = false;
+		state = userPreference.getU_stateid();
 		refreshPersonStatue();
 		refreshPersonData();
 	}

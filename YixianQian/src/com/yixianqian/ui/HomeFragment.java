@@ -43,6 +43,7 @@ import com.yixianqian.table.FlipperTable;
 import com.yixianqian.table.LoversTable;
 import com.yixianqian.utils.AsyncHttpClientTool;
 import com.yixianqian.utils.FriendPreference;
+import com.yixianqian.utils.LogTool;
 import com.yixianqian.utils.ToastTool;
 import com.yixianqian.utils.UserPreference;
 

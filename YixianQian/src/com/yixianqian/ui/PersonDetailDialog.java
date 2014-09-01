@@ -44,6 +44,7 @@ import com.yixianqian.jsonobject.JsonMessage;
 import com.yixianqian.jsonobject.JsonUser;
 import com.yixianqian.table.FlipperRequestTable;
 import com.yixianqian.table.FlipperTable;
+import com.yixianqian.table.LoveRequestTable;
 import com.yixianqian.table.LoversTable;
 import com.yixianqian.table.ShieldersTable;
 import com.yixianqian.table.UserTable;
@@ -357,44 +358,59 @@ public class PersonDetailDialog extends DialogFragment {
 	 * 心动升级为情侣
 	 */
 	private void becomeLover(int filpperId) {
+
 		RequestParams params = new RequestParams();
-		int myUserID = userPreference.getU_id();
-		params.put(LoversTable.L_USERID, myUserID);
-		params.put(LoversTable.L_LOVERID, filpperId);
+		params.put(LoveRequestTable.LR_USERID, userPreference.getU_id());
+		params.put(LoveRequestTable.LR_LOVERID, friendPreference.getF_id());
 		TextHttpResponseHandler responseHandler = new TextHttpResponseHandler() {
-			Dialog dialog;
 
 			@Override
 			public void onStart() {
 				// TODO Auto-generated method stub
 				super.onStart();
-				dialog = showProgressDialog();
 			}
 
 			@Override
 			public void onSuccess(int statusCode, Header[] headers, String response) {
 				// TODO Auto-generated method stub
-				ToastTool.showLong(getActivity(), "恭喜！您和" + friendPreference.getName() + "成为了情侣！");
-				userPreference.setU_stateid(2);
+				if (statusCode == 200) {
+					if (!TextUtils.isEmpty(response)) {
+						if (response.equals("0")) {
+							ToastTool.showLong(getActivity(), "添加失败！");
+							getActivity().finish();
+						} else if (response.equals("重复")) {
+							ToastTool.showLong(getActivity(), "您已经邀请过ta了！");
+							getActivity().finish();
+						} else if (response.equals("状态")) {
+							ToastTool.showLong(getActivity(), "心动关系的两个人才能升级成为情侣哦！");
+							getActivity().finish();
+						} else {
+							//给对方发送消息
+							JsonMessage jsonMessage = new JsonMessage(userPreference.getU_tel(),
+									Constants.MessageType.MESSAGE_TYPE_LOVE_REQUEST);
+							new SendMsgAsyncTask(FastJsonTool.createJsonString(jsonMessage),
+									friendPreference.getBpush_UserID()).send();
+							userPreference.setLoveRequest(true);
 
-				PersonDetailDialog.this.dismiss();
-				getActivity().startActivity(new Intent(getActivity(), MainActivity.class));
-				getActivity().finish();
-				getActivity().overridePendingTransition(R.anim.abc_fade_in, R.anim.push_right_out);
+							Intent intent = new Intent(getActivity(), WaitActivity.class);
+							startActivity(intent);
+							getActivity().overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+							getActivity().finish();
+						}
+					}
+				}
 			}
 
 			@Override
 			public void onFailure(int statusCode, Header[] headers, String errorResponse, Throwable e) {
 				// TODO Auto-generated method stub
-				LogTool.e("DayRecommendActivity", "错误原因" + errorResponse);
-				PersonDetailDialog.this.dismiss();
+				ToastTool.showLong(getActivity(), "添加失败！" + errorResponse);
 			}
 
 			@Override
 			public void onFinish() {
 				// TODO Auto-generated method stub
 				super.onFinish();
-				dialog.dismiss();
 			}
 		};
 		AsyncHttpClientTool.post(getActivity(), "buildlover", params, responseHandler);
@@ -458,7 +474,7 @@ public class PersonDetailDialog extends DialogFragment {
 						// TODO Auto-generated method stub
 						ToastTool.showLong(getActivity(), "爱情验证已发送！等待对方同意");
 						saveFlipper(filpperId, response);
-						
+
 						startActivity(new Intent(getActivity(), MainActivity.class));
 						getActivity().finish();
 						getActivity().overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
