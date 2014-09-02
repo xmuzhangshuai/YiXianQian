@@ -4,7 +4,7 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="day_recommend_font_info">14sp</dimen>
-    <dimen name="day_recommend_info_space">2dp</dimen>
+    <dimen name="day_recommend_info_space">1dp</dimen>
     <dimen name="day_recommend_padding">30dp</dimen>
     <dimen name="day_recommend_user_font">14sp</dimen>
     <dimen name="day_recommend_viewpager_height">300dp</dimen>

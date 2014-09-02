@@ -502,7 +502,8 @@ public class PublishTimeCapActivity extends BaseActivity {
 		if (!TextUtils.isEmpty(audioPath)) {
 			audioFile = new File(audioPath);
 		}
-		if (!TextUtils.isEmpty(photoUri)) {
+		if (!TextUtils.isEmpty(photoUri)
+				&& photoUri.equals(Environment.getExternalStorageDirectory() + "/yixianqian/image/timeCapsule.jpeg")) {
 			photoFile = new File(photoUri);
 			LogTool.e("时间胶囊图片大小", "" + FileSizeUtil.getFileOrFilesSize(photoUri, FileSizeUtil.SIZETYPE_KB) + "KB");
 		}
