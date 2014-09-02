@@ -49,19 +49,19 @@
 
         <ImageView
             android:id="@+id/iv_unread_voice"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="12dp"
+            android:layout_height="12dp"
             android:layout_marginLeft="10dp"
             android:layout_toRightOf="@id/tv_length"
             android:src="@drawable/voice_unread" />
 
         <ProgressBar
             android:id="@+id/pb_sending"
-            android:layout_toRightOf="@id/iv_unread_voice"
             style="?android:attr/progressBarStyleSmall"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_marginTop="5dp"
+            android:layout_toRightOf="@id/iv_unread_voice"
             android:visibility="invisible" />
 
         <TextView

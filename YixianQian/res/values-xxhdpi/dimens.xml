@@ -42,5 +42,6 @@
     <dimen name="size_avatar">50dp</dimen>
     <dimen name="message_padding">5dp</dimen>
     <dimen name="love_vertify_headimage">70dp</dimen>
+    <dimen name="new_msg">11dp</dimen>
 
 </resources>

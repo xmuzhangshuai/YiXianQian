@@ -46,5 +46,6 @@
 
     <!-- 设置 -->
     <dimen name="setting_list_margin">8dp</dimen>
+    <dimen name="new_msg">11dp</dimen>
 
 </resources>
