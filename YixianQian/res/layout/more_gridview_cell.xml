@@ -7,8 +7,8 @@
 
     <ImageView
         android:id="@+id/cellimage"
-        android:layout_width="80dp"
-        android:layout_height="80dp" />
+        android:layout_width="@dimen/get_image_btn_padding"
+        android:layout_height="@dimen/get_image_btn_padding" />
 
     <TextView
         android:id="@+id/celltext"

@@ -153,6 +153,12 @@ public class ChatInfoActivity extends BaseActivity implements OnClickListener {
 		} else {
 			iv_switch_open_notification.setVisibility(View.INVISIBLE);
 			iv_switch_close_notification.setVisibility(View.VISIBLE);
+
+			rl_switch_sound.setVisibility(View.GONE);
+			rl_switch_vibrate.setVisibility(View.GONE);
+			divider1.setVisibility(View.GONE);
+			divider2.setVisibility(View.GONE);
+			divider3.setVisibility(View.GONE);
 		}
 		if (chatOptions.getNoticedBySound()) {
 			iv_switch_open_sound.setVisibility(View.VISIBLE);
@@ -167,6 +173,13 @@ public class ChatInfoActivity extends BaseActivity implements OnClickListener {
 		} else {
 			iv_switch_open_vibrate.setVisibility(View.INVISIBLE);
 			iv_switch_close_vibrate.setVisibility(View.VISIBLE);
+		}
+		if (chatOptions.getUseSpeaker()) {
+			iv_switch_open_speaker.setVisibility(View.VISIBLE);
+			iv_switch_close_speaker.setVisibility(View.INVISIBLE);
+		} else {
+			iv_switch_open_speaker.setVisibility(View.INVISIBLE);
+			iv_switch_close_speaker.setVisibility(View.VISIBLE);
 		}
 	}
 
