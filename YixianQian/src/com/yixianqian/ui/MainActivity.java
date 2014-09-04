@@ -165,6 +165,17 @@ public class MainActivity extends BaseFragmentActivity {
 		}
 	}
 
+	public void refresh() {
+		// 当前页面如果为聊天历史页面，刷新此页面
+		if (homeFragment != null) {
+			homeFragment.refreshConversation();
+		}
+		if (personalFragment != null) {
+			personalFragment.refreshPersonData();
+			personalFragment.refreshPersonStatue();
+		}
+	}
+
 	@Override
 	protected void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);

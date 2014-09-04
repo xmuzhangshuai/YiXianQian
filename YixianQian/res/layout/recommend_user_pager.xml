@@ -55,7 +55,8 @@
             android:id="@+id/headimage"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scaleType="centerCrop" />
+            android:scaleType="centerCrop"
+            android:src="@drawable/photoconor" />
 
         <TextView
             android:id="@+id/school"

@@ -276,6 +276,9 @@ public class HomeFragment extends BaseV4Fragment {
 
 								friendPreference.clear();
 								userPreference.setU_stateid(4);
+
+								MainActivity activity = (MainActivity) getActivity();
+								activity.refresh();
 							}
 
 							@Override
@@ -341,6 +344,9 @@ public class HomeFragment extends BaseV4Fragment {
 								//EMChatManager.getInstance().deleteConversation("" + friendPreference.getF_id());
 								friendPreference.clear();
 								userPreference.setU_stateid(4);
+
+								MainActivity activity = (MainActivity) getActivity();
+								activity.refresh();
 							}
 
 							@Override

@@ -210,7 +210,7 @@ public class PersonalFragment extends BaseV4Fragment {
 	/**
 	 * 更新个人资料
 	 */
-	private void refreshPersonData() {
+	public void refreshPersonData() {
 		if (state == UserStateType.LOVER) {
 			SinglePanel.setVisibility(View.GONE);
 			LoverPanel.setVisibility(View.VISIBLE);
@@ -299,7 +299,7 @@ public class PersonalFragment extends BaseV4Fragment {
 	/**
 	 * 更新顶部用户状态
 	 */
-	private void refreshPersonStatue() {
+	public void refreshPersonStatue() {
 		int state = userPreference.getU_stateid();
 		switch (state) {
 		case UserStateType.SINGLE:

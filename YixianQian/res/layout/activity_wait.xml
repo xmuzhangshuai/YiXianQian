@@ -2,20 +2,38 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/system_back"
     android:orientation="vertical" >
 
     <include
         layout="@layout/top_navigation2"
         android:focusable="true" />
 
-    <TextView
-        android:id="@+id/info"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:padding="@dimen/day_recommend_dot_space"
-        android:textColor="@color/dark_gray"
-        android:textSize="14sp" />
+        android:background="@color/white"
+        android:gravity="center"
+        android:paddingBottom="30dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:paddingTop="30dp" >
+
+        <ImageView
+            android:id="@+id/face"
+            android:layout_width="@dimen/login_register"
+            android:layout_height="@dimen/login_register"
+            android:src="@drawable/face_black" />
+
+        <TextView
+            android:id="@+id/info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:gravity="center"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -30,9 +48,40 @@
             android:layout_height="@dimen/register_height"
             android:layout_marginTop="10dp"
             android:background="@drawable/sel_auth_code_again_bg"
-            android:text="刷新"
+            android:text="查看请求状态"
             android:textColor="@drawable/sel_enable_font_color"
             android:textSize="@dimen/day_recommend_user_font" />
+
+        <Button
+            android:id="@+id/gomain"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/register_height"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/sel_auth_code_again_bg"
+            android:text="进入主页"
+            android:textColor="@drawable/sel_enable_font_color"
+            android:textSize="@dimen/day_recommend_user_font"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/revoke"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/register_height"
+            android:layout_marginTop="@dimen/get_image_btn_top"
+            android:background="@drawable/sel_revoke_btn_bg"
+            android:text="撤销"
+            android:textColor="@drawable/sel_enable_font_color"
+            android:textSize="@dimen/day_recommend_user_font" />
+
+        <TextView
+            android:id="@+id/revoke_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="6dp"
+            android:text="对方一直没有接受你的请求，可以点击撤销"
+            android:textColor="@color/unenable"
+            android:textSize="13sp" />
     </LinearLayout>
 
 </LinearLayout>

@@ -45,6 +45,10 @@ public class WaitActivity extends BaseActivity {
 	private TextView textInfo;
 	private FriendPreference friendpreference;
 	private UserPreference userPreference;
+	private Button revokeBtn;
+	private ImageView faceImageView;
+	private Button goMianBtn;
+	private TextView revokeText;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -67,19 +71,26 @@ public class WaitActivity extends BaseActivity {
 		topNavText = (TextView) findViewById(R.id.nav_text);
 		refreshBtn = (Button) findViewById(R.id.refresh);
 		textInfo = (TextView) findViewById(R.id.info);
+		revokeBtn = (Button) findViewById(R.id.revoke);
+		faceImageView = (ImageView) findViewById(R.id.face);
+		goMianBtn = (Button) findViewById(R.id.gomain);
+		revokeText = (TextView) findViewById(R.id.revoke_text);
 	}
 
 	@Override
 	protected void initView() {
 		// TODO Auto-generated method stub
 		right_btn_bg.setVisibility(View.GONE);
-		topNavText.setText("等待匹配");
-		textInfo.setText("对方还没有同意您的邀请，请尽快通知对方同意");
+		topNavText.setText("添加情侣");
+		textInfo.setText("对方还没有接受你的请求，快去叫醒Ta...");
+		faceImageView.setImageResource(R.drawable.face_black);
 		topNavLeftBtn.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
+				startActivity(new Intent(WaitActivity.this, MainActivity.class));
+				overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
 				finish();
 			}
 		});
@@ -91,6 +102,18 @@ public class WaitActivity extends BaseActivity {
 				getLoveRequestState();
 			}
 		});
+		goMianBtn.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				startActivity(new Intent(WaitActivity.this, MainActivity.class));
+				overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+				finish();
+			}
+		});
+
+		getLoveRequestState();
 	}
 
 	/**
@@ -116,6 +139,13 @@ public class WaitActivity extends BaseActivity {
 				if (statusCode == 200) {
 					if (!TextUtils.isEmpty(response)) {
 						if (response.equals("1")) {
+							textInfo.setText("恭喜！对方接受了你的请求，快去亲亲Ta...");
+							revokeBtn.setVisibility(View.INVISIBLE);
+							faceImageView.setImageResource(R.drawable.face_red);
+							refreshBtn.setVisibility(View.GONE);
+							goMianBtn.setVisibility(View.VISIBLE);
+							revokeText.setVisibility(View.INVISIBLE);
+
 							userPreference.setLoveRequest(false);
 							friendpreference.setType(1);
 							userPreference.setU_stateid(2);
@@ -143,21 +173,20 @@ public class WaitActivity extends BaseActivity {
 							message.setReceipt("" + friendpreference.getF_id());
 							//把消息加入到此会话对象中
 							emConversation.addMessage(message);
-
-							Intent intent = new Intent(WaitActivity.this, ChatActivity.class);
-							intent.putExtra("userId", "" + friendpreference.getF_id());
-							startActivity(intent);
-							overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
-							finish();
-
 						} else if (response.equals("2")) {
-							ToastTool.showLong(WaitActivity.this, "对方拒绝了您的邀请！");
 							userPreference.setLoveRequest(false);
-							Intent intent = new Intent(WaitActivity.this, MainActivity.class);
-							startActivity(intent);
-							overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+							textInfo.setText("啊哦，对方拒绝了你的请求...");
+							revokeBtn.setVisibility(View.INVISIBLE);
+							faceImageView.setImageResource(R.drawable.face_unhappy);
+							refreshBtn.setVisibility(View.GONE);
+							goMianBtn.setVisibility(View.VISIBLE);
+							revokeText.setVisibility(View.INVISIBLE);
 						} else if (response.equals("3")) {
-							textInfo.setText("对方还没有同意您的邀请，请尽快通知对方同意");
+							textInfo.setText("对方还没有接受你的请求，快去叫醒Ta...");
+							faceImageView.setImageResource(R.drawable.face_black);
+							refreshBtn.setVisibility(View.VISIBLE);
+							revokeBtn.setVisibility(View.VISIBLE);
+							revokeText.setVisibility(View.VISIBLE);
 						}
 					}
 				}
