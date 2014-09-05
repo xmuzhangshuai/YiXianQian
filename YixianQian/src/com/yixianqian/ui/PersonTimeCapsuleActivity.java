@@ -290,7 +290,6 @@ public class PersonTimeCapsuleActivity extends AbsListViewBaseActivity {
 			holder.capsuleImage.setMaxHeight(DensityUtil.dip2px(PersonTimeCapsuleActivity.this,
 					(DensityUtil.getScreenWidthforDP(PersonTimeCapsuleActivity.this) - 40)));
 
-			//单身
 			if (!TextUtils.isEmpty(singleTimeCapsuleList.get(position).getStc_photo())) {
 				imageLoader.displayImage(
 						AsyncHttpClientImageSound.getAbsoluteUrl(singleTimeCapsuleList.get(position).getStc_photo()),
@@ -310,10 +309,10 @@ public class PersonTimeCapsuleActivity extends AbsListViewBaseActivity {
 				});
 			}
 
+			holder.time.setText(DateTimeTools.DateToString(singleTimeCapsuleList.get(position).getStc_record_time()));
+
 			if (!TextUtils.isEmpty(singleTimeCapsuleList.get(position).getStc_voice())) {
 				holder.timespan.setText("" + singleTimeCapsuleList.get(position).getStc_voice_length() + "\"");
-				holder.time.setText(DateTimeTools
-						.DateToString(singleTimeCapsuleList.get(position).getStc_record_time()));
 				holder.palyView.setVisibility(View.VISIBLE);
 			}
 
@@ -335,7 +334,6 @@ public class PersonTimeCapsuleActivity extends AbsListViewBaseActivity {
 					}
 				}
 			});
-			//点击更多
 			holder.moreBtn.setVisibility(View.GONE);
 			return view;
 		}
