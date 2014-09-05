@@ -500,7 +500,6 @@ public class DayRecommendActivity extends BaseFragmentActivity {
 		options = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.photoconor)// 设置图片下载期间显示的图片  
 				.showImageForEmptyUri(R.drawable.photoconor) // 设置图片Uri为空或是错误的时候显示的图片  
 				.showImageOnFail(R.drawable.photoconor) // 设置图片加载或解码过程中发生错误显示的图片 
-				.displayer(new RoundedBitmapDisplayer(DensityUtil.dip2px(DayRecommendActivity.this, 10))) // 设置成圆角图片  
 				.cacheInMemory(true) // 设置下载的图片是否缓存在内存中  
 				.cacheOnDisk(true) // 设置下载的图片是否缓存在SD卡中  
 				.build(); // 创建配置过得DisplayImageOption对象 

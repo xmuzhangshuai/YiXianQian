@@ -68,6 +68,7 @@ public class PersonalFragment extends BaseV4Fragment {
 	private TextView lNameTextView;//情侣姓名
 	private TextView provinceTextView;//省份
 	private TextView schoolTextView;//学校
+	private ImageView studentFlagImage;
 
 	private TextView waitCheckView;
 	private Uri takePhotoUri;
@@ -82,7 +83,6 @@ public class PersonalFragment extends BaseV4Fragment {
 	private String soundName = "audio";//文件名称
 	private MediaRecorder mRecorder;
 	private boolean recording = false;//是否正在录音
-	private int state;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -90,7 +90,6 @@ public class PersonalFragment extends BaseV4Fragment {
 		super.onCreate(savedInstanceState);
 		userPreference = BaseApplication.getInstance().getUserPreference();
 		friendPreference = BaseApplication.getInstance().getFriendPreference();
-		state = userPreference.getU_stateid();
 	}
 
 	@Override
@@ -136,6 +135,7 @@ public class PersonalFragment extends BaseV4Fragment {
 		provinceTextView = (TextView) rootView.findViewById(R.id.province);
 		schoolTextView = (TextView) rootView.findViewById(R.id.school);
 		waitCheckView = (TextView) rootView.findViewById(R.id.waitcheck);
+		studentFlagImage = (ImageView) rootView.findViewById(R.id.student_flag);
 	}
 
 	@Override
@@ -211,6 +211,12 @@ public class PersonalFragment extends BaseV4Fragment {
 	 */
 	public void refreshPersonData() {
 		int state = userPreference.getU_stateid();
+		if (userPreference.getVertify()) {
+			studentFlagImage.setVisibility(View.VISIBLE);
+		} else {
+			studentFlagImage.setVisibility(View.GONE);
+		}
+
 		if (state == UserStateType.LOVER) {
 			SinglePanel.setVisibility(View.GONE);
 			LoverPanel.setVisibility(View.VISIBLE);

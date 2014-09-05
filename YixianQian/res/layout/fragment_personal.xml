@@ -53,6 +53,15 @@
                 android:layout_toRightOf="@+id/headimageview"
                 android:textSize="@dimen/day_recommend_user_font" />
 
+            <ImageView
+                android:id="@+id/student_flag"
+                android:layout_width="@dimen/day_recommend_help_padding"
+                android:layout_height="@dimen/day_recommend_help_padding"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="10dp"
+                android:layout_toLeftOf="@+id/province"
+                android:src="@drawable/student_flag" />
+
             <TextView
                 android:id="@+id/province"
                 android:layout_width="wrap_content"

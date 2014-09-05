@@ -63,7 +63,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:background="@drawable/shape_day_rec_school_bg"
+            android:background="#80000000"
             android:gravity="center"
             android:padding="@dimen/day_recommend_dot_space"
             android:textColor="@color/white" />
