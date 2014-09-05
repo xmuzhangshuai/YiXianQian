@@ -18,6 +18,7 @@ import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.TextHttpResponseHandler;
 import com.yixianqian.R;
 import com.yixianqian.base.BaseActivity;
+import com.yixianqian.customewidget.MyAlertDialog;
 import com.yixianqian.table.UserTable;
 import com.yixianqian.utils.AsyncHttpClientTool;
 import com.yixianqian.utils.CommonTools;
@@ -104,9 +105,26 @@ public class AddLoverActivity extends BaseActivity implements OnClickListener {
 		if (resultCode == RESULT_OK) {
 			Bundle bundle = data.getExtras();
 			String scanResult = bundle.getString("result");
-			Intent intent = new Intent(AddLoverActivity.this, AddLoverInfoActivity.class);
-			intent.putExtra(AddLoverInfoActivity.LOVER_PHONE_KEY, scanResult);
-			startActivity(intent);
+			if (CommonTools.isMobileNO(scanResult)) {
+				Intent intent = new Intent(AddLoverActivity.this, AddLoverInfoActivity.class);
+				intent.putExtra(AddLoverInfoActivity.LOVER_PHONE_KEY, scanResult);
+				startActivity(intent);
+			} else {
+				final MyAlertDialog dialog = new MyAlertDialog(AddLoverActivity.this);
+				dialog.setShowCancel(false);
+				dialog.setTitle("提示");
+				dialog.setMessage("无法识别...让你的另一半打开个人中心的【我的二维码】再试试吧！");
+				View.OnClickListener comfirm = new OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						// TODO Auto-generated method stub
+						dialog.dismiss();
+					}
+				};
+				dialog.setPositiveButton("确定", comfirm);
+				dialog.show();
+			}
 		}
 	}
 
