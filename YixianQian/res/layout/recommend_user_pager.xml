@@ -63,10 +63,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:background="#80000000"
+            android:background="@drawable/shape_day_rec_school_bg"
             android:gravity="center"
             android:padding="@dimen/day_recommend_dot_space"
-            android:text="厦门大学"
             android:textColor="@color/white" />
     </FrameLayout>
 

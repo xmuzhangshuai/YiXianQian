@@ -29,6 +29,8 @@ import android.widget.TextView;
 import com.easemob.chat.EMContactManager;
 import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.TextHttpResponseHandler;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 import com.yixianqian.R;
 import com.yixianqian.baidupush.SendMsgAsyncTask;
 import com.yixianqian.base.BaseApplication;
@@ -50,7 +52,6 @@ import com.yixianqian.utils.AsyncHttpClientImageSound;
 import com.yixianqian.utils.AsyncHttpClientTool;
 import com.yixianqian.utils.DensityUtil;
 import com.yixianqian.utils.FastJsonTool;
-import com.yixianqian.utils.ImageLoaderTool;
 import com.yixianqian.utils.LogTool;
 import com.yixianqian.utils.ToastTool;
 import com.yixianqian.utils.UserPreference;
@@ -444,7 +445,7 @@ public class DayRecommendActivity extends BaseFragmentActivity {
 			if (!TextUtils.isEmpty(todayRecommendList.get(position).getUserAvatar())) {
 				imageLoader.displayImage(
 						AsyncHttpClientImageSound.getAbsoluteUrl(todayRecommendList.get(position).getUserAvatar()),
-						holder.headimage, ImageLoaderTool.getHeadImageOptions());
+						holder.headimage, getHeadImageOptions());
 			}
 
 			//点击头像进入详情页面
@@ -487,6 +488,23 @@ public class DayRecommendActivity extends BaseFragmentActivity {
 			// TODO Auto-generated method stub  
 
 		}
+	}
+
+	/**
+	 * 头像设置
+	 * @return
+	 */
+	public DisplayImageOptions getHeadImageOptions() {
+		DisplayImageOptions options = null;
+		// 使用DisplayImageOptions.Builder()创建DisplayImageOptions  
+		options = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.photoconor)// 设置图片下载期间显示的图片  
+				.showImageForEmptyUri(R.drawable.photoconor) // 设置图片Uri为空或是错误的时候显示的图片  
+				.showImageOnFail(R.drawable.photoconor) // 设置图片加载或解码过程中发生错误显示的图片 
+				.displayer(new RoundedBitmapDisplayer(DensityUtil.dip2px(DayRecommendActivity.this, 15))) // 设置成圆角图片  
+				.cacheInMemory(true) // 设置下载的图片是否缓存在内存中  
+				.cacheOnDisk(true) // 设置下载的图片是否缓存在SD卡中  
+				.build(); // 创建配置过得DisplayImageOption对象 
+		return options;
 	}
 
 	/**
