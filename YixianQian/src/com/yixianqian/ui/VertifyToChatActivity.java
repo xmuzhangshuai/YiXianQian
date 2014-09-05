@@ -99,7 +99,7 @@ public class VertifyToChatActivity extends BaseActivity {
 			topNavText.setText("爱情请求");
 			refuseBtn.setText("拒    绝");
 		}
-		beginChatBtn.setText("确    定");
+		beginChatBtn.setText("同    意");
 
 		topNavLeftBtn.setOnClickListener(new OnClickListener() {
 
@@ -186,6 +186,14 @@ public class VertifyToChatActivity extends BaseActivity {
 					if (response.equals("1")) {
 						startActivity(new Intent(VertifyToChatActivity.this, MainActivity.class));
 						overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+						finish();
+					} else if (response.equals("2")) {
+						ToastTool.showLong(VertifyToChatActivity.this, "对方已撤回请求");
+						startActivity(new Intent(VertifyToChatActivity.this, MainActivity.class));
+						overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+						finish();
+					} else {
+						LogTool.e("VertifyToChatActivity", "拒绝，服务器错误");
 					}
 				}
 
@@ -228,7 +236,10 @@ public class VertifyToChatActivity extends BaseActivity {
 			public void onSuccess(int statusCode, Header[] headers, String response) {
 				// TODO Auto-generated method stub
 				if (response.equals("0")) {
-					ToastTool.showLong(VertifyToChatActivity.this, "您没有被邀请！");
+					ToastTool.showLong(VertifyToChatActivity.this, "您没有被邀请或对方已撤回请求");
+					startActivity(new Intent(VertifyToChatActivity.this, MainActivity.class));
+					overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+					finish();
 				} else {
 					JsonUser jsonUser = FastJsonTool.getObject(response, JsonUser.class);
 					saveLoverInfo(jsonUser);

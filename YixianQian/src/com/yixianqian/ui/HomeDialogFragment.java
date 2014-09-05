@@ -73,7 +73,7 @@ public class HomeDialogFragment extends DialogFragment {
 		menuitemList = new ArrayList<String>();
 
 		menuitemList.add("添加情侣");
-		menuitemList.add("爱情验证");
+		menuitemList.add("怦然心动");
 
 		menuitemListView.setAdapter(mAdapter);
 		menuitemListView.setOnItemClickListener(new OnItemClickListener() {

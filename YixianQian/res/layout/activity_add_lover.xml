@@ -35,7 +35,7 @@
             android:id="@+id/search"
             android:layout_width="match_parent"
             android:layout_height="@dimen/register_height"
-            android:layout_marginTop="@dimen/register_height"
+            android:layout_marginTop="@dimen/day_recommend_help_padding"
             android:background="@drawable/sel_auth_code_again_bg"
             android:text="搜索"
             android:textColor="@drawable/sel_enable_font_color"
