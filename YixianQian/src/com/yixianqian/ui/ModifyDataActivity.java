@@ -74,6 +74,7 @@ public class ModifyDataActivity extends BaseFragmentActivity implements OnClickL
 	private View weightView;
 	private View constellView;
 	private View introView;
+	private ImageView vertifyView;
 	private EditText ageEditText;
 	private EditText heightEditText;
 	private EditText weightEditText;
@@ -156,6 +157,7 @@ public class ModifyDataActivity extends BaseFragmentActivity implements OnClickL
 		constellEditText = (TextView) findViewById(R.id.constell);
 		introEditText = (EditText) findViewById(R.id.personIntro);
 		birthdayTextView = (TextView) findViewById(R.id.birthday);
+		vertifyView = (ImageView) findViewById(R.id.vertify);
 	}
 
 	@Override
@@ -177,6 +179,14 @@ public class ModifyDataActivity extends BaseFragmentActivity implements OnClickL
 		weightView.setOnClickListener(this);
 		constellView.setOnClickListener(this);
 		introView.setOnClickListener(this);
+		vertifyView.setOnClickListener(this);
+
+		//如果通过认证
+		if (userPreference.getVertify()) {
+			vertifyView.setImageResource(R.drawable.already_vertify);
+		} else {
+			vertifyView.setImageResource(R.drawable.sel_apply_vertify_btn);
+		}
 
 		if (userPreference.getU_age() > 0) {
 			ageEditText.setText("" + userPreference.getU_age());
@@ -901,6 +911,11 @@ public class ModifyDataActivity extends BaseFragmentActivity implements OnClickL
 		case R.id.genderview:
 			ToastTool.showShort(ModifyDataActivity.this, "性别不可修改");
 			break;
+		case R.id.vertify:
+			intent = new Intent(ModifyDataActivity.this, ApplyVertifyActivity.class);
+			startActivity(intent);
+			overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+			finish();
 		default:
 			break;
 		}

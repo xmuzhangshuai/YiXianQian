@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white" >
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/login_register"
+        android:gravity="center_vertical"
+        android:padding="0.0px" >
+
+        <ImageView
+            android:id="@+id/rlCommenTitleBG"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:background="@color/system_male" />
+
+        <TextView
+            android:id="@+id/nav_text"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_centerInParent="true"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:paddingLeft="96.0dip"
+            android:paddingRight="96.0dip"
+            android:singleLine="true"
+            android:textColor="@color/white"
+            android:textSize="@dimen/day_recommend_user_font" />
+
+        <LinearLayout
+            android:id="@+id/left_btn_bg"
+            android:layout_width="@dimen/login_register"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:background="@drawable/sel_nav_leftbtn_bg"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="@dimen/day_recommend_help_font_space" >
+
+            <ImageView
+                android:id="@+id/nav_left_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:src="@drawable/ic_action_previous_item" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/right_btn_bg"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/sel_nav_rightbtn_bg"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="@dimen/day_recommend_dot_space" >
+
+            <TextView
+                android:id="@+id/nav_right_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:text="提交认证"
+                android:textColor="@color/white" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/gethead_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/get_image_btn_padding"
+        android:background="@drawable/sel_get_head_bg"
+        android:orientation="vertical" >
+
+        <ImageView
+            android:id="@+id/camera_image"
+            android:layout_width="@dimen/register_height"
+            android:layout_height="@dimen/register_height"
+            android:layout_margin="@dimen/get_image_btn_padding"
+            android:src="@drawable/sel_get_head" />
+
+        <ImageView
+            android:id="@+id/headimage"
+            android:layout_width="@dimen/headiamge_height"
+            android:layout_height="@dimen/headiamge_height"
+            android:layout_gravity="center"
+            android:visibility="gone" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/gethead_btn"
+        android:layout_marginTop="@dimen/day_recommend_help_padding"
+        android:gravity="center"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="请上传一张清晰的正面"
+            android:textSize="@dimen/day_recommend_user_font" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="学生证/学生卡"
+            android:textColor="@color/system_male"
+            android:textSize="@dimen/day_recommend_user_font" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/activity_line"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/info"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/dotted_line_gray"
+        android:orientation="horizontal" />
+
+    <LinearLayout
+        android:id="@+id/why"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/procress"
+        android:layout_marginBottom="15dp"
+        android:gravity="left"
+        android:orientation="vertical"
+        android:paddingLeft="20dp"
+        android:paddingRight="10dp" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:lineSpacingExtra="5dp"
+            android:text="为什么要认证"
+            android:textSize="@dimen/day_recommend_font_info" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:lineSpacingExtra="3dp"
+            android:text="①确保所有用户的身份都是学生"
+            android:textSize="@dimen/register_font_size" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:lineSpacingExtra="3dp"
+            android:text="②只有认证后，才能提供【校园-牵线搭桥】服务"
+            android:textSize="@dimen/register_font_size" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:lineSpacingExtra="3dp"
+            android:text="③只有认证后，彼此才能信任，爱情才能长久"
+            android:textSize="@dimen/register_font_size" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:lineSpacingExtra="3dp"
+            android:text="④没有认证，享受不到以上服务"
+            android:textSize="@dimen/register_font_size" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/procress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="20dp"
+        android:gravity="center" >
+
+        <ImageView
+            android:layout_width="@dimen/get_image_btn_padding"
+            android:layout_height="@dimen/get_image_btn_padding"
+            android:src="@drawable/student_card" />
+
+        <ImageView
+            android:layout_width="@dimen/personal_timecapsule_padding"
+            android:layout_height="@dimen/personal_timecapsule_padding"
+            android:layout_marginLeft="@dimen/day_recommend_viewpager_padding_top"
+            android:src="@drawable/arrows" />
+
+        <ImageView
+            android:layout_width="@dimen/get_image_btn_padding"
+            android:layout_height="@dimen/get_image_btn_padding"
+            android:layout_marginLeft="@dimen/day_recommend_viewpager_padding_top"
+            android:src="@drawable/manual_review" />
+
+        <ImageView
+            android:layout_width="@dimen/personal_timecapsule_padding"
+            android:layout_height="@dimen/personal_timecapsule_padding"
+            android:layout_marginLeft="@dimen/day_recommend_viewpager_padding_top"
+            android:src="@drawable/arrows" />
+
+        <ImageView
+            android:layout_width="@dimen/get_image_btn_padding"
+            android:layout_height="@dimen/get_image_btn_padding"
+            android:layout_marginLeft="@dimen/day_recommend_viewpager_padding_top"
+            android:src="@drawable/already_vertify" />
+    </LinearLayout>
+
+</RelativeLayout>

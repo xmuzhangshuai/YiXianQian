@@ -36,6 +36,19 @@ public class UserPreference {
 		editor.commit();
 	}
 
+	/**
+	 * 记录是否通过认证
+	 * @return
+	 */
+	public boolean getVertify() {
+		return sp.getBoolean("vertify", false);
+	}
+
+	public void setVertify(boolean vertified) {
+		editor.putBoolean("vertify", vertified);
+		editor.commit();
+	}
+
 	//环信用户名和密码
 	public void setHuanXinUserName(String username) {
 		editor.putString("huanxin_username", username);

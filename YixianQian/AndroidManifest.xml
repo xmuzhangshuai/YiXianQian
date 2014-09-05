@@ -297,6 +297,12 @@
             android:screenOrientation="portrait" >
         </activity>
 
+        <!-- 处理投诉页面 -->
+        <activity
+            android:name="com.yixianqian.ui.ApplyVertifyActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+
         <!-- 百度地图页面 -->
         <activity
             android:name="com.yixianqian.ui.BaiduMapActivity"

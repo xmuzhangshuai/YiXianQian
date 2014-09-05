@@ -15,9 +15,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.yixianqian.R;
-import com.yixianqian.base.BaseApplication;
-import com.yixianqian.utils.FriendPreference;
-import com.yixianqian.utils.UserPreference;
 
 /**
  * 类名称：PersonalDialogFragment
@@ -30,8 +27,6 @@ public class PersonalDialogFragment extends DialogFragment implements OnItemClic
 	private View rootView;
 	private ListView menuitemListView;
 	private List<String> menuitemList;
-	private UserPreference userPreference;
-	private FriendPreference friendPreference;
 
 	/**
 	 * 创建实例
@@ -46,8 +41,6 @@ public class PersonalDialogFragment extends DialogFragment implements OnItemClic
 	public void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		userPreference = BaseApplication.getInstance().getUserPreference();
-		friendPreference = BaseApplication.getInstance().getFriendPreference();
 		setStyle(DialogFragment.STYLE_NO_TITLE, 0);
 	}
 
@@ -61,8 +54,6 @@ public class PersonalDialogFragment extends DialogFragment implements OnItemClic
 		menuitemList.add("编辑资料");
 		menuitemList.add("我的二维码");
 		menuitemList.add("设置");
-		//		menuitemList.add("关于");
-		//		menuitemList.add("退出");
 
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), R.layout.dialog_listview_item,
 				R.id.item_name, menuitemList);
@@ -94,17 +85,6 @@ public class PersonalDialogFragment extends DialogFragment implements OnItemClic
 			getActivity().overridePendingTransition(R.anim.zoomin, R.anim.zoomout);
 			PersonalDialogFragment.this.dismiss();
 			break;
-//		case 3:
-//			//设置用户不曾登录
-//			BaseApplication.getInstance().logout();
-//			userPreference.clear();
-//			//			FlipperDbService flipperDbService = FlipperDbService.getInstance(getActivity());
-//			//			flipperDbService.flipperDao.deleteAll();
-//			friendPreference.clear();
-//			intent = new Intent(getActivity(), LoginOrRegisterActivity.class);
-//			getActivity().startActivity(intent);
-//			getActivity().finish();
-//			break;
 		default:
 			break;
 		}

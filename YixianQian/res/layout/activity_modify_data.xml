@@ -25,21 +25,11 @@
             android:paddingRight="20dp"
             android:paddingTop="20dp" >
 
-            <TextView
-                android:id="@+id/headimage_lable"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginTop="30dp"
-                android:text="更改头像"
-                android:textColor="@color/dark_gray"
-                android:textSize="@dimen/day_recommend_font_info" />
-
             <FrameLayout
+                android:id="@+id/head_image"
                 android:layout_width="@dimen/get_image_btn_padding"
                 android:layout_height="@dimen/get_image_btn_padding"
-                android:layout_alignParentRight="true"
+                android:layout_alignParentLeft="true"
                 android:layout_alignParentTop="true"
                 android:layout_marginRight="5dp" >
 
@@ -60,11 +50,18 @@
                     android:visibility="gone" />
             </FrameLayout>
 
+            <ImageView
+                android:id="@+id/vertify"
+                android:layout_width="@dimen/personal_photo_margin"
+                android:layout_height="@dimen/personal_photo_margin"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/sel_apply_vertify_btn" />
+
             <RelativeLayout
                 android:id="@+id/realnameview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/headimage_lable"
+                android:layout_below="@+id/head_image"
                 android:layout_marginTop="@dimen/motify_data_space"
                 android:background="@drawable/sel_modify_bg" >
 

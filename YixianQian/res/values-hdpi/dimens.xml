@@ -35,7 +35,7 @@
     <dimen name="headiamge_height">250dp</dimen>
     <!-- 时间胶囊 -->
     <dimen name="time_capsule_220">180dp</dimen>
-    <dimen name="motify_data_space">30dp</dimen>
+    <dimen name="motify_data_space">20dp</dimen>
 
     <!-- 聊天 -->
     <dimen name="margin_chat_activity">4dp</dimen>
