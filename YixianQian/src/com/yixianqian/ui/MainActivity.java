@@ -37,6 +37,7 @@ import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.TextHttpResponseHandler;
 import com.umeng.update.UmengUpdateAgent;
 import com.yixianqian.R;
+import com.yixianqian.Listener.OnRecordingListener;
 import com.yixianqian.base.BaseApplication;
 import com.yixianqian.base.BaseFragmentActivity;
 import com.yixianqian.config.Constants;
@@ -64,7 +65,7 @@ import com.yixianqian.utils.UserPreference;
  * 创建时间：2014年7月16日 下午3:25:58
  *
  */
-public class MainActivity extends BaseFragmentActivity {
+public class MainActivity extends BaseFragmentActivity implements OnRecordingListener {
 	private View[] mTabs;
 	private UserPreference userPreference;
 	private FriendPreference friendpreference;
@@ -692,5 +693,22 @@ public class MainActivity extends BaseFragmentActivity {
 		public void onConnecting(String progress) {
 		}
 
+	}
+
+	/**
+	 * 当在个人中心录音时，使得主页按钮不可用
+	 */
+	@Override
+	public void onRecordingChanged(boolean isRecording) {
+		// TODO Auto-generated method stub
+		if (isRecording) {
+			for (View view : mTabs) {
+				view.setEnabled(false);
+			}
+		} else {
+			for (View view : mTabs) {
+				view.setEnabled(true);
+			}
+		}
 	}
 }

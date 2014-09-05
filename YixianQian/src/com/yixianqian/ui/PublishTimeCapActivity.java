@@ -150,10 +150,13 @@ public class PublishTimeCapActivity extends BaseActivity {
 						showRecordingTape();
 						mRecorder.start();
 						recording = true;
+						right_btn_bg.setEnabled(false);
+
 					} else {
 						shutRecordingTape();
 						mRecorder.stop();
 						recording = false;
+						right_btn_bg.setEnabled(true);
 						if (soundFile != null && soundFile.exists()) {
 							audioPath = soundFile.getAbsolutePath();
 						}

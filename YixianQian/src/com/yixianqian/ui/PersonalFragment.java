@@ -29,6 +29,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.yixianqian.R;
+import com.yixianqian.Listener.OnRecordingListener;
 import com.yixianqian.base.BaseApplication;
 import com.yixianqian.base.BaseV4Fragment;
 import com.yixianqian.config.Constants.UserStateType;
@@ -83,6 +84,15 @@ public class PersonalFragment extends BaseV4Fragment {
 	private String soundName = "audio";//文件名称
 	private MediaRecorder mRecorder;
 	private boolean recording = false;//是否正在录音
+
+	private OnRecordingListener onRecordingListener;
+
+	@Override
+	public void onAttach(Activity activity) {
+		// TODO Auto-generated method stub
+		super.onAttach(activity);
+		onRecordingListener = (OnRecordingListener) activity;
+	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -187,10 +197,21 @@ public class PersonalFragment extends BaseV4Fragment {
 					showRecordingTape();
 					mRecorder.start();
 					recording = true;
+					/*********设置其他按钮不可用***********/
+					timeCapsuleBtn.setEnabled(false);
+					right_btn_bg.setEnabled(false);
+					photo.setEnabled(false);
+					onRecordingListener.onRecordingChanged(true);
 				} else {
 					shutRecordingTape();
 					mRecorder.stop();
 					recording = false;
+					/*********设置其他按钮可用***********/
+					timeCapsuleBtn.setEnabled(true);
+					right_btn_bg.setEnabled(true);
+					photo.setEnabled(true);
+					onRecordingListener.onRecordingChanged(false);
+
 					String path = null;
 					if (soundFile != null && soundFile.exists()) {
 						path = soundFile.getAbsolutePath();
