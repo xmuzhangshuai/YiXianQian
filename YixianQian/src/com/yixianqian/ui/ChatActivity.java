@@ -114,6 +114,8 @@ public class ChatActivity extends BaseFragmentActivity implements OnTouchListene
 	public static final int RESULT_CODE_OPEN = 4;
 	public static final int RESULT_CODE_DWONLOAD = 5;
 	public static final int RESULT_CODE_TO_CLOUD = 6;
+	public static final int REQUEST_CODE_PREVIEW_PICTURE = 1000;//预览图库图片后发送
+	public static final int RESULT_CODE_PREVIEW_PICTURE = 1002;
 	public static final String COPY_IMAGE = "EASEMOBIMG";
 	public static final int CHATTYPE_SINGLE = 1;
 
@@ -155,6 +157,7 @@ public class ChatActivity extends BaseFragmentActivity implements OnTouchListene
 	private NewMessageBroadcastReceiver receiver;//新消息广播
 	private ClipboardManager clipboard;//复制消息粘贴板
 	private File cameraFile;//相机文件
+	private String selectedImagePath;
 	public static ChatActivity activityInstance = null;
 
 	private Handler micImageHandler = new Handler() {
@@ -240,7 +243,7 @@ public class ChatActivity extends BaseFragmentActivity implements OnTouchListene
 		mMsgListView = (MsgListView) findViewById(R.id.msg_listView);
 		topNavLeftBtn = findViewById(R.id.left_btn_bg);
 		topNavRightBtn = findViewById(R.id.right_btn_bg);
-		topNavRightImage= (ImageView) findViewById(R.id.nav_right_btn);
+		topNavRightImage = (ImageView) findViewById(R.id.nav_right_btn);
 		topNavText = (TextView) findViewById(R.id.nav_text);
 		sendBtn = (Button) findViewById(R.id.send_btn);
 		faceBtn = (ImageView) findViewById(R.id.face_btn);
@@ -411,11 +414,20 @@ public class ChatActivity extends BaseFragmentActivity implements OnTouchListene
 				adapter.refresh();
 				mMsgListView.setSelection(data.getIntExtra("position", adapter.getCount()) - 1);
 				break;
-
 			default:
 				break;
 			}
 		}
+		//发送图片预览
+		if (resultCode == RESULT_CODE_PREVIEW_PICTURE) {
+			if (requestCode == REQUEST_CODE_PREVIEW_PICTURE) {
+				if (!TextUtils.isEmpty(selectedImagePath)) {
+					sendPicture(selectedImagePath);
+					selectedImagePath = null;
+				}
+			}
+		}
+
 		if (resultCode == RESULT_OK) { // 清空消息
 			if (requestCode == REQUEST_CODE_EMPTY_HISTORY) {
 				// 清空会话
@@ -427,8 +439,11 @@ public class ChatActivity extends BaseFragmentActivity implements OnTouchListene
 			} else if (requestCode == REQUEST_CODE_LOCAL) { // 发送本地图片
 				if (data != null) {
 					Uri selectedImage = data.getData();
+					selectedImagePath = getPicPathByUri(selectedImage);
 					if (selectedImage != null) {
-						sendPicByUri(selectedImage);
+						startActivityForResult(new Intent(ChatActivity.this, ChatImagePreviewActivity.class).putExtra(
+								ChatImagePreviewActivity.SHOW_BIG_IMAGE, "file://" + selectedImagePath),
+								REQUEST_CODE_PREVIEW_PICTURE);
 					}
 				}
 			} else if (requestCode == REQUEST_CODE_MAP) { // 地图
@@ -491,7 +506,6 @@ public class ChatActivity extends BaseFragmentActivity implements OnTouchListene
 		if (Build.VERSION.SDK_INT < 19) {
 			intent = new Intent(Intent.ACTION_GET_CONTENT);
 			intent.setType("image/*");
-
 		} else {
 			intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
 		}
@@ -871,11 +885,42 @@ public class ChatActivity extends BaseFragmentActivity implements OnTouchListene
 				toast.setGravity(Gravity.CENTER, 0, 0);
 				toast.show();
 				return;
-
 			}
 			sendPicture(file.getAbsolutePath());
 		}
+	}
 
+	/**
+	 * 根据URI获取图片地址
+	 * @param selectedImage
+	 * @return
+	 */
+	private String getPicPathByUri(Uri selectedImage) {
+		Cursor cursor = getContentResolver().query(selectedImage, null, null, null, null);
+		if (cursor != null) {
+			cursor.moveToFirst();
+			int columnIndex = cursor.getColumnIndex("_data");
+			String picturePath = cursor.getString(columnIndex);
+			cursor.close();
+			cursor = null;
+
+			if (picturePath == null || picturePath.equals("null")) {
+				Toast toast = Toast.makeText(this, "找不到图片", Toast.LENGTH_SHORT);
+				toast.setGravity(Gravity.CENTER, 0, 0);
+				toast.show();
+				return null;
+			}
+			return picturePath;
+		} else {
+			File file = new File(selectedImage.getPath());
+			if (!file.exists()) {
+				Toast toast = Toast.makeText(this, "找不到图片", Toast.LENGTH_SHORT);
+				toast.setGravity(Gravity.CENTER, 0, 0);
+				toast.show();
+				return null;
+			}
+			return file.getAbsolutePath();
+		}
 	}
 
 	@Override
@@ -904,7 +949,7 @@ public class ChatActivity extends BaseFragmentActivity implements OnTouchListene
 			setModeKeyboard();
 			break;
 		case R.id.right_btn_bg:
-			startActivity(new Intent(ChatActivity.this,ChatInfoActivity.class));
+			startActivity(new Intent(ChatActivity.this, ChatInfoActivity.class));
 			overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
 			break;
 		default:

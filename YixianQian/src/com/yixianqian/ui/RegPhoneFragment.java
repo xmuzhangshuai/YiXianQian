@@ -156,7 +156,7 @@ public class RegPhoneFragment extends BaseV4Fragment {
 		mNameView.setError(null);
 
 		// ¥Ê¥¢”√ªß÷µ
-		mName = mNameView.getText().toString();
+		mName = mNameView.getText().toString().trim();
 		mPassword = mPasswordView.getText().toString();
 		mPhone = mPhoneView.getText().toString();
 		mConformPass = mConformPassView.getText().toString();
@@ -220,7 +220,6 @@ public class RegPhoneFragment extends BaseV4Fragment {
 			userPreference.setU_tel(mPhone);
 			userPreference.setU_password(MD5For32.GetMD5Code(mPassword));
 			userPreference.setU_nickname(mName);
-
 		}
 	}
 

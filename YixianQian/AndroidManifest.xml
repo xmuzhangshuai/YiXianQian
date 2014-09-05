@@ -168,6 +168,12 @@
             android:screenOrientation="portrait" >
         </activity>
 
+        <!-- 聊天时预览图片 -->
+        <activity
+            android:name="com.yixianqian.ui.ChatImagePreviewActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+
         <!-- 自定义的alertdialog -->
         <activity
             android:name="com.yixianqian.customewidget.ChatAlertDialog"
