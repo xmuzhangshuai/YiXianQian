@@ -108,7 +108,6 @@ public class PersonalFragment extends BaseV4Fragment {
 		// TODO Auto-generated method stub
 		super.onResume();
 		recording = false;
-		state = userPreference.getU_stateid();
 		refreshPersonStatue();
 		refreshPersonData();
 	}
@@ -211,6 +210,7 @@ public class PersonalFragment extends BaseV4Fragment {
 	 * 更新个人资料
 	 */
 	public void refreshPersonData() {
+		int state = userPreference.getU_stateid();
 		if (state == UserStateType.LOVER) {
 			SinglePanel.setVisibility(View.GONE);
 			LoverPanel.setVisibility(View.VISIBLE);
