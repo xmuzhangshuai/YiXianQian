@@ -3,20 +3,20 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:paddingBottom="30dp"
-    android:paddingLeft="20dp"
-    android:paddingRight="20dp"
-    android:paddingTop="30dp" >
+    android:paddingBottom="@dimen/day_recommend_help_padding"
+    android:paddingLeft="@dimen/time_capsule20"
+    android:paddingRight="@dimen/time_capsule20"
+    android:paddingTop="@dimen/day_recommend_help_padding" >
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp" >
+        android:layout_marginBottom="@dimen/setting_list_margin" >
 
         <ImageView
             android:id="@+id/timerImage"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+            android:layout_width="@dimen/time_capsule20"
+            android:layout_height="@dimen/time_capsule20"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:src="@drawable/timer" />
@@ -64,13 +64,13 @@
         android:background="@drawable/sel_paly_bg"
         android:clickable="true"
         android:focusable="false"
-        android:padding="15dp"
+        android:padding="@dimen/personal_timecapsule_padding"
         android:visibility="gone" >
 
         <ImageView
             android:id="@+id/play"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="@dimen/day_recommend_help_padding"
+            android:layout_height="@dimen/day_recommend_help_padding"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:src="@drawable/paly_white" />

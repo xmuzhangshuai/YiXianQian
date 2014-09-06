@@ -42,6 +42,9 @@
     <dimen name="size_avatar">40dp</dimen>
     <dimen name="message_padding">4dp</dimen>
     <dimen name="love_vertify_headimage">60dp</dimen>
+
+    <!-- 设置 -->
+    <dimen name="setting_list_margin">5dp</dimen>
     <dimen name="new_msg">8dp</dimen>
 
 </resources>
