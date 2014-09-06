@@ -33,15 +33,20 @@
     <dimen name="get_image_btn_top">100dp</dimen>
     <dimen name="get_image_btn_padding">60dp</dimen>
     <dimen name="headiamge_height">250dp</dimen>
+
     <!-- 时间胶囊 -->
     <dimen name="time_capsule_220">180dp</dimen>
     <dimen name="motify_data_space">20dp</dimen>
+    <dimen name="share_space">7dp</dimen>
 
     <!-- 聊天 -->
-    <dimen name="margin_chat_activity">4dp</dimen>
+    <dimen name="margin_chat_activity">3dp</dimen>
     <dimen name="size_avatar">40dp</dimen>
-    <dimen name="message_padding">4dp</dimen>
+    <dimen name="message_padding">3dp</dimen>
     <dimen name="love_vertify_headimage">60dp</dimen>
+    <dimen name="message_maxlength">230dp</dimen>
+    <dimen name="message_loc_maxlength">205dp</dimen>
+    <dimen name="sent_btn_height">30dp</dimen>
 
     <!-- 设置 -->
     <dimen name="setting_list_margin">5dp</dimen>

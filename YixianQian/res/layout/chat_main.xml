@@ -64,53 +64,53 @@
 
         <ImageView
             android:id="@+id/voice_btn"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="@dimen/day_recommend_padding"
+            android:layout_height="@dimen/day_recommend_padding"
             android:background="@android:color/transparent"
-            android:padding="5dp"
+            android:padding="@dimen/day_recommend_viewpager_padding_top"
             android:src="@drawable/sel_chat_voice" />
 
         <ImageView
             android:id="@+id/face_btn"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginLeft="5dp"
+            android:layout_width="@dimen/day_recommend_padding"
+            android:layout_height="@dimen/day_recommend_padding"
+            android:layout_marginLeft="@dimen/day_recommend_viewpager_padding_top"
             android:background="@android:color/transparent"
-            android:padding="5dp"
+            android:padding="@dimen/day_recommend_viewpager_padding_top"
             android:src="@drawable/pop_btn_face_selector" />
 
         <ImageView
             android:id="@+id/btn_set_mode_keyboard"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
+            android:layout_width="@dimen/day_recommend_help_padding"
+            android:layout_height="@dimen/day_recommend_help_padding"
+            android:layout_marginLeft="@dimen/day_recommend_viewpager_padding_top"
+            android:layout_marginRight="@dimen/day_recommend_viewpager_padding_top"
             android:background="@drawable/chatting_setmode_keyboard_btn"
             android:onClick="setModeKeyboard"
-            android:padding="5dp"
+            android:padding="@dimen/day_recommend_viewpager_padding_top"
             android:visibility="gone" />
 
         <EditText
             android:id="@+id/msg_et"
             android:layout_width="0.0dip"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="6.0dip"
-            android:layout_marginLeft="5dp"
-            android:layout_marginTop="6.0dip"
+            android:layout_marginBottom="@dimen/day_recommend_viewpager_padding_top"
+            android:layout_marginLeft="@dimen/day_recommend_viewpager_padding_top"
+            android:layout_marginTop="@dimen/day_recommend_viewpager_padding_top"
             android:layout_weight="1.0"
             android:background="@drawable/sel_chat_input"
             android:inputType="textMultiLine"
             android:maxHeight="200.0dip"
-            android:paddingLeft="10.0dip"
-            android:paddingRight="14.0dip"
-            android:textSize="16.0sp" />
+            android:paddingLeft="@dimen/day_recommend_dot_space"
+            android:paddingRight="@dimen/day_recommend_dot_space"
+            android:textSize="@dimen/day_recommend_font_info" />
 
         <LinearLayout
             android:id="@+id/btn_press_to_speak"
             android:layout_width="0dp"
-            android:layout_height="40dp"
-            android:layout_marginLeft="6dp"
-            android:layout_marginRight="6dp"
+            android:layout_height="@dimen/day_recommend_padding"
+            android:layout_marginLeft="@dimen/day_recommend_viewpager_padding_top"
+            android:layout_marginRight="@dimen/day_recommend_viewpager_padding_top"
             android:layout_weight="1"
             android:background="@drawable/chat_press_speak_btn"
             android:gravity="center"
@@ -119,7 +119,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
+                android:layout_marginLeft="@dimen/day_recommend_viewpager_padding_top"
                 android:text="@string/button_pushtotalk"
                 android:textColor="@drawable/sel_chat_pressed_to_talk"
                 android:textSize="18sp" />
@@ -135,24 +135,24 @@
 
             <ImageView
                 android:id="@+id/more_btn"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="@dimen/day_recommend_padding"
+                android:layout_height="@dimen/day_recommend_padding"
                 android:background="@android:color/transparent"
                 android:padding="3dp"
                 android:src="@drawable/pop_btn_selector" />
 
             <Button
                 android:id="@+id/send_btn"
-                android:layout_width="50dp"
-                android:layout_height="35dp"
+                android:layout_width="@dimen/size_avatar"
+                android:layout_height="@dimen/sent_btn_height"
                 android:layout_marginBottom="3dp"
-                android:layout_marginLeft="5.0dip"
+                android:layout_marginLeft="@dimen/day_recommend_viewpager_padding_top"
                 android:layout_marginTop="3dp"
                 android:background="@drawable/chat_press_speak_btn"
                 android:enabled="false"
                 android:text="发送"
                 android:textColor="@drawable/sel_chat_pressed_to_talk"
-                android:textSize="16.0sp"
+                android:textSize="@dimen/day_recommend_font_info"
                 android:visibility="gone" />
         </LinearLayout>
     </LinearLayout>

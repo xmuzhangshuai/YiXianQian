@@ -39,6 +39,7 @@
             android:gravity="left|center"
             android:lineSpacingExtra="2dp"
             android:maxWidth="300.0dip"
+            android:layout_marginRight="@dimen/size_avatar"
             android:paddingBottom="@dimen/message_padding"
             android:paddingTop="@dimen/message_padding"
             android:textColor="#ff000000"
