@@ -65,6 +65,13 @@ public class AlreadyInviteActivity extends BaseActivity {
 	}
 
 	@Override
+	public void onBackPressed() {
+		// TODO Auto-generated method stub
+		finish();
+		overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
+	}
+
+	@Override
 	protected void findViewById() {
 		// TODO Auto-generated method stub
 		topNavLeftBtn = (ImageView) findViewById(R.id.nav_left_btn);
@@ -85,6 +92,7 @@ public class AlreadyInviteActivity extends BaseActivity {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				finish();
+				overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
 			}
 		});
 

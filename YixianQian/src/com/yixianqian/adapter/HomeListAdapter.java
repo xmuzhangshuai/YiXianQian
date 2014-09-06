@@ -32,6 +32,7 @@ import com.yixianqian.entities.Conversation;
 import com.yixianqian.utils.AsyncHttpClientImageSound;
 import com.yixianqian.utils.ImageLoaderTool;
 import com.yixianqian.utils.ImageTools;
+import com.yixianqian.utils.LogTool;
 
 public class HomeListAdapter extends BaseAdapter {
 	private LayoutInflater mInflater;
@@ -180,8 +181,9 @@ public class HomeListAdapter extends BaseAdapter {
 			}
 			break;
 		case IMAGE: // 图片消息
-			ImageMessageBody imageBody = (ImageMessageBody) message.getBody();
-			digest = getString(context, R.string.picture) + imageBody.getFileName();
+//			ImageMessageBody imageBody = (ImageMessageBody) message.getBody();
+//			digest = getString(context, R.string.picture) + imageBody.getFileName();
+			digest = getString(context, R.string.picture);
 			break;
 		case VOICE:// 语音消息
 			digest = getString(context, R.string.voice);
@@ -191,7 +193,7 @@ public class HomeListAdapter extends BaseAdapter {
 			digest = txtBody.getMessage();
 			break;
 		default:
-			System.err.println("error, unknow type");
+			LogTool.e("error, unknow type");
 			return "";
 		}
 
