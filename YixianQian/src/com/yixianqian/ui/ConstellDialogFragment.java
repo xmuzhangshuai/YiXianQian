@@ -1,7 +1,5 @@
 package com.yixianqian.ui;
 
-import java.util.List;
-
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -15,7 +13,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.yixianqian.R;
-import com.yixianqian.config.Constants;
+import com.yixianqian.utils.ConstellUtil;
 
 /**
  * ¿‡√˚≥∆£∫ConstellDialogFragment
@@ -27,7 +25,7 @@ import com.yixianqian.config.Constants;
 public class ConstellDialogFragment extends DialogFragment {
 	private View rootView;
 	private ListView menuitemListView;
-	private List<String> menuitemList;
+	private String[] menuitemList;
 	private OnConstellChangedListener onConstellChangedListener;
 
 	public interface OnConstellChangedListener {
@@ -55,7 +53,7 @@ public class ConstellDialogFragment extends DialogFragment {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setStyle(DialogFragment.STYLE_NO_TITLE, 0);
-		menuitemList = Constants.Constell.getConstellList();
+		menuitemList = ConstellUtil.constellationArr;
 	}
 
 	@Override
@@ -79,7 +77,7 @@ public class ConstellDialogFragment extends DialogFragment {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				// TODO Auto-generated method stub
 				ConstellDialogFragment.this.dismiss();
-				onConstellChangedListener.onConstellChaged(menuitemList.get(position));
+				onConstellChangedListener.onConstellChaged(menuitemList[position]);
 			}
 		});
 

@@ -119,38 +119,4 @@ public class Constants {
 		public static final int FROM = 0;//±»ÑûÇë
 		public static final int TO = 1;//ÎÒÑûÇë±ğÈË
 	}
-
-	//ĞÇ×ù
-	public static class Constell {
-		public static final String Aries = "°×Ñò×ù";
-		public static final String Taurus = "½ğÅ£×ù";
-		public static final String Gemini = "Ë«×Ó×ù";
-		public static final String Cancer = "¾ŞĞ·×ù";
-		public static final String Leo = "Ê¨×Ó×ù";
-		public static final String Virgo = "´¦Å®×ù";
-		public static final String Libra = "Ìì³Ó×ù";
-		public static final String Scorpius = "ÌìĞ«×ù";
-		public static final String Sagittarius = "ÉäÊÖ×ù";
-		public static final String Capricorn = "Ä¦ôÉ×ù";
-		public static final String Aquarius = "Ë®Æ¿×ù";
-		public static final String Pisces = "Ë«Óã×ù";
-
-		public static List<String> getConstellList() {
-			List<String> list = new ArrayList<String>();
-			list.add(Aries);
-			list.add(Taurus);
-			list.add(Gemini);
-			list.add(Cancer);
-			list.add(Leo);
-			list.add(Virgo);
-			list.add(Libra);
-			list.add(Scorpius);
-			list.add(Sagittarius);
-			list.add(Capricorn);
-			list.add(Aquarius);
-			list.add(Pisces);
-			return list;
-		}
-	}
-
 }

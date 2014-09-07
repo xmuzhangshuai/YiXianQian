@@ -12,6 +12,7 @@ import org.apache.http.Header;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.DatePickerDialog.OnDateSetListener;
+import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -27,7 +28,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnFocusChangeListener;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.DatePicker;
@@ -46,6 +46,7 @@ import com.yixianqian.table.UserTable;
 import com.yixianqian.ui.ConstellDialogFragment.OnConstellChangedListener;
 import com.yixianqian.utils.AsyncHttpClientImageSound;
 import com.yixianqian.utils.AsyncHttpClientTool;
+import com.yixianqian.utils.ConstellUtil;
 import com.yixianqian.utils.DateTimeTools;
 import com.yixianqian.utils.ImageTools;
 import com.yixianqian.utils.LogTool;
@@ -63,9 +64,9 @@ public class ModifyDataActivity extends BaseFragmentActivity implements OnClickL
 	private TextView topNavigation;//导航栏文字
 	private View leftImageButton;//导航栏左侧按钮
 	private View rightImageButton;//导航栏右侧按钮
-	private EditText nameEditText;//姓名
+	//	private EditText nameEditText;//姓名
 	private EditText nickNameEditText;//昵称
-	private EditText emailEditText;//邮箱
+	//	private EditText emailEditText;//邮箱
 	private TextView telEditText;//电话
 	private View genderView;
 	private View ageView;
@@ -84,16 +85,16 @@ public class ModifyDataActivity extends BaseFragmentActivity implements OnClickL
 	private TextView birthdayTextView;
 	private UserPreference userPreference;
 	private View passView;
-	private View nameView;
+	//	private View nameView;
 	private View nicknameView;
-	private View emailView;
+	//	private View emailView;
 	private View phoneView;
 	private TextView waitCheckView;
 	private ImageView headImage;
 	private InputMethodManager imm;
-	private String realname;
+	//	private String realname;
 	private String nickname;
-	private String email;
+	//	private String email;
 	private String age;
 	private String weight;
 	private String height;
@@ -105,6 +106,12 @@ public class ModifyDataActivity extends BaseFragmentActivity implements OnClickL
 
 	private final int activity_result_camara_with_data = 1006;
 	private final int activity_result_cropimage_with_data = 1007;
+	boolean nickNameChanged = false;
+	boolean ageChanged = false;
+	boolean weightChanged = false;
+	boolean heightChanged = false;
+	boolean constellChanged = false;
+	boolean personIntroChanged = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -132,14 +139,14 @@ public class ModifyDataActivity extends BaseFragmentActivity implements OnClickL
 		topNavigation = (TextView) findViewById(R.id.nav_text);
 		leftImageButton = (View) findViewById(R.id.left_btn_bg);
 		rightImageButton = (View) findViewById(R.id.right_btn_bg);
-		nameEditText = (EditText) findViewById(R.id.name);
+		//		nameEditText = (EditText) findViewById(R.id.name);
 		nickNameEditText = (EditText) findViewById(R.id.nickname);
-		emailEditText = (EditText) findViewById(R.id.email);
+		//		emailEditText = (EditText) findViewById(R.id.email);
 		telEditText = (TextView) findViewById(R.id.phone);
 		passView = findViewById(R.id.passview);
-		nameView = findViewById(R.id.realnameview);
+		//		nameView = findViewById(R.id.realnameview);
 		nicknameView = findViewById(R.id.nicknameview);
-		emailView = findViewById(R.id.emailview);
+		//		emailView = findViewById(R.id.emailview);
 		phoneView = findViewById(R.id.phoneview);
 		headImage = (ImageView) findViewById(R.id.headimage);
 		waitCheckView = (TextView) findViewById(R.id.waitcheck);
@@ -168,9 +175,9 @@ public class ModifyDataActivity extends BaseFragmentActivity implements OnClickL
 		rightImageButton.setOnClickListener(this);
 		passView.setOnClickListener(this);
 		headImage.setOnClickListener(this);
-		nameView.setOnClickListener(this);
+		//		nameView.setOnClickListener(this);
 		nicknameView.setOnClickListener(this);
-		emailView.setOnClickListener(this);
+		//		emailView.setOnClickListener(this);
 		phoneView.setOnClickListener(this);
 		genderView.setOnClickListener(this);
 		ageView.setOnClickListener(this);
@@ -215,48 +222,48 @@ public class ModifyDataActivity extends BaseFragmentActivity implements OnClickL
 		}
 
 		genderText.setText(userPreference.getU_gender());
-		nameEditText.setOnFocusChangeListener(new OnFocusChangeListener() {
+		//		nameEditText.setOnFocusChangeListener(new OnFocusChangeListener() {
+		//
+		//			@Override
+		//			public void onFocusChange(View v, boolean hasFocus) {
+		//				// TODO Auto-generated method stub
+		//				if (hasFocus) {
+		//					if (nameEditText.getText().toString().equals("未添加")) {
+		//						nameEditText.setText("");
+		//					}
+		//				} else {
+		//					if (TextUtils.isEmpty(nameEditText.getText().toString())) {
+		//						nameEditText.setText("未添加");
+		//					}
+		//				}
+		//			}
+		//		});
+		//		emailEditText.setOnFocusChangeListener(new OnFocusChangeListener() {
+		//
+		//			@Override
+		//			public void onFocusChange(View v, boolean hasFocus) {
+		//				// TODO Auto-generated method stub
+		//				if (hasFocus) {
+		//					if (emailEditText.getText().toString().equals("未绑定")) {
+		//						emailEditText.setText("");
+		//					}
+		//				} else {
+		//					if (TextUtils.isEmpty(emailEditText.getText().toString())) {
+		//						emailEditText.setText("未绑定");
+		//					}
+		//				}
+		//			}
+		//		});
 
-			@Override
-			public void onFocusChange(View v, boolean hasFocus) {
-				// TODO Auto-generated method stub
-				if (hasFocus) {
-					if (nameEditText.getText().toString().equals("未添加")) {
-						nameEditText.setText("");
-					}
-				} else {
-					if (TextUtils.isEmpty(nameEditText.getText().toString())) {
-						nameEditText.setText("未添加");
-					}
-				}
-			}
-		});
-		emailEditText.setOnFocusChangeListener(new OnFocusChangeListener() {
-
-			@Override
-			public void onFocusChange(View v, boolean hasFocus) {
-				// TODO Auto-generated method stub
-				if (hasFocus) {
-					if (emailEditText.getText().toString().equals("未绑定")) {
-						emailEditText.setText("");
-					}
-				} else {
-					if (TextUtils.isEmpty(emailEditText.getText().toString())) {
-						emailEditText.setText("未绑定");
-					}
-				}
-			}
-		});
-
-		nameEditText.setText(userPreference.getU_realname());
-		if (TextUtils.isEmpty(userPreference.getU_realname())) {
-			nameEditText.setText("未添加");
-		}
+		//		nameEditText.setText(userPreference.getU_realname());
+		//		if (TextUtils.isEmpty(userPreference.getU_realname())) {
+		//			nameEditText.setText("未添加");
+		//		}
 		nickNameEditText.setText(userPreference.getU_nickname());
-		emailEditText.setText(userPreference.getU_email());
-		if (TextUtils.isEmpty(userPreference.getU_email())) {
-			emailEditText.setText("未绑定");
-		}
+		//		emailEditText.setText(userPreference.getU_email());
+		//		if (TextUtils.isEmpty(userPreference.getU_email())) {
+		//			emailEditText.setText("未绑定");
+		//		}
 
 		ServerUtil.getInstance(ModifyDataActivity.this).disPlayHeadImage(headImage, waitCheckView);
 	}
@@ -462,19 +469,19 @@ public class ModifyDataActivity extends BaseFragmentActivity implements OnClickL
 	 * 确认修改
 	 */
 	private void attemptModify() {
-		boolean realNameChanged = false;
-		boolean nickNameChanged = false;
-		boolean emailNameChanged = false;
-		boolean ageChanged = false;
-		boolean weightChanged = false;
-		boolean heightChanged = false;
-		boolean constellChanged = false;
-		boolean personIntroChanged = false;
+		//		boolean realNameChanged = false;
+		//		boolean emailNameChanged = false;
+		//		boolean nickNameChanged = false;
+		//		boolean ageChanged = false;
+		//		boolean weightChanged = false;
+		//		boolean heightChanged = false;
+		//		boolean constellChanged = false;
+		//		boolean personIntroChanged = false;
 
 		// 重置错误
-		nameEditText.setError(null);
+		//		nameEditText.setError(null);
 		nickNameEditText.setError(null);
-		emailEditText.setError(null);
+		//		emailEditText.setError(null);
 		ageEditText.setError(null);
 		weightEditText.setError(null);
 		heightEditText.setError(null);
@@ -483,9 +490,9 @@ public class ModifyDataActivity extends BaseFragmentActivity implements OnClickL
 		birthdayTextView.setError(null);
 
 		// 存储用户值
-		realname = nameEditText.getText().toString();
+		//		realname = nameEditText.getText().toString();
 		nickname = nickNameEditText.getText().toString();
-		email = emailEditText.getText().toString();
+		//		email = emailEditText.getText().toString();
 		age = ageEditText.getText().toString();
 		height = heightEditText.getText().toString();
 		weight = weightEditText.getText().toString();
@@ -496,9 +503,9 @@ public class ModifyDataActivity extends BaseFragmentActivity implements OnClickL
 		View focusView = null;
 
 		//检查真名
-		if (!realname.equals(userPreference.getU_realname()) && !realname.equals("未添加") && !TextUtils.isEmpty(realname)) {
-			realNameChanged = true;
-		}
+		//		if (!realname.equals(userPreference.getU_realname()) && !realname.equals("未添加") && !TextUtils.isEmpty(realname)) {
+		//			realNameChanged = true;
+		//		}
 
 		//检查昵称
 		if (!nickname.equals(userPreference.getU_nickname()) && !TextUtils.isEmpty(nickname)) {
@@ -506,15 +513,15 @@ public class ModifyDataActivity extends BaseFragmentActivity implements OnClickL
 		}
 
 		//检查邮箱
-		if ((!email.equals(userPreference.getU_email())) && (!TextUtils.isEmpty(email)) && !email.equals("未绑定")) {
-			if (!email.contains("@")) {
-				emailEditText.setError("邮箱格式不对");
-				focusView = emailEditText;
-				cancel = true;
-			} else {
-				emailNameChanged = true;
-			}
-		}
+		//		if ((!email.equals(userPreference.getU_email())) && (!TextUtils.isEmpty(email)) && !email.equals("未绑定")) {
+		//			if (!email.contains("@")) {
+		//				emailEditText.setError("邮箱格式不对");
+		//				focusView = emailEditText;
+		//				cancel = true;
+		//			} else {
+		//				emailNameChanged = true;
+		//			}
+		//		}
 
 		//检查年龄
 		if (!TextUtils.isEmpty(age)) {
@@ -566,6 +573,18 @@ public class ModifyDataActivity extends BaseFragmentActivity implements OnClickL
 			// 如果错误，则提示错误
 			focusView.requestFocus();
 		} else {
+
+			if (!nickNameChanged && !ageChanged && !weightChanged && !heightChanged && !constellChanged
+					&& !personIntroChanged) {
+				ToastTool.showShort(ModifyDataActivity.this, "没有做任何修改");
+				finish();
+				overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
+			}
+
+			final ProgressDialog dialog = new ProgressDialog(this);
+			dialog.setMessage("正在修改,请稍后...");
+			dialog.setCancelable(false);
+
 			//昵称有变化
 			if (nickNameChanged) {
 				RequestParams params = new RequestParams();
@@ -574,11 +593,33 @@ public class ModifyDataActivity extends BaseFragmentActivity implements OnClickL
 				TextHttpResponseHandler responseHandler = new TextHttpResponseHandler("utf-8") {
 
 					@Override
+					public void onStart() {
+						// TODO Auto-generated method stub
+						super.onStart();
+						if (!dialog.isShowing()) {
+							dialog.show();
+						}
+					}
+
+					@Override
+					public void onFinish() {
+						// TODO Auto-generated method stub
+						super.onFinish();
+						nickNameChanged = false;
+						if (!nickNameChanged && !ageChanged && !weightChanged && !heightChanged && !constellChanged
+								&& !personIntroChanged && dialog.isShowing()) {
+							dialog.dismiss();
+							ToastTool.showLong(ModifyDataActivity.this, "修改成功！");
+							finish();
+							overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
+						}
+					}
+
+					@Override
 					public void onSuccess(int arg0, Header[] arg1, String arg2) {
 						// TODO Auto-generated method stub
 						if (arg0 == 200) {
 							userPreference.setU_nickname(nickname);
-							LogTool.e(userPreference.getName());
 							//更新环信昵称
 							if (EMChatManager.getInstance().updateCurrentUserNick(userPreference.getName())) {
 								LogTool.i("ModifyDataActivity", "更新环信昵称成功");
@@ -597,64 +638,86 @@ public class ModifyDataActivity extends BaseFragmentActivity implements OnClickL
 			}
 
 			//真名有变化
-			if (realNameChanged) {
-				RequestParams params = new RequestParams();
-				params.put(UserTable.U_ID, userPreference.getU_id());
-				params.put(UserTable.U_REALNAME, realname);
-				TextHttpResponseHandler responseHandler = new TextHttpResponseHandler("utf-8") {
-
-					@Override
-					public void onSuccess(int arg0, Header[] arg1, String arg2) {
-						// TODO Auto-generated method stub
-						if (arg0 == 200) {
-							userPreference.setU_realname(realname);
-							LogTool.e(userPreference.getName());
-							//更新环信昵称
-							if (EMChatManager.getInstance().updateCurrentUserNick(userPreference.getName())) {
-								LogTool.i("ModifyDataActivity", "更新环信昵称成功");
-							} else {
-								LogTool.e("ModifyDataActivity", "更新环信昵称失败");
-							}
-						}
-					}
-
-					@Override
-					public void onFailure(int arg0, Header[] arg1, String arg2, Throwable arg3) {
-						// TODO Auto-generated method stub
-
-					}
-				};
-				AsyncHttpClientTool.post("updateuserrealname", params, responseHandler);
-			}
+			//			if (realNameChanged) {
+			//				RequestParams params = new RequestParams();
+			//				params.put(UserTable.U_ID, userPreference.getU_id());
+			//				params.put(UserTable.U_REALNAME, realname);
+			//				TextHttpResponseHandler responseHandler = new TextHttpResponseHandler("utf-8") {
+			//
+			//					@Override
+			//					public void onSuccess(int arg0, Header[] arg1, String arg2) {
+			//						// TODO Auto-generated method stub
+			//						if (arg0 == 200) {
+			//							userPreference.setU_realname(realname);
+			//							LogTool.e(userPreference.getName());
+			//							//更新环信昵称
+			//							if (EMChatManager.getInstance().updateCurrentUserNick(userPreference.getName())) {
+			//								LogTool.i("ModifyDataActivity", "更新环信昵称成功");
+			//							} else {
+			//								LogTool.e("ModifyDataActivity", "更新环信昵称失败");
+			//							}
+			//						}
+			//					}
+			//
+			//					@Override
+			//					public void onFailure(int arg0, Header[] arg1, String arg2, Throwable arg3) {
+			//						// TODO Auto-generated method stub
+			//
+			//					}
+			//				};
+			//				AsyncHttpClientTool.post("updateuserrealname", params, responseHandler);
+			//			}
 
 			//邮箱有变化
-			if (emailNameChanged) {
-				RequestParams params = new RequestParams();
-				params.put(UserTable.U_ID, userPreference.getU_id());
-				params.put(UserTable.U_EMAIL, email);
-				TextHttpResponseHandler responseHandler = new TextHttpResponseHandler("utf-8") {
-
-					@Override
-					public void onSuccess(int arg0, Header[] arg1, String arg2) {
-						// TODO Auto-generated method stub
-						if (arg0 == 200) {
-							userPreference.setU_email(email);
-						}
-					}
-
-					@Override
-					public void onFailure(int arg0, Header[] arg1, String arg2, Throwable arg3) {
-						// TODO Auto-generated method stub
-					}
-				};
-				AsyncHttpClientTool.post("updateusermail", params, responseHandler);
-			}
+			//			if (emailNameChanged) {
+			//				RequestParams params = new RequestParams();
+			//				params.put(UserTable.U_ID, userPreference.getU_id());
+			//				params.put(UserTable.U_EMAIL, email);
+			//				TextHttpResponseHandler responseHandler = new TextHttpResponseHandler("utf-8") {
+			//
+			//					@Override
+			//					public void onSuccess(int arg0, Header[] arg1, String arg2) {
+			//						// TODO Auto-generated method stub
+			//						if (arg0 == 200) {
+			//							userPreference.setU_email(email);
+			//						}
+			//					}
+			//
+			//					@Override
+			//					public void onFailure(int arg0, Header[] arg1, String arg2, Throwable arg3) {
+			//						// TODO Auto-generated method stub
+			//					}
+			//				};
+			//				AsyncHttpClientTool.post("updateusermail", params, responseHandler);
+			//			}
 			//年龄有变化
 			if (ageChanged) {
 				RequestParams params = new RequestParams();
 				params.put(UserTable.U_ID, userPreference.getU_id());
 				params.put(UserTable.U_AGE, age);
 				TextHttpResponseHandler responseHandler = new TextHttpResponseHandler("utf-8") {
+					@Override
+					public void onStart() {
+						// TODO Auto-generated method stub
+						super.onStart();
+						if (!dialog.isShowing()) {
+							dialog.show();
+						}
+					}
+
+					@Override
+					public void onFinish() {
+						// TODO Auto-generated method stub
+						super.onFinish();
+						ageChanged = false;
+						if (!nickNameChanged && !ageChanged && !weightChanged && !heightChanged && !constellChanged
+								&& !personIntroChanged && dialog.isShowing()) {
+							dialog.dismiss();
+							ToastTool.showLong(ModifyDataActivity.this, "修改成功！");
+							finish();
+							overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
+						}
+					}
 
 					@Override
 					public void onSuccess(int arg0, Header[] arg1, String arg2) {
@@ -677,6 +740,28 @@ public class ModifyDataActivity extends BaseFragmentActivity implements OnClickL
 				params.put(UserTable.U_ID, userPreference.getU_id());
 				params.put(UserTable.U_WEIGHT, weight);
 				TextHttpResponseHandler responseHandler = new TextHttpResponseHandler("utf-8") {
+					@Override
+					public void onStart() {
+						// TODO Auto-generated method stub
+						super.onStart();
+						if (!dialog.isShowing()) {
+							dialog.show();
+						}
+					}
+
+					@Override
+					public void onFinish() {
+						// TODO Auto-generated method stub
+						super.onFinish();
+						weightChanged = false;
+						if (!nickNameChanged && !ageChanged && !weightChanged && !heightChanged && !constellChanged
+								&& !personIntroChanged && dialog.isShowing()) {
+							dialog.dismiss();
+							ToastTool.showLong(ModifyDataActivity.this, "修改成功！");
+							finish();
+							overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
+						}
+					}
 
 					@Override
 					public void onSuccess(int arg0, Header[] arg1, String arg2) {
@@ -699,6 +784,28 @@ public class ModifyDataActivity extends BaseFragmentActivity implements OnClickL
 				params.put(UserTable.U_ID, userPreference.getU_id());
 				params.put(UserTable.U_HEIGHT, height);
 				TextHttpResponseHandler responseHandler = new TextHttpResponseHandler("utf-8") {
+					@Override
+					public void onStart() {
+						// TODO Auto-generated method stub
+						super.onStart();
+						if (!dialog.isShowing()) {
+							dialog.show();
+						}
+					}
+
+					@Override
+					public void onFinish() {
+						// TODO Auto-generated method stub
+						super.onFinish();
+						heightChanged = false;
+						if (!nickNameChanged && !ageChanged && !weightChanged && !heightChanged && !constellChanged
+								&& !personIntroChanged && dialog.isShowing()) {
+							dialog.dismiss();
+							ToastTool.showLong(ModifyDataActivity.this, "修改成功！");
+							finish();
+							overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
+						}
+					}
 
 					@Override
 					public void onSuccess(int arg0, Header[] arg1, String arg2) {
@@ -721,6 +828,28 @@ public class ModifyDataActivity extends BaseFragmentActivity implements OnClickL
 				params.put(UserTable.U_ID, userPreference.getU_id());
 				params.put(UserTable.U_CONSTELL, constell);
 				TextHttpResponseHandler responseHandler = new TextHttpResponseHandler("utf-8") {
+					@Override
+					public void onStart() {
+						// TODO Auto-generated method stub
+						super.onStart();
+						if (!dialog.isShowing()) {
+							dialog.show();
+						}
+					}
+
+					@Override
+					public void onFinish() {
+						// TODO Auto-generated method stub
+						super.onFinish();
+						constellChanged = false;
+						if (!nickNameChanged && !ageChanged && !weightChanged && !heightChanged && !constellChanged
+								&& !personIntroChanged && dialog.isShowing()) {
+							dialog.dismiss();
+							ToastTool.showLong(ModifyDataActivity.this, "修改成功！");
+							finish();
+							overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
+						}
+					}
 
 					@Override
 					public void onSuccess(int arg0, Header[] arg1, String arg2) {
@@ -744,6 +873,28 @@ public class ModifyDataActivity extends BaseFragmentActivity implements OnClickL
 				params.put(UserTable.U_ID, userPreference.getU_id());
 				params.put(UserTable.U_INTRODUCE, personIntro);
 				TextHttpResponseHandler responseHandler = new TextHttpResponseHandler("utf-8") {
+					@Override
+					public void onStart() {
+						// TODO Auto-generated method stub
+						super.onStart();
+						if (!dialog.isShowing()) {
+							dialog.show();
+						}
+					}
+
+					@Override
+					public void onFinish() {
+						// TODO Auto-generated method stub
+						super.onFinish();
+						personIntroChanged = false;
+						if (!nickNameChanged && !ageChanged && !weightChanged && !heightChanged && !constellChanged
+								&& !personIntroChanged && dialog.isShowing()) {
+							dialog.dismiss();
+							ToastTool.showLong(ModifyDataActivity.this, "修改成功！");
+							finish();
+							overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
+						}
+					}
 
 					@Override
 					public void onSuccess(int arg0, Header[] arg1, String arg2) {
@@ -761,9 +912,7 @@ public class ModifyDataActivity extends BaseFragmentActivity implements OnClickL
 				AsyncHttpClientTool.post("updateuserintro", params, responseHandler);
 			}
 
-			finish();
 		}
-
 	}
 
 	/**
@@ -790,7 +939,7 @@ public class ModifyDataActivity extends BaseFragmentActivity implements OnClickL
 		OnDateSetListener callBack = new OnDateSetListener() {
 
 			@Override
-			public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+			public void onDateSet(DatePicker view, final int year, int monthOfYear, int dayOfMonth) {
 				// TODO Auto-generated method stub
 				calendar.set(year, monthOfYear, dayOfMonth);
 				final Date date = calendar.getTime();
@@ -806,6 +955,9 @@ public class ModifyDataActivity extends BaseFragmentActivity implements OnClickL
 						if (arg0 == 200) {
 							userPreference.setU_birthday(date);
 							birthdayTextView.setText(DateTimeTools.getDateString(date));
+							constellEditText.setText(ConstellUtil.date2Constellation(calendar));
+							int tempAge = Calendar.getInstance().get(Calendar.YEAR) - year;
+							ageEditText.setText("" + tempAge);
 						}
 					}
 
@@ -830,12 +982,20 @@ public class ModifyDataActivity extends BaseFragmentActivity implements OnClickL
 	}
 
 	@Override
+	public void onBackPressed() {
+		// TODO Auto-generated method stub
+		finish();
+		overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
+	}
+
+	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
 		Intent intent;
 		switch (v.getId()) {
 		case R.id.left_btn_bg:
 			finish();
+			overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
 			break;
 		case R.id.right_btn_bg:
 			attemptModify();
@@ -848,13 +1008,13 @@ public class ModifyDataActivity extends BaseFragmentActivity implements OnClickL
 		case R.id.headimage:
 			showPicturePicker(ModifyDataActivity.this);
 			break;
-		case R.id.realnameview:
-			nameEditText.setFocusable(true);
-			nameEditText.setFocusableInTouchMode(true);
-			nameEditText.requestFocus();
-			nameEditText.requestFocusFromTouch();
-			imm.showSoftInput(nameEditText, 0);
-			break;
+		//		case R.id.realnameview:
+		//			nameEditText.setFocusable(true);
+		//			nameEditText.setFocusableInTouchMode(true);
+		//			nameEditText.requestFocus();
+		//			nameEditText.requestFocusFromTouch();
+		//			imm.showSoftInput(nameEditText, 0);
+		//			break;
 		case R.id.nicknameview:
 			nickNameEditText.setFocusable(true);
 			nickNameEditText.setFocusableInTouchMode(true);
@@ -862,13 +1022,13 @@ public class ModifyDataActivity extends BaseFragmentActivity implements OnClickL
 			nickNameEditText.requestFocusFromTouch();
 			imm.showSoftInput(nickNameEditText, 0);
 			break;
-		case R.id.emailview:
-			emailEditText.setFocusable(true);
-			emailEditText.setFocusableInTouchMode(true);
-			emailEditText.requestFocus();
-			emailEditText.requestFocusFromTouch();
-			imm.showSoftInput(emailEditText, 0);
-			break;
+		//		case R.id.emailview:
+		//			emailEditText.setFocusable(true);
+		//			emailEditText.setFocusableInTouchMode(true);
+		//			emailEditText.requestFocus();
+		//			emailEditText.requestFocusFromTouch();
+		//			imm.showSoftInput(emailEditText, 0);
+		//			break;
 		case R.id.ageview:
 			ageEditText.setFocusable(true);
 			ageEditText.setFocusableInTouchMode(true);
