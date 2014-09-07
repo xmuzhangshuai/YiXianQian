@@ -22,7 +22,6 @@ import android.widget.TextView.BufferType;
 import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMConversation;
 import com.easemob.chat.EMMessage;
-import com.easemob.chat.ImageMessageBody;
 import com.easemob.chat.TextMessageBody;
 import com.easemob.util.DateUtils;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -173,7 +172,7 @@ public class HomeListAdapter extends BaseAdapter {
 				//从sdk中提到了ui中，使用更简单不犯错的获取string方法
 				//				digest = EasyUtils.getAppResourceString(context, "location_recv");
 				digest = getString(context, R.string.location_recv);
-				digest = String.format(digest, message.getFrom());
+				digest = String.format(digest, message.getStringAttribute("username", ""));
 				return digest;
 			} else {
 				//				digest = EasyUtils.getAppResourceString(context, "location_prefix");
@@ -181,8 +180,8 @@ public class HomeListAdapter extends BaseAdapter {
 			}
 			break;
 		case IMAGE: // 图片消息
-//			ImageMessageBody imageBody = (ImageMessageBody) message.getBody();
-//			digest = getString(context, R.string.picture) + imageBody.getFileName();
+			//			ImageMessageBody imageBody = (ImageMessageBody) message.getBody();
+			//			digest = getString(context, R.string.picture) + imageBody.getFileName();
 			digest = getString(context, R.string.picture);
 			break;
 		case VOICE:// 语音消息

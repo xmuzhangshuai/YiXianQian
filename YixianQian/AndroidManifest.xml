@@ -151,6 +151,9 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize" >
+            <intent-filter>
+                <action android:name="com.yixianqian.chat" />
+            </intent-filter>
         </activity>
 
         <!-- 二维码扫描页面 -->

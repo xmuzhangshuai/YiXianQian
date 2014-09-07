@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.apache.http.Header;
 
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -17,6 +18,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -29,6 +31,7 @@ import com.easemob.chat.EMContactListener;
 import com.easemob.chat.EMContactManager;
 import com.easemob.chat.EMConversation;
 import com.easemob.chat.EMMessage;
+import com.easemob.chat.EMMessage.ChatType;
 import com.easemob.chat.EMNotifier;
 import com.easemob.chat.TextMessageBody;
 import com.easemob.exceptions.EaseMobException;
@@ -269,6 +272,31 @@ public class MainActivity extends BaseFragmentActivity implements OnRecordingLis
 	}
 
 	/**
+	 * 通知栏提示新消息
+	 */
+	private void notifyNesMsg(EMMessage message) {
+		BaseApplication application = BaseApplication.getInstance();
+		//通知
+		NotificationCompat.Builder builder = new NotificationCompat.Builder(application);
+		builder.setSmallIcon(R.drawable.ic_launcher).setContentTitle("新消息")
+				.setContentText("你有" + EMChatManager.getInstance().getUnreadMsgsCount() + "条未读消息~").setAutoCancel(true)
+				.setTicker("新消息");
+		Intent resultIntent = new Intent(application, ChatActivity.class);
+		ChatType chatType = message.getChatType();
+		if (chatType == ChatType.Chat) { //单聊信息
+			resultIntent.putExtra("userId", message.getFrom());
+			resultIntent.putExtra("chatType", ChatActivity.CHATTYPE_SINGLE);
+		}
+
+		resultIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+		PendingIntent resultPendingIntent = PendingIntent.getActivity(this, 0, resultIntent, 0);
+
+		builder.setContentIntent(resultPendingIntent);
+		application.getNotificationManager().notify(0x01, builder.build());// 通知一下
+
+	}
+
+	/**
 	 * 新消息广播接收者
 	 * 
 	 * 
@@ -277,17 +305,23 @@ public class MainActivity extends BaseFragmentActivity implements OnRecordingLis
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			// 消息id
-			//			String msgId = intent.getStringExtra("msgid");
+			String msgId = intent.getStringExtra("msgid");
 			// 收到这个广播的时候，message已经在db和内存里了，可以通过id获取mesage对象
-			// EMMessage message =
-			// EMChatManager.getInstance().getMessage(msgId);
+			EMMessage message = EMChatManager.getInstance().getMessage(msgId);
 
-			if (currentTabIndex == 0) {
-				// 当前页面如果为聊天历史页面，刷新此页面
-				if (homeFragment != null) {
-					homeFragment.refreshConversation();
-				}
+			// 提示有新消息
+			//			if (currentTabIndex == 0) {
+			// 当前页面如果为聊天历史页面，刷新此页面
+			if (homeFragment != null) {
+				homeFragment.refreshConversation();
 			}
+			//			}
+
+			//不再主页的时候通知栏提示新消息
+			//			if (!(currentTabIndex == 0)) {
+			notifyNesMsg(message);
+			//			}
+
 			// 注销广播，否则在ChatActivity中会收到这个广播
 			abortBroadcast();
 		}

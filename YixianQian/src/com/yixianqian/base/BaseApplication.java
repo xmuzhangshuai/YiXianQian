@@ -149,7 +149,7 @@ public class BaseApplication extends FrontiaApplication {
 			@Override
 			public String onNewMessageNotify(EMMessage message) {
 				//可以根据message的类型提示不同文字，demo简单的覆盖了原来的提示
-				return "你的另一半" + message.getFrom() + "发来了一条消息哦";
+				return message.getStringAttribute("username", "") + "发来了一条消息哦~";
 			}
 
 			@Override

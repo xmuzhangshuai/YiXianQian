@@ -648,8 +648,8 @@ public class ChatActivity extends BaseFragmentActivity implements OnTouchListene
 					if (bitmap != null) {
 						int rawHeigh = bitmap.getHeight();
 						int rawWidth = bitmap.getHeight();
-						int newHeight = 60;
-						int newWidth = 60;
+						int newHeight = DensityUtil.dip2px(ChatActivity.this, 25);
+						int newWidth = DensityUtil.dip2px(ChatActivity.this, 25);
 						// 计算缩放因子
 						float heightScale = ((float) newHeight) / rawHeigh;
 						float widthScale = ((float) newWidth) / rawWidth;
@@ -764,6 +764,7 @@ public class ChatActivity extends BaseFragmentActivity implements OnTouchListene
 					TextMessageBody txtBody = new TextMessageBody(content);
 					// 设置消息body
 					message.addBody(txtBody);
+					message.setAttribute("username", userPreference.getName());
 					// 设置要发给谁,用户username
 					message.setReceipt(toChatUsername);
 					// 把messgage加到conversation中
@@ -796,6 +797,7 @@ public class ChatActivity extends BaseFragmentActivity implements OnTouchListene
 		EMMessage message = EMMessage.createSendMessage(EMMessage.Type.LOCATION);
 		LocationMessageBody locBody = new LocationMessageBody(locationAddress, latitude, longitude);
 		message.addBody(locBody);
+		message.setAttribute("username", userPreference.getName());
 		message.setReceipt(toChatUsername);
 		emConversation.addMessage(message);
 		mMsgListView.setAdapter(adapter);
@@ -824,6 +826,7 @@ public class ChatActivity extends BaseFragmentActivity implements OnTouchListene
 			VoiceMessageBody body = new VoiceMessageBody(new File(filePath), len);
 			message.addBody(body);
 
+			message.setAttribute("username", userPreference.getName());
 			emConversation.addMessage(message);
 			adapter.refresh();
 			mMsgListView.setSelection(adapter.getCount() - 1);
@@ -844,6 +847,7 @@ public class ChatActivity extends BaseFragmentActivity implements OnTouchListene
 		final EMMessage message = EMMessage.createSendMessage(EMMessage.Type.IMAGE);
 		message.setReceipt(to);
 		ImageMessageBody body = new ImageMessageBody(new File(filePath));
+		message.setAttribute("username", userPreference.getName());
 		// 默认超过100k的图片会压缩后发给对方，可以设置成发送原图
 		// body.setSendOriginalImage(true);
 		message.addBody(body);
