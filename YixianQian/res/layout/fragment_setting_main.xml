@@ -249,7 +249,7 @@
                     android:layout_marginTop="@dimen/setting_list_margin"
                     android:gravity="center_vertical"
                     android:paddingLeft="10dip"
-                    android:text="退出"
+                    android:text="退出登录"
                     android:textColor="@color/btn_gray_pressed"
                     android:textSize="14sp" />
 

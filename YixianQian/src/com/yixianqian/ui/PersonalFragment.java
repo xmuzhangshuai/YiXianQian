@@ -306,20 +306,20 @@ public class PersonalFragment extends BaseV4Fragment {
 				ServerUtil.getInstance(getActivity()).getHeadImage(smHeadImageView, waitCheckView);
 			}
 
-			if (!TextUtils.isEmpty(userPreference.getU_small_avatar())) {
-				//点击显示高清头像
-				smHeadImageView.setOnClickListener(new OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						// TODO Auto-generated method stub
+			//点击显示高清头像
+			smHeadImageView.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+					if (!TextUtils.isEmpty(userPreference.getU_small_avatar())) {
 						Intent intent = new Intent(getActivity(), ImageShowerActivity.class);
 						intent.putExtra(ImageShowerActivity.SHOW_BIG_IMAGE,
 								AsyncHttpClientImageSound.getAbsoluteUrl(userPreference.getU_large_avatar()));
 						startActivity(intent);
 						getActivity().overridePendingTransition(R.anim.zoomin, R.anim.zoomout);
 					}
-				});
-			}
+				}
+			});
 		}
 	}
 

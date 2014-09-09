@@ -134,7 +134,7 @@ public class SettingMainFragment extends BaseV4Fragment implements OnClickListen
 
 		final MyAlertDialog myAlertDialog = new MyAlertDialog(getActivity());
 		myAlertDialog.setTitle("提示");
-		myAlertDialog.setMessage("是否注销用户？");
+		myAlertDialog.setMessage("是否退出登录？退出登录后将不能接受消息。");
 		View.OnClickListener comfirm = new OnClickListener() {
 
 			@Override
@@ -161,7 +161,7 @@ public class SettingMainFragment extends BaseV4Fragment implements OnClickListen
 				myAlertDialog.dismiss();
 			}
 		};
-		myAlertDialog.setPositiveButton("确定", comfirm);
+		myAlertDialog.setPositiveButton("退出", comfirm);
 		myAlertDialog.setNegativeButton("取消", cancle);
 		myAlertDialog.show();
 

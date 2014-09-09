@@ -9,7 +9,7 @@ public class Constants {
 	public static final String PACKAGENAME = "com.yixianqian";
 
 	//域名或者是IP
-	public static String DoMainName = "http://192.168.1.104/";
+	public static String DoMainName = "http://192.168.1.102/";
 
 	public static class Config {
 		//是否处于开发模式

@@ -35,6 +35,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.easemob.EMCallBack;
 import com.easemob.chat.EMChatManager;
 import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.TextHttpResponseHandler;
@@ -620,12 +621,7 @@ public class ModifyDataActivity extends BaseFragmentActivity implements OnClickL
 						// TODO Auto-generated method stub
 						if (arg0 == 200) {
 							userPreference.setU_nickname(nickname);
-							//更新环信昵称
-							if (EMChatManager.getInstance().updateCurrentUserNick(userPreference.getName())) {
-								LogTool.i("ModifyDataActivity", "更新环信昵称成功");
-							} else {
-								LogTool.e("ModifyDataActivity", "更新环信昵称失败");
-							}
+							loginHuanXin();
 						}
 					}
 
@@ -913,6 +909,34 @@ public class ModifyDataActivity extends BaseFragmentActivity implements OnClickL
 			}
 
 		}
+	}
+
+	/**
+	 * 登录环信
+	 */
+	private void loginHuanXin() {
+		EMChatManager.getInstance().login(userPreference.getHuanXinUserName(), userPreference.getHuanXinPassword(),
+				new EMCallBack() {
+					@Override
+					public void onSuccess() {
+						LogTool.i("ModifyDataActivity", "登录环信成功");
+						//更新环信昵称
+						if (EMChatManager.getInstance().updateCurrentUserNick(userPreference.getName())) {
+							LogTool.i("ModifyDataActivity", "更新环信昵称");
+						} else {
+							LogTool.e("ModifyDataActivity", "更新环信昵称失败");
+						}
+					}
+
+					@Override
+					public void onProgress(int progress, String status) {
+					}
+
+					@Override
+					public void onError(int code, final String message) {
+						LogTool.e("ModifyDataActivity", "登录环信失败：code:" + code + "   message:" + message);
+					}
+				});
 	}
 
 	/**
