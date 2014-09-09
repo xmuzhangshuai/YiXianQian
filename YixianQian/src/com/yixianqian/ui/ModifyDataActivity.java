@@ -922,7 +922,7 @@ public class ModifyDataActivity extends BaseFragmentActivity implements OnClickL
 						LogTool.i("ModifyDataActivity", "登录环信成功");
 						//更新环信昵称
 						if (EMChatManager.getInstance().updateCurrentUserNick(userPreference.getName())) {
-							LogTool.i("ModifyDataActivity", "更新环信昵称");
+							LogTool.i("ModifyDataActivity", "更新环信昵称成功");
 						} else {
 							LogTool.e("ModifyDataActivity", "更新环信昵称失败");
 						}

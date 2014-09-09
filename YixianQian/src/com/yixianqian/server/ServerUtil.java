@@ -209,6 +209,7 @@ public class ServerUtil {
 	 */
 	private void saveUser(final JsonUser user, final String password) {
 		// TODO Auto-generated method stub
+		LogTool.i("ServerUtil", "存储自身信息");
 		userPreference.setU_birthday(user.getU_birthday());
 		userPreference.setU_blood_type(user.getU_blood_type());
 		userPreference.setU_cityid(user.getU_cityid());
@@ -243,6 +244,7 @@ public class ServerUtil {
 	 */
 	private void saveFriend(final JsonUser jsonUser) {
 		if (jsonUser != null) {
+			LogTool.i("ServerUtil", "存储另一半信息");
 			if (userPreference.getU_stateid() == 2) {
 				friendpreference.setType(1);
 			} else if (userPreference.getU_stateid() == 3) {
@@ -468,35 +470,35 @@ public class ServerUtil {
 	 * 获取头像是否通过
 	 * @param context
 	 */
-	public void getHeadImagePass() {
-		if (userPreference.getHeadImageChanged()) {
-			RequestParams params = new RequestParams();
-			params.put(UserTable.U_ID, userPreference.getU_id());
-
-			TextHttpResponseHandler responseHandler = new TextHttpResponseHandler("utf-8") {
-				@Override
-				public void onSuccess(int statusCode, Header[] headers, String response) {
-					// TODO Auto-generated method stub
-					if (statusCode == 200) {
-						if (response.equals("1")) {//通过
-							userPreference.setHeadImagePassed(1);
-							userPreference.setHeadImageChanged(false);
-						} else if (response.equals("0")) {//待审核
-							userPreference.setHeadImagePassed(0);
-						} else if (response.equals("-1")) {//未通过
-							userPreference.setHeadImagePassed(-1);
-							userPreference.setHeadImageChanged(false);
-						}
-					}
-				}
-
-				@Override
-				public void onFailure(int statusCode, Header[] headers, String errorResponse, Throwable e) {
-					// TODO Auto-generated method stub
-				}
-			};
-			AsyncHttpClientTool.post("getuserimagepass", params, responseHandler);
-		}
-	}
+	//	public void getHeadImagePass() {
+	//		if (userPreference.getHeadImageChanged()) {
+	//			RequestParams params = new RequestParams();
+	//			params.put(UserTable.U_ID, userPreference.getU_id());
+	//
+	//			TextHttpResponseHandler responseHandler = new TextHttpResponseHandler("utf-8") {
+	//				@Override
+	//				public void onSuccess(int statusCode, Header[] headers, String response) {
+	//					// TODO Auto-generated method stub
+	//					if (statusCode == 200) {
+	//						if (response.equals("1")) {//通过
+	//							userPreference.setHeadImagePassed(1);
+	//							userPreference.setHeadImageChanged(false);
+	//						} else if (response.equals("0")) {//待审核
+	//							userPreference.setHeadImagePassed(0);
+	//						} else if (response.equals("-1")) {//未通过
+	//							userPreference.setHeadImagePassed(-1);
+	//							userPreference.setHeadImageChanged(false);
+	//						}
+	//					}
+	//				}
+	//
+	//				@Override
+	//				public void onFailure(int statusCode, Header[] headers, String errorResponse, Throwable e) {
+	//					// TODO Auto-generated method stub
+	//				}
+	//			};
+	//			AsyncHttpClientTool.post("getuserimagepass", params, responseHandler);
+	//		}
+	//	}
 
 }

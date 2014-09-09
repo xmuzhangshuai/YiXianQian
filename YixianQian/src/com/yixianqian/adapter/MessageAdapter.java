@@ -58,6 +58,7 @@ import com.yixianqian.ui.ContextMenu;
 import com.yixianqian.ui.PersonDetailActivity;
 import com.yixianqian.ui.ShowBigImage;
 import com.yixianqian.utils.AsyncHttpClientImageSound;
+import com.yixianqian.utils.FriendPreference;
 import com.yixianqian.utils.ImageCache;
 import com.yixianqian.utils.ImageLoaderTool;
 import com.yixianqian.utils.ImageTools;
@@ -98,6 +99,7 @@ public class MessageAdapter extends BaseAdapter {
 	private ImageLoader imageLoader;
 	private Context context;
 	private UserPreference userPreference;
+	private FriendPreference friendPreference;
 	private ConversationDbService conversationDbService;
 	private Conversation myConversation;
 
@@ -111,6 +113,7 @@ public class MessageAdapter extends BaseAdapter {
 		conversationDbService = ConversationDbService.getInstance(context);
 		this.emConversation = EMChatManager.getInstance().getConversation(username);
 		myConversation = conversationDbService.getConversationByUser(Integer.parseInt(username));
+		friendPreference = BaseApplication.getInstance().getFriendPreference();
 	}
 
 	public int getCount() {
@@ -293,8 +296,9 @@ public class MessageAdapter extends BaseAdapter {
 		if (myConversation != null) {
 			//如果是收到消息
 			if (message.direct == EMMessage.Direct.RECEIVE) {
-				imageLoader.displayImage(AsyncHttpClientImageSound.getAbsoluteUrl(myConversation.getSmallAvatar()),
-						holder.head_iv, ImageLoaderTool.getHeadImageOptions(10));
+				imageLoader.displayImage(
+						AsyncHttpClientImageSound.getAbsoluteUrl(friendPreference.getF_small_avatar()), holder.head_iv,
+						ImageLoaderTool.getHeadImageOptions(10));
 				//点击头像进入对方主页
 				holder.head_iv.setOnClickListener(new OnClickListener() {
 					@Override

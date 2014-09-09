@@ -230,7 +230,7 @@ public class LoginActivity extends BaseActivity {
 						userPreference.setUserLogin(true);
 						//更新环信昵称
 						if (EMChatManager.getInstance().updateCurrentUserNick(userPreference.getName())) {
-							LogTool.i("LoginActivity", "更新环信昵称");
+							LogTool.i("LoginActivity", "更新环信昵称成功");
 						} else {
 							LogTool.e("LoginActivity", "更新环信昵称失败");
 						}

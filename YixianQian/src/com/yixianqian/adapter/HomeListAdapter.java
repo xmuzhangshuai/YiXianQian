@@ -29,20 +29,24 @@ import com.yixianqian.R;
 import com.yixianqian.base.BaseApplication;
 import com.yixianqian.entities.Conversation;
 import com.yixianqian.utils.AsyncHttpClientImageSound;
+import com.yixianqian.utils.FriendPreference;
 import com.yixianqian.utils.ImageLoaderTool;
 import com.yixianqian.utils.ImageTools;
 import com.yixianqian.utils.LogTool;
+import com.yixianqian.utils.UserPreference;
 
 public class HomeListAdapter extends BaseAdapter {
 	private LayoutInflater mInflater;
 	private LinkedList<Conversation> conversationList;
 	private Context mContext;
 	public static final Pattern EMOTION_URL = Pattern.compile("\\[(\\S+?)\\]");
+	private FriendPreference friendPreference;
 
 	public HomeListAdapter(Context context, LinkedList<Conversation> cList) {
 		this.mContext = context;
 		this.mInflater = LayoutInflater.from(context);
 		this.conversationList = cList;
+		this.friendPreference = BaseApplication.getInstance().getFriendPreference();
 	}
 
 	@Override
@@ -104,7 +108,7 @@ public class HomeListAdapter extends BaseAdapter {
 		// 获取与此用户/群组的会话
 		EMConversation emCconversation = EMChatManager.getInstance().getConversation("" + conversation.getUserID());
 
-		holder.name.setText(conversation.getName());
+		holder.name.setText(friendPreference.getName());
 
 		if (emCconversation.getUnreadMsgCount() > 0) {
 			// 显示与此用户的消息未读数
@@ -129,7 +133,7 @@ public class HomeListAdapter extends BaseAdapter {
 		}
 
 		ImageLoader imageLoader = ImageLoader.getInstance();
-		imageLoader.displayImage(AsyncHttpClientImageSound.getAbsoluteUrl(conversation.getSmallAvatar()),
+		imageLoader.displayImage(AsyncHttpClientImageSound.getAbsoluteUrl(friendPreference.getF_small_avatar()),
 				holder.avatar, ImageLoaderTool.getHeadImageOptions(10));
 
 		return convertView;
