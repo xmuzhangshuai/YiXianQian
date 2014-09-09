@@ -28,7 +28,6 @@ import com.yixianqian.config.Constants.FlipperType;
 import com.yixianqian.config.Constants.MessageType;
 import com.yixianqian.customewidget.MyAlertDialog;
 import com.yixianqian.db.FlipperDbService;
-import com.yixianqian.db.ProvinceDbService;
 import com.yixianqian.db.SchoolDbService;
 import com.yixianqian.entities.Flipper;
 import com.yixianqian.jsonobject.JsonMessage;
@@ -61,9 +60,9 @@ public class PersonDetailActivity extends BaseFragmentActivity implements OnClic
 	private TextView sendMsg;
 	private ImageView headImageView;//头像
 	private TextView nameTextView;//姓名
-	private TextView provinceTextView;//省份
 	private TextView schoolTextView;//学校
-	private TextView genderView;//性别
+	private ImageView genderView;//性别
+	private View moreDetaileBtn;//详细资料按钮
 	private FriendPreference friendPreference;
 	private UserPreference userPreference;
 	private int userId;
@@ -102,9 +101,9 @@ public class PersonDetailActivity extends BaseFragmentActivity implements OnClic
 		sendMsg = (TextView) findViewById(R.id.send_msg);
 		headImageView = (ImageView) findViewById(R.id.head_image);
 		nameTextView = (TextView) findViewById(R.id.name);
-		provinceTextView = (TextView) findViewById(R.id.province);
 		schoolTextView = (TextView) findViewById(R.id.school);
-		genderView = (TextView) findViewById(R.id.gender);
+		genderView = (ImageView) findViewById(R.id.gender);
+		moreDetaileBtn = findViewById(R.id.detail);
 	}
 
 	@Override
@@ -116,6 +115,7 @@ public class PersonDetailActivity extends BaseFragmentActivity implements OnClic
 		topNavLeftBtn.setOnClickListener(this);
 		right_btn_bg.setOnClickListener(this);
 		sendMsg.setOnClickListener(this);
+		moreDetaileBtn.setOnClickListener(this);
 		if (type == Constants.PersonDetailType.SINGLE || type == Constants.PersonDetailType.FLIPPER) {
 			timeCapsule.setOnClickListener(this);
 			timeCapsule.setVisibility(View.VISIBLE);
@@ -148,17 +148,18 @@ public class PersonDetailActivity extends BaseFragmentActivity implements OnClic
 			//优先显示真实姓名
 
 			nameTextView.setText(getUserName(jsonUser));
-			ProvinceDbService provinceDbService = ProvinceDbService.getInstance(this);
 			SchoolDbService schoolDbService = SchoolDbService.getInstance(this);
-			provinceTextView.setText(provinceDbService.getProNameById(jsonUser.getU_provinceid()));
 			schoolTextView.setText(schoolDbService.schoolDao.load((long) jsonUser.getU_schoolid()).getSchoolName());
-			genderView.setText(jsonUser.getU_gender());
+			if (jsonUser.getU_gender().equals(Constants.Gender.MALE)) {
+				genderView.setImageResource(R.drawable.male);
+			} else {
+				genderView.setImageResource(R.drawable.female);
+			}
 
 		} else if (type == Constants.PersonDetailType.LOVER || type == Constants.PersonDetailType.FLIPPER) {
 			//设置姓名、省份、及学校
 			//优先显示真实姓名
 			nameTextView.setText(friendPreference.getName());
-			provinceTextView.setText(friendPreference.getProvinceName());
 			schoolTextView.setText(friendPreference.getSchoolName());
 			//设置头像
 			if (!TextUtils.isEmpty(friendPreference.getF_small_avatar())) {
@@ -178,7 +179,11 @@ public class PersonDetailActivity extends BaseFragmentActivity implements OnClic
 					}
 				});
 			}
-			genderView.setText(friendPreference.getF_gender());
+			if (friendPreference.getF_gender().equals(Constants.Gender.MALE)) {
+				genderView.setImageResource(R.drawable.male);
+			} else {
+				genderView.setImageResource(R.drawable.female);
+			}
 		}
 	}
 
@@ -286,7 +291,6 @@ public class PersonDetailActivity extends BaseFragmentActivity implements OnClic
 			startActivity(intent);
 			overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
 		}
-
 	}
 
 	/**
@@ -469,6 +473,19 @@ public class PersonDetailActivity extends BaseFragmentActivity implements OnClic
 			break;
 		case R.id.send_msg:
 			showSendMsgDialog();
+			break;
+		case R.id.detail:
+			if (type == Constants.PersonDetailType.SINGLE) {
+				if (jsonUser != null) {
+					startActivity(new Intent(PersonDetailActivity.this, PersonMoreDetailActivity.class).putExtra(
+							"user", jsonUser));
+					overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+				}
+			} else if (type == Constants.PersonDetailType.LOVER || type == Constants.PersonDetailType.FLIPPER) {
+				startActivity(new Intent(PersonDetailActivity.this, PersonMoreDetailActivity.class).putExtra("user",
+						friendPreference.getJsonUser()));
+				overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+			}
 			break;
 		default:
 			break;

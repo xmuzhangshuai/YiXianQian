@@ -90,6 +90,9 @@ public class ModifyDataActivity extends BaseFragmentActivity implements OnClickL
 	private View nicknameView;
 	//	private View emailView;
 	private View phoneView;
+	private TextView provinceTextView;
+	private TextView cityTextView;
+	private TextView schoolTextView;
 	private TextView waitCheckView;
 	private ImageView headImage;
 	private InputMethodManager imm;
@@ -166,6 +169,9 @@ public class ModifyDataActivity extends BaseFragmentActivity implements OnClickL
 		introEditText = (EditText) findViewById(R.id.personIntro);
 		birthdayTextView = (TextView) findViewById(R.id.birthday);
 		vertifyView = (ImageView) findViewById(R.id.vertify);
+		provinceTextView = (TextView) findViewById(R.id.province);
+		cityTextView = (TextView) findViewById(R.id.city);
+		schoolTextView = (TextView) findViewById(R.id.school);
 	}
 
 	@Override
@@ -221,6 +227,10 @@ public class ModifyDataActivity extends BaseFragmentActivity implements OnClickL
 		if (!TextUtils.isEmpty(userPreference.getU_introduce())) {
 			introEditText.setText(userPreference.getU_introduce());
 		}
+
+		provinceTextView.setText(userPreference.getProvinceName());
+		cityTextView.setText(userPreference.getCityName());
+		schoolTextView.setText(userPreference.getSchoolName());
 
 		genderText.setText(userPreference.getU_gender());
 		//		nameEditText.setOnFocusChangeListener(new OnFocusChangeListener() {

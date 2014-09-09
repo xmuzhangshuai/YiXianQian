@@ -256,6 +256,12 @@
             android:screenOrientation="portrait" >
         </activity>
 
+        <!-- 个人详细资料更多资料页面 -->
+        <activity
+            android:name="com.yixianqian.ui.PersonMoreDetailActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+
         <!-- 个人时间胶囊页面 -->
         <activity
             android:name="com.yixianqian.ui.PersonTimeCapsuleActivity"
@@ -306,7 +312,7 @@
             android:screenOrientation="portrait" >
         </activity>
 
-        <!-- 处理投诉页面 -->
+        <!-- 申请认证页面 -->
         <activity
             android:name="com.yixianqian.ui.ApplyVertifyActivity"
             android:screenOrientation="portrait" >

@@ -2,6 +2,7 @@ package com.yixianqian.db;
 
 import java.util.List;
 
+import u.aly.ci;
 import android.content.Context;
 
 import com.yixianqian.base.BaseApplication;
@@ -45,5 +46,18 @@ public class CityDbService {
 	 */
 	public List<City> getCityListByProvince(Province p) {
 		return cityDao.queryBuilder().where(Properties.ProvinceID.eq(p.getProvinceID())).list();
+	}
+
+	public String getCityNameById(int cityId) {
+		City city = null;
+		if (cityId > -1) {
+			city = cityDao.queryBuilder().where(Properties.CityID.eq(cityId)).unique();
+		}
+
+		if (city != null) {
+			return city.getCityName();
+		} else {
+			return "";
+		}
 	}
 }

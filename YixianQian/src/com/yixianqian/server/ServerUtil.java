@@ -256,6 +256,7 @@ public class ServerUtil {
 			// TODO Auto-generated method stub
 			friendpreference.setBpush_ChannelID(jsonUser.getU_bpush_channel_id());
 			friendpreference.setBpush_UserID(jsonUser.getU_bpush_user_id());
+			friendpreference.setU_birthday(jsonUser.getU_birthday());
 			friendpreference.setF_address(jsonUser.getU_address());
 			friendpreference.setF_age(jsonUser.getU_age());
 			friendpreference.setF_blood_type(jsonUser.getU_blood_type());

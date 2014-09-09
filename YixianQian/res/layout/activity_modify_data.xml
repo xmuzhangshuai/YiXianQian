@@ -74,7 +74,7 @@
                     android:layout_alignParentTop="true"
                     android:layout_marginTop="@dimen/motify_data_space"
                     android:text="姓名"
-                    android:textColor="@color/dark_gray"
+                    android:textColor="@color/unenable"
                     android:textSize="@dimen/day_recommend_font_info" />
 
                 <EditText
@@ -102,8 +102,7 @@
                     android:layout_below="@+id/namelabel"
                     android:layout_marginTop="3dp"
                     android:background="@color/unenable" />
-            </RelativeLayout>
-            -->
+            </RelativeLayout>-->
 
             <RelativeLayout
                 android:id="@+id/nicknameview"
@@ -120,7 +119,7 @@
                     android:layout_alignParentTop="true"
                     android:layout_marginTop="@dimen/motify_data_space"
                     android:text="昵称"
-                    android:textColor="@color/dark_gray"
+                    android:textColor="@color/unenable"
                     android:textSize="@dimen/day_recommend_font_info" />
 
                 <EditText
@@ -146,7 +145,7 @@
                     android:layout_height="0.5dp"
                     android:layout_below="@+id/nicknamelabel"
                     android:layout_marginTop="3dp"
-                    android:background="@color/unenable" />
+                    android:background="@color/unenable_font" />
             </RelativeLayout>
 
             <TextView
@@ -175,7 +174,7 @@
                     android:layout_alignParentTop="true"
                     android:layout_marginTop="@dimen/motify_data_space"
                     android:text="邮箱"
-                    android:textColor="@color/dark_gray"
+                    android:textColor="@color/unenable"
                     android:textSize="@dimen/day_recommend_font_info" />
 
                 <EditText
@@ -202,8 +201,7 @@
                     android:layout_below="@+id/emaillabel"
                     android:layout_marginTop="3dp"
                     android:background="@color/unenable" />
-            </RelativeLayout>
-            -->
+            </RelativeLayout> -->
 
             <RelativeLayout
                 android:id="@+id/phoneview"
@@ -220,7 +218,7 @@
                     android:layout_alignParentTop="true"
                     android:layout_marginTop="@dimen/motify_data_space"
                     android:text="电话"
-                    android:textColor="@color/dark_gray"
+                    android:textColor="@color/unenable"
                     android:textSize="@dimen/day_recommend_font_info" />
 
                 <TextView
@@ -242,7 +240,7 @@
                     android:layout_height="0.5dp"
                     android:layout_below="@+id/phonelabel"
                     android:layout_marginTop="3dp"
-                    android:background="@color/unenable" />
+                    android:background="@color/unenable_font" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -260,7 +258,7 @@
                     android:layout_alignParentTop="true"
                     android:layout_marginTop="@dimen/motify_data_space"
                     android:text="更改密码"
-                    android:textColor="@color/dark_gray"
+                    android:textColor="@color/unenable"
                     android:textSize="@dimen/day_recommend_font_info" />
 
                 <TextView
@@ -278,7 +276,7 @@
                     android:layout_height="0.5dp"
                     android:layout_below="@+id/passlabel"
                     android:layout_marginTop="3dp"
-                    android:background="@color/unenable" />
+                    android:background="@color/unenable_font" />
             </RelativeLayout>
 
             <TextView
@@ -306,7 +304,7 @@
                     android:layout_alignParentTop="true"
                     android:layout_marginTop="@dimen/motify_data_space"
                     android:text="省份"
-                    android:textColor="@color/dark_gray"
+                    android:textColor="@color/unenable"
                     android:textSize="@dimen/day_recommend_font_info" />
 
                 <TextView
@@ -316,7 +314,6 @@
                     android:layout_alignBottom="@+id/prolabel"
                     android:layout_alignParentRight="true"
                     android:layout_marginRight="5dp"
-                    android:text="福建省"
                     android:textSize="@dimen/day_recommend_font_info" />
 
                 <View
@@ -324,7 +321,7 @@
                     android:layout_height="0.5dp"
                     android:layout_below="@+id/prolabel"
                     android:layout_marginTop="3dp"
-                    android:background="@color/unenable" />
+                    android:background="@color/unenable_font" />
 
                 <TextView
                     android:id="@+id/citylabel"
@@ -334,7 +331,7 @@
                     android:layout_below="@+id/prolabel"
                     android:layout_marginTop="@dimen/motify_data_space"
                     android:text="城市"
-                    android:textColor="@color/dark_gray"
+                    android:textColor="@color/unenable"
                     android:textSize="@dimen/day_recommend_font_info" />
 
                 <TextView
@@ -344,7 +341,6 @@
                     android:layout_alignBottom="@+id/citylabel"
                     android:layout_alignParentRight="true"
                     android:layout_marginRight="5dp"
-                    android:text="厦门"
                     android:textSize="@dimen/day_recommend_font_info" />
 
                 <View
@@ -352,7 +348,7 @@
                     android:layout_height="0.5dp"
                     android:layout_below="@+id/citylabel"
                     android:layout_marginTop="3dp"
-                    android:background="@color/unenable" />
+                    android:background="@color/unenable_font" />
 
                 <TextView
                     android:id="@+id/schoollabel"
@@ -362,7 +358,7 @@
                     android:layout_below="@+id/citylabel"
                     android:layout_marginTop="@dimen/motify_data_space"
                     android:text="学校"
-                    android:textColor="@color/dark_gray"
+                    android:textColor="@color/unenable"
                     android:textSize="@dimen/day_recommend_font_info" />
 
                 <TextView
@@ -372,7 +368,6 @@
                     android:layout_alignBottom="@+id/schoollabel"
                     android:layout_alignParentRight="true"
                     android:layout_marginRight="5dp"
-                    android:text="厦门大学"
                     android:textSize="@dimen/day_recommend_font_info" />
 
                 <View
@@ -380,7 +375,7 @@
                     android:layout_height="0.5dp"
                     android:layout_below="@+id/schoollabel"
                     android:layout_marginTop="3dp"
-                    android:background="@color/unenable" />
+                    android:background="@color/unenable_font" />
             </RelativeLayout>
 
             <TextView
@@ -408,7 +403,7 @@
                     android:layout_alignParentTop="true"
                     android:layout_marginTop="@dimen/motify_data_space"
                     android:text="性别"
-                    android:textColor="@color/dark_gray"
+                    android:textColor="@color/unenable"
                     android:textSize="@dimen/day_recommend_font_info" />
 
                 <TextView
@@ -428,7 +423,7 @@
                     android:layout_height="0.5dp"
                     android:layout_below="@+id/genderlabel"
                     android:layout_marginTop="3dp"
-                    android:background="@color/unenable" />
+                    android:background="@color/unenable_font" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -446,7 +441,7 @@
                     android:layout_alignParentTop="true"
                     android:layout_marginTop="@dimen/motify_data_space"
                     android:text="生日"
-                    android:textColor="@color/dark_gray"
+                    android:textColor="@color/unenable"
                     android:textSize="@dimen/day_recommend_font_info" />
 
                 <TextView
@@ -466,7 +461,7 @@
                     android:layout_height="0.5dp"
                     android:layout_below="@+id/birthdaylabel"
                     android:layout_marginTop="3dp"
-                    android:background="@color/unenable" />
+                    android:background="@color/unenable_font" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -484,7 +479,7 @@
                     android:layout_alignParentTop="true"
                     android:layout_marginTop="@dimen/motify_data_space"
                     android:text="年龄"
-                    android:textColor="@color/dark_gray"
+                    android:textColor="@color/unenable"
                     android:textSize="@dimen/day_recommend_font_info" />
 
                 <EditText
@@ -510,7 +505,7 @@
                     android:layout_height="0.5dp"
                     android:layout_below="@+id/agelabel"
                     android:layout_marginTop="3dp"
-                    android:background="@color/unenable" />
+                    android:background="@color/unenable_font" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -528,7 +523,7 @@
                     android:layout_alignParentTop="true"
                     android:layout_marginTop="@dimen/motify_data_space"
                     android:text="身高"
-                    android:textColor="@color/dark_gray"
+                    android:textColor="@color/unenable"
                     android:textSize="@dimen/day_recommend_font_info" />
 
                 <EditText
@@ -563,7 +558,7 @@
                     android:layout_height="0.5dp"
                     android:layout_below="@+id/heightlabel"
                     android:layout_marginTop="3dp"
-                    android:background="@color/unenable" />
+                    android:background="@color/unenable_font" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -581,7 +576,7 @@
                     android:layout_alignParentTop="true"
                     android:layout_marginTop="@dimen/motify_data_space"
                     android:text="体重"
-                    android:textColor="@color/dark_gray"
+                    android:textColor="@color/unenable"
                     android:textSize="@dimen/day_recommend_font_info" />
 
                 <EditText
@@ -616,7 +611,7 @@
                     android:layout_height="0.5dp"
                     android:layout_below="@+id/weightlabel"
                     android:layout_marginTop="3dp"
-                    android:background="@color/unenable" />
+                    android:background="@color/unenable_font" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -634,7 +629,7 @@
                     android:layout_alignParentTop="true"
                     android:layout_marginTop="@dimen/motify_data_space"
                     android:text="星座"
-                    android:textColor="@color/dark_gray"
+                    android:textColor="@color/unenable"
                     android:textSize="@dimen/day_recommend_font_info" />
 
                 <TextView
@@ -654,7 +649,7 @@
                     android:layout_height="0.5dp"
                     android:layout_below="@+id/constelllabel"
                     android:layout_marginTop="3dp"
-                    android:background="@color/unenable" />
+                    android:background="@color/unenable_font" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -672,7 +667,7 @@
                     android:layout_alignParentTop="true"
                     android:layout_marginTop="@dimen/motify_data_space"
                     android:text="个人说明"
-                    android:textColor="@color/dark_gray"
+                    android:textColor="@color/unenable"
                     android:textSize="@dimen/day_recommend_font_info" />
 
                 <EditText
@@ -698,7 +693,7 @@
                     android:layout_height="0.5dp"
                     android:layout_below="@+id/personIntrolabel"
                     android:layout_marginTop="3dp"
-                    android:background="@color/unenable" />
+                    android:background="@color/unenable_font" />
             </RelativeLayout>
         </RelativeLayout>
     </ScrollView>

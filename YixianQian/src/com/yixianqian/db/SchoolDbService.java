@@ -46,4 +46,16 @@ public class SchoolDbService {
 	public List<School> getSchoolListByCity(City c) {
 		return schoolDao.queryBuilder().where(Properties.CityID.eq(c.getCityID())).list();
 	}
+
+	public String getSchoolNameById(int schoolid) {
+		School school = null;
+		if (schoolid > -1) {
+			school = schoolDao.load((long) schoolid);
+		}
+		if (school != null) {
+			return school.getSchoolName();
+		} else {
+			return "";
+		}
+	}
 }

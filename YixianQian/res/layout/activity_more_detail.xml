@@ -1,0 +1,491 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/system_back"
+    android:isScrollContainer="true"
+    android:orientation="vertical" >
+
+    <include
+        layout="@layout/top_navigation2"
+        android:focusable="true" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/day_recommend_dot_space" >
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:scrollbars="none" >
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:paddingBottom="100dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:paddingTop="20dp" >
+
+                <RelativeLayout
+                    android:id="@+id/vertifyview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true" >
+
+                    <TextView
+                        android:id="@+id/vertify_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:text="学生身份认证"
+                        android:textSize="@dimen/day_recommend_help_font" />
+
+                    <ImageView
+                        android:id="@+id/vertify"
+                        android:layout_width="@dimen/personal_photo_margin"
+                        android:layout_height="@dimen/personal_photo_margin"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_gravity="right"
+                        android:src="@drawable/already_vertify" />
+                </RelativeLayout>
+
+                <View
+                    android:id="@+id/divider"
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:layout_below="@+id/vertifyview"
+                    android:layout_marginTop="3dp"
+                    android:background="@color/unenable_font" />
+
+                <RelativeLayout
+                    android:id="@+id/nicknameView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/divider" >
+
+                    <TextView
+                        android:id="@+id/nicknamelabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginTop="@dimen/motify_data_space"
+                        android:text="昵称"
+                        android:textColor="@color/unenable"
+                        android:textSize="@dimen/day_recommend_font_info" />
+
+                    <TextView
+                        android:id="@+id/nickname"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@+id/nicknamelabel"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_toRightOf="@+id/nicknamelabel"
+                        android:gravity="right"
+                        android:paddingBottom="2dp"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="5dp"
+                        android:paddingTop="2dp"
+                        android:textSize="@dimen/day_recommend_font_info" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
+                        android:layout_below="@+id/nicknamelabel"
+                        android:layout_marginTop="3dp"
+                        android:background="@color/unenable_font" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/genderview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/nicknameView" >
+
+                    <TextView
+                        android:id="@+id/genderlabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginTop="@dimen/motify_data_space"
+                        android:text="性别"
+                        android:textColor="@color/unenable"
+                        android:textSize="@dimen/day_recommend_font_info" />
+
+                    <TextView
+                        android:id="@+id/gender"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@+id/genderlabel"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_toRightOf="@+id/genderlabel"
+                        android:gravity="right"
+                        android:textSize="@dimen/day_recommend_font_info" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
+                        android:layout_below="@+id/genderlabel"
+                        android:layout_marginTop="3dp"
+                        android:background="@color/unenable_font" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/birthdayview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/genderview" >
+
+                    <TextView
+                        android:id="@+id/birthdaylabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginTop="@dimen/motify_data_space"
+                        android:text="生日"
+                        android:textColor="@color/unenable"
+                        android:textSize="@dimen/day_recommend_font_info" />
+
+                    <TextView
+                        android:id="@+id/birthday"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@+id/birthdaylabel"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_toRightOf="@+id/birthday"
+                        android:gravity="right"
+                        android:textSize="@dimen/day_recommend_font_info" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
+                        android:layout_below="@+id/birthdaylabel"
+                        android:layout_marginTop="3dp"
+                        android:background="@color/unenable_font" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/ageview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/birthdayview" >
+
+                    <TextView
+                        android:id="@+id/agelabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginTop="@dimen/motify_data_space"
+                        android:text="年龄"
+                        android:textColor="@color/unenable"
+                        android:textSize="@dimen/day_recommend_font_info" />
+
+                    <TextView
+                        android:id="@+id/age"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@+id/agelabel"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_toRightOf="@+id/agelabel"
+                        android:gravity="right"
+                        android:paddingBottom="2dp"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="5dp"
+                        android:paddingTop="2dp"
+                        android:textSize="@dimen/day_recommend_font_info" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
+                        android:layout_below="@+id/agelabel"
+                        android:layout_marginTop="3dp"
+                        android:background="@color/unenable_font" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/heightview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/ageview" >
+
+                    <TextView
+                        android:id="@+id/heightlabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginTop="@dimen/motify_data_space"
+                        android:text="身高"
+                        android:textColor="@color/unenable"
+                        android:textSize="@dimen/day_recommend_font_info" />
+
+                    <TextView
+                        android:id="@+id/height"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@+id/heightlabel"
+                        android:layout_marginLeft="10dp"
+                        android:layout_toLeftOf="@+id/cm"
+                        android:layout_toRightOf="@+id/heightlabel"
+                        android:gravity="right"
+                        android:paddingBottom="2dp"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="5dp"
+                        android:paddingTop="2dp"
+                        android:textSize="@dimen/day_recommend_font_info" />
+
+                    <TextView
+                        android:id="@+id/cm"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@+id/height"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="5dp"
+                        android:paddingBottom="2dp"
+                        android:text="cm" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
+                        android:layout_below="@+id/heightlabel"
+                        android:layout_marginTop="3dp"
+                        android:background="@color/unenable_font" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/weightview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/heightview" >
+
+                    <TextView
+                        android:id="@+id/weightlabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginTop="@dimen/motify_data_space"
+                        android:text="体重"
+                        android:textColor="@color/unenable"
+                        android:textSize="@dimen/day_recommend_font_info" />
+
+                    <TextView
+                        android:id="@+id/weight"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@+id/weightlabel"
+                        android:layout_marginLeft="10dp"
+                        android:layout_toLeftOf="@+id/Kg"
+                        android:layout_toRightOf="@+id/weightlabel"
+                        android:gravity="right"
+                        android:paddingBottom="2dp"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="5dp"
+                        android:paddingTop="2dp"
+                        android:textSize="@dimen/day_recommend_font_info" />
+
+                    <TextView
+                        android:id="@+id/Kg"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@+id/weight"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="5dp"
+                        android:paddingBottom="2dp"
+                        android:text="Kg" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
+                        android:layout_below="@+id/weightlabel"
+                        android:layout_marginTop="3dp"
+                        android:background="@color/unenable_font" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/constellview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/weightview" >
+
+                    <TextView
+                        android:id="@+id/constelllabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginTop="@dimen/motify_data_space"
+                        android:text="星座"
+                        android:textColor="@color/unenable"
+                        android:textSize="@dimen/day_recommend_font_info" />
+
+                    <TextView
+                        android:id="@+id/constell"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@+id/constelllabel"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_toRightOf="@+id/constelllabel"
+                        android:gravity="right"
+                        android:textSize="@dimen/day_recommend_font_info" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
+                        android:layout_below="@+id/constelllabel"
+                        android:layout_marginTop="3dp"
+                        android:background="@color/unenable_font" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/schoolview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/constellview" >
+
+                    <TextView
+                        android:id="@+id/prolabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginTop="@dimen/motify_data_space"
+                        android:text="省份"
+                        android:textColor="@color/unenable"
+                        android:textSize="@dimen/day_recommend_font_info" />
+
+                    <TextView
+                        android:id="@+id/province"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@+id/prolabel"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="5dp"
+                        android:text="福建省"
+                        android:textSize="@dimen/day_recommend_font_info" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
+                        android:layout_below="@+id/prolabel"
+                        android:layout_marginTop="3dp"
+                        android:background="@color/unenable_font" />
+
+                    <TextView
+                        android:id="@+id/citylabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_below="@+id/prolabel"
+                        android:layout_marginTop="@dimen/motify_data_space"
+                        android:text="城市"
+                        android:textColor="@color/unenable"
+                        android:textSize="@dimen/day_recommend_font_info" />
+
+                    <TextView
+                        android:id="@+id/city"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@+id/citylabel"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="5dp"
+                        android:text="厦门"
+                        android:textSize="@dimen/day_recommend_font_info" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
+                        android:layout_below="@+id/citylabel"
+                        android:layout_marginTop="3dp"
+                        android:background="@color/unenable_font" />
+
+                    <TextView
+                        android:id="@+id/schoollabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_below="@+id/citylabel"
+                        android:layout_marginTop="@dimen/motify_data_space"
+                        android:text="学校"
+                        android:textColor="@color/unenable"
+                        android:textSize="@dimen/day_recommend_font_info" />
+
+                    <TextView
+                        android:id="@+id/school"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@+id/schoollabel"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="5dp"
+                        android:text="厦门大学"
+                        android:textSize="@dimen/day_recommend_font_info" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
+                        android:layout_below="@+id/schoollabel"
+                        android:layout_marginTop="3dp"
+                        android:background="@color/unenable_font" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/personIntroview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/schoolview" >
+
+                    <TextView
+                        android:id="@+id/personIntrolabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginTop="@dimen/motify_data_space"
+                        android:text="个人说明"
+                        android:textColor="@color/unenable"
+                        android:textSize="@dimen/day_recommend_font_info" />
+
+                    <TextView
+                        android:id="@+id/personIntro"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_below="@+id/personIntrolabel"
+                        android:layout_toRightOf="@+id/personIntrolabel"
+                        android:gravity="left"
+                        android:lineSpacingExtra="4dp"
+                        android:paddingBottom="2dp"
+                        android:paddingTop="5dp"
+                        android:textSize="@dimen/day_recommend_font_info" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
+                        android:layout_below="@+id/personIntro"
+                        android:layout_marginTop="3dp"
+                        android:background="@color/unenable_font" />
+                </RelativeLayout>
+            </RelativeLayout>
+        </ScrollView>
+    </LinearLayout>
+
+</LinearLayout>

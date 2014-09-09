@@ -12,6 +12,7 @@ import com.yixianqian.db.ProvinceDbService;
 import com.yixianqian.db.SchoolDbService;
 import com.yixianqian.entities.City;
 import com.yixianqian.entities.School;
+import com.yixianqian.jsonobject.JsonUser;
 import com.yixianqian.table.LoversTable;
 import com.yixianqian.table.UserTable;
 
@@ -32,6 +33,14 @@ public class FriendPreference {
 		this.context = context;
 		sp = context.getSharedPreferences(FRIEND_SHAREDPREFERENCE, Context.MODE_PRIVATE);
 		editor = sp.edit();
+	}
+
+	public JsonUser getJsonUser() {
+		JsonUser jsonUser = new JsonUser(getF_id(), getF_nickname(), getF_realname(), null, getF_gender(), getF_tel(),
+				getF_email(), getU_birthday(), getF_age(), getF_large_avatar(), getF_small_avatar(), getF_vocationid(),
+				getF_stateid(), getU_provinceid(), getU_cityid(), getU_schoolid(), getF_address(), getF_height(),
+				getF_weight(), getF_blood_type(), getF_constell(), getF_introduce(), getF_salary(), 0);
+		return jsonUser;
 	}
 
 	/**
