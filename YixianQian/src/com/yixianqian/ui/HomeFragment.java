@@ -299,7 +299,7 @@ public class HomeFragment extends BaseV4Fragment {
 					myAlertDialog.dismiss();
 				}
 			};
-			myAlertDialog.setPositiveButton("删除", comfirm);
+			myAlertDialog.setPositiveButton("解除", comfirm);
 			myAlertDialog.setNegativeButton("取消", cancle);
 			myAlertDialog.show();
 		}
@@ -368,7 +368,7 @@ public class HomeFragment extends BaseV4Fragment {
 
 				}
 			};
-			myAlertDialog.setPositiveButton("删除", comfirm);
+			myAlertDialog.setPositiveButton("解除", comfirm);
 			myAlertDialog.setNegativeButton("取消", cancle);
 			myAlertDialog.show();
 		}

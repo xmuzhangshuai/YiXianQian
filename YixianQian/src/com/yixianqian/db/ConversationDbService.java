@@ -67,6 +67,10 @@ public class ConversationDbService {
 		return null;
 	}
 
+	public void deleteConByUserID(int userID) {
+		conversationDao.delete(getConversationByUser(userID));
+	}
+
 	/**
 	 * 判断会话是否存在
 	 * @param userID
