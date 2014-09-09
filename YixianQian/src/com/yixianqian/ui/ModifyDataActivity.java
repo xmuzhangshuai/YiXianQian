@@ -266,7 +266,7 @@ public class ModifyDataActivity extends BaseFragmentActivity implements OnClickL
 		//			emailEditText.setText("未绑定");
 		//		}
 
-		ServerUtil.getInstance(ModifyDataActivity.this).disPlayHeadImage(headImage, waitCheckView);
+		ServerUtil.getInstance().disPlayHeadImage(headImage, waitCheckView);
 	}
 
 	/**
@@ -446,7 +446,7 @@ public class ModifyDataActivity extends BaseFragmentActivity implements OnClickL
 							ImageTools.deleteImageByPath(filePath);
 							ImageTools.deletePhotoAtPathAndName(smallAvatarPath, "smallAvatar.jpeg");
 							//获取新头像地址
-							ServerUtil.getInstance(ModifyDataActivity.this).getHeadImage(headImage, waitCheckView);
+							ServerUtil.getInstance().getHeadImage(headImage, waitCheckView);
 						}
 					}
 

@@ -142,7 +142,7 @@ public class HeadImageActivity extends BaseActivity {
 				// TODO Auto-generated method stub
 				uploadImage(photoUri.getPath());
 				if (userPreference.getU_stateid() == 4) {
-					ServerUtil.getInstance(HeadImageActivity.this).getTodayRecommend(HeadImageActivity.this, true);
+					ServerUtil.getInstance().getTodayRecommend(HeadImageActivity.this, true);
 				} else if (userPreference.getU_stateid() == 2 && friendPreference.getF_id() == -1) {
 					startActivity(new Intent(HeadImageActivity.this, AddLoverActivity.class));
 					overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);

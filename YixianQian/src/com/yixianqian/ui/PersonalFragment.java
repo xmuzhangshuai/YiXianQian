@@ -243,10 +243,10 @@ public class PersonalFragment extends BaseV4Fragment {
 			LoverPanel.setVisibility(View.VISIBLE);
 			//设置头像
 			if (!TextUtils.isEmpty(userPreference.getU_small_avatar())) {
-				ServerUtil.getInstance(getActivity()).disPlayHeadImage(lmHeadImageView, waitCheckView);
+				ServerUtil.getInstance().disPlayHeadImage(lmHeadImageView, waitCheckView);
 			} else {
 				//获取新头像地址
-				ServerUtil.getInstance(getActivity()).getHeadImage(lmHeadImageView, waitCheckView);
+				ServerUtil.getInstance().getHeadImage(lmHeadImageView, waitCheckView);
 			}
 
 			if (!TextUtils.isEmpty(userPreference.getU_small_avatar())) {
@@ -300,10 +300,10 @@ public class PersonalFragment extends BaseV4Fragment {
 
 			//设置头像
 			if (!TextUtils.isEmpty(userPreference.getU_small_avatar())) {
-				ServerUtil.getInstance(getActivity()).disPlayHeadImage(smHeadImageView, waitCheckView);
+				ServerUtil.getInstance().disPlayHeadImage(smHeadImageView, waitCheckView);
 			} else {
 				//获取新头像地址
-				ServerUtil.getInstance(getActivity()).getHeadImage(smHeadImageView, waitCheckView);
+				ServerUtil.getInstance().getHeadImage(smHeadImageView, waitCheckView);
 			}
 
 			//点击显示高清头像

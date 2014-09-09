@@ -25,6 +25,7 @@ import com.yixianqian.db.TodayRecommendDbService;
 import com.yixianqian.entities.Conversation;
 import com.yixianqian.entities.TodayRecommend;
 import com.yixianqian.jsonobject.JsonTodayRecommend;
+import com.yixianqian.jsonobject.JsonUser;
 import com.yixianqian.table.UserTable;
 import com.yixianqian.ui.DayRecommendActivity;
 import com.yixianqian.ui.MainActivity;
@@ -35,15 +36,16 @@ import com.yixianqian.utils.FastJsonTool;
 import com.yixianqian.utils.FriendPreference;
 import com.yixianqian.utils.ImageLoaderTool;
 import com.yixianqian.utils.LogTool;
+import com.yixianqian.utils.MD5For16;
 import com.yixianqian.utils.SharePreferenceUtil;
 import com.yixianqian.utils.UserPreference;
 
 public class ServerUtil {
 	private static ServerUtil instance;
-	private static Context appContext;
 	private UserPreference userPreference;
-	private FriendPreference friendPreference;
+	private FriendPreference friendpreference;
 	private SharePreferenceUtil sharePreferenceUtil;
+	private List<JsonUser> jsonUsers;
 
 	public ServerUtil() {
 		// TODO Auto-generated constructor stub
@@ -54,58 +56,90 @@ public class ServerUtil {
 	 * @param context
 	 * @return
 	 */
-	public static ServerUtil getInstance(Context context) {
+	public static ServerUtil getInstance() {
 		if (instance == null) {
 			instance = new ServerUtil();
-			if (appContext == null) {
-				appContext = context.getApplicationContext();
-			}
 			instance.userPreference = BaseApplication.getInstance().getUserPreference();
-			instance.friendPreference = BaseApplication.getInstance().getFriendPreference();
-			instance.sharePreferenceUtil = new SharePreferenceUtil(context, SharePreferenceUtil.USE_COUNT);
+			instance.friendpreference = BaseApplication.getInstance().getFriendPreference();
+			instance.sharePreferenceUtil = new SharePreferenceUtil(BaseApplication.getInstance(),
+					SharePreferenceUtil.USE_COUNT);
 		}
 		return instance;
 	}
 
 	/**
-	 * 初始化用户数据
-	 * @param context
-	 * @param isFinished
+	 * 用户登录
 	 */
 	public void initUserData(final Context context, final boolean isFinished) {
+		String mPhone = userPreference.getU_tel();
+		final String mPassword = userPreference.getU_password();
+
 		RequestParams params = new RequestParams();
-		params.put(UserTable.U_ID, userPreference.getU_id());
+		params.put(UserTable.U_TEL, mPhone);
+		params.put(UserTable.U_PASSWORD, mPassword);
+		params.put(UserTable.U_BPUSH_USER_ID, userPreference.getBpush_UserID());
+		params.put(UserTable.U_BPUSH_CHANNEL_ID, userPreference.getBpush_ChannelID());
+
 		TextHttpResponseHandler responseHandler = new TextHttpResponseHandler("utf-8") {
 			@Override
 			public void onSuccess(int statusCode, Header[] headers, String response) {
 				// TODO Auto-generated method stub
-				if (statusCode == 200) {
-					if (!TextUtils.isEmpty(response)) {
-						if (Integer.parseInt(response) > 0) {
-							int oldState = userPreference.getU_stateid();
-							int newState = Integer.parseInt(response);
-							userPreference.setU_stateid(newState);
-							//如果由情侣或心动变为单身
-							if ((oldState == 2 || oldState == 3) && newState == 4) {
-								//删除会话
+				if (statusCode == 200 && !TextUtils.isEmpty(response)) {
+					jsonUsers = FastJsonTool.getObjectList(response, JsonUser.class);
+					if (jsonUsers != null) {
+						if (jsonUsers.size() > 0) {
+							LogTool.i("ServerUtil", "登录成功！");
+							if (jsonUsers.size() == 1) {
+								int oldState = userPreference.getU_stateid();
+								int newState = jsonUsers.get(0).getU_stateid();
+								saveUser(jsonUsers.get(0), mPassword);
 								//如果由情侣或心动变为单身
 								if ((oldState == 2 || oldState == 3) && newState == 4) {
 									ConversationDbService conversationDbService = ConversationDbService
 											.getInstance(context);
 									//删除会话
 									Conversation conversation = conversationDbService
-											.getConversationByUser(friendPreference.getF_id());
+											.getConversationByUser(friendpreference.getF_id());
 									if (conversation != null) {
 										conversationDbService.conversationDao.delete(conversation);
 										//删除会话
-										EMChatManager.getInstance().deleteConversation("" + friendPreference.getF_id());
-										friendPreference.clear();
+										EMChatManager.getInstance().deleteConversation("" + friendpreference.getF_id());
+										friendpreference.clear();
 										userPreference.setU_stateid(4);
 									}
 								}
+								getTodayRecommend(context, isFinished);
+							} else if (jsonUsers.size() > 1) {
+								saveUser(jsonUsers.get(0), mPassword);
+								saveFriend(jsonUsers.get(1));
+
+								if (jsonUsers.get(1) != null) {
+									//创建对话
+									ConversationDbService conversationDbService = ConversationDbService
+											.getInstance(context);
+
+									if (!conversationDbService.isConversationExist(friendpreference.getF_id())) {
+										Conversation conversation = new Conversation(null,
+												Long.valueOf(friendpreference.getF_id()), friendpreference.getName(),
+												friendpreference.getF_small_avatar(), "", 0, System.currentTimeMillis());
+										conversationDbService.conversationDao.insert(conversation);
+									}
+								} else {
+									LogTool.e("Login", "登录获取两个人，但是第二个为空");
+								}
+
+								Intent intent = new Intent(context, MainActivity.class);
+								context.startActivity(intent);
+								((Activity) context).overridePendingTransition(R.anim.push_left_in,
+										R.anim.push_left_out);
 							}
-							getTodayRecommend(context, isFinished);
+							//登录环信
+							//							attempLoginHuanXin(1);
+						} else {
+							LogTool.e("ServerUtil", "jsonUsers长度为0");
 						}
+					} else {
+						LogTool.e("ServerUtil", "登录返回为空");
 					}
 				}
 			}
@@ -115,62 +149,180 @@ public class ServerUtil {
 				// TODO Auto-generated method stub
 			}
 		};
-		AsyncHttpClientTool.post("getuserstate", params, responseHandler);
+		AsyncHttpClientTool.post("login", params, responseHandler);
 	}
 
 	/**
-	 * 获取心动请求
+	 * 登录环信
 	 */
-	//	public void getFlipperAndRecommend(final Context context, final boolean isFinished) {
-	//		//如果是单身，请求心动和今日推荐
-	//		if (userPreference.getU_stateid() == 4) {
-	//			final FlipperDbService flipperDbService = FlipperDbService.getInstance(context);
-	//			RequestParams params = new RequestParams();
-	//			params.put(UserTable.U_ID, userPreference.getU_id());
+	//	private void loginHuanXin() {
+	//		EMChatManager.getInstance().login(userPreference.getHuanXinUserName(), userPreference.getHuanXinPassword(),
+	//				new EMCallBack() {
 	//
-	//			TextHttpResponseHandler responseHandler = new TextHttpResponseHandler("utf-8") {
-	//				@Override
-	//				public void onSuccess(int statusCode, Header[] headers, String response) {
-	//					// TODO Auto-generated method stub
-	//					if (statusCode == 200) {
-	//						List<JsonFlipperRequest> jsonFlipperRequests = FastJsonTool.getObjectList(response,
-	//								JsonFlipperRequest.class);
-	//						if (jsonFlipperRequests != null && jsonFlipperRequests.size() > 0) {
-	//							for (JsonFlipperRequest fRequest : jsonFlipperRequests) {
-	//								Flipper flipper = new Flipper(null, fRequest.getU_id(), fRequest.getU_bpush_user_id(),
-	//										fRequest.getU_bpush_channel_id(), fRequest.getU_nickname(),
-	//										fRequest.getU_realname(), fRequest.getU_gender(), fRequest.getU_email(),
-	//										fRequest.getU_large_avatar(), fRequest.getU_small_avatar(),
-	//										fRequest.getU_blood_type(), fRequest.getU_constell(),
-	//										fRequest.getU_introduce(), fRequest.getU_birthday(), fRequest.getTime(),
-	//										fRequest.getU_age(), fRequest.getU_vocationid(), fRequest.getU_stateid(),
-	//										fRequest.getU_provinceid(), fRequest.getU_cityid(), fRequest.getU_schoolid(),
-	//										fRequest.getU_height(), fRequest.getU_weight(), fRequest.getU_image_pass(),
-	//										fRequest.getU_salary(), false, fRequest.getU_tel(),
-	//										Constants.FlipperStatus.BEINVITEED, Constants.FlipperType.FROM);
-	//								flipperDbService.flipperDao.insert(flipper);
-	//							}
+	//					@Override
+	//					public void onSuccess() {
+	//						userPreference.setUserLogin(true);
+	//						//更新环信昵称
+	//						if (EMChatManager.getInstance().updateCurrentUserNick(userPreference.getName())) {
+	//							LogTool.i("LoginActivity", "更新环信昵称");
+	//						} else {
+	//							LogTool.e("LoginActivity", "更新环信昵称失败");
 	//						}
 	//					}
-	//					getTodayRecommend(context, isFinished);
-	//				}
 	//
-	//				@Override
-	//				public void onFailure(int statusCode, Header[] headers, String errorResponse, Throwable e) {
-	//					// TODO Auto-generated method stub
-	//					getTodayRecommend(context, isFinished);
-	//				}
+	//					@Override
+	//					public void onProgress(int progress, String status) {
+	//					}
 	//
-	//			};
-	//			AsyncHttpClientTool.post(context, "getflipperrequest", params, responseHandler);
+	//					@Override
+	//					public void onError(int code, final String message) {
+	//						LogTool.e("登录环信", "code:" + code + "   message:" + message);
+	//					}
+	//				});
+	//	}
+
+	/**
+	 * 登陆
+	 * 
+	 * @param view
+	 */
+	//	public void attempLoginHuanXin(int time) {
+	//		if (!NetworkUtils.isNetworkAvailable(appContext)) {
+	//			NetworkUtils.networkStateTips(appContext);
+	//			return;
+	//		}
+	//		// 调用sdk登陆方法登陆聊天服务器
+	//		if (!TextUtils.isEmpty(userPreference.getHuanXinUserName())
+	//				&& !TextUtils.isEmpty(userPreference.getHuanXinPassword())) {
+	//			loginHuanXin();
 	//		} else {
-	//			Intent intent = new Intent(context, MainActivity.class);
-	//			context.startActivity(intent);
-	//			((Activity) context).overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
-	//			if (isFinished) {
-	//				((Activity) context).finish();
+	//			if (time == 1) {
+	//				userPreference.setHuanXinUserName("" + userPreference.getU_id());
+	//				userPreference.setHuanXinPassword(MD5For16.GetMD5CodeToLower(userPreference.getU_password()));
+	//				attempLoginHuanXin(2);
 	//			}
 	//		}
+	//	}
+
+	/**
+	 * 存储自己的信息
+	 */
+	private void saveUser(final JsonUser user, final String password) {
+		// TODO Auto-generated method stub
+		userPreference.setU_birthday(user.getU_birthday());
+		userPreference.setU_blood_type(user.getU_blood_type());
+		userPreference.setU_cityid(user.getU_cityid());
+		userPreference.setU_constell(user.getU_constell());
+		userPreference.setU_email(user.getU_email());
+		userPreference.setU_gender(user.getU_gender());
+		userPreference.setU_age(user.getU_age());
+		userPreference.setU_height(user.getU_height());
+		userPreference.setU_id(user.getU_id());
+		userPreference.setU_introduce(user.getU_introduce());
+		userPreference.setU_large_avatar(user.getU_large_avatar());
+		userPreference.setU_nickname(user.getU_nickname());
+		userPreference.setU_password(user.getU_password());
+		userPreference.setU_provinceid(user.getU_provinceid());
+		userPreference.setU_realname(user.getU_realname());
+		userPreference.setU_salary(user.getU_salary());
+		userPreference.setU_schoolid(user.getU_schoolid());
+		userPreference.setU_small_avatar(user.getU_small_avatar());
+		userPreference.setU_stateid(user.getU_stateid());
+		userPreference.setU_tel(user.getU_tel());
+		userPreference.setU_vocationid(user.getU_vocationid());
+		userPreference.setU_weight(user.getU_weight());
+		userPreference.setU_password(password);
+		userPreference.setHuanXinUserName("" + user.getU_id());
+		userPreference.setHuanXinPassword(MD5For16.GetMD5CodeToLower(password));
+		userPreference.setHeadImagePassed(user.getU_image_pass());
+		userPreference.setUserLogin(true);
+	}
+
+	/**
+	 * 存储另一半
+	 */
+	private void saveFriend(final JsonUser jsonUser) {
+		if (jsonUser != null) {
+			if (userPreference.getU_stateid() == 2) {
+				friendpreference.setType(1);
+			} else if (userPreference.getU_stateid() == 3) {
+				friendpreference.setType(0);
+			} else {
+				return;
+			}
+
+			// TODO Auto-generated method stub
+			friendpreference.setBpush_ChannelID(jsonUser.getU_bpush_channel_id());
+			friendpreference.setBpush_UserID(jsonUser.getU_bpush_user_id());
+			friendpreference.setF_address(jsonUser.getU_address());
+			friendpreference.setF_age(jsonUser.getU_age());
+			friendpreference.setF_blood_type(jsonUser.getU_blood_type());
+			friendpreference.setF_constell(jsonUser.getU_constell());
+			friendpreference.setF_email(jsonUser.getU_email());
+			friendpreference.setF_gender(jsonUser.getU_gender());
+			friendpreference.setF_height(jsonUser.getU_height());
+			friendpreference.setF_id(jsonUser.getU_id());
+			friendpreference.setF_introduce(jsonUser.getU_introduce());
+			friendpreference.setF_large_avatar(jsonUser.getU_large_avatar());
+			friendpreference.setF_nickname(jsonUser.getU_nickname());
+			friendpreference.setF_realname(jsonUser.getU_realname());
+			friendpreference.setF_salary(jsonUser.getU_salary());
+			friendpreference.setF_small_avatar(jsonUser.getU_small_avatar());
+			friendpreference.setF_stateid(jsonUser.getU_stateid());
+			friendpreference.setF_tel(jsonUser.getU_tel());
+			friendpreference.setF_vocationid(jsonUser.getU_vocationid());
+			friendpreference.setF_weight(jsonUser.getU_weight());
+			friendpreference.setU_cityid(jsonUser.getU_cityid());
+			friendpreference.setU_provinceid(jsonUser.getU_provinceid());
+			friendpreference.setU_schoolid(jsonUser.getU_schoolid());
+		}
+	}
+
+	/**
+	 * 初始化用户数据
+	 * @param context
+	 * @param isFinished
+	 */
+	//	public void initUserData(final Context context, final boolean isFinished) {
+	//		RequestParams params = new RequestParams();
+	//		params.put(UserTable.U_ID, userPreference.getU_id());
+	//		TextHttpResponseHandler responseHandler = new TextHttpResponseHandler("utf-8") {
+	//			@Override
+	//			public void onSuccess(int statusCode, Header[] headers, String response) {
+	//				// TODO Auto-generated method stub
+	//				if (statusCode == 200) {
+	//					if (!TextUtils.isEmpty(response)) {
+	//						if (Integer.parseInt(response) > 0) {
+	//							int oldState = userPreference.getU_stateid();
+	//							int newState = Integer.parseInt(response);
+	//							userPreference.setU_stateid(newState);
+	//							//如果由情侣或心动变为单身
+	//							if ((oldState == 2 || oldState == 3) && newState == 4) {
+	//								ConversationDbService conversationDbService = ConversationDbService
+	//										.getInstance(context);
+	//								//删除会话
+	//								Conversation conversation = conversationDbService
+	//										.getConversationByUser(friendpreference.getF_id());
+	//								if (conversation != null) {
+	//									conversationDbService.conversationDao.delete(conversation);
+	//									//删除会话
+	//									EMChatManager.getInstance().deleteConversation("" + friendpreference.getF_id());
+	//									friendpreference.clear();
+	//									userPreference.setU_stateid(4);
+	//								}
+	//							}
+	//							getTodayRecommend(context, isFinished);
+	//						}
+	//					}
+	//				}
+	//			}
+	//
+	//			@Override
+	//			public void onFailure(int statusCode, Header[] headers, String errorResponse, Throwable e) {
+	//				// TODO Auto-generated method stub
+	//			}
+	//		};
+	//		AsyncHttpClientTool.post("getuserstate", params, responseHandler);
 	//	}
 
 	/**

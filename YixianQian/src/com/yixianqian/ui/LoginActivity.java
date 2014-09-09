@@ -236,7 +236,7 @@ public class LoginActivity extends BaseActivity {
 						}
 						runOnUiThread(new Runnable() {
 							public void run() {
-								ServerUtil.getInstance(LoginActivity.this).getTodayRecommend(LoginActivity.this, true);
+								ServerUtil.getInstance().getTodayRecommend(LoginActivity.this, true);
 								showProgress(false);
 							}
 						});

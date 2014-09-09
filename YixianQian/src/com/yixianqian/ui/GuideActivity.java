@@ -26,7 +26,6 @@ import com.yixianqian.config.Constants;
 import com.yixianqian.config.DefaultKeys;
 import com.yixianqian.db.CopyDataBase;
 import com.yixianqian.server.ServerUtil;
-import com.yixianqian.utils.FriendPreference;
 import com.yixianqian.utils.NetworkUtils;
 import com.yixianqian.utils.SharePreferenceUtil;
 import com.yixianqian.utils.UserPreference;
@@ -51,7 +50,6 @@ public class GuideActivity extends BaseActivity {
 	SharedPreferences.Editor locationEditor;
 	private SharePreferenceUtil sharePreferenceUtil;
 	private UserPreference userPreference;
-	private FriendPreference friendPreference;
 	private String province;//省份
 	private String city;//城市
 	private String detailLocation;//详细地址
@@ -65,7 +63,6 @@ public class GuideActivity extends BaseActivity {
 		sharePreferenceUtil = new SharePreferenceUtil(this, SharePreferenceUtil.USE_COUNT);
 		int count = sharePreferenceUtil.getUseCount();
 		userPreference = BaseApplication.getInstance().getUserPreference();
-		friendPreference = BaseApplication.getInstance().getFriendPreference();
 
 		//获取定位
 		initLocation();
@@ -107,8 +104,8 @@ public class GuideActivity extends BaseActivity {
 						setContentView(R.layout.activity_guide);
 						findViewById();
 						initView();
-						ServerUtil.getInstance(GuideActivity.this).getHeadImagePass();
-						ServerUtil.getInstance(GuideActivity.this).initUserData(GuideActivity.this, false);
+//						ServerUtil.getInstance(GuideActivity.this).getHeadImagePass();
+						ServerUtil.getInstance().initUserData(GuideActivity.this, false);
 					}
 				} else {
 					startActivity(new Intent(GuideActivity.this, MainActivity.class));
