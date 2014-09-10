@@ -18,11 +18,13 @@ import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.TextHttpResponseHandler;
 import com.yixianqian.R;
 import com.yixianqian.base.BaseActivity;
+import com.yixianqian.base.BaseApplication;
 import com.yixianqian.customewidget.MyAlertDialog;
 import com.yixianqian.table.UserTable;
 import com.yixianqian.utils.AsyncHttpClientTool;
 import com.yixianqian.utils.CommonTools;
 import com.yixianqian.utils.ToastTool;
+import com.yixianqian.utils.UserPreference;
 
 /**
  * 类名称：AddLoverActivity
@@ -40,6 +42,7 @@ public class AddLoverActivity extends BaseActivity implements OnClickListener {
 	private Button alreadyBtn;
 	private EditText mPhoneView;
 	private String mPhone;
+	private UserPreference userPreference;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +50,7 @@ public class AddLoverActivity extends BaseActivity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_add_lover);
+		userPreference = BaseApplication.getInstance().getUserPreference();
 
 		findViewById();
 		initView();
@@ -106,9 +110,13 @@ public class AddLoverActivity extends BaseActivity implements OnClickListener {
 			Bundle bundle = data.getExtras();
 			String scanResult = bundle.getString("result");
 			if (CommonTools.isMobileNO(scanResult)) {
-				Intent intent = new Intent(AddLoverActivity.this, AddLoverInfoActivity.class);
-				intent.putExtra(AddLoverInfoActivity.LOVER_PHONE_KEY, scanResult);
-				startActivity(intent);
+				if (scanResult.equals(userPreference.getU_tel())) {
+					ToastTool.showShort(AddLoverActivity.this, "不能和自己成为情侣哦~");
+				} else {
+					Intent intent = new Intent(AddLoverActivity.this, AddLoverInfoActivity.class);
+					intent.putExtra(AddLoverInfoActivity.LOVER_PHONE_KEY, scanResult);
+					startActivity(intent);
+				}
 			} else {
 				final MyAlertDialog dialog = new MyAlertDialog(AddLoverActivity.this);
 				dialog.setShowCancel(false);
@@ -146,6 +154,10 @@ public class AddLoverActivity extends BaseActivity implements OnClickListener {
 			cancel = true;
 		} else if (!CommonTools.isMobileNO(mPhone)) {
 			mPhoneView.setError(getString(R.string.error_phone));
+			focusView = mPhoneView;
+			cancel = true;
+		} else if (mPhone.equals(userPreference.getU_tel())) {
+			mPhoneView.setError(getString(R.string.canot_be_lover));
 			focusView = mPhoneView;
 			cancel = true;
 		}

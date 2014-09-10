@@ -71,7 +71,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="@dimen/register_height"
             android:gravity="center"
-            android:text="对方已经对我发送了邀请，我却没有及时收到,可以在这里主动完成匹配"
+            android:text="对方已经对我发送了添加情侣邀请，我却没有及时收到,可以在这里主动完成匹配"
             android:textColor="@color/dark_gray"
             android:textSize="14sp" />
     </RelativeLayout>
