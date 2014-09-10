@@ -17,6 +17,7 @@ public class MyAlertDialog {
 	TextView negativeButton;
 	boolean showCancle = true;
 	boolean cancleable = true;
+	boolean showTitle = true;
 
 	public MyAlertDialog(Context context) {
 		// TODO Auto-generated constructor stub
@@ -30,6 +31,10 @@ public class MyAlertDialog {
 		messageView = (TextView) window.findViewById(R.id.message);
 		negativeButton = (TextView) window.findViewById(R.id.cancle);
 		positiveButton = (TextView) window.findViewById(R.id.confirm);
+	}
+
+	public void setShowTitle(boolean showTitle) {
+		this.showTitle = showTitle;
 	}
 
 	public void setTitle(int resId) {
@@ -51,10 +56,16 @@ public class MyAlertDialog {
 	}
 
 	public void setMessage(int resId) {
+		if (!showTitle) {
+			titleView.setVisibility(View.GONE);
+		}
 		messageView.setText(resId);
 	}
 
 	public void setMessage(String message) {
+		if (!showTitle) {
+			titleView.setVisibility(View.GONE);
+		}
 		messageView.setText(message);
 	}
 

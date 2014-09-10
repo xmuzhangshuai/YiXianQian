@@ -90,14 +90,14 @@ public class UserPreference {
 	}
 
 	//记录是否更改头像
-	public boolean getHeadImageChanged() {
-		return sp.getBoolean("changed", false);
-	}
-
-	public void setHeadImageChanged(boolean changed) {
-		editor.putBoolean("changed", changed);
-		editor.commit();
-	}
+//	public boolean getHeadImageChanged() {
+//		return sp.getBoolean("changed", false);
+//	}
+//
+//	public void setHeadImageChanged(boolean changed) {
+//		editor.putBoolean("changed", changed);
+//		editor.commit();
+//	}
 
 	//记录用户是否登录
 	public boolean getUserLogin() {

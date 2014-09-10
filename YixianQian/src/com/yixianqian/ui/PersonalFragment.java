@@ -70,6 +70,7 @@ public class PersonalFragment extends BaseV4Fragment {
 	private TextView provinceTextView;//省份
 	private TextView schoolTextView;//学校
 	private ImageView studentFlagImage;
+	private ImageView sGenderImageView;
 
 	private TextView waitCheckView;
 	private Uri takePhotoUri;
@@ -146,6 +147,7 @@ public class PersonalFragment extends BaseV4Fragment {
 		schoolTextView = (TextView) rootView.findViewById(R.id.school);
 		waitCheckView = (TextView) rootView.findViewById(R.id.waitcheck);
 		studentFlagImage = (ImageView) rootView.findViewById(R.id.student_flag);
+		sGenderImageView = (ImageView) rootView.findViewById(R.id.gender);
 	}
 
 	@Override
@@ -297,6 +299,12 @@ public class PersonalFragment extends BaseV4Fragment {
 			smNnameTextView.setText(userPreference.getName());
 			provinceTextView.setText(userPreference.getProvinceName());
 			schoolTextView.setText(userPreference.getSchoolName());
+
+			if (userPreference.getU_gender().equals(Constants.Gender.MALE)) {
+				sGenderImageView.setImageResource(R.drawable.male);
+			} else {
+				sGenderImageView.setImageResource(R.drawable.female);
+			}
 
 			//设置头像
 			if (!TextUtils.isEmpty(userPreference.getU_small_avatar())) {

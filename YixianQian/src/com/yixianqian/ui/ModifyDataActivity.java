@@ -450,7 +450,7 @@ public class ModifyDataActivity extends BaseFragmentActivity implements OnClickL
 							largeAvatar.recycle();
 							smallBitmap.recycle();
 							//设置头像已改变
-							userPreference.setHeadImageChanged(true);
+//							userPreference.setHeadImageChanged(true);
 							userPreference.setHeadImagePassed(0);
 							//删除本地头像
 							ImageTools.deleteImageByPath(filePath);

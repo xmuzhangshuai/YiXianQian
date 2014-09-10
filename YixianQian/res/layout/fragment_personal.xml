@@ -54,6 +54,15 @@
                 android:textSize="@dimen/day_recommend_user_font" />
 
             <ImageView
+                android:id="@+id/gender"
+                android:layout_width="@dimen/time_capsule20"
+                android:layout_height="@dimen/time_capsule20"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/time_capsule20"
+                android:layout_toRightOf="@+id/name"
+                android:src="@drawable/male" />
+
+            <ImageView
                 android:id="@+id/student_flag"
                 android:layout_width="@dimen/day_recommend_help_padding"
                 android:layout_height="@dimen/day_recommend_help_padding"

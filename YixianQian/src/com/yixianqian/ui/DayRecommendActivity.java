@@ -30,7 +30,6 @@ import com.easemob.chat.EMContactManager;
 import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.TextHttpResponseHandler;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 import com.yixianqian.R;
 import com.yixianqian.baidupush.SendMsgAsyncTask;
 import com.yixianqian.base.BaseApplication;
@@ -161,7 +160,11 @@ public class DayRecommendActivity extends BaseFragmentActivity {
 				if (isLiked) {
 					TodayRecommend todayRecommend = todayRecommendList.get(currentLike);
 					if (todayRecommend != null) {
-						sendLoveReuest(todayRecommendList.get(currentLike).getUserID());
+						if (userPreference.getVertify()) {
+							sendLoveReuest(todayRecommendList.get(currentLike).getUserID());
+						} else {
+							showVertifyDialog();
+						}
 					}
 				} else {
 					skip();
@@ -206,6 +209,36 @@ public class DayRecommendActivity extends BaseFragmentActivity {
 	}
 
 	/**
+	 * 如果没有通过认证，则进行提示
+	 */
+	private void showVertifyDialog() {
+		final MyAlertDialog myAlertDialog = new MyAlertDialog(DayRecommendActivity.this);
+		myAlertDialog.setShowTitle(false);
+		myAlertDialog.setMessage("啊哦...这里的每一个人都是学生哦~\n\n你还没有完成学生认证，无法使用该服务");
+		View.OnClickListener comfirm = new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				myAlertDialog.dismiss();
+				startActivity(new Intent(DayRecommendActivity.this, ApplyVertifyActivity.class));
+				overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+			}
+		};
+		View.OnClickListener cancle = new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				myAlertDialog.dismiss();
+			}
+		};
+		myAlertDialog.setPositiveButton("去认证", comfirm);
+		myAlertDialog.setNegativeButton("不认证", cancle);
+		myAlertDialog.show();
+	}
+
+	/**
 	 * 异步发送爱情验证
 	 * @param userID
 	 */
@@ -214,7 +247,7 @@ public class DayRecommendActivity extends BaseFragmentActivity {
 			FlipperDbService flipperDbService = FlipperDbService.getInstance(DayRecommendActivity.this);
 			Flipper flipper = flipperDbService.getFlipperByUserId(filpperId);
 			if (flipper != null && flipper.getStatus().equals(FlipperStatus.BEINVITEED)) {//如果被邀请过
-				LogTool.e("DayRecommendAcitvity", "已经被邀请过了");
+				LogTool.i("DayRecommendAcitvity", "已经被邀请过了");
 				String name = flipper.getNickname();
 				if (!TextUtils.isEmpty(flipper.getRealname())) {
 					name = flipper.getRealname();
@@ -237,7 +270,7 @@ public class DayRecommendActivity extends BaseFragmentActivity {
 				myAlertDialog.setPositiveButton("确定", comfirm);
 				myAlertDialog.show();
 			} else {
-				LogTool.e("dayRecommend", "发送爱情验证");
+				LogTool.i("dayRecommend", "发送爱情验证");
 				String url = "addflipperrequest";
 				RequestParams params = new RequestParams();
 				int myUserID = userPreference.getU_id();

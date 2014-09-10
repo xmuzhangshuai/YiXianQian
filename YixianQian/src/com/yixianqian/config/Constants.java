@@ -11,6 +11,8 @@ public class Constants {
 	//域名或者是IP
 	public static String DoMainName = "http://192.168.1.102/";
 
+	public static String ASDomain = "http://yixianqian.me";
+
 	public static class Config {
 		//是否处于开发模式
 		public static final boolean DEVELOPER_MODE = true;

@@ -45,7 +45,8 @@
             android:layout_height="wrap_content"
             android:layout_alignTop="@+id/headimageview"
             android:layout_marginTop="@dimen/margin_chat_activity"
-            android:layout_toRightOf="@+id/headimageview" >
+            android:layout_toRightOf="@+id/headimageview"
+            android:gravity="center_vertical" >
 
             <TextView
                 android:id="@+id/name"

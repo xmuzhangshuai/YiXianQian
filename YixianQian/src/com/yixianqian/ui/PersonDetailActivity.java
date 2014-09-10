@@ -216,6 +216,36 @@ public class PersonDetailActivity extends BaseFragmentActivity implements OnClic
 	}
 
 	/**
+	 * 如果没有通过认证，则进行提示
+	 */
+	private void showVertifyDialog() {
+		final MyAlertDialog myAlertDialog = new MyAlertDialog(PersonDetailActivity.this);
+		myAlertDialog.setShowTitle(false);
+		myAlertDialog.setMessage("啊哦...这里的每一个人都是学生哦~\n\n你还没有完成学生认证，无法使用该服务");
+		View.OnClickListener comfirm = new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				myAlertDialog.dismiss();
+				startActivity(new Intent(PersonDetailActivity.this, ApplyVertifyActivity.class));
+				overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+			}
+		};
+		View.OnClickListener cancle = new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				myAlertDialog.dismiss();
+			}
+		};
+		myAlertDialog.setPositiveButton("去认证", comfirm);
+		myAlertDialog.setNegativeButton("不认证", cancle);
+		myAlertDialog.show();
+	}
+
+	/**
 	 * 菜单显示
 	 */
 	void showDialog() {
@@ -271,7 +301,11 @@ public class PersonDetailActivity extends BaseFragmentActivity implements OnClic
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
 					myAlertDialog.dismiss();
-					sendLoveReuest(jsonUser.getU_id());
+					if (userPreference.getVertify()) {
+						sendLoveReuest(jsonUser.getU_id());
+					} else {
+						showVertifyDialog();
+					}
 				}
 			};
 			View.OnClickListener cancle = new OnClickListener() {

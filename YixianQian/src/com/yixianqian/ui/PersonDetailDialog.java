@@ -121,7 +121,11 @@ public class PersonDetailDialog extends DialogFragment {
 					if (position == 0) {
 						shield();
 					} else if (position == 1) {
-						sendLoveReuest(userId);
+						if (userPreference.getVertify()) {
+							sendLoveReuest(userId);
+						} else {
+							showVertifyDialog();
+						}
 					}
 				}
 				//如果是心动关系
@@ -141,6 +145,36 @@ public class PersonDetailDialog extends DialogFragment {
 			}
 		});
 		return rootView;
+	}
+
+	/**
+	 * 如果没有通过认证，则进行提示
+	 */
+	private void showVertifyDialog() {
+		final MyAlertDialog myAlertDialog = new MyAlertDialog(getActivity());
+		myAlertDialog.setShowTitle(false);
+		myAlertDialog.setMessage("啊哦...这里的每一个人都是学生哦~\n\n你还没有完成学生认证，无法使用该服务");
+		View.OnClickListener comfirm = new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				myAlertDialog.dismiss();
+				startActivity(new Intent(getActivity(), ApplyVertifyActivity.class));
+				getActivity().overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+			}
+		};
+		View.OnClickListener cancle = new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				myAlertDialog.dismiss();
+			}
+		};
+		myAlertDialog.setPositiveButton("去认证", comfirm);
+		myAlertDialog.setNegativeButton("不认证", cancle);
+		myAlertDialog.show();
 	}
 
 	/**
