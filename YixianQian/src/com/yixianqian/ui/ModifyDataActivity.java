@@ -42,6 +42,7 @@ import com.loopj.android.http.TextHttpResponseHandler;
 import com.yixianqian.R;
 import com.yixianqian.base.BaseApplication;
 import com.yixianqian.base.BaseFragmentActivity;
+import com.yixianqian.config.Constants;
 import com.yixianqian.server.ServerUtil;
 import com.yixianqian.table.UserTable;
 import com.yixianqian.ui.ConstellDialogFragment.OnConstellChangedListener;
@@ -196,7 +197,7 @@ public class ModifyDataActivity extends BaseFragmentActivity implements OnClickL
 		vertifyView.setOnClickListener(this);
 
 		//如果通过认证
-		if (userPreference.getVertify()) {
+		if (userPreference.getVertify() == Constants.VertifyState.PASSED) {
 			vertifyView.setImageResource(R.drawable.already_vertify);
 		} else {
 			vertifyView.setImageResource(R.drawable.sel_apply_vertify_btn);

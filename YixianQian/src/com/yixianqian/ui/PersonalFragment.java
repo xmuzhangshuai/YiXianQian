@@ -234,7 +234,7 @@ public class PersonalFragment extends BaseV4Fragment {
 	 */
 	public void refreshPersonData() {
 		int state = userPreference.getU_stateid();
-		if (userPreference.getVertify()) {
+		if (userPreference.getVertify() == Constants.VertifyState.PASSED) {
 			studentFlagImage.setVisibility(View.VISIBLE);
 		} else {
 			studentFlagImage.setVisibility(View.GONE);

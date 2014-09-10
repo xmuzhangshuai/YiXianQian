@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
 
+import com.yixianqian.config.Constants;
 import com.yixianqian.dao.CityDao.Properties;
 import com.yixianqian.db.CityDbService;
 import com.yixianqian.db.ProvinceDbService;
@@ -40,12 +41,12 @@ public class UserPreference {
 	 * 记录是否通过认证
 	 * @return
 	 */
-	public boolean getVertify() {
-		return sp.getBoolean("vertify", false);
+	public int getVertify() {
+		return sp.getInt("vertify", Constants.VertifyState.NOTSUBMIT);
 	}
 
-	public void setVertify(boolean vertified) {
-		editor.putBoolean("vertify", vertified);
+	public void setVertify(int vertifiState) {
+		editor.putInt("vertify", vertifiState);
 		editor.commit();
 	}
 
@@ -90,14 +91,14 @@ public class UserPreference {
 	}
 
 	//记录是否更改头像
-//	public boolean getHeadImageChanged() {
-//		return sp.getBoolean("changed", false);
-//	}
-//
-//	public void setHeadImageChanged(boolean changed) {
-//		editor.putBoolean("changed", changed);
-//		editor.commit();
-//	}
+	//	public boolean getHeadImageChanged() {
+	//		return sp.getBoolean("changed", false);
+	//	}
+	//
+	//	public void setHeadImageChanged(boolean changed) {
+	//		editor.putBoolean("changed", changed);
+	//		editor.commit();
+	//	}
 
 	//记录用户是否登录
 	public boolean getUserLogin() {

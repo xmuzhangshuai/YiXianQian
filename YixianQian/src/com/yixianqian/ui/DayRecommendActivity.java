@@ -160,7 +160,7 @@ public class DayRecommendActivity extends BaseFragmentActivity {
 				if (isLiked) {
 					TodayRecommend todayRecommend = todayRecommendList.get(currentLike);
 					if (todayRecommend != null) {
-						if (userPreference.getVertify()) {
+						if (userPreference.getVertify() == Constants.VertifyState.PASSED) {
 							sendLoveReuest(todayRecommendList.get(currentLike).getUserID());
 						} else {
 							showVertifyDialog();
@@ -214,15 +214,25 @@ public class DayRecommendActivity extends BaseFragmentActivity {
 	private void showVertifyDialog() {
 		final MyAlertDialog myAlertDialog = new MyAlertDialog(DayRecommendActivity.this);
 		myAlertDialog.setShowTitle(false);
-		myAlertDialog.setMessage("啊哦...这里的每一个人都是学生哦~\n\n你还没有完成学生认证，无法使用该服务");
+		final int state = userPreference.getVertify();
+		if (state == Constants.VertifyState.NOTSUBMIT) {
+			myAlertDialog.setMessage("啊哦...这里的每一个人都是学生哦~\n\n您还没有进行学生认证，无法使用该服务");
+		} else if (state == Constants.VertifyState.NOTPASSED) {
+			myAlertDialog.setMessage("啊哦...这里的每一个人都是学生哦~\n\n您的学生认证未通过，无法使用该服务");
+		} else if (state == Constants.VertifyState.VERTIFING) {
+			myAlertDialog.setMessage("啊哦...这里的每一个人都是学生哦~\n\n您的认证正在审核中，暂时无法使用该服务");
+		}
+
 		View.OnClickListener comfirm = new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				myAlertDialog.dismiss();
-				startActivity(new Intent(DayRecommendActivity.this, ApplyVertifyActivity.class));
-				overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+				if (!(state == Constants.VertifyState.VERTIFING)) {
+					startActivity(new Intent(DayRecommendActivity.this, ApplyVertifyActivity.class));
+					overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+				}
 			}
 		};
 		View.OnClickListener cancle = new OnClickListener() {
@@ -233,8 +243,16 @@ public class DayRecommendActivity extends BaseFragmentActivity {
 				myAlertDialog.dismiss();
 			}
 		};
-		myAlertDialog.setPositiveButton("去认证", comfirm);
-		myAlertDialog.setNegativeButton("不认证", cancle);
+		if (state == Constants.VertifyState.NOTSUBMIT) {
+			myAlertDialog.setPositiveButton("去认证", comfirm);
+			myAlertDialog.setNegativeButton("不认证", cancle);
+		} else if (state == Constants.VertifyState.NOTPASSED) {
+			myAlertDialog.setPositiveButton("重新认证", comfirm);
+			myAlertDialog.setNegativeButton("不认证", cancle);
+		} else if (state == Constants.VertifyState.VERTIFING) {
+			myAlertDialog.setShowCancel(false);
+			myAlertDialog.setPositiveButton("再等等吧~", comfirm);
+		}
 		myAlertDialog.show();
 	}
 

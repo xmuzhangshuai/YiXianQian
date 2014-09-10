@@ -50,6 +50,18 @@ public class Constants {
 		public static final int FREEZE = 1;
 	}
 
+	//审核状态
+	public static class VertifyState {
+		//通过
+		public static final int PASSED = 2;
+		//正在审核
+		public static final int VERTIFING = 1;
+		//未通过
+		public static final int NOTPASSED = -1;
+		//未提交
+		public static final int NOTSUBMIT = 0;
+	}
+
 	public static class BaiduPushConfig {
 		public final static String API_KEY = "bcB8dCkZh0GVtMTdpyTTabj3";
 		public final static String SECRIT_KEY = "y75ge4lbEEGth1nwbTveiGr7yHARKnm2";
