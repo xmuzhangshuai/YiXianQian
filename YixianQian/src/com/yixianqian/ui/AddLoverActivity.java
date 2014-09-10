@@ -72,7 +72,7 @@ public class AddLoverActivity extends BaseActivity implements OnClickListener {
 	protected void initView() {
 		// TODO Auto-generated method stub
 		right_btn_bg.setVisibility(View.GONE);
-		topNavText.setText("添加情侣");
+		topNavText.setText("搜索用户");
 		topNavLeftBtn.setOnClickListener(this);
 		searchBtn.setOnClickListener(this);
 		scanBtn.setOnClickListener(this);
@@ -193,6 +193,7 @@ public class AddLoverActivity extends BaseActivity implements OnClickListener {
 							Intent intent = new Intent(AddLoverActivity.this, AddLoverInfoActivity.class);
 							intent.putExtra(AddLoverInfoActivity.LOVER_PHONE_KEY, mPhone);
 							startActivity(intent);
+							overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
 						} else {
 							ToastTool.showLong(AddLoverActivity.this, "服务器错误！");
 						}

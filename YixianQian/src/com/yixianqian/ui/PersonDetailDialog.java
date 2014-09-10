@@ -185,10 +185,10 @@ public class PersonDetailDialog extends DialogFragment {
 		};
 		if (state == Constants.VertifyState.NOTSUBMIT) {
 			myAlertDialog.setPositiveButton("去认证", comfirm);
-			myAlertDialog.setNegativeButton("不认证", cancle);
+			myAlertDialog.setNegativeButton("暂时不认证", cancle);
 		} else if (state == Constants.VertifyState.NOTPASSED) {
 			myAlertDialog.setPositiveButton("重新认证", comfirm);
-			myAlertDialog.setNegativeButton("不认证", cancle);
+			myAlertDialog.setNegativeButton("暂时不认证", cancle);
 		} else if (state == Constants.VertifyState.VERTIFING) {
 			myAlertDialog.setShowCancel(false);
 			myAlertDialog.setPositiveButton("再等等吧~", comfirm);

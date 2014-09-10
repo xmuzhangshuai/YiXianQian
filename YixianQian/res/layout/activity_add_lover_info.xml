@@ -23,34 +23,58 @@
             android:layout_marginLeft="20dp"
             android:src="@drawable/photoconor" />
 
-        <TextView
-            android:id="@+id/name"
+        <LinearLayout
+            android:id="@+id/nameView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="16dp"
+            android:layout_alignTop="@+id/head_image"
+            android:layout_marginTop="@dimen/margin_chat_activity"
             android:layout_toRightOf="@+id/head_image"
-            android:textSize="@dimen/day_recommend_user_font" />
+            android:gravity="center_vertical" >
 
-        <TextView
-            android:id="@+id/province"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="10dp"
-            android:layout_toLeftOf="@+id/school"
-            android:textColor="@color/system_gray"
-            android:textSize="@dimen/day_recommend_user_font" />
+            <TextView
+                android:id="@+id/name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="16dp"
+                android:text="用户"
+                android:textSize="@dimen/day_recommend_user_font" />
+
+            <ImageView
+                android:id="@+id/gender"
+                android:layout_width="@dimen/time_capsule20"
+                android:layout_height="@dimen/time_capsule20"
+                android:layout_marginLeft="@dimen/time_capsule20"
+                android:src="@drawable/male" />
+        </LinearLayout>
 
         <TextView
             android:id="@+id/school"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="20dp"
+            android:layout_alignBottom="@+id/head_image"
+            android:layout_alignLeft="@+id/nameView"
+            android:layout_marginBottom="@dimen/margin_chat_activity"
+            android:layout_marginLeft="16dp"
+            android:text="厦门大学"
             android:textColor="@color/system_gray"
             android:textSize="@dimen/day_recommend_user_font" />
+
+        <TextView
+            android:id="@+id/detail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/head_image"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/sel_person_detail_btn"
+            android:paddingBottom="@dimen/share_space"
+            android:paddingLeft="@dimen/share_space"
+            android:paddingRight="@dimen/share_space"
+            android:paddingTop="@dimen/share_space"
+            android:text="详细资料"
+            android:textSize="@dimen/register_font_size" />
     </RelativeLayout>
 
     <LinearLayout
@@ -63,12 +87,22 @@
         android:padding="@dimen/day_recommend_dot_space" >
 
         <Button
+            android:id="@+id/flipper"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/register_height"
+            android:layout_marginTop="@dimen/login_register"
+            android:background="@drawable/sel_female_btn"
+            android:text="对Ta砰然心动"
+            android:textColor="@drawable/sel_enable_font_color"
+            android:textSize="@dimen/day_recommend_user_font" />
+
+        <Button
             android:id="@+id/addlover"
             android:layout_width="match_parent"
             android:layout_height="@dimen/register_height"
-            android:layout_marginTop="50dp"
-            android:background="@drawable/sel_auth_code_again_bg"
-            android:text="添加为情侣"
+            android:layout_marginTop="@dimen/register_height"
+            android:background="@drawable/sel_purple_btn"
+            android:text="直接添加为情侣"
             android:textColor="@drawable/sel_enable_font_color"
             android:textSize="@dimen/day_recommend_user_font" />
     </LinearLayout>

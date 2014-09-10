@@ -8,6 +8,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import com.easemob.util.EMLog;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -35,6 +37,13 @@ import android.os.Build;
  * 
  */
 public final class ImageTools {
+	public static String getThumbnailImagePath(String imagePath) {
+		String path = imagePath.substring(0, imagePath.lastIndexOf("/") + 1);
+		path += "th" + imagePath.substring(imagePath.lastIndexOf("/") + 1, imagePath.length());
+		EMLog.d("msg", "original image path:" + imagePath);
+		EMLog.d("msg", "thum image path:" + path);
+		return path;
+	}
 
 	/**
 	 * 质量压缩方法

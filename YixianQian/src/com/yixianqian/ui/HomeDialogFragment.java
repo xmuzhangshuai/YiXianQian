@@ -90,7 +90,7 @@ public class HomeDialogFragment extends DialogFragment {
 		menuitemList = new ArrayList<String>();
 		final int stateID = userPreference.getU_stateid();
 
-		menuitemList.add("添加情侣");
+		menuitemList.add("搜索");
 		menuitemList.add("怦然心动");
 		if (stateID == 3) {
 			menuitemList.add("解除心动关系");

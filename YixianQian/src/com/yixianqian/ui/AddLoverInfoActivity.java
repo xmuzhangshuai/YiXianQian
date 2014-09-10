@@ -1,5 +1,7 @@
 package com.yixianqian.ui;
 
+import java.util.Date;
+
 import org.apache.http.Header;
 
 import android.app.Dialog;
@@ -13,6 +15,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.easemob.chat.EMContactManager;
 import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.TextHttpResponseHandler;
 import com.yixianqian.R;
@@ -20,10 +23,16 @@ import com.yixianqian.baidupush.SendMsgAsyncTask;
 import com.yixianqian.base.BaseActivity;
 import com.yixianqian.base.BaseApplication;
 import com.yixianqian.config.Constants;
-import com.yixianqian.db.ProvinceDbService;
+import com.yixianqian.config.Constants.FlipperStatus;
+import com.yixianqian.config.Constants.FlipperType;
+import com.yixianqian.config.Constants.MessageType;
+import com.yixianqian.customewidget.MyAlertDialog;
+import com.yixianqian.db.FlipperDbService;
 import com.yixianqian.db.SchoolDbService;
+import com.yixianqian.entities.Flipper;
 import com.yixianqian.jsonobject.JsonMessage;
 import com.yixianqian.jsonobject.JsonUser;
+import com.yixianqian.table.FlipperRequestTable;
 import com.yixianqian.table.LoveRequestTable;
 import com.yixianqian.table.UserTable;
 import com.yixianqian.utils.AsyncHttpClientImageSound;
@@ -31,6 +40,7 @@ import com.yixianqian.utils.AsyncHttpClientTool;
 import com.yixianqian.utils.FastJsonTool;
 import com.yixianqian.utils.FriendPreference;
 import com.yixianqian.utils.ImageLoaderTool;
+import com.yixianqian.utils.LogTool;
 import com.yixianqian.utils.ToastTool;
 import com.yixianqian.utils.UserPreference;
 
@@ -48,13 +58,15 @@ public class AddLoverInfoActivity extends BaseActivity {
 	private View right_btn_bg;
 	private ImageView headImageView;//头像
 	private TextView nameTextView;//姓名
-	private TextView provinceTextView;//省份
 	private TextView schoolTextView;//学校
 	private FriendPreference friendpreference;
 	private UserPreference userPreference;
 	private String loverphone;
 	private Button addLoverBtn;
+	private Button flipperBtn;
 	private JsonUser jsonUser;
+	private ImageView genderView;//性别
+	private View moreDetaileBtn;//详细资料按钮
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -81,22 +93,25 @@ public class AddLoverInfoActivity extends BaseActivity {
 		topNavText = (TextView) findViewById(R.id.nav_text);
 		headImageView = (ImageView) findViewById(R.id.head_image);
 		nameTextView = (TextView) findViewById(R.id.name);
-		provinceTextView = (TextView) findViewById(R.id.province);
 		schoolTextView = (TextView) findViewById(R.id.school);
 		addLoverBtn = (Button) findViewById(R.id.addlover);
+		genderView = (ImageView) findViewById(R.id.gender);
+		moreDetaileBtn = findViewById(R.id.detail);
+		flipperBtn = (Button) findViewById(R.id.flipper);
 	}
 
 	@Override
 	protected void initView() {
 		// TODO Auto-generated method stub
 		right_btn_bg.setVisibility(View.GONE);
-		topNavText.setText("添加情侣");
+		topNavText.setText("添加情侣&心动");
 		topNavLeftBtn.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				finish();
+				overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
 			}
 		});
 
@@ -106,6 +121,32 @@ public class AddLoverInfoActivity extends BaseActivity {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				addLoverRequest();
+			}
+		});
+
+		moreDetaileBtn.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				if (jsonUser != null) {
+					startActivity(new Intent(AddLoverInfoActivity.this, PersonMoreDetailActivity.class).putExtra(
+							"user", jsonUser));
+					overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+				}
+			}
+		});
+
+		flipperBtn.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				if (userPreference.getVertify() == Constants.VertifyState.PASSED) {
+					sendLoveReuest(jsonUser.getU_id());
+				} else {
+					showVertifyDialog();
+				}
 			}
 		});
 	}
@@ -137,10 +178,70 @@ public class AddLoverInfoActivity extends BaseActivity {
 			}
 		}
 		nameTextView.setText(name);
-		ProvinceDbService provinceDbService = ProvinceDbService.getInstance(this);
+
+		if (jsonUser.getU_gender().equals(Constants.Gender.MALE)) {
+			genderView.setImageResource(R.drawable.male);
+		} else {
+			genderView.setImageResource(R.drawable.female);
+		}
+
 		SchoolDbService schoolDbService = SchoolDbService.getInstance(this);
-		provinceTextView.setText(provinceDbService.getProNameById(jsonUser.getU_provinceid()));
 		schoolTextView.setText(schoolDbService.schoolDao.load((long) jsonUser.getU_schoolid()).getSchoolName());
+	}
+
+	@Override
+	public void onBackPressed() {
+		// TODO Auto-generated method stub
+		finish();
+		overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
+	}
+
+	/**
+	 * 如果没有通过认证，则进行提示
+	 */
+	private void showVertifyDialog() {
+		final MyAlertDialog myAlertDialog = new MyAlertDialog(AddLoverInfoActivity.this);
+		myAlertDialog.setShowTitle(false);
+		final int state = userPreference.getVertify();
+		if (state == Constants.VertifyState.NOTSUBMIT) {
+			myAlertDialog.setMessage("啊哦...这里的每一个人都是学生哦~\n\n您还没有进行学生认证，无法使用该服务");
+		} else if (state == Constants.VertifyState.NOTPASSED) {
+			myAlertDialog.setMessage("啊哦...这里的每一个人都是学生哦~\n\n您的学生认证未通过，无法使用该服务");
+		} else if (state == Constants.VertifyState.VERTIFING) {
+			myAlertDialog.setMessage("啊哦...这里的每一个人都是学生哦~\n\n您的认证正在审核中，暂时无法使用该服务");
+		}
+
+		View.OnClickListener comfirm = new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				myAlertDialog.dismiss();
+				if (!(state == Constants.VertifyState.VERTIFING)) {
+					startActivity(new Intent(AddLoverInfoActivity.this, ApplyVertifyActivity.class));
+					overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+				}
+			}
+		};
+		View.OnClickListener cancle = new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				myAlertDialog.dismiss();
+			}
+		};
+		if (state == Constants.VertifyState.NOTSUBMIT) {
+			myAlertDialog.setPositiveButton("去认证", comfirm);
+			myAlertDialog.setNegativeButton("暂时不认证", cancle);
+		} else if (state == Constants.VertifyState.NOTPASSED) {
+			myAlertDialog.setPositiveButton("重新认证", comfirm);
+			myAlertDialog.setNegativeButton("暂时不认证", cancle);
+		} else if (state == Constants.VertifyState.VERTIFING) {
+			myAlertDialog.setShowCancel(false);
+			myAlertDialog.setPositiveButton("再等等吧~", comfirm);
+		}
+		myAlertDialog.show();
 	}
 
 	/**
@@ -279,5 +380,168 @@ public class AddLoverInfoActivity extends BaseActivity {
 			friendpreference.setU_provinceid(jsonUser.getU_provinceid());
 			friendpreference.setU_schoolid(jsonUser.getU_schoolid());
 		}
+	}
+
+	/**
+	 * 异步发送爱情验证
+	 * @param userID
+	 */
+	private void sendLoveReuest(final int filpperId) {
+		if (filpperId > 0) {
+			FlipperDbService flipperDbService = FlipperDbService.getInstance(AddLoverInfoActivity.this);
+			Flipper flipper = flipperDbService.getFlipperByUserId(filpperId);
+			if (flipper != null && flipper.getStatus().equals(FlipperStatus.BEINVITEED)) {//如果被邀请过
+				LogTool.e("PersonDetailActivity", "已经被邀请过了");
+				String name = flipper.getNickname();
+				if (!TextUtils.isEmpty(flipper.getRealname())) {
+					name = flipper.getRealname();
+				}
+				final MyAlertDialog myAlertDialog = new MyAlertDialog(this);
+				myAlertDialog.setShowCancel(false);
+				myAlertDialog.setTitle("提示");
+				myAlertDialog.setMessage("您已经被 " + name + " 邀请过，可以在爱情验证页面点击“我也对他砰然心动”来成为心动关系");
+				View.OnClickListener comfirm = new OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						// TODO Auto-generated method stub
+						myAlertDialog.dismiss();
+					}
+				};
+				myAlertDialog.setPositiveButton("确定", comfirm);
+				myAlertDialog.show();
+			} else {
+				LogTool.e("PersonDetailActivity", "发送爱情验证");
+				String url = "addflipperrequest";
+				RequestParams params = new RequestParams();
+				int myUserID = userPreference.getU_id();
+				params.put(FlipperRequestTable.FR_USERID, myUserID);
+				params.put(FlipperRequestTable.FR_FLIPPERID, filpperId);
+				TextHttpResponseHandler responseHandler = new TextHttpResponseHandler() {
+					@Override
+					public void onStart() {
+						// TODO Auto-generated method stub
+						super.onStart();
+					}
+
+					@Override
+					public void onFailure(int statusCode, Header[] headers, String errorResponse, Throwable e) {
+						// TODO Auto-generated method stub
+						LogTool.e("DayRecommendActivity", "错误原因" + errorResponse);
+						AddLoverInfoActivity.this.finish();
+						overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
+					}
+
+					@Override
+					public void onSuccess(int statusCode, Header[] headers, String response) {
+						// TODO Auto-generated method stub
+						ToastTool.showLong(getApplicationContext(), "爱情验证已发送！等待对方同意");
+						saveFlipper(filpperId, response);
+						AddLoverInfoActivity.this.finish();
+						overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
+					}
+
+					@Override
+					public void onFinish() {
+						// TODO Auto-generated method stub
+						super.onFinish();
+					}
+				};
+				AsyncHttpClientTool.post(AddLoverInfoActivity.this, url, params, responseHandler);
+			}
+		}
+	}
+
+	/**
+	 *  添加contact
+	 * @param view
+	 */
+	public void addContact(final int flipperId) {
+		LogTool.i("PersonDetailActivity", "环信添加好友");
+		new Thread(new Runnable() {
+			public void run() {
+				try {
+					//添加好友
+					EMContactManager.getInstance().addContact("" + flipperId, userPreference.getName() + "对您砰然心动！");
+				} catch (final Exception e) {
+				}
+			}
+		}).start();
+	}
+
+	/**
+	 * 存储到数据库，已经同意
+	 */
+	public void saveFlipper(final int flipperId, String response) {
+		FlipperDbService flipperDbService = FlipperDbService.getInstance(AddLoverInfoActivity.this);
+		Flipper flipper = flipperDbService.getFlipperByUserId(flipperId);
+		//如果数据库中存在该用户的请求，则更新状态
+		if (flipper != null) {
+			if (!flipper.getStatus().equals(FlipperStatus.INVITE)) {//如果已经请求过，则不再请求
+				addContact(flipperId);
+			}
+
+			LogTool.i("PersonDetailActivity", "flipper已经存在，更新");
+			flipper.setIsRead(true);
+			flipper.setTime(new Date());
+			flipper.setType(FlipperType.TO);
+			flipper.setStatus(Constants.FlipperStatus.INVITE);
+			flipperDbService.flipperDao.update(flipper);
+
+			//发给对方通知
+			JsonMessage jsonMessage = new JsonMessage(userPreference.getName() + "对您怦然心动",
+					MessageType.MESSAGE_TYPE_FLIPPER_REQUEEST);
+			new SendMsgAsyncTask(FastJsonTool.createJsonString(jsonMessage), flipper.getBpushUserID()).send();
+		} else {
+			//如果网络端不是未推送状态，则添加环信好友
+			if (response.equals("1")) {
+				addContact(flipperId);
+			}
+			getUser(flipperId);
+		}
+	}
+
+	/**
+	 * 	网络获取User信息
+	 */
+	private void getUser(int userId) {
+		RequestParams params = new RequestParams();
+		params.put(UserTable.U_ID, userId);
+
+		TextHttpResponseHandler responseHandler = new TextHttpResponseHandler("utf-8") {
+			@Override
+			public void onSuccess(int statusCode, Header[] headers, String response) {
+				// TODO Auto-generated method stub
+				if (statusCode == 200) {
+					jsonUser = FastJsonTool.getObject(response, JsonUser.class);
+					if (jsonUser != null) {
+						FlipperDbService flipperDbService = FlipperDbService.getInstance(AddLoverInfoActivity.this);
+						Flipper flipper = new Flipper(null, jsonUser.getU_id(), jsonUser.getU_bpush_user_id(),
+								jsonUser.getU_bpush_channel_id(), jsonUser.getU_nickname(), jsonUser.getU_realname(),
+								jsonUser.getU_gender(), jsonUser.getU_email(), jsonUser.getU_large_avatar(),
+								jsonUser.getU_small_avatar(), jsonUser.getU_blood_type(), jsonUser.getU_constell(),
+								jsonUser.getU_introduce(), jsonUser.getU_birthday(), new Date(), jsonUser.getU_age(),
+								jsonUser.getU_vocationid(), jsonUser.getU_stateid(), jsonUser.getU_provinceid(),
+								jsonUser.getU_cityid(), jsonUser.getU_schoolid(), jsonUser.getU_height(),
+								jsonUser.getU_weight(), jsonUser.getU_image_pass(), jsonUser.getU_salary(), true,
+								jsonUser.getU_tel(), Constants.FlipperStatus.INVITE, Constants.FlipperType.TO);
+						flipperDbService.flipperDao.insert(flipper);
+
+						//发给对方通知
+						JsonMessage jsonMessage = new JsonMessage(userPreference.getName() + "对您怦然心动",
+								MessageType.MESSAGE_TYPE_FLIPPER_REQUEEST);
+						new SendMsgAsyncTask(FastJsonTool.createJsonString(jsonMessage), flipper.getBpushUserID())
+								.send();
+					}
+				}
+			}
+
+			@Override
+			public void onFailure(int statusCode, Header[] headers, String errorResponse, Throwable e) {
+				// TODO Auto-generated method stub
+				ToastTool.showLong(AddLoverInfoActivity.this, "服务器错误");
+			}
+		};
+		AsyncHttpClientTool.post(AddLoverInfoActivity.this, "getuserbyid", params, responseHandler);
 	}
 }

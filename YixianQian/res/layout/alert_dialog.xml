@@ -35,23 +35,25 @@
 
         <TextView
             android:id="@+id/confirm"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@drawable/sel_alert_dialog_left_btn"
-            android:gravity="center"
-            android:padding="13dp"
+            android:gravity="center_horizontal"
+            android:paddingBottom="13dp"
+            android:paddingTop="13dp"
             android:textColor="@color/alert_dialog_blue"
             android:textSize="@dimen/day_recommend_font_info" />
 
         <TextView
             android:id="@+id/cancle"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@drawable/sel_alert_dialog_right_btn"
-            android:gravity="center"
-            android:padding="13dp"
+            android:gravity="center_horizontal"
+            android:paddingBottom="13dp"
+            android:paddingTop="13dp"
             android:textColor="@color/alert_dialog_blue"
             android:textSize="@dimen/day_recommend_font_info" />
     </LinearLayout>

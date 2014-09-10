@@ -62,7 +62,6 @@ import com.yixianqian.utils.FriendPreference;
 import com.yixianqian.utils.ImageCache;
 import com.yixianqian.utils.ImageLoaderTool;
 import com.yixianqian.utils.ImageTools;
-import com.yixianqian.utils.ImageUtils;
 import com.yixianqian.utils.LogTool;
 import com.yixianqian.utils.ToastTool;
 import com.yixianqian.utils.UserPreference;
@@ -410,7 +409,7 @@ public class MessageAdapter extends BaseAdapter {
 				ImageMessageBody imgBody = (ImageMessageBody) message.getBody();
 				if (imgBody.getLocalUrl() != null) {
 					String filePath = imgBody.getLocalUrl();
-					String thumbnailPath = ImageUtils.getThumbnailImagePath(filePath);
+					String thumbnailPath = ImageTools.getThumbnailImagePath(filePath);
 					showImageView(thumbnailPath, holder.iv, filePath, imgBody.getRemoteUrl(), message);
 				}
 			}
@@ -422,9 +421,9 @@ public class MessageAdapter extends BaseAdapter {
 		ImageMessageBody imgBody = (ImageMessageBody) message.getBody();
 		String filePath = imgBody.getLocalUrl();
 		if (new File(filePath).exists())
-			showImageView(ImageUtils.getThumbnailImagePath(filePath), holder.iv, filePath, null, message);
+			showImageView(ImageTools.getThumbnailImagePath(filePath), holder.iv, filePath, null, message);
 		else {
-			showImageView(ImageUtils.getThumbnailImagePath(filePath), holder.iv, filePath, IMAGE_DIR, message);
+			showImageView(ImageTools.getThumbnailImagePath(filePath), holder.iv, filePath, IMAGE_DIR, message);
 		}
 
 		switch (message.status) {

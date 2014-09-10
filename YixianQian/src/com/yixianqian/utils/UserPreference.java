@@ -42,7 +42,7 @@ public class UserPreference {
 	 * @return
 	 */
 	public int getVertify() {
-		return sp.getInt("vertify", Constants.VertifyState.NOTSUBMIT);
+		return sp.getInt("vertify", Constants.VertifyState.PASSED);
 	}
 
 	public void setVertify(int vertifiState) {

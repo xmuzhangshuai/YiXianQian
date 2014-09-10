@@ -44,7 +44,7 @@
             android:id="@+id/submit"
             android:layout_width="match_parent"
             android:layout_height="@dimen/register_height"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="@dimen/login_register"
             android:background="@drawable/sel_female_btn"
             android:text="进行匹配"
             android:textColor="@drawable/sel_enable_font_color"
