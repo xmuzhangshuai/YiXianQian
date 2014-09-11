@@ -523,7 +523,7 @@ public class AddLoverInfoActivity extends BaseActivity {
 								jsonUser.getU_introduce(), jsonUser.getU_birthday(), new Date(), jsonUser.getU_age(),
 								jsonUser.getU_vocationid(), jsonUser.getU_stateid(), jsonUser.getU_provinceid(),
 								jsonUser.getU_cityid(), jsonUser.getU_schoolid(), jsonUser.getU_height(),
-								jsonUser.getU_weight(), jsonUser.getU_image_pass(), jsonUser.getU_salary(), true,
+								jsonUser.getU_weight(), jsonUser.getU_vertify_image_pass(), jsonUser.getU_salary(), true,
 								jsonUser.getU_tel(), Constants.FlipperStatus.INVITE, Constants.FlipperType.TO);
 						flipperDbService.flipperDao.insert(flipper);
 

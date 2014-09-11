@@ -80,6 +80,7 @@ public class MainActivity extends BaseFragmentActivity implements OnRecordingLis
 	private boolean isConflictDialogShow;
 	private HomeFragment homeFragment;
 	private PersonalFragment personalFragment;
+	private LoveBridgeFragment loveBridgeFragment;
 	private int index;
 	// 当前fragment的index
 	private int currentTabIndex;
@@ -103,8 +104,9 @@ public class MainActivity extends BaseFragmentActivity implements OnRecordingLis
 		conversationDbService = ConversationDbService.getInstance(MainActivity.this);
 		flipperDbService = FlipperDbService.getInstance(MainActivity.this);
 		homeFragment = new HomeFragment();
+		loveBridgeFragment = new LoveBridgeFragment();
 		personalFragment = new PersonalFragment();
-		fragments = new Fragment[] { homeFragment, personalFragment };
+		fragments = new Fragment[] { homeFragment, loveBridgeFragment, personalFragment };
 
 		findViewById();
 		initView();
@@ -137,9 +139,10 @@ public class MainActivity extends BaseFragmentActivity implements OnRecordingLis
 	@Override
 	protected void findViewById() {
 		// TODO Auto-generated method stub
-		mTabs = new View[2];
+		mTabs = new View[3];
 		mTabs[0] = (View) findViewById(R.id.homeBtn);
-		mTabs[1] = (View) findViewById(R.id.personalBtn);
+		mTabs[1] = (View) findViewById(R.id.loverBridgeBtn);
+		mTabs[2] = (View) findViewById(R.id.personalBtn);
 		// 把第一个tab设为选中状态
 		mTabs[0].setSelected(true);
 	}
@@ -253,8 +256,11 @@ public class MainActivity extends BaseFragmentActivity implements OnRecordingLis
 		case R.id.homeBtn:
 			index = 0;
 			break;
-		case R.id.personalBtn:
+		case R.id.loverBridgeBtn:
 			index = 1;
+			break;
+		case R.id.personalBtn:
+			index = 2;
 			break;
 		}
 		if (currentTabIndex != index) {

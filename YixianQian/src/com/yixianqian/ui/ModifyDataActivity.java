@@ -194,13 +194,13 @@ public class ModifyDataActivity extends BaseFragmentActivity implements OnClickL
 		weightView.setOnClickListener(this);
 		constellView.setOnClickListener(this);
 		introView.setOnClickListener(this);
-		vertifyView.setOnClickListener(this);
 
 		//如果通过认证
 		if (userPreference.getVertify() == Constants.VertifyState.PASSED) {
 			vertifyView.setImageResource(R.drawable.already_vertify);
 		} else {
 			vertifyView.setImageResource(R.drawable.sel_apply_vertify_btn);
+			vertifyView.setOnClickListener(this);
 		}
 
 		if (userPreference.getU_age() > 0) {
@@ -450,9 +450,6 @@ public class ModifyDataActivity extends BaseFragmentActivity implements OnClickL
 							ToastTool.showLong(ModifyDataActivity.this, "头像上传成功！请等待审核");
 							largeAvatar.recycle();
 							smallBitmap.recycle();
-							//设置头像已改变
-//							userPreference.setHeadImageChanged(true);
-							userPreference.setHeadImagePassed(0);
 							//删除本地头像
 							ImageTools.deleteImageByPath(filePath);
 							ImageTools.deletePhotoAtPathAndName(smallAvatarPath, "smallAvatar.jpeg");

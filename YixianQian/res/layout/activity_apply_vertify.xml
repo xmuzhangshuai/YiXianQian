@@ -87,8 +87,8 @@
 
         <ImageView
             android:id="@+id/headimage"
-            android:layout_width="@dimen/headiamge_height"
-            android:layout_height="@dimen/headiamge_height"
+            android:layout_width="@dimen/tape_margin"
+            android:layout_height="@dimen/tape_margin"
             android:layout_gravity="center"
             android:visibility="gone" />
     </LinearLayout>

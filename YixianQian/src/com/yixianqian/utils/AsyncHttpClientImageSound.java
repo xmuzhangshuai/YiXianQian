@@ -9,7 +9,8 @@ import com.yixianqian.config.Constants;
 
 public class AsyncHttpClientImageSound {
 	public static final String HEADIMAGE_URL = "headimage";
-	public static final String BASE_URL = Constants.DoMainName+"ImageSoundServer/";
+	public static final String BASE_URL = Constants.DoMainName + "ImageSoundServer/";
+	public static final String STUDENT_CARD_URL = "studentcardimage";
 
 	private static AsyncHttpClient client = new AsyncHttpClient();
 

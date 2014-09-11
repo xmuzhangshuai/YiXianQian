@@ -7,6 +7,7 @@ import java.io.IOException;
 import org.apache.http.Header;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -28,9 +29,11 @@ import com.loopj.android.http.TextHttpResponseHandler;
 import com.yixianqian.R;
 import com.yixianqian.base.BaseActivity;
 import com.yixianqian.base.BaseApplication;
+import com.yixianqian.customewidget.MyAlertDialog;
 import com.yixianqian.table.UserTable;
 import com.yixianqian.utils.AsyncHttpClientImageSound;
 import com.yixianqian.utils.ImageTools;
+import com.yixianqian.utils.LogTool;
 import com.yixianqian.utils.ToastTool;
 import com.yixianqian.utils.UserPreference;
 
@@ -94,10 +97,10 @@ public class ApplyVertifyActivity extends BaseActivity implements OnClickListene
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
 		case R.id.right_btn_bg:
-
+			uploadImage(photoUri.getPath());
 			break;
 		case R.id.left_btn_bg:
-			finish();
+			giveUpPublish();
 			break;
 		case R.id.gethead_btn:
 			showPicturePicker(ApplyVertifyActivity.this);
@@ -105,6 +108,42 @@ public class ApplyVertifyActivity extends BaseActivity implements OnClickListene
 		default:
 			break;
 		}
+	}
+
+	@Override
+	public void onBackPressed() {
+		// TODO Auto-generated method stub
+		giveUpPublish();
+	}
+
+	/**
+	 * 放弃发布
+	 */
+	private void giveUpPublish() {
+		final MyAlertDialog myAlertDialog = new MyAlertDialog(this);
+		myAlertDialog.setTitle("提示");
+		myAlertDialog.setMessage("放弃认证？  认证后可以享受到“一线牵”提供的校内牵线搭桥服务");
+		View.OnClickListener comfirm = new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				myAlertDialog.dismiss();
+				finish();
+				overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
+			}
+		};
+		View.OnClickListener cancle = new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				myAlertDialog.dismiss();
+			}
+		};
+		myAlertDialog.setPositiveButton("放弃", comfirm);
+		myAlertDialog.setNegativeButton("继续认证", cancle);
+		myAlertDialog.show();
 	}
 
 	/**
@@ -268,48 +307,60 @@ public class ApplyVertifyActivity extends BaseActivity implements OnClickListene
 	 * @param filePath
 	 */
 	public void uploadImage(final String filePath) {
-		final Bitmap largeAvatar = BitmapFactory.decodeFile(filePath);
-		if (largeAvatar != null) {
-			final Bitmap smallBitmap = ImageTools.zoomBitmap(largeAvatar, largeAvatar.getWidth() / 4,
-					largeAvatar.getHeight() / 4);
-			final String smallAvatarPath = Environment.getExternalStorageDirectory() + "/yixianqian/image";
-
+		if (picFile != null) {
 			RequestParams params = new RequestParams();
 			int userId = userPreference.getU_id();
 			if (userId > -1) {
 				params.put(UserTable.U_ID, String.valueOf(userId));
 				try {
-					params.put("large_avatar", picFile);
-					params.put("small_avatar",
-							ImageTools.savePhotoToSDCard(smallBitmap, smallAvatarPath, "smallAvatar.jpeg", 100));
+					params.put(UserTable.U_VERTIFY_IMAGE, picFile);
 				} catch (FileNotFoundException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 				TextHttpResponseHandler responseHandler = new TextHttpResponseHandler() {
+					ProgressDialog dialog = new ProgressDialog(ApplyVertifyActivity.this);
+
+					@Override
+					public void onStart() {
+						// TODO Auto-generated method stub
+						super.onStart();
+						dialog.setMessage("正在上传，请稍后...");
+						dialog.setCancelable(false);
+						dialog.show();
+					}
+
 					@Override
 					public void onSuccess(int statusCode, Header[] headers, String response) {
 						// TODO Auto-generated method stub
 						if (statusCode == 200) {
 							ToastTool.showLong(ApplyVertifyActivity.this, "上传成功！请等待审核");
-							largeAvatar.recycle();
-							smallBitmap.recycle();
-							//删除本地头像
+							//删除本地学生证
 							ImageTools.deleteImageByPath(filePath);
-							ImageTools.deletePhotoAtPathAndName(smallAvatarPath, "smallAvatar.jpeg");
+							ApplyVertifyActivity.this.finish();
+							overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
 						}
 					}
 
 					@Override
 					public void onFailure(int statusCode, Header[] headers, String errorResponse, Throwable e) {
 						// TODO Auto-generated method stub
-						ToastTool.showLong(ApplyVertifyActivity.this, "上传失败！" + errorResponse);
+						ToastTool.showLong(ApplyVertifyActivity.this, "上传失败！");
+						LogTool.e("ApplyVertifyActivity", "学生证上传失败 " + errorResponse);
 						//删除本地头像
 						ImageTools.deleteImageByPath(filePath);
-						ImageTools.deletePhotoAtPathAndName(smallAvatarPath, "smallAvatar.jpeg");
+					}
+
+					@Override
+					public void onFinish() {
+						// TODO Auto-generated method stub
+						super.onFinish();
+						if (dialog != null && dialog.isShowing()) {
+							dialog.dismiss();
+						}
 					}
 				};
-				AsyncHttpClientImageSound.post(AsyncHttpClientImageSound.HEADIMAGE_URL, params, responseHandler);
+				AsyncHttpClientImageSound.post(AsyncHttpClientImageSound.STUDENT_CARD_URL, params, responseHandler);
 			}
 		} else {
 			ImageTools.deleteImageByPath(filePath);

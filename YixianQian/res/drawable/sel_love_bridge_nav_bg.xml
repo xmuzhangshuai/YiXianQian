@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:state_pressed="false" android:state_selected="false"><shape android:shape="rectangle">
+            <solid android:color="@color/white" />
+
+            <stroke android:width="0.1dp" android:color="@color/system_back" />
+        </shape></item>
+    <item android:state_pressed="true" android:state_selected="false"><shape android:shape="rectangle">
+            <solid android:color="@color/system_back" />
+
+            <stroke android:width="0.1dp" android:color="@color/system_back" />
+        </shape></item>
+    <item android:drawable="@drawable/abc_ab_transparent_dark_holo" android:state_pressed="false" android:state_selected="true"></item>
+
+</selector>

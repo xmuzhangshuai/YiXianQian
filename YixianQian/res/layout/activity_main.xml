@@ -32,6 +32,24 @@
         </RelativeLayout>
 
         <RelativeLayout
+            android:id="@+id/loverBridgeBtn"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/sel_main_btn_bg"
+            android:onClick="onTabClicked" >
+
+            <ImageView
+                android:id="@+id/loverBridge_icon"
+                android:layout_width="@dimen/home_indicator"
+                android:layout_height="@dimen/home_indicator"
+                android:layout_centerInParent="true"
+                android:paddingBottom="10dp"
+                android:paddingTop="10dp"
+                android:src="@drawable/icon_love_bridge" />
+        </RelativeLayout>
+
+        <RelativeLayout
             android:id="@+id/personalBtn"
             android:layout_width="0dp"
             android:layout_height="match_parent"

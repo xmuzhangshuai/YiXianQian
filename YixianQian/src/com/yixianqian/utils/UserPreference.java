@@ -42,7 +42,7 @@ public class UserPreference {
 	 * @return
 	 */
 	public int getVertify() {
-		return sp.getInt("vertify", Constants.VertifyState.PASSED);
+		return sp.getInt("vertify", Constants.VertifyState.NOTSUBMIT);
 	}
 
 	public void setVertify(int vertifiState) {
@@ -79,16 +79,16 @@ public class UserPreference {
 		editor.commit();
 	}
 
-	//记录头像是否审核通过
-	//-1为未通过，0为待审核，1为已通过
-	public int getHeadImagePassed() {
-		return sp.getInt("passed", 0);
-	}
-
-	public void setHeadImagePassed(int passed) {
-		editor.putInt("passed", passed);
-		editor.commit();
-	}
+//	//记录头像是否审核通过
+//	//-1为未通过，0为待审核，1为已通过
+//	public int getHeadImagePassed() {
+//		return sp.getInt("passed", 0);
+//	}
+//
+//	public void setHeadImagePassed(int passed) {
+//		editor.putInt("passed", passed);
+//		editor.commit();
+//	}
 
 	//记录是否更改头像
 	//	public boolean getHeadImageChanged() {

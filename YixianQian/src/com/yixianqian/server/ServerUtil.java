@@ -8,9 +8,7 @@ import org.apache.http.Header;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.text.TextUtils;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -235,7 +233,7 @@ public class ServerUtil {
 		userPreference.setU_password(password);
 		userPreference.setHuanXinUserName("" + user.getU_id());
 		userPreference.setHuanXinPassword(MD5For16.GetMD5CodeToLower(password));
-		userPreference.setHeadImagePassed(user.getU_image_pass());
+		userPreference.setVertify(user.getU_vertify_image_pass());
 		userPreference.setUserLogin(true);
 	}
 
@@ -423,15 +421,15 @@ public class ServerUtil {
 					if (map != null) {
 						userPreference.setU_large_avatar(map.get(UserTable.U_LARGE_AVATAR));
 						userPreference.setU_small_avatar(map.get(UserTable.U_SMALL_AVATAR));
-						if (!TextUtils.isEmpty(map.get(UserTable.U_IMAGE_PASS))) {
-							if (map.get(UserTable.U_IMAGE_PASS).equals("1")) {
-								userPreference.setHeadImagePassed(1);
-							} else if (map.get(UserTable.U_IMAGE_PASS).equals("0")) {
-								userPreference.setHeadImagePassed(0);
-							} else if (map.get(UserTable.U_IMAGE_PASS).equals("-1")) {
-								userPreference.setHeadImagePassed(-1);
-							}
-						}
+//						if (!TextUtils.isEmpty(map.get(UserTable.U_IMAGE_PASS))) {
+//							if (map.get(UserTable.U_IMAGE_PASS).equals("1")) {
+//								userPreference.setHeadImagePassed(1);
+//							} else if (map.get(UserTable.U_IMAGE_PASS).equals("0")) {
+//								userPreference.setHeadImagePassed(0);
+//							} else if (map.get(UserTable.U_IMAGE_PASS).equals("-1")) {
+//								userPreference.setHeadImagePassed(-1);
+//							}
+//						}
 						//显示头像
 						disPlayHeadImage(imageView, textView);
 					}
@@ -450,21 +448,21 @@ public class ServerUtil {
 	 * 显示头像，如果本地审核通过
 	 */
 	public void disPlayHeadImage(final ImageView imageView, final TextView textView) {
-		int state = userPreference.getHeadImagePassed();
+//		int state = userPreference.getHeadImagePassed();
 		//显示头像
 		ImageLoader.getInstance().displayImage(
 				AsyncHttpClientImageSound.getAbsoluteUrl(userPreference.getU_small_avatar()), imageView,
 				ImageLoaderTool.getHeadImageOptions(10));
-		//如果为待审核
-		if (state == 0) {
-			textView.setVisibility(View.VISIBLE);
-			textView.setText("待审核");
-			textView.setTextColor(Color.BLACK);
-		} else if (state == -1) {
-			textView.setVisibility(View.VISIBLE);
-			textView.setText("未通过");
-			textView.setTextColor(Color.RED);
-		}
+//		//如果为待审核
+//		if (state == 0) {
+//			textView.setVisibility(View.VISIBLE);
+//			textView.setText("待审核");
+//			textView.setTextColor(Color.BLACK);
+//		} else if (state == -1) {
+//			textView.setVisibility(View.VISIBLE);
+//			textView.setText("未通过");
+//			textView.setTextColor(Color.RED);
+//		}
 	}
 
 	/**

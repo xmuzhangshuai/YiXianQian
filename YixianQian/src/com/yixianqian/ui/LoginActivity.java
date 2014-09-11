@@ -318,7 +318,7 @@ public class LoginActivity extends BaseActivity {
 		userPreference.setU_password(password);
 		userPreference.setHuanXinUserName("" + user.getU_id());
 		userPreference.setHuanXinPassword(MD5For16.GetMD5CodeToLower(password));
-		userPreference.setHeadImagePassed(user.getU_image_pass());
+		userPreference.setVertify(user.getU_vertify_image_pass());
 	}
 
 	/**
