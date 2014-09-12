@@ -318,6 +318,18 @@
             android:screenOrientation="portrait" >
         </activity>
 
+        <!-- 发布鹊桥信息页面 -->
+        <activity
+            android:name="com.yixianqian.ui.PublishLoveBridgeActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        
+         <!-- 发布鹊桥信息预览图片页面 -->
+        <activity
+            android:name="com.yixianqian.ui.PublishLBPriviewActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+
         <!-- 百度地图页面 -->
         <activity
             android:name="com.yixianqian.ui.BaiduMapActivity"

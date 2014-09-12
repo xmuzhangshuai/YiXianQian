@@ -1,5 +1,6 @@
 package com.yixianqian.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -112,7 +113,8 @@ public class LoveBridgeFragment extends BaseV4Fragment implements OnClickListene
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
 		case R.id.publish_btn:
-
+			startActivity(new Intent(getActivity(), PublishLoveBridgeActivity.class));
+			getActivity().overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
 			break;
 		case R.id.refresh_btn:
 

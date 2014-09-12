@@ -14,6 +14,7 @@
     <color name="system_blue">#0099CC</color> <!-- 系统蓝色 -->
     <color name="edittext">#B0E2FF</color> <!-- 对话框字体颜色 -->
     <color name="bg2">#F9F9F9</color>
+    <color name="bg1">#F3F3F3</color>
     <color name="alert_dialog_blue">#0476F0</color>
     <color name="semi_transparent_w">#7fffffff</color>
     <color name="top_nav_black">#333333</color>
@@ -22,6 +23,9 @@
     <color name="top_nav_blue_dark">#4F94CD</color>
     <color name="white">#ffffff</color>
     <color name="black">#000000</color>
+    <color name="purple">#7B33CC</color>
+    <color name="purple_light">#B734EE</color>
+    <color name="purple_dark">#6A23AA</color>
     <color name="red">#ff0000</color>
     <color name="unenable">#999999</color>
     <color name="unenable_font">#dbdbdb</color>

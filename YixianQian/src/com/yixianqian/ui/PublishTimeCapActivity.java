@@ -43,7 +43,6 @@ import com.yixianqian.customewidget.MyAlertDialog;
 import com.yixianqian.table.LoverTimeCapsuleTable;
 import com.yixianqian.table.UserTable;
 import com.yixianqian.utils.AsyncHttpClientImageSound;
-import com.yixianqian.utils.FileSizeUtil;
 import com.yixianqian.utils.FriendPreference;
 import com.yixianqian.utils.ImageTools;
 import com.yixianqian.utils.LogTool;
@@ -508,7 +507,7 @@ public class PublishTimeCapActivity extends BaseActivity {
 		if (!TextUtils.isEmpty(photoUri)
 				&& photoUri.equals(Environment.getExternalStorageDirectory() + "/yixianqian/image/timeCapsule.jpeg")) {
 			photoFile = new File(photoUri);
-			LogTool.e("时间胶囊图片大小", "" + FileSizeUtil.getFileOrFilesSize(photoUri, FileSizeUtil.SIZETYPE_KB) + "KB");
+//			LogTool.e("时间胶囊图片大小", "" + FileSizeUtil.getFileOrFilesSize(photoUri, FileSizeUtil.SIZETYPE_KB) + "KB");
 		}
 
 		RequestParams params = new RequestParams();

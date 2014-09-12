@@ -305,7 +305,6 @@ public class LoginActivity extends BaseActivity {
 		userPreference.setU_introduce(user.getU_introduce());
 		userPreference.setU_large_avatar(user.getU_large_avatar());
 		userPreference.setU_nickname(user.getU_nickname());
-		userPreference.setU_password(user.getU_password());
 		userPreference.setU_provinceid(user.getU_provinceid());
 		userPreference.setU_realname(user.getU_realname());
 		userPreference.setU_salary(user.getU_salary());

@@ -26,6 +26,7 @@ import com.yixianqian.jsonobject.JsonTodayRecommend;
 import com.yixianqian.jsonobject.JsonUser;
 import com.yixianqian.table.UserTable;
 import com.yixianqian.ui.DayRecommendActivity;
+import com.yixianqian.ui.LoginOrRegisterActivity;
 import com.yixianqian.ui.MainActivity;
 import com.yixianqian.utils.AsyncHttpClientImageSound;
 import com.yixianqian.utils.AsyncHttpClientTool;
@@ -135,6 +136,9 @@ public class ServerUtil {
 							//							attempLoginHuanXin(1);
 						} else {
 							LogTool.e("ServerUtil", "jsonUsers长度为0");
+							Intent intent = new Intent(context, LoginOrRegisterActivity.class);
+							context.startActivity(intent);
+							((Activity) context).overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
 						}
 					} else {
 						LogTool.e("ServerUtil", "登录返回为空");
@@ -220,7 +224,6 @@ public class ServerUtil {
 		userPreference.setU_introduce(user.getU_introduce());
 		userPreference.setU_large_avatar(user.getU_large_avatar());
 		userPreference.setU_nickname(user.getU_nickname());
-		userPreference.setU_password(user.getU_password());
 		userPreference.setU_provinceid(user.getU_provinceid());
 		userPreference.setU_realname(user.getU_realname());
 		userPreference.setU_salary(user.getU_salary());
@@ -421,15 +424,15 @@ public class ServerUtil {
 					if (map != null) {
 						userPreference.setU_large_avatar(map.get(UserTable.U_LARGE_AVATAR));
 						userPreference.setU_small_avatar(map.get(UserTable.U_SMALL_AVATAR));
-//						if (!TextUtils.isEmpty(map.get(UserTable.U_IMAGE_PASS))) {
-//							if (map.get(UserTable.U_IMAGE_PASS).equals("1")) {
-//								userPreference.setHeadImagePassed(1);
-//							} else if (map.get(UserTable.U_IMAGE_PASS).equals("0")) {
-//								userPreference.setHeadImagePassed(0);
-//							} else if (map.get(UserTable.U_IMAGE_PASS).equals("-1")) {
-//								userPreference.setHeadImagePassed(-1);
-//							}
-//						}
+						//						if (!TextUtils.isEmpty(map.get(UserTable.U_IMAGE_PASS))) {
+						//							if (map.get(UserTable.U_IMAGE_PASS).equals("1")) {
+						//								userPreference.setHeadImagePassed(1);
+						//							} else if (map.get(UserTable.U_IMAGE_PASS).equals("0")) {
+						//								userPreference.setHeadImagePassed(0);
+						//							} else if (map.get(UserTable.U_IMAGE_PASS).equals("-1")) {
+						//								userPreference.setHeadImagePassed(-1);
+						//							}
+						//						}
 						//显示头像
 						disPlayHeadImage(imageView, textView);
 					}
@@ -448,21 +451,21 @@ public class ServerUtil {
 	 * 显示头像，如果本地审核通过
 	 */
 	public void disPlayHeadImage(final ImageView imageView, final TextView textView) {
-//		int state = userPreference.getHeadImagePassed();
+		//		int state = userPreference.getHeadImagePassed();
 		//显示头像
 		ImageLoader.getInstance().displayImage(
 				AsyncHttpClientImageSound.getAbsoluteUrl(userPreference.getU_small_avatar()), imageView,
 				ImageLoaderTool.getHeadImageOptions(10));
-//		//如果为待审核
-//		if (state == 0) {
-//			textView.setVisibility(View.VISIBLE);
-//			textView.setText("待审核");
-//			textView.setTextColor(Color.BLACK);
-//		} else if (state == -1) {
-//			textView.setVisibility(View.VISIBLE);
-//			textView.setText("未通过");
-//			textView.setTextColor(Color.RED);
-//		}
+		//		//如果为待审核
+		//		if (state == 0) {
+		//			textView.setVisibility(View.VISIBLE);
+		//			textView.setText("待审核");
+		//			textView.setTextColor(Color.BLACK);
+		//		} else if (state == -1) {
+		//			textView.setVisibility(View.VISIBLE);
+		//			textView.setText("未通过");
+		//			textView.setTextColor(Color.RED);
+		//		}
 	}
 
 	/**
