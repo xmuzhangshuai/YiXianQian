@@ -1,34 +1,21 @@
 package com.yixianqian.ui;
 
-import java.util.LinkedList;
-import java.util.List;
-
-import org.apache.http.Header;
-
 import android.os.Bundle;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
-import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener2;
-import com.loopj.android.http.RequestParams;
-import com.loopj.android.http.TextHttpResponseHandler;
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.nostra13.universalimageloader.core.listener.PauseOnScrollListener;
 import com.yixianqian.R;
 import com.yixianqian.base.BaseV4Fragment;
-import com.yixianqian.config.Constants.Config;
-import com.yixianqian.jsonobject.JsonLoveBridgeItem;
-import com.yixianqian.table.UserTable;
-import com.yixianqian.utils.AsyncHttpClientTool;
-import com.yixianqian.utils.FastJsonTool;
-import com.yixianqian.utils.LogTool;
-import com.yixianqian.utils.ToastTool;
-import com.yixianqian.utils.UserPreference;
 
 /**
  * 类名称：LoveBridgeMsgFragment
@@ -40,6 +27,7 @@ import com.yixianqian.utils.UserPreference;
 public class LoveBridgeMsgFragment extends BaseV4Fragment {
 	private View rootView;// 根View
 	private PullToRefreshListView messageListView;
+
 	protected boolean pauseOnScroll = false;
 	protected boolean pauseOnFling = true;
 	private int pageNow = 0;//控制页数
@@ -160,6 +148,14 @@ public class LoveBridgeMsgFragment extends BaseV4Fragment {
 	 *
 	 */
 	class MessageAdapter extends BaseAdapter {
+		private class ViewHolder {
+			public ImageView headImageView;
+			public TextView nameTextView;
+			public ImageView genderImageView;
+			public TextView timeTextView;
+			public TextView contentTextView;
+			public TextView loveItemTextView;
+		}
 
 		@Override
 		public int getCount() {
@@ -182,6 +178,28 @@ public class LoveBridgeMsgFragment extends BaseV4Fragment {
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 			// TODO Auto-generated method stub
+//			View view = convertView;
+//			final JsonLoveBridgeItem loveBridgeItem = loveBridgeItemList.get(position);
+//			if (loveBridgeItem == null) {
+//				return null;
+//			}
+//
+//			final ViewHolder holder;
+//			if (convertView == null) {
+//				view = LayoutInflater.from(getActivity()).inflate(R.layout.love_bridge_list_item, null);
+//				holder = new ViewHolder();
+//				holder.headImageView = (ImageView) view.findViewById(R.id.head_image);
+//				holder.nameTextView = (TextView) view.findViewById(R.id.name);
+//				holder.genderImageView = (ImageView) view.findViewById(R.id.gender);
+//				holder.timeTextView = (TextView) view.findViewById(R.id.time);
+//				holder.contentTextView = (TextView) view.findViewById(R.id.content);
+//				holder.loveItemTextView = (TextView) view.findViewById(R.id.love_bridge_item);
+//				view.setTag(holder); // 给View添加一个格外的数据 
+//			} else {
+//				holder = (ViewHolder) view.getTag(); // 把数据取出来  
+//			}
+//
+//			return view;
 			return null;
 		}
 	}

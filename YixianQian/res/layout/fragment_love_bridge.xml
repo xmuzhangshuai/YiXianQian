@@ -96,6 +96,7 @@
                 android:gravity="center"
                 android:singleLine="true"
                 android:textColor="@drawable/sel_love_bridge_nav_color"
+                android:textSize="@dimen/day_recommend_user_font"
                 android:textStyle="bold" />
         </RelativeLayout>
 
@@ -115,6 +116,7 @@
                 android:singleLine="true"
                 android:text="我发布的"
                 android:textColor="@drawable/sel_love_bridge_nav_color"
+                android:textSize="@dimen/day_recommend_user_font"
                 android:textStyle="bold" />
         </RelativeLayout>
 
@@ -134,6 +136,7 @@
                 android:singleLine="true"
                 android:text="消息"
                 android:textColor="@drawable/sel_love_bridge_nav_color"
+                android:textSize="@dimen/day_recommend_user_font"
                 android:textStyle="bold" />
         </RelativeLayout>
     </LinearLayout>

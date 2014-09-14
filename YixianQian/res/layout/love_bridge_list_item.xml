@@ -11,7 +11,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/shape_radius"
+        android:background="@drawable/shape_radius_with_stroke"
         android:orientation="vertical"
         android:paddingTop="@dimen/margin_chat_activity" >
 

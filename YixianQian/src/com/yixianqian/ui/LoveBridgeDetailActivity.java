@@ -63,18 +63,18 @@ public class LoveBridgeDetailActivity extends BaseActivity implements OnClickLis
 	protected boolean pauseOnFling = true;
 
 	private View headView;//详情区域
-	public ImageView headImageView;
-	public TextView nameTextView;
-	public ImageView genderImageView;
-	public TextView timeTextView;
-	public TextView contentTextView;
-	public ImageView contentImageView;
-	public CheckBox flipperBtn;
-	public TextView flipperCountTextView;
-	public TextView commentCountTextView;
-	public ImageView moreBtn;
-	public EditText commentEditText;
-	public Button commentBtn;
+	private ImageView headImageView;
+	private TextView nameTextView;
+	private ImageView genderImageView;
+	private TextView timeTextView;
+	private TextView contentTextView;
+	private ImageView contentImageView;
+	private CheckBox flipperBtn;
+	private TextView flipperCountTextView;
+	private TextView commentCountTextView;
+	private ImageView moreBtn;
+	private EditText commentEditText;
+	private Button commentBtn;
 	private TextView topNavigation;//导航栏文字
 	private View leftImageButton;//导航栏左侧按钮
 	private View rightBtnBg;//导航栏右侧按钮
@@ -154,6 +154,8 @@ public class LoveBridgeDetailActivity extends BaseActivity implements OnClickLis
 		leftImageButton.setOnClickListener(this);
 		rightBtnBg.setOnClickListener(this);
 		topNavigation.setText("评论");
+		flipperBtn.setChecked(true);
+		flipperBtn.setEnabled(false);
 
 		//设置上拉下拉刷新事件
 		loveBridgeListView.setOnRefreshListener(new OnRefreshListener2<ListView>() {

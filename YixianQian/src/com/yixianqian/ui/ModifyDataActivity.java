@@ -629,7 +629,7 @@ public class ModifyDataActivity extends BaseFragmentActivity implements OnClickL
 						// TODO Auto-generated method stub
 						if (arg0 == 200) {
 							userPreference.setU_nickname(nickname);
-							loginHuanXin();
+//							loginHuanXin();
 						}
 					}
 
@@ -922,30 +922,30 @@ public class ModifyDataActivity extends BaseFragmentActivity implements OnClickL
 	/**
 	 * 登录环信
 	 */
-	private void loginHuanXin() {
-		EMChatManager.getInstance().login(userPreference.getHuanXinUserName(), userPreference.getHuanXinPassword(),
-				new EMCallBack() {
-					@Override
-					public void onSuccess() {
-						LogTool.i("ModifyDataActivity", "登录环信成功");
-						//更新环信昵称
-						if (EMChatManager.getInstance().updateCurrentUserNick(userPreference.getName())) {
-							LogTool.i("ModifyDataActivity", "更新环信昵称成功");
-						} else {
-							LogTool.e("ModifyDataActivity", "更新环信昵称失败");
-						}
-					}
-
-					@Override
-					public void onProgress(int progress, String status) {
-					}
-
-					@Override
-					public void onError(int code, final String message) {
-						LogTool.e("ModifyDataActivity", "登录环信失败：code:" + code + "   message:" + message);
-					}
-				});
-	}
+//	private void loginHuanXin() {
+//		EMChatManager.getInstance().login(userPreference.getHuanXinUserName(), userPreference.getHuanXinPassword(),
+//				new EMCallBack() {
+//					@Override
+//					public void onSuccess() {
+//						LogTool.i("ModifyDataActivity", "登录环信成功");
+//						//更新环信昵称
+//						if (EMChatManager.getInstance().updateCurrentUserNick(userPreference.getName())) {
+//							LogTool.i("ModifyDataActivity", "更新环信昵称成功");
+//						} else {
+//							LogTool.e("ModifyDataActivity", "更新环信昵称失败");
+//						}
+//					}
+//
+//					@Override
+//					public void onProgress(int progress, String status) {
+//					}
+//
+//					@Override
+//					public void onError(int code, final String message) {
+//						LogTool.e("ModifyDataActivity", "登录环信失败：code:" + code + "   message:" + message);
+//					}
+//				});
+//	}
 
 	/**
 	 * 显示星座菜单

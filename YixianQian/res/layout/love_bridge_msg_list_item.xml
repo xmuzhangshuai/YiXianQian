@@ -65,33 +65,44 @@
             </RelativeLayout>
         </RelativeLayout>
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/comment_info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginLeft="@dimen/personal_timecapsule_padding"
+                android:layout_marginRight="@dimen/personal_timecapsule_padding"
+                android:layout_marginTop="@dimen/margin_chat_activity"
+                android:text="评论:"
+                android:textColor="@color/unenable"
+                android:textSize="@dimen/day_recommend_font_info" />
+
+            <TextView
+                android:id="@+id/content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/setting_list_margin"
+                android:layout_marginRight="@dimen/setting_list_margin"
+                android:layout_marginTop="@dimen/margin_chat_activity"
+                android:layout_toRightOf="@+id/comment_info"
+                android:textSize="@dimen/day_recommend_font_info" />
+        </RelativeLayout>
+
         <TextView
-            android:id="@+id/content"
+            android:id="@+id/love_bridge_item"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/personal_timecapsule_padding"
             android:layout_marginRight="@dimen/personal_timecapsule_padding"
             android:layout_marginTop="@dimen/margin_chat_activity"
+            android:background="@drawable/sel_love_bridge_item_bg"
+            android:maxLines="3"
             android:textSize="@dimen/day_recommend_user_font" />
-
-        <ImageView
-            android:id="@+id/item_image"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="left"
-            android:layout_marginLeft="@dimen/personal_timecapsule_padding"
-            android:layout_marginRight="@dimen/personal_timecapsule_padding"
-            android:layout_marginTop="@dimen/margin_chat_activity"
-            android:clickable="true"
-            android:focusable="false"
-            android:maxHeight="@dimen/tape_margin"
-            android:visibility="gone" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_marginTop="@dimen/day_recommend_dot_space"
-            android:background="@color/unenable_font" />
     </LinearLayout>
 
 </LinearLayout>
