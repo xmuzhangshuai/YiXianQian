@@ -26,6 +26,7 @@
     <dimen name="tape_margin">150dp</dimen>
     <dimen name="tape_margin_top">140dp</dimen>
     <dimen name="time_capsule20">16dp</dimen>
+    <dimen name="student_flag_left">49dp</dimen>
 
     <!-- 注册 -->
     <dimen name="register_height">50dp</dimen>
@@ -51,7 +52,7 @@
     <!-- 设置 -->
     <dimen name="setting_list_margin">5dp</dimen>
     <dimen name="new_msg">8dp</dimen>
-    
+
     <!-- 鹊桥广场 -->
     <dimen name="title_size">18sp</dimen>
 

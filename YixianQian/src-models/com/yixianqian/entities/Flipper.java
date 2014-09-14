@@ -45,41 +45,45 @@ public class Flipper {
     public Flipper() {
     }
 
-    public Flipper(Long id) {
-        this.id = id;
-    }
+	public Flipper(Long id) {
+		this.id = id;
+	}
 
-    public Flipper(Long id, Integer userID, String bpushUserID, String bpushChannelID, String nickname, String realname, String gender, String email, String largeAvatar, String samllAvatar, String bloodType, String constell, String introduce, java.util.Date birthday, java.util.Date time, Integer age, Integer vocationID, Integer stateID, Integer provinceID, Integer cityID, Integer schoolID, Integer height, Integer weight, Integer imagePass, Double salary, Boolean isRead, String tel, String status, Integer type) {
-        this.id = id;
-        this.userID = userID;
-        this.bpushUserID = bpushUserID;
-        this.bpushChannelID = bpushChannelID;
-        this.nickname = nickname;
-        this.realname = realname;
-        this.gender = gender;
-        this.email = email;
-        this.largeAvatar = largeAvatar;
-        this.samllAvatar = samllAvatar;
-        this.bloodType = bloodType;
-        this.constell = constell;
-        this.introduce = introduce;
-        this.birthday = birthday;
-        this.time = time;
-        this.age = age;
-        this.vocationID = vocationID;
-        this.stateID = stateID;
-        this.provinceID = provinceID;
-        this.cityID = cityID;
-        this.schoolID = schoolID;
-        this.height = height;
-        this.weight = weight;
-        this.imagePass = imagePass;
-        this.salary = salary;
-        this.isRead = isRead;
-        this.tel = tel;
-        this.status = status;
-        this.type = type;
-    }
+	public Flipper(Long id, Integer userID, String bpushUserID, String bpushChannelID, String nickname,
+			String realname, String gender, String email, String largeAvatar, String samllAvatar, String bloodType,
+			String constell, String introduce, java.util.Date birthday, java.util.Date time, Integer age,
+			Integer vocationID, Integer stateID, Integer provinceID, Integer cityID, Integer schoolID, Integer height,
+			Integer weight, Integer imagePass, Double salary, Boolean isRead, String tel, String status, Integer type) {
+		this.id = id;
+		this.userID = userID;
+		this.bpushUserID = bpushUserID;
+		this.bpushChannelID = bpushChannelID;
+		this.nickname = nickname;
+		this.realname = realname;
+		this.gender = gender;
+		this.email = email;
+		this.largeAvatar = largeAvatar;
+		this.samllAvatar = samllAvatar;
+		this.bloodType = bloodType;
+		this.constell = constell;
+		this.introduce = introduce;
+		this.birthday = birthday;
+		this.time = time;
+		this.age = age;
+		this.vocationID = vocationID;
+		this.stateID = stateID;
+		this.provinceID = provinceID;
+		this.cityID = cityID;
+		this.schoolID = schoolID;
+		this.height = height;
+		this.weight = weight;
+		this.imagePass = imagePass;
+		this.salary = salary;
+		this.isRead = isRead;
+		this.tel = tel;
+		this.status = status;
+		this.type = type;
+	}
 
     public Long getId() {
         return id;

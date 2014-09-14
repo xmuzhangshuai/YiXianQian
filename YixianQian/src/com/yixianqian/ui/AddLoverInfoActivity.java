@@ -379,6 +379,7 @@ public class AddLoverInfoActivity extends BaseActivity {
 			friendpreference.setU_cityid(jsonUser.getU_cityid());
 			friendpreference.setU_provinceid(jsonUser.getU_provinceid());
 			friendpreference.setU_schoolid(jsonUser.getU_schoolid());
+			friendpreference.setVertify(jsonUser.getU_vertify_image_pass());
 		}
 	}
 
@@ -523,8 +524,8 @@ public class AddLoverInfoActivity extends BaseActivity {
 								jsonUser.getU_introduce(), jsonUser.getU_birthday(), new Date(), jsonUser.getU_age(),
 								jsonUser.getU_vocationid(), jsonUser.getU_stateid(), jsonUser.getU_provinceid(),
 								jsonUser.getU_cityid(), jsonUser.getU_schoolid(), jsonUser.getU_height(),
-								jsonUser.getU_weight(), jsonUser.getU_vertify_image_pass(), jsonUser.getU_salary(), true,
-								jsonUser.getU_tel(), Constants.FlipperStatus.INVITE, Constants.FlipperType.TO);
+								jsonUser.getU_weight(), jsonUser.getU_vertify_image_pass(), jsonUser.getU_salary(),
+								true, jsonUser.getU_tel(), Constants.FlipperStatus.INVITE, Constants.FlipperType.TO);
 						flipperDbService.flipperDao.insert(flipper);
 
 						//发给对方通知

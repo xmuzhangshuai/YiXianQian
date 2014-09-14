@@ -3,10 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/bg3"
-    android:paddingBottom="@dimen/personal_timecapsule_padding"
     android:paddingLeft="@dimen/time_capsule20"
-    android:paddingRight="@dimen/time_capsule20"
-    android:paddingTop="@dimen/personal_timecapsule_padding" >
+    android:paddingRight="@dimen/time_capsule20" >
 
     <LinearLayout
         android:layout_width="match_parent"

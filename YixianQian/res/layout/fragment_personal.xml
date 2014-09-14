@@ -21,63 +21,61 @@
 
             <FrameLayout
                 android:id="@+id/headimageview"
-                android:layout_width="@dimen/get_image_btn_padding"
-                android:layout_height="@dimen/get_image_btn_padding"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="20dp" >
 
                 <ImageView
                     android:id="@+id/head_image"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_width="@dimen/get_image_btn_padding"
+                    android:layout_height="@dimen/get_image_btn_padding"
                     android:src="@drawable/photoconor" />
 
-                <TextView
-                    android:id="@+id/waitcheck"
-                    android:layout_width="match_parent"
-                    android:layout_height="20dp"
-                    android:layout_gravity="bottom"
-                    android:background="#b0ffffff"
-                    android:gravity="center"
-                    android:text="待审核"
-                    android:visibility="gone" />
+                <ImageView
+                    android:id="@+id/student_flag"
+                    android:layout_width="@dimen/day_recommend_help_padding"
+                    android:layout_height="@dimen/day_recommend_help_padding"
+                    android:layout_gravity="bottom|right"
+                    android:layout_marginLeft="@dimen/student_flag_left"
+                    android:src="@drawable/student_flag" />
             </FrameLayout>
 
-            <TextView
-                android:id="@+id/name"
+            <LinearLayout
+                android:id="@+id/nameView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="16dp"
+                android:layout_alignTop="@+id/headimageview"
+                android:layout_marginTop="@dimen/margin_chat_activity"
                 android:layout_toRightOf="@+id/headimageview"
-                android:textSize="@dimen/day_recommend_user_font" />
+                android:gravity="center_vertical" >
 
-            <ImageView
-                android:id="@+id/gender"
-                android:layout_width="@dimen/time_capsule20"
-                android:layout_height="@dimen/time_capsule20"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="@dimen/time_capsule20"
-                android:layout_toRightOf="@+id/name"
-                android:src="@drawable/male" />
+                <TextView
+                    android:id="@+id/name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="16dp"
+                    android:textSize="@dimen/day_recommend_user_font" />
 
-            <ImageView
-                android:id="@+id/student_flag"
-                android:layout_width="@dimen/day_recommend_help_padding"
-                android:layout_height="@dimen/day_recommend_help_padding"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="10dp"
-                android:layout_toLeftOf="@+id/province"
-                android:src="@drawable/student_flag" />
+                <ImageView
+                    android:id="@+id/gender"
+                    android:layout_width="@dimen/time_capsule20"
+                    android:layout_height="@dimen/time_capsule20"
+                    android:layout_marginLeft="@dimen/time_capsule20"
+                    android:src="@drawable/male" />
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/province"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
+                android:layout_alignBottom="@+id/headimageview"
+                android:layout_alignLeft="@+id/nameView"
+                android:layout_marginBottom="@dimen/margin_chat_activity"
+                android:layout_marginLeft="16dp"
                 android:layout_marginRight="10dp"
-                android:layout_toLeftOf="@+id/school"
                 android:textColor="@color/system_gray"
                 android:textSize="@dimen/day_recommend_user_font" />
 
@@ -85,9 +83,9 @@
                 android:id="@+id/school"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="20dp"
+                android:layout_alignBottom="@+id/headimageview"
+                android:layout_marginBottom="@dimen/margin_chat_activity"
+                android:layout_toRightOf="@+id/province"
                 android:textColor="@color/system_gray"
                 android:textSize="@dimen/day_recommend_user_font" />
         </RelativeLayout>

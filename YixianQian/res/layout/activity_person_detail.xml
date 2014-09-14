@@ -16,26 +16,25 @@
 
         <FrameLayout
             android:id="@+id/headimageview"
-            android:layout_width="@dimen/get_image_btn_padding"
-            android:layout_height="@dimen/get_image_btn_padding"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:layout_marginLeft="20dp" >
 
             <ImageView
                 android:id="@+id/head_image"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="@dimen/get_image_btn_padding"
+                android:layout_height="@dimen/get_image_btn_padding"
                 android:src="@drawable/photoconor" />
 
-            <TextView
-                android:id="@+id/waitcheck"
-                android:layout_width="match_parent"
-                android:layout_height="20dp"
-                android:layout_gravity="bottom"
-                android:background="#b0ffffff"
-                android:gravity="center"
-                android:text="待审核"
+            <ImageView
+                android:id="@+id/student_flag"
+                android:layout_width="@dimen/day_recommend_help_padding"
+                android:layout_height="@dimen/day_recommend_help_padding"
+                android:layout_gravity="bottom|right"
+                android:layout_marginLeft="@dimen/student_flag_left"
+                android:src="@drawable/student_flag"
                 android:visibility="gone" />
         </FrameLayout>
 
@@ -54,15 +53,13 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="16dp"
-                android:text="用户"
                 android:textSize="@dimen/day_recommend_user_font" />
 
             <ImageView
                 android:id="@+id/gender"
                 android:layout_width="@dimen/time_capsule20"
                 android:layout_height="@dimen/time_capsule20"
-                android:layout_marginLeft="@dimen/time_capsule20"
-                android:src="@drawable/male" />
+                android:layout_marginLeft="@dimen/time_capsule20" />
         </LinearLayout>
 
         <TextView
@@ -73,7 +70,6 @@
             android:layout_alignLeft="@+id/nameView"
             android:layout_marginBottom="@dimen/margin_chat_activity"
             android:layout_marginLeft="16dp"
-            android:text="厦门大学"
             android:textColor="@color/system_gray"
             android:textSize="@dimen/day_recommend_user_font" />
 

@@ -35,8 +35,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.easemob.EMCallBack;
-import com.easemob.chat.EMChatManager;
 import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.TextHttpResponseHandler;
 import com.yixianqian.R;
@@ -51,7 +49,6 @@ import com.yixianqian.utils.AsyncHttpClientTool;
 import com.yixianqian.utils.ConstellUtil;
 import com.yixianqian.utils.DateTimeTools;
 import com.yixianqian.utils.ImageTools;
-import com.yixianqian.utils.LogTool;
 import com.yixianqian.utils.ToastTool;
 import com.yixianqian.utils.UserPreference;
 
@@ -198,6 +195,8 @@ public class ModifyDataActivity extends BaseFragmentActivity implements OnClickL
 		//如果通过认证
 		if (userPreference.getVertify() == Constants.VertifyState.PASSED) {
 			vertifyView.setImageResource(R.drawable.already_vertify);
+		} else if (userPreference.getVertify() == Constants.VertifyState.VERTIFING) {
+			vertifyView.setImageResource(R.drawable.onvertify);
 		} else {
 			vertifyView.setImageResource(R.drawable.sel_apply_vertify_btn);
 			vertifyView.setOnClickListener(this);
@@ -629,7 +628,7 @@ public class ModifyDataActivity extends BaseFragmentActivity implements OnClickL
 						// TODO Auto-generated method stub
 						if (arg0 == 200) {
 							userPreference.setU_nickname(nickname);
-//							loginHuanXin();
+							//							loginHuanXin();
 						}
 					}
 
@@ -922,30 +921,30 @@ public class ModifyDataActivity extends BaseFragmentActivity implements OnClickL
 	/**
 	 * 登录环信
 	 */
-//	private void loginHuanXin() {
-//		EMChatManager.getInstance().login(userPreference.getHuanXinUserName(), userPreference.getHuanXinPassword(),
-//				new EMCallBack() {
-//					@Override
-//					public void onSuccess() {
-//						LogTool.i("ModifyDataActivity", "登录环信成功");
-//						//更新环信昵称
-//						if (EMChatManager.getInstance().updateCurrentUserNick(userPreference.getName())) {
-//							LogTool.i("ModifyDataActivity", "更新环信昵称成功");
-//						} else {
-//							LogTool.e("ModifyDataActivity", "更新环信昵称失败");
-//						}
-//					}
-//
-//					@Override
-//					public void onProgress(int progress, String status) {
-//					}
-//
-//					@Override
-//					public void onError(int code, final String message) {
-//						LogTool.e("ModifyDataActivity", "登录环信失败：code:" + code + "   message:" + message);
-//					}
-//				});
-//	}
+	//	private void loginHuanXin() {
+	//		EMChatManager.getInstance().login(userPreference.getHuanXinUserName(), userPreference.getHuanXinPassword(),
+	//				new EMCallBack() {
+	//					@Override
+	//					public void onSuccess() {
+	//						LogTool.i("ModifyDataActivity", "登录环信成功");
+	//						//更新环信昵称
+	//						if (EMChatManager.getInstance().updateCurrentUserNick(userPreference.getName())) {
+	//							LogTool.i("ModifyDataActivity", "更新环信昵称成功");
+	//						} else {
+	//							LogTool.e("ModifyDataActivity", "更新环信昵称失败");
+	//						}
+	//					}
+	//
+	//					@Override
+	//					public void onProgress(int progress, String status) {
+	//					}
+	//
+	//					@Override
+	//					public void onError(int code, final String message) {
+	//						LogTool.e("ModifyDataActivity", "登录环信失败：code:" + code + "   message:" + message);
+	//					}
+	//				});
+	//	}
 
 	/**
 	 * 显示星座菜单

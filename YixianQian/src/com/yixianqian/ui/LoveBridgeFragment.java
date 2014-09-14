@@ -28,7 +28,7 @@ public class LoveBridgeFragment extends BaseV4Fragment implements OnClickListene
 	private View rootView;// 根View
 	private View[] mTabs;
 	private View publishBtn;//发布
-	private View refreshBtn;//刷新
+	//	private View refreshBtn;//刷新
 	private TextView schoolNameTextView;
 	private int index;
 	private int currentTabIndex;
@@ -56,7 +56,7 @@ public class LoveBridgeFragment extends BaseV4Fragment implements OnClickListene
 		// TODO Auto-generated method stub
 		mViewPager = (ViewPager) rootView.findViewById(R.id.lover_bridge_pager);
 		publishBtn = rootView.findViewById(R.id.publish_btn);
-		refreshBtn = rootView.findViewById(R.id.refresh_btn);
+		//		refreshBtn = rootView.findViewById(R.id.refresh_btn);
 		schoolNameTextView = (TextView) rootView.findViewById(R.id.school_name);
 	}
 
@@ -72,7 +72,7 @@ public class LoveBridgeFragment extends BaseV4Fragment implements OnClickListene
 
 		schoolNameTextView.setText(userPreference.getSchoolName());
 		publishBtn.setOnClickListener(this);
-		refreshBtn.setOnClickListener(this);
+		//		refreshBtn.setOnClickListener(this);
 		for (View view : mTabs) {
 			view.setOnClickListener(this);
 		}
@@ -123,9 +123,6 @@ public class LoveBridgeFragment extends BaseV4Fragment implements OnClickListene
 		case R.id.publish_btn:
 			startActivity(new Intent(getActivity(), PublishLoveBridgeActivity.class));
 			getActivity().overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
-			break;
-		case R.id.refresh_btn:
-
 			break;
 
 		case R.id.schoolBtn:

@@ -26,7 +26,7 @@
     <dimen name="tape_margin">200dp</dimen>
     <dimen name="tape_margin_top">160dp</dimen>
     <dimen name="time_capsule20">20dp</dimen>
-
+    <dimen name="student_flag_left">65dp</dimen>
     <!-- 注册 -->
     <dimen name="register_height">60dp</dimen>
     <dimen name="register_font_size">14sp</dimen>
@@ -53,4 +53,5 @@
 
     <!-- 鹊桥广场 -->
     <dimen name="title_size">20sp</dimen>
-</resources>
+
+</resources>

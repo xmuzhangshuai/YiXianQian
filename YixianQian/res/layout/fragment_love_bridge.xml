@@ -35,8 +35,8 @@
             android:id="@+id/publish_btn"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_marginRight="@dimen/day_recommend_help_padding"
-            android:layout_toLeftOf="@+id/refresh_btn"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/time_capsule20"
             android:background="@drawable/sel_love_bridge_btn"
             android:gravity="center"
             android:orientation="vertical"
@@ -51,6 +51,7 @@
                 android:src="@drawable/publish" />
         </RelativeLayout>
 
+        <!--
         <RelativeLayout
             android:id="@+id/refresh_btn"
             android:layout_width="wrap_content"
@@ -70,6 +71,7 @@
                 android:includeFontPadding="false"
                 android:src="@drawable/refresh" />
         </RelativeLayout>
+        -->
     </RelativeLayout>
 
     <LinearLayout

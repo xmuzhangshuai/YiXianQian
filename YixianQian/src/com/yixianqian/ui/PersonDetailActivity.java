@@ -63,6 +63,7 @@ public class PersonDetailActivity extends BaseFragmentActivity implements OnClic
 	private TextView schoolTextView;//学校
 	private ImageView genderView;//性别
 	private View moreDetaileBtn;//详细资料按钮
+	private ImageView studentFlagImage;
 	private FriendPreference friendPreference;
 	private UserPreference userPreference;
 	private int userId;
@@ -104,6 +105,7 @@ public class PersonDetailActivity extends BaseFragmentActivity implements OnClic
 		schoolTextView = (TextView) findViewById(R.id.school);
 		genderView = (ImageView) findViewById(R.id.gender);
 		moreDetaileBtn = findViewById(R.id.detail);
+		studentFlagImage = (ImageView) findViewById(R.id.student_flag);
 	}
 
 	@Override
@@ -156,6 +158,12 @@ public class PersonDetailActivity extends BaseFragmentActivity implements OnClic
 				genderView.setImageResource(R.drawable.female);
 			}
 
+			if (jsonUser.getU_vertify_image_pass() == Constants.VertifyState.PASSED) {
+				studentFlagImage.setVisibility(View.VISIBLE);
+			} else {
+				studentFlagImage.setVisibility(View.GONE);
+			}
+
 		} else if (type == Constants.PersonDetailType.LOVER || type == Constants.PersonDetailType.FLIPPER) {
 			//设置姓名、省份、及学校
 			//优先显示真实姓名
@@ -183,6 +191,12 @@ public class PersonDetailActivity extends BaseFragmentActivity implements OnClic
 				genderView.setImageResource(R.drawable.male);
 			} else {
 				genderView.setImageResource(R.drawable.female);
+			}
+
+			if (friendPreference.getVertify() == Constants.VertifyState.PASSED) {
+				studentFlagImage.setVisibility(View.VISIBLE);
+			} else {
+				studentFlagImage.setVisibility(View.GONE);
 			}
 		}
 	}
@@ -484,8 +498,8 @@ public class PersonDetailActivity extends BaseFragmentActivity implements OnClic
 								jsonUser.getU_introduce(), jsonUser.getU_birthday(), new Date(), jsonUser.getU_age(),
 								jsonUser.getU_vocationid(), jsonUser.getU_stateid(), jsonUser.getU_provinceid(),
 								jsonUser.getU_cityid(), jsonUser.getU_schoolid(), jsonUser.getU_height(),
-								jsonUser.getU_weight(), jsonUser.getU_vertify_image_pass(), jsonUser.getU_salary(), true,
-								jsonUser.getU_tel(), Constants.FlipperStatus.INVITE, Constants.FlipperType.TO);
+								jsonUser.getU_weight(), jsonUser.getU_vertify_image_pass(), jsonUser.getU_salary(),
+								true, jsonUser.getU_tel(), Constants.FlipperStatus.INVITE, Constants.FlipperType.TO);
 						flipperDbService.flipperDao.insert(flipper);
 
 						//发给对方通知

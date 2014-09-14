@@ -358,6 +358,7 @@ public class LoginActivity extends BaseActivity {
 			friendpreference.setU_provinceid(jsonUser.getU_provinceid());
 			friendpreference.setU_schoolid(jsonUser.getU_schoolid());
 			friendpreference.setU_birthday(jsonUser.getU_birthday());
+			friendpreference.setVertify(jsonUser.getU_vertify_image_pass());
 		}
 	}
 

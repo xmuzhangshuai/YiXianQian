@@ -448,7 +448,8 @@ public class LoveVertifyActivity extends BaseActivity {
 									friendpreference.setU_cityid(flipper.getCityID());
 									friendpreference.setU_provinceid(flipper.getProvinceID());
 									friendpreference.setU_schoolid(flipper.getSchoolID());
-
+									friendpreference.setVertify(flipper.getImagePass());
+									
 									ConversationDbService conversationDbService = ConversationDbService
 											.getInstance(LoveVertifyActivity.this);
 									conversationDbService.conversationDao.deleteAll();

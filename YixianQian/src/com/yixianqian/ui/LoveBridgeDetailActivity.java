@@ -14,6 +14,7 @@ import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.InputMethodManager;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.BaseAdapter;
@@ -86,6 +87,8 @@ public class LoveBridgeDetailActivity extends BaseActivity implements OnClickLis
 	private int pageNow = 0;//控制页数
 	private CommentAdapter mAdapter;
 	private LinkedList<JsonBridgeComment> commentList;
+	private InputMethodManager inputMethodManager;
+	private int commentCount = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -95,6 +98,7 @@ public class LoveBridgeDetailActivity extends BaseActivity implements OnClickLis
 		setContentView(R.layout.activity_love_bridge_detail);
 		userPreference = BaseApplication.getInstance().getUserPreference();
 		commentList = new LinkedList<JsonBridgeComment>();
+		inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
 
 		loveBridgeItem = (JsonLoveBridgeItem) getIntent().getSerializableExtra(LOVE_BRIDGE_ITEM);
 
@@ -249,8 +253,9 @@ public class LoveBridgeDetailActivity extends BaseActivity implements OnClickLis
 			//设置心动次数
 			flipperCountTextView.setText("" + loveBridgeItem.getN_flipcount());
 
+			commentCount = loveBridgeItem.getN_commentcount();
 			//设置评论次数
-			commentCountTextView.setText("" + loveBridgeItem.getN_commentcount());
+			commentCountTextView.setText("" + commentCount);
 
 			commentEditText.addTextChangedListener(new TextWatcher() {
 
@@ -282,8 +287,16 @@ public class LoveBridgeDetailActivity extends BaseActivity implements OnClickLis
 	 * 更新数据
 	 */
 	private void refresh() {
+		loveBridgeListView.setRefreshing();
 		pageNow = 0;
 		getDataTask(pageNow);
+	}
+
+	/**
+	* 隐藏软键盘
+	*/
+	private void hideKeyboard() {
+		inputMethodManager.hideSoftInputFromWindow(commentEditText.getWindowToken(), 0);
 	}
 
 	@Override
@@ -324,6 +337,10 @@ public class LoveBridgeDetailActivity extends BaseActivity implements OnClickLis
 					// TODO Auto-generated method stub
 					if (statusCode == 200) {
 						commentEditText.setText("");
+						//设置评论次数
+						commentCountTextView.setText("" + (++commentCount));
+						refresh();
+						hideKeyboard();
 					}
 				}
 
@@ -347,7 +364,6 @@ public class LoveBridgeDetailActivity extends BaseActivity implements OnClickLis
 		final int page = p;
 		RequestParams params = new RequestParams();
 		params.put("page", pageNow);
-
 		//如果是单身
 		params.put(LoveBridgeItemTable.N_ID, loveBridgeItem.getN_id());
 		TextHttpResponseHandler responseHandler = new TextHttpResponseHandler("utf-8") {
@@ -430,14 +446,14 @@ public class LoveBridgeDetailActivity extends BaseActivity implements OnClickLis
 		public View getView(int position, View convertView, ViewGroup parent) {
 			// TODO Auto-generated method stub
 			View view = convertView;
-			JsonBridgeComment bridgeComment = commentList.get(position);
+			final JsonBridgeComment bridgeComment = commentList.get(position);
 			if (loveBridgeItem == null) {
 				return null;
 			}
 
 			final ViewHolder holder;
 			if (convertView == null) {
-				view = LayoutInflater.from(LoveBridgeDetailActivity.this).inflate(R.layout.love_bridge_list_item, null);
+				view = LayoutInflater.from(LoveBridgeDetailActivity.this).inflate(R.layout.comment_list_item, null);
 				holder = new ViewHolder();
 				holder.headImageView = (ImageView) view.findViewById(R.id.head_image);
 				holder.nameTextView = (TextView) view.findViewById(R.id.name);
@@ -451,10 +467,10 @@ public class LoveBridgeDetailActivity extends BaseActivity implements OnClickLis
 
 			//设置头像
 			if (!TextUtils.isEmpty(loveBridgeItem.getN_small_avatar())) {
-				imageLoader.displayImage(AsyncHttpClientImageSound.getAbsoluteUrl(loveBridgeItem.getN_small_avatar()),
+				imageLoader.displayImage(AsyncHttpClientImageSound.getAbsoluteUrl(bridgeComment.getC_small_avatar()),
 						holder.headImageView, ImageLoaderTool.getHeadImageOptions(10));
 
-				if (userPreference.getU_id() != loveBridgeItem.getN_userid()) {
+				if (userPreference.getU_id() != bridgeComment.getC_userid()) {
 					//点击头像进入详情页面
 					holder.headImageView.setOnClickListener(new OnClickListener() {
 
@@ -463,7 +479,7 @@ public class LoveBridgeDetailActivity extends BaseActivity implements OnClickLis
 							// TODO Auto-generated method stub
 							Intent intent = new Intent(LoveBridgeDetailActivity.this, PersonDetailActivity.class);
 							intent.putExtra(PersonDetailActivity.PERSON_TYPE, Constants.PersonDetailType.SINGLE);
-							intent.putExtra(UserTable.U_ID, loveBridgeItem.getN_userid());
+							intent.putExtra(UserTable.U_ID, bridgeComment.getC_userid());
 							startActivity(intent);
 							LoveBridgeDetailActivity.this.overridePendingTransition(R.anim.zoomin2, R.anim.zoomout);
 						}
@@ -472,20 +488,20 @@ public class LoveBridgeDetailActivity extends BaseActivity implements OnClickLis
 			}
 
 			//设置内容
-			holder.contentTextView.setText(loveBridgeItem.getN_content());
+			holder.contentTextView.setText(bridgeComment.getC_content());
 
 			//设置姓名
-			holder.nameTextView.setText(loveBridgeItem.getN_name());
+			holder.nameTextView.setText(bridgeComment.getC_nickname());
 
 			//设置性别
-			if (loveBridgeItem.getN_gender().equals(Constants.Gender.MALE)) {
+			if (bridgeComment.getC_gender().equals(Constants.Gender.MALE)) {
 				holder.genderImageView.setImageResource(R.drawable.male);
 			} else {
 				holder.genderImageView.setImageResource(R.drawable.female);
 			}
 
 			//设置日期
-			holder.timeTextView.setText(DateTimeTools.DateToString(loveBridgeItem.getN_time()));
+			holder.timeTextView.setText(DateTimeTools.DateToString(bridgeComment.getC_time()));
 
 			return view;
 		}

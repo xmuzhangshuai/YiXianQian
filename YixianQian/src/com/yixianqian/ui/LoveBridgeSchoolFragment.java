@@ -156,8 +156,6 @@ public class LoveBridgeSchoolFragment extends BaseV4Fragment {
 		final int page = p;
 		RequestParams params = new RequestParams();
 		params.put("page", pageNow);
-
-		//如果是单身
 		params.put(UserTable.U_SCHOOLID, userPreference.getU_schoolid());
 		TextHttpResponseHandler responseHandler = new TextHttpResponseHandler("utf-8") {
 
@@ -399,7 +397,6 @@ public class LoveBridgeSchoolFragment extends BaseV4Fragment {
 				// TODO Auto-generated method stub
 				if (statusCode == 200) {
 					LogTool.i("LoveBridgeSchool", "心动成功！");
-
 				}
 			}
 

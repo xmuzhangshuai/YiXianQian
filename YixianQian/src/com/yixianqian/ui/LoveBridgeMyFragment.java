@@ -158,14 +158,14 @@ public class LoveBridgeMyFragment extends BaseV4Fragment {
 		params.put("page", pageNow);
 
 		//如果是单身
-		params.put(UserTable.U_SCHOOLID, userPreference.getU_schoolid());
+		params.put(UserTable.U_ID, userPreference.getU_id());
 		TextHttpResponseHandler responseHandler = new TextHttpResponseHandler("utf-8") {
 
 			@Override
 			public void onSuccess(int statusCode, Header[] headers, String response) {
 				// TODO Auto-generated method stub
 				if (statusCode == 200) {
-					LogTool.i("LoveBridgeSchoolFragment", "长度" + loveBridgeItemList.size());
+					LogTool.i("LoveBridgeMyFragment", "长度" + loveBridgeItemList.size());
 					List<JsonLoveBridgeItem> temp = FastJsonTool.getObjectList(response, JsonLoveBridgeItem.class);
 					if (temp != null) {
 						//如果是首次获取数据
@@ -197,7 +197,7 @@ public class LoveBridgeMyFragment extends BaseV4Fragment {
 				loveBridgeListView.onRefreshComplete();
 			}
 		};
-		AsyncHttpClientTool.post(getActivity(), "getlovebridgelist", params, responseHandler);
+		AsyncHttpClientTool.post(getActivity(), "getmylovebridgelist", params, responseHandler);
 	}
 
 	/**

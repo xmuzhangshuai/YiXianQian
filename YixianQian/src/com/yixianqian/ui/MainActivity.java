@@ -553,6 +553,7 @@ public class MainActivity extends BaseFragmentActivity implements OnRecordingLis
 		friendpreference.setU_cityid(flipper.getCityID());
 		friendpreference.setU_provinceid(flipper.getProvinceID());
 		friendpreference.setU_schoolid(flipper.getSchoolID());
+		friendpreference.setVertify(flipper.getImagePass());
 		creatConversation(flipper.getUserID());
 	}
 

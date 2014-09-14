@@ -10,12 +10,12 @@ import android.widget.TextView;
 
 import com.yixianqian.R;
 import com.yixianqian.base.BaseActivity;
+import com.yixianqian.config.Constants;
 import com.yixianqian.db.CityDbService;
 import com.yixianqian.db.ProvinceDbService;
 import com.yixianqian.db.SchoolDbService;
 import com.yixianqian.jsonobject.JsonUser;
 import com.yixianqian.utils.DateTimeTools;
-import com.yixianqian.utils.LogTool;
 
 /**
  * 类名称：PersonMoreDetailActivity
@@ -82,9 +82,13 @@ public class PersonMoreDetailActivity extends BaseActivity {
 
 		if (jsonUser != null) {
 			//如果通过认证
-			//			if (userPreference.getVertify()) {
-			//				vertifyView.setImageResource(R.drawable.already_vertify);
-			//			} 
+			if (jsonUser.getU_vertify_image_pass() == Constants.VertifyState.PASSED) {
+				vertifyView.setImageResource(R.drawable.already_vertify);
+			} else if (jsonUser.getU_vertify_image_pass() == Constants.VertifyState.VERTIFING) {
+				vertifyView.setImageResource(R.drawable.onvertify);
+			} else {
+				vertifyView.setImageResource(R.drawable.novertify);
+			}
 
 			if (jsonUser.getU_age() > 0) {
 				ageTextView.setText("" + jsonUser.getU_age());

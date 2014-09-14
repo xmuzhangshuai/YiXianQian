@@ -279,6 +279,7 @@ public class ServerUtil {
 			friendpreference.setU_cityid(jsonUser.getU_cityid());
 			friendpreference.setU_provinceid(jsonUser.getU_provinceid());
 			friendpreference.setU_schoolid(jsonUser.getU_schoolid());
+			friendpreference.setVertify(jsonUser.getU_vertify_image_pass());
 		}
 	}
 

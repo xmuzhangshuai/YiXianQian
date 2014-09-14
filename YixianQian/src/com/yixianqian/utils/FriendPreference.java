@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
 
+import com.yixianqian.config.Constants;
 import com.yixianqian.dao.CityDao.Properties;
 import com.yixianqian.db.CityDbService;
 import com.yixianqian.db.ProvinceDbService;
@@ -48,6 +49,19 @@ public class FriendPreference {
 	 */
 	public void clear() {
 		editor.clear();
+		editor.commit();
+	}
+
+	/**
+	* 记录是否通过认证
+	* @return
+	*/
+	public int getVertify() {
+		return sp.getInt("vertify", Constants.VertifyState.NOTSUBMIT);
+	}
+
+	public void setVertify(int vertifiState) {
+		editor.putInt("vertify", vertifiState);
 		editor.commit();
 	}
 
