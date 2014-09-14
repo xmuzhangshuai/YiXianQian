@@ -88,13 +88,13 @@
             android:background="@drawable/sel_love_bridge_nav_bg" >
 
             <TextView
+                android:id="@+id/school_name"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:layout_alignParentLeft="true"
                 android:ellipsize="end"
                 android:gravity="center"
                 android:singleLine="true"
-                android:text="厦门大学"
                 android:textColor="@drawable/sel_love_bridge_nav_color"
                 android:textStyle="bold" />
         </RelativeLayout>

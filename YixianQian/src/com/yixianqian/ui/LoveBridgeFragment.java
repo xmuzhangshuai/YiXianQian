@@ -10,9 +10,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.yixianqian.R;
+import com.yixianqian.base.BaseApplication;
 import com.yixianqian.base.BaseV4Fragment;
+import com.yixianqian.utils.UserPreference;
 
 /**
  * 类名称：LoverBridgeFragment
@@ -26,8 +29,10 @@ public class LoveBridgeFragment extends BaseV4Fragment implements OnClickListene
 	private View[] mTabs;
 	private View publishBtn;//发布
 	private View refreshBtn;//刷新
+	private TextView schoolNameTextView;
 	private int index;
 	private int currentTabIndex;
+	private UserPreference userPreference;
 
 	ViewPager mViewPager;
 	LoveBridgePagerAdapter myLoveBridgeAdapter;
@@ -37,6 +42,7 @@ public class LoveBridgeFragment extends BaseV4Fragment implements OnClickListene
 		// TODO Auto-generated method stub
 		rootView = inflater.inflate(R.layout.fragment_love_bridge, container, false);
 		myLoveBridgeAdapter = new LoveBridgePagerAdapter(getFragmentManager());
+		userPreference = BaseApplication.getInstance().getUserPreference();
 
 		findViewById();// 初始化views
 		initView();
@@ -51,6 +57,7 @@ public class LoveBridgeFragment extends BaseV4Fragment implements OnClickListene
 		mViewPager = (ViewPager) rootView.findViewById(R.id.lover_bridge_pager);
 		publishBtn = rootView.findViewById(R.id.publish_btn);
 		refreshBtn = rootView.findViewById(R.id.refresh_btn);
+		schoolNameTextView = (TextView) rootView.findViewById(R.id.school_name);
 	}
 
 	@Override
@@ -63,6 +70,7 @@ public class LoveBridgeFragment extends BaseV4Fragment implements OnClickListene
 		// 把第一个tab设为选中状态
 		mTabs[0].setSelected(true);
 
+		schoolNameTextView.setText(userPreference.getSchoolName());
 		publishBtn.setOnClickListener(this);
 		refreshBtn.setOnClickListener(this);
 		for (View view : mTabs) {
