@@ -227,8 +227,6 @@ public class TimeCapsuleActivity extends AbsListViewBaseActivity {
 									pageNow = -1;
 								}
 								singleTimeCapsuleList = new LinkedList<JsonSingleTimeCapsule>();
-								for (JsonSingleTimeCapsule jsonSingleTimeCapsule : temp) {
-								}
 								singleTimeCapsuleList.addAll(temp);
 							}
 							//如果是获取更多
@@ -248,7 +246,7 @@ public class TimeCapsuleActivity extends AbsListViewBaseActivity {
 				@Override
 				public void onFailure(int statusCode, Header[] headers, String errorResponse, Throwable e) {
 					// TODO Auto-generated method stub
-					ToastTool.showShort(TimeCapsuleActivity.this, "获取时间胶囊失败！");
+					LogTool.e("TimeCapsuleActivity", "获取时间胶囊失败！");
 					timeCapsuleListview.onRefreshComplete();
 				}
 			};

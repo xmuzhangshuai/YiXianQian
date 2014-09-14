@@ -1,12 +1,23 @@
 package com.yixianqian.jsonobject;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class JsonLoveBridgeItem {
+public class JsonLoveBridgeItem implements Serializable {
 
 	private int n_id;
 	private int n_userid;
 	private String n_name;
+	private String n_small_avatar;
+
+	public String getN_small_avatar() {
+		return n_small_avatar;
+	}
+
+	public void setN_small_avatar(String n_small_avatar) {
+		this.n_small_avatar = n_small_avatar;
+	}
+
 	private String n_gender;
 	private int n_schoolid;
 	private String n_content;
@@ -14,6 +25,11 @@ public class JsonLoveBridgeItem {
 	private Date n_time;
 	private int n_flipcount;
 	private int n_commentcount;
+
+	public JsonLoveBridgeItem() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
 
 	public int getN_id() {
 		return n_id;

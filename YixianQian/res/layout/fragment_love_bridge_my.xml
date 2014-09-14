@@ -4,10 +4,16 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="我发布的" />
+    <com.handmark.pulltorefresh.library.PullToRefreshListView
+        android:id="@+id/lovebridge_list"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:cacheColorHint="@color/white"
+        android:descendantFocusability="blocksDescendants"
+        android:divider="@color/system_gray"
+        android:dividerHeight="0.1dp"
+        android:drawSelectorOnTop="false"
+        android:listSelector="#00000000"
+        android:scrollbars="none" />
 
 </LinearLayout>

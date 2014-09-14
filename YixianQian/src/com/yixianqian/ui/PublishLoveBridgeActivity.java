@@ -32,7 +32,6 @@ import com.loopj.android.http.TextHttpResponseHandler;
 import com.yixianqian.R;
 import com.yixianqian.base.BaseActivity;
 import com.yixianqian.base.BaseApplication;
-import com.yixianqian.config.Constants;
 import com.yixianqian.customewidget.MyAlertDialog;
 import com.yixianqian.table.LoveBridgeItemTable;
 import com.yixianqian.utils.AsyncHttpClientImageSound;
@@ -62,6 +61,7 @@ public class PublishLoveBridgeActivity extends BaseActivity implements OnClickLi
 
 	/**************用户变量**************/
 	public static final int NUM = 250;
+	private int minCount = 10;
 	private String photoUri;//图片地址
 	private UserPreference userPreference;
 
@@ -110,7 +110,7 @@ public class PublishLoveBridgeActivity extends BaseActivity implements OnClickLi
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before, int count) {
 				temp = s;
-				if (s.length() > 14) {
+				if (s.length() > (minCount - 1)) {
 					right_btn_bg.setEnabled(true);
 				} else {
 					right_btn_bg.setEnabled(false);
@@ -318,14 +318,6 @@ public class PublishLoveBridgeActivity extends BaseActivity implements OnClickLi
 		};
 		params.put(LoveBridgeItemTable.N_USERID, userPreference.getU_id());
 		params.put(LoveBridgeItemTable.N_CONTENT, publishEditeEditText.getText().toString().trim());
-		if (userPreference.getU_gender().equals(Constants.Gender.MALE)) {
-			params.put(LoveBridgeItemTable.N_GENDER, 1);
-		} else {
-			params.put(LoveBridgeItemTable.N_GENDER, 2);
-		}
-
-		params.put(LoveBridgeItemTable.N_SCHOOLID, userPreference.getU_schoolid());
-		params.put(LoveBridgeItemTable.N_NAME, userPreference.getName());
 
 		if (photoFile != null && photoFile.exists()) {
 			try {

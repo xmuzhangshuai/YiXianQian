@@ -96,7 +96,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/personal_timecapsule_padding"
                     android:ems="10"
-                    android:hint="介绍一下自己吧...(最少15字)" >
+                    android:hint="介绍一下自己吧...(最少10字)" >
                 </EditText>
 
                 <ImageView

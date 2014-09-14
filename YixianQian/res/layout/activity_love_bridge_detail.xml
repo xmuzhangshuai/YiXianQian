@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg3"
+    android:gravity="bottom"
+    android:orientation="vertical" >
+
+    <include
+        layout="@layout/top_navigation2"
+        android:focusable="true" />
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1.0"
+        android:fillViewport="true"
+        android:orientation="vertical"
+        android:scrollbars="vertical" >
+
+        <com.handmark.pulltorefresh.library.PullToRefreshListView
+            android:id="@+id/lovebridge_list"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:cacheColorHint="@color/white"
+            android:descendantFocusability="blocksDescendants"
+            android:divider="@color/system_gray"
+            android:dividerHeight="0.1dp"
+            android:drawSelectorOnTop="false"
+            android:listSelector="#00000000"
+            android:scrollbars="none" />
+    </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/inputBar"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/day_recommend_viewpager_padding_top"
+        android:background="@drawable/shape_bottombar_gb"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:gravity="center_vertical"
+        android:padding="@dimen/day_recommend_viewpager_padding_top" >
+
+        <EditText
+            android:id="@+id/msg_et"
+            android:layout_width="0.0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.0"
+            android:background="@drawable/sel_comment_input"
+            android:inputType="textMultiLine"
+            android:maxHeight="200.0dip"
+            android:minHeight="@dimen/sent_btn_height"
+            android:paddingLeft="@dimen/day_recommend_dot_space"
+            android:paddingRight="@dimen/day_recommend_dot_space"
+            android:textSize="@dimen/day_recommend_font_info" />
+
+        <LinearLayout
+            android:id="@+id/send_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left|center"
+            android:clickable="true"
+            android:gravity="center_vertical" >
+
+            <Button
+                android:id="@+id/send_btn"
+                android:layout_width="@dimen/size_avatar"
+                android:layout_height="@dimen/sent_btn_height"
+                android:layout_marginBottom="3dp"
+                android:layout_marginLeft="@dimen/day_recommend_viewpager_padding_top"
+                android:layout_marginTop="3dp"
+                android:background="@drawable/chat_press_speak_btn"
+                android:enabled="false"
+                android:text="评论"
+                android:textColor="@drawable/sel_chat_pressed_to_talk"
+                android:textSize="@dimen/day_recommend_font_info" />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

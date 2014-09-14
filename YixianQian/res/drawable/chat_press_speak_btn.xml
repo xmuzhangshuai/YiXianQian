@@ -5,21 +5,18 @@
             <solid android:color="@color/system_male" />
 
             <corners android:radius="5dp" />
-        </shape>
-    </item>
+        </shape></item>
     <item android:state_focused="false" android:state_pressed="true"><shape android:shape="rectangle">
             <solid android:color="@color/system_male" />
 
             <corners android:radius="5dp" />
-        </shape>
-    </item>
+        </shape></item>
     <item><shape android:shape="rectangle">
             <solid android:color="@color/white" />
 
             <corners android:radius="5dp" />
 
             <stroke android:width="0.1dp" android:color="@color/unenable" />
-        </shape>
-    </item>
+        </shape></item>
 
 </selector>

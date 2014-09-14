@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/bg3"
+    android:paddingBottom="@dimen/personal_timecapsule_padding"
+    android:paddingLeft="@dimen/time_capsule20"
+    android:paddingRight="@dimen/time_capsule20"
+    android:paddingTop="@dimen/personal_timecapsule_padding" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/shape_radius"
+        android:orientation="vertical"
+        android:paddingTop="@dimen/margin_chat_activity" >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/setting_list_margin"
+            android:layout_marginLeft="@dimen/personal_timecapsule_padding"
+            android:layout_marginRight="@dimen/personal_timecapsule_padding"
+            android:layout_marginTop="@dimen/new_msg" >
+
+            <ImageView
+                android:id="@+id/head_image"
+                android:layout_width="@dimen/register_height"
+                android:layout_height="@dimen/register_height"
+                android:src="@drawable/photoconor" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/head_image" >
+
+                <TextView
+                    android:id="@+id/name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/day_recommend_dot_space"
+                    android:layout_marginTop="@dimen/day_recommend_dot_space"
+                    android:textColor="@color/system_male"
+                    android:textSize="@dimen/day_recommend_user_font" />
+
+                <ImageView
+                    android:id="@+id/gender"
+                    android:layout_width="@dimen/time_capsule20"
+                    android:layout_height="@dimen/time_capsule20"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/day_recommend_dot_space"
+                    android:layout_toRightOf="@+id/name"
+                    android:src="@drawable/male" />
+
+                <TextView
+                    android:id="@+id/time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerVertical="true"
+                    android:textColor="@color/unenable"
+                    android:textSize="@dimen/register_font_size" />
+            </RelativeLayout>
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/personal_timecapsule_padding"
+            android:layout_marginRight="@dimen/personal_timecapsule_padding"
+            android:layout_marginTop="@dimen/margin_chat_activity"
+            android:textSize="@dimen/day_recommend_user_font" />
+
+        <ImageView
+            android:id="@+id/item_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:layout_marginLeft="@dimen/personal_timecapsule_padding"
+            android:layout_marginRight="@dimen/personal_timecapsule_padding"
+            android:layout_marginTop="@dimen/margin_chat_activity"
+            android:clickable="true"
+            android:focusable="false"
+            android:maxHeight="@dimen/tape_margin"
+            android:visibility="gone" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginTop="@dimen/day_recommend_dot_space"
+            android:background="@color/unenable_font" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/personal_timecapsule_padding"
+            android:layout_marginRight="@dimen/personal_timecapsule_padding"
+            android:padding="@dimen/activity_vertical_margin" >
+
+            <CheckBox
+                android:id="@+id/flipper"
+                android:layout_width="@dimen/day_recommend_help_padding"
+                android:layout_height="@dimen/day_recommend_help_padding"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/sel_flipper_checkbox"
+                android:button="@null" />
+
+            <TextView
+                android:id="@+id/info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/day_recommend_dot_space"
+                android:layout_toRightOf="@+id/flipper"
+                android:text="心动"
+                android:textColor="@color/unenable"
+                android:textSize="@dimen/register_font_size" />
+
+            <TextView
+                android:id="@+id/flipper_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/info"
+                android:textColor="@color/system_male"
+                android:textSize="@dimen/register_font_size" />
+
+            <TextView
+                android:id="@+id/info2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/flipper_count"
+                android:text="次"
+                android:textColor="@color/unenable"
+                android:textSize="@dimen/register_font_size" />
+
+            <ImageView
+                android:id="@+id/comment_btn"
+                android:layout_width="@dimen/day_recommend_help_padding"
+                android:layout_height="@dimen/day_recommend_help_padding"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/login_register"
+                android:layout_toRightOf="@+id/info2"
+                android:src="@drawable/sel_comment_btn" />
+
+            <TextView
+                android:id="@+id/comment_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/day_recommend_dot_space"
+                android:layout_toRightOf="@+id/comment_btn"
+                android:textColor="@color/system_male"
+                android:textSize="@dimen/register_font_size" />
+
+            <ImageView
+                android:id="@+id/more"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginTop="10dp"
+                android:clickable="true"
+                android:focusable="false"
+                android:src="@drawable/sel_more_btn" />
+        </RelativeLayout>
+    </LinearLayout>
+
+</LinearLayout>
