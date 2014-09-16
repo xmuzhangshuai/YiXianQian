@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.apache.http.Header;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -188,6 +189,16 @@ public class LoveBridgeMsgFragment extends BaseV4Fragment {
 		RequestParams params = new RequestParams();
 		params.put(LoveBridgeItemTable.N_ID, loveItemId);
 		TextHttpResponseHandler responseHandler = new TextHttpResponseHandler("utf-8") {
+			ProgressDialog dialog = new ProgressDialog(getActivity());
+
+			@Override
+			public void onStart() {
+				// TODO Auto-generated method stub
+				super.onStart();
+				dialog.setMessage("请稍后...");
+				dialog.setCancelable(false);
+				dialog.show();
+			}
 
 			@Override
 			public void onSuccess(int statusCode, Header[] headers, String response) {
@@ -208,6 +219,15 @@ public class LoveBridgeMsgFragment extends BaseV4Fragment {
 			public void onFailure(int statusCode, Header[] headers, String errorResponse, Throwable e) {
 				// TODO Auto-generated method stub
 				LogTool.e("LoveBridgeMsgFragment", "获取详情失败");
+			}
+
+			@Override
+			public void onFinish() {
+				// TODO Auto-generated method stub
+				super.onFinish();
+				if (dialog != null && dialog.isShowing()) {
+					dialog.dismiss();
+				}
 			}
 		};
 		AsyncHttpClientTool.post(getActivity(), "", params, responseHandler);
