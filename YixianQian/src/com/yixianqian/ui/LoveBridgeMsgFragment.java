@@ -174,11 +174,43 @@ public class LoveBridgeMsgFragment extends BaseV4Fragment {
 			@Override
 			public void onFailure(int statusCode, Header[] headers, String errorResponse, Throwable e) {
 				// TODO Auto-generated method stub
-				LogTool.e("LoveBridgeSchoolFragment", "获取列表失败");
+				LogTool.e("LoveBridgeMsgFragment", "获取列表失败");
 				messageListView.onRefreshComplete();
 			}
 		};
 		AsyncHttpClientTool.post(getActivity(), "getbridgemessagelist", params, responseHandler);
+	}
+
+	/**
+	 * 根据ID获取JsonLoveBridgeItem数据
+	 */
+	private void goToDetail(int loveItemId) {
+		RequestParams params = new RequestParams();
+		params.put(LoveBridgeItemTable.N_ID, loveItemId);
+		TextHttpResponseHandler responseHandler = new TextHttpResponseHandler("utf-8") {
+
+			@Override
+			public void onSuccess(int statusCode, Header[] headers, String response) {
+				// TODO Auto-generated method stub
+				if (statusCode == 200) {
+					if (!TextUtils.isEmpty(response)) {
+						int loveItemId = Integer.parseInt(response);
+						if (loveItemId > 0) {
+							startActivity(new Intent(getActivity(), LoveBridgeDetailActivity.class).putExtra(
+									LoveBridgeDetailActivity.LOVE_BRIDGE_ITEM, loveItemId));
+							getActivity().overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+						}
+					}
+				}
+			}
+
+			@Override
+			public void onFailure(int statusCode, Header[] headers, String errorResponse, Throwable e) {
+				// TODO Auto-generated method stub
+				LogTool.e("LoveBridgeMsgFragment", "获取详情失败");
+			}
+		};
+		AsyncHttpClientTool.post(getActivity(), "", params, responseHandler);
 	}
 
 	/**
@@ -280,6 +312,15 @@ public class LoveBridgeMsgFragment extends BaseV4Fragment {
 			holder.timeTextView.setText(DateTimeTools.DateToString(message.getCommenttime()));
 
 			holder.loveItemTextView.setText(message.getMessage());
+
+			holder.loveItemTextView.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+					goToDetail(message.getMessageid());
+				}
+			});
 
 			return view;
 		}

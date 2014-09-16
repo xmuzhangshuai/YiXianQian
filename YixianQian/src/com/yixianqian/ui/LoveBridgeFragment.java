@@ -1,20 +1,28 @@
 package com.yixianqian.ui;
 
+import org.apache.http.Header;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.loopj.android.http.RequestParams;
+import com.loopj.android.http.TextHttpResponseHandler;
 import com.yixianqian.R;
 import com.yixianqian.base.BaseApplication;
 import com.yixianqian.base.BaseV4Fragment;
+import com.yixianqian.table.LoveBridgeItemTable;
+import com.yixianqian.utils.AsyncHttpClientTool;
+import com.yixianqian.utils.LogTool;
 import com.yixianqian.utils.UserPreference;
 
 /**
@@ -33,6 +41,8 @@ public class LoveBridgeFragment extends BaseV4Fragment implements OnClickListene
 	private int index;
 	private int currentTabIndex;
 	private UserPreference userPreference;
+	private TextView msgCountTextView;
+	private int msgCount;
 
 	ViewPager mViewPager;
 	LoveBridgePagerAdapter myLoveBridgeAdapter;
@@ -58,6 +68,7 @@ public class LoveBridgeFragment extends BaseV4Fragment implements OnClickListene
 		publishBtn = rootView.findViewById(R.id.publish_btn);
 		//		refreshBtn = rootView.findViewById(R.id.refresh_btn);
 		schoolNameTextView = (TextView) rootView.findViewById(R.id.school_name);
+		msgCountTextView = (TextView) rootView.findViewById(R.id.righttext);
 	}
 
 	@Override
@@ -69,6 +80,9 @@ public class LoveBridgeFragment extends BaseV4Fragment implements OnClickListene
 		mTabs[2] = (View) rootView.findViewById(R.id.msgBtn);
 		// 把第一个tab设为选中状态
 		mTabs[0].setSelected(true);
+
+		//获取未读消息数量
+		getMsgCount();
 
 		schoolNameTextView.setText(userPreference.getSchoolName());
 		publishBtn.setOnClickListener(this);
@@ -135,10 +149,46 @@ public class LoveBridgeFragment extends BaseV4Fragment implements OnClickListene
 
 		case R.id.msgBtn:
 			onTabClicked(v);
+			msgCount = 0;
+			msgCountTextView.setVisibility(View.GONE);
 			break;
 		default:
 			break;
 		}
+	}
+
+	/**
+	 * 获取消息数量
+	 */
+	private void getMsgCount() {
+		RequestParams params = new RequestParams();
+		params.put(LoveBridgeItemTable.N_USERID, userPreference.getU_id());
+		TextHttpResponseHandler responseHandler = new TextHttpResponseHandler("utf-8") {
+
+			@Override
+			public void onSuccess(int statusCode, Header[] headers, String response) {
+				// TODO Auto-generated method stub
+				if (statusCode == 200) {
+					LogTool.e("LoveBridgeFragment", "未读消息数量：" + response);
+					if (!TextUtils.isEmpty(response)) {
+						msgCount = Integer.parseInt(response);
+						if (msgCount > 0) {
+							msgCountTextView.setText("" + msgCount);
+							msgCountTextView.setVisibility(View.VISIBLE);
+						} else {
+							msgCountTextView.setVisibility(View.GONE);
+						}
+					}
+				}
+			}
+
+			@Override
+			public void onFailure(int statusCode, Header[] headers, String errorResponse, Throwable e) {
+				// TODO Auto-generated method stub
+				LogTool.e("LoveBridgeFragment", "获取消息数量失败");
+			}
+		};
+		AsyncHttpClientTool.post(getActivity(), "getunreadbridgemessage", params, responseHandler);
 	}
 
 	/**
@@ -182,7 +232,6 @@ public class LoveBridgeFragment extends BaseV4Fragment implements OnClickListene
 			// TODO Auto-generated method stub
 			return 3;
 		}
-
 	}
 
 }

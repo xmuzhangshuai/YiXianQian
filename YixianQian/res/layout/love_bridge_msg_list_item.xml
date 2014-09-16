@@ -97,11 +97,16 @@
             android:id="@+id/love_bridge_item"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/personal_timecapsule_padding"
             android:layout_marginLeft="@dimen/personal_timecapsule_padding"
             android:layout_marginRight="@dimen/personal_timecapsule_padding"
             android:layout_marginTop="@dimen/margin_chat_activity"
             android:background="@drawable/sel_love_bridge_item_bg"
             android:maxLines="3"
+            android:paddingBottom="@dimen/margin_chat_activity"
+            android:paddingLeft="@dimen/new_msg"
+            android:paddingRight="@dimen/new_msg"
+            android:paddingTop="@dimen/margin_chat_activity"
             android:textSize="@dimen/day_recommend_user_font" />
     </LinearLayout>
 

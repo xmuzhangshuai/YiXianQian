@@ -50,28 +50,6 @@
                 android:includeFontPadding="false"
                 android:src="@drawable/publish" />
         </RelativeLayout>
-
-        <!--
-        <RelativeLayout
-            android:id="@+id/refresh_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="@dimen/day_recommend_help_padding"
-            android:background="@drawable/sel_love_bridge_btn"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp" >
-
-            <ImageView
-                android:layout_width="@dimen/day_recommend_help_padding"
-                android:layout_height="@dimen/day_recommend_help_padding"
-                android:gravity="center"
-                android:includeFontPadding="false"
-                android:src="@drawable/refresh" />
-        </RelativeLayout>
-        -->
     </RelativeLayout>
 
     <LinearLayout
@@ -130,16 +108,28 @@
             android:background="@drawable/sel_love_bridge_nav_bg" >
 
             <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:layout_alignParentLeft="true"
-                android:ellipsize="end"
-                android:gravity="center"
+                android:id="@+id/msg_info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
                 android:singleLine="true"
                 android:text="消息"
                 android:textColor="@drawable/sel_love_bridge_nav_color"
                 android:textSize="@dimen/day_recommend_user_font"
                 android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/righttext"
+                android:layout_width="@dimen/time_capsule20"
+                android:layout_height="@dimen/time_capsule20"
+                android:layout_centerInParent="true"
+                android:layout_marginLeft="@dimen/day_recommend_help_font_space"
+                android:layout_toRightOf="@+id/msg_info"
+                android:background="@drawable/shape_like_count"
+                android:gravity="center"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:visibility="gone" />
         </RelativeLayout>
     </LinearLayout>
 
