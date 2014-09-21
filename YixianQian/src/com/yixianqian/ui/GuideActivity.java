@@ -6,9 +6,12 @@ import java.util.List;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.widget.TextView;
 
 import com.baidu.android.pushservice.PushConstants;
 import com.baidu.android.pushservice.PushManager;
@@ -53,6 +56,7 @@ public class GuideActivity extends BaseActivity {
 	private String province;//省份
 	private String city;//城市
 	private String detailLocation;//详细地址
+	private TextView versionInfotTextView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -87,8 +91,6 @@ public class GuideActivity extends BaseActivity {
 		if (count == 0) {// 如果是第一次登陆，则启动向导页面
 			// 第一次运行拷贝数据库文件
 			new initDataBase().execute();
-			//				SchoolDbService schoolDbService = SchoolDbService.getInstance(this);
-			//				schoolDbService.schoolDao.loadAll();
 			sharePreferenceUtil.setUseCount(++count);// 次数加1
 			startActivity(new Intent(GuideActivity.this, GuidePagerActivity.class));
 		} else {// 如果不是第一次使用,则不启动向导页面，显示欢迎页面。
@@ -144,11 +146,13 @@ public class GuideActivity extends BaseActivity {
 	@Override
 	protected void findViewById() {
 		// TODO Auto-generated method stub
+		versionInfotTextView = (TextView) findViewById(R.id.version_info);
 	}
 
 	@Override
 	protected void initView() {
 		// TODO Auto-generated method stub
+		versionInfotTextView.setText("一线牵\n\n"+getVersion());
 	}
 
 	@Override
@@ -185,6 +189,22 @@ public class GuideActivity extends BaseActivity {
 
 		locationPreferences = getSharedPreferences("location", Context.MODE_PRIVATE);
 		locationEditor = locationPreferences.edit();
+	}
+	
+	/**
+	 * 获取版本号
+	 * @return 当前应用的版本号
+	 */
+	public String getVersion() {
+		try {
+			PackageManager manager = this.getPackageManager();
+			PackageInfo info = manager.getPackageInfo(this.getPackageName(), 0);
+			String version = info.versionName;
+			return this.getString(R.string.version_name) + version;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return this.getString(R.string.can_not_find_version_name);
+		}
 	}
 
 	/**

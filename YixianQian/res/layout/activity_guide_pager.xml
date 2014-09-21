@@ -1,21 +1,51 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="${relativePackage}.${activityClass}" >
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
 
-    <TextView
+    <android.support.v4.view.ViewPager
+        android:id="@+id/whatsnew_viewpager"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="首次运行引导页面" />
+        android:layout_gravity="center" />
 
-    <Button
-        android:id="@+id/begin"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="114dp"
-        android:text="登录/注册" />
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="30.0dip"
+        android:gravity="center_horizontal" >
 
-</RelativeLayout>
+        <ImageView
+            android:id="@+id/page0"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="matrix"
+            android:src="@drawable/page_now" />
+
+        <ImageView
+            android:id="@+id/page1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10.0dip"
+            android:scaleType="matrix"
+            android:src="@drawable/page" />
+
+        <ImageView
+            android:id="@+id/page2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10.0dip"
+            android:scaleType="matrix"
+            android:src="@drawable/page" />
+
+        <ImageView
+            android:id="@+id/page3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10.0dip"
+            android:scaleType="matrix"
+            android:src="@drawable/page" />
+    </LinearLayout>
+
+</FrameLayout>

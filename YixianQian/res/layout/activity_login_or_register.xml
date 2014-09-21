@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/day_recommend_next_btn"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="30dp"
+        android:layout_marginBottom="@dimen/day_recommend_help"
         android:gravity="center_horizontal"
         android:orientation="horizontal" >
 

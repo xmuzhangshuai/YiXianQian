@@ -359,7 +359,9 @@ public class LoveBridgeMyFragment extends BaseV4Fragment {
 					}
 				}
 			});
-
+			
+			holder.moreBtn.setVisibility(View.GONE);
+			
 			if (userPreference.getU_id() == loveBridgeItem.getN_userid() || holder.flipperBtn.isChecked()) {
 				holder.flipperBtn.setEnabled(false);
 			} else {

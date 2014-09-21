@@ -10,7 +10,9 @@ import com.yixianqian.R;
 import com.yixianqian.base.BaseActivity;
 
 /**
- * 类名称：LoginOrRegisterActivity 类描述：注册或登录引导页面 创建人： 张帅 创建时间：2014-7-4 上午9:23:09
+ * 类名称：LoginOrRegisterActivity 
+ * 类描述：注册或登录引导页面 创建人： 
+ * 张帅 创建时间：2014-7-4 上午9:23:09
  * 
  */
 public class LoginOrRegisterActivity extends BaseActivity {

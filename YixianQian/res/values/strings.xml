@@ -2,7 +2,7 @@
 <resources>
 
     <string name="app_name">一线牵</string>
-    <string name="version_info">一线牵\n\nVersion 1.0.0</string>
+    <string name="version_info">一线牵</string>
     <string name="day_recommend">一线牵每天为你创造4次相遇的机会，您可以点击“怦然心动”或者“跳过”。每天只能对一个人心动。</string>
     <string name="recommend_help1">一线牵致力于为在校大学生寻找自己的另一半，在这里可以记录生活中最难忘的点点滴滴。</string>
     <string name="recommend_help2">如果您是单身，一线牵 将扮演一个牵线搭桥的月老角色。</string>
