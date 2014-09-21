@@ -107,7 +107,7 @@ public class DeleteLoveBridgeMenu extends BaseActivity {
 		RequestParams params = new RequestParams();
 		params.put(LoveBridgeItemTable.N_ID, item_id);
 		if (position > -1 && item_id > -1) {
-			AsyncHttpClientTool.post("deleteloverrecord", params, responseHandler);
+			AsyncHttpClientTool.post("deletelovebridgeitembyid", params, responseHandler);
 		}
 	}
 }

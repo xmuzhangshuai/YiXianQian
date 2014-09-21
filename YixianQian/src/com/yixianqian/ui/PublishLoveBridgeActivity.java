@@ -267,7 +267,6 @@ public class PublishLoveBridgeActivity extends BaseActivity implements OnClickLi
 		if (!TextUtils.isEmpty(photoUri)
 				&& photoUri.equals(Environment.getExternalStorageDirectory() + "/yixianqian/image/loveBridge.jpeg")) {
 			photoFile = new File(photoUri);
-			//			LogTool.e("х╣ге", "" + FileSizeUtil.getFileOrFilesSize(photoUri, FileSizeUtil.SIZETYPE_KB) + "KB");
 		}
 
 		RequestParams params = new RequestParams();
