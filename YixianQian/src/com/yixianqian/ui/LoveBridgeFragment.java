@@ -100,6 +100,11 @@ public class LoveBridgeFragment extends BaseV4Fragment implements OnClickListene
 				}
 				currentTabIndex = position;
 				mTabs[currentTabIndex].setSelected(true);
+
+				if (position == 2) {
+					msgCount = 0;
+					msgCountTextView.setVisibility(View.GONE);
+				}
 			}
 		});
 	}
