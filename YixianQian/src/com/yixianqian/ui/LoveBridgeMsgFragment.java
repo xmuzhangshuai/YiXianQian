@@ -32,6 +32,7 @@ import com.yixianqian.base.BaseV4Fragment;
 import com.yixianqian.config.Constants;
 import com.yixianqian.config.Constants.Config;
 import com.yixianqian.jsonobject.JsonBridgeCommentMessage;
+import com.yixianqian.jsonobject.JsonLoveBridgeItem;
 import com.yixianqian.table.LoveBridgeItemTable;
 import com.yixianqian.table.UserTable;
 import com.yixianqian.utils.AsyncHttpClientImageSound;
@@ -187,6 +188,7 @@ public class LoveBridgeMsgFragment extends BaseV4Fragment {
 	 */
 	private void goToDetail(int loveItemId) {
 		RequestParams params = new RequestParams();
+		LogTool.e("Ð¯´ø" + loveItemId);
 		params.put(LoveBridgeItemTable.N_ID, loveItemId);
 		TextHttpResponseHandler responseHandler = new TextHttpResponseHandler("utf-8") {
 			ProgressDialog dialog = new ProgressDialog(getActivity());
@@ -204,11 +206,12 @@ public class LoveBridgeMsgFragment extends BaseV4Fragment {
 			public void onSuccess(int statusCode, Header[] headers, String response) {
 				// TODO Auto-generated method stub
 				if (statusCode == 200) {
+					LogTool.e("½á¹û" + response);
 					if (!TextUtils.isEmpty(response)) {
-						int loveItemId = Integer.parseInt(response);
-						if (loveItemId > 0) {
+						JsonLoveBridgeItem loveBridgeItem = FastJsonTool.getObject(response, JsonLoveBridgeItem.class);
+						if (loveBridgeItem != null) {
 							startActivity(new Intent(getActivity(), LoveBridgeDetailActivity.class).putExtra(
-									LoveBridgeDetailActivity.LOVE_BRIDGE_ITEM, loveItemId));
+									LoveBridgeDetailActivity.LOVE_BRIDGE_ITEM, loveBridgeItem));
 							getActivity().overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
 						}
 					}
@@ -230,7 +233,7 @@ public class LoveBridgeMsgFragment extends BaseV4Fragment {
 				}
 			}
 		};
-		AsyncHttpClientTool.post(getActivity(), "", params, responseHandler);
+		AsyncHttpClientTool.post(getActivity(), "getlovebridgeitembyid", params, responseHandler);
 	}
 
 	/**

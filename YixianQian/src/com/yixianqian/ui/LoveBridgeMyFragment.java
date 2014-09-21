@@ -111,6 +111,19 @@ public class LoveBridgeMyFragment extends BaseV4Fragment {
 	}
 
 	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		// TODO Auto-generated method stub
+		super.onActivityResult(requestCode, resultCode, data);
+		if (resultCode == DeleteLoveBridgeMenu.RESULT_CODE_DELETE) {
+			int position = data.getIntExtra("position", -1);
+			if (position != -1) {
+				loveBridgeItemList.remove(position);
+				mAdapter.notifyDataSetChanged();
+			}
+		}
+	}
+
+	@Override
 	protected void findViewById() {
 		// TODO Auto-generated method stub
 		loveBridgeListView = (PullToRefreshListView) rootView.findViewById(R.id.lovebridge_list);
@@ -242,7 +255,7 @@ public class LoveBridgeMyFragment extends BaseV4Fragment {
 		}
 
 		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
+		public View getView(final int position, View convertView, ViewGroup parent) {
 			// TODO Auto-generated method stub
 			View view = convertView;
 			final JsonLoveBridgeItem loveBridgeItem = loveBridgeItemList.get(position);
@@ -359,9 +372,18 @@ public class LoveBridgeMyFragment extends BaseV4Fragment {
 					}
 				}
 			});
-			
-			holder.moreBtn.setVisibility(View.GONE);
-			
+
+			holder.moreBtn.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+					if (userPreference.getU_id() == loveBridgeItem.getN_userid()) {
+						showMoreDialog(position, loveBridgeItem.getN_id());
+					}
+				}
+			});
+
 			if (userPreference.getU_id() == loveBridgeItem.getN_userid() || holder.flipperBtn.isChecked()) {
 				holder.flipperBtn.setEnabled(false);
 			} else {
@@ -386,6 +408,16 @@ public class LoveBridgeMyFragment extends BaseV4Fragment {
 			}
 			return view;
 		}
+	}
+
+	/**
+	 * ÏÔÊ¾¸ü¶à
+	 */
+	private void showMoreDialog(int position, int loveBridgeItemTableId) {
+		Intent intent = new Intent(getActivity(), DeleteLoveBridgeMenu.class);
+		intent.putExtra("position", position);
+		intent.putExtra(LoveBridgeItemTable.N_ID, loveBridgeItemTableId);
+		startActivityForResult(intent, SharePanelActivity.REQUEST_CODE_SHAREPANEL);
 	}
 
 	/**

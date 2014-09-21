@@ -234,6 +234,8 @@ public class LoveBridgeDetailActivity extends BaseActivity implements OnClickLis
 				contentImageView.setVisibility(View.GONE);
 			}
 
+			moreBtn.setVisibility(View.GONE);
+
 			//…Ë÷√ƒ⁄»›
 			contentTextView.setText(loveBridgeItem.getN_content());
 

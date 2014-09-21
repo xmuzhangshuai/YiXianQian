@@ -330,6 +330,13 @@
             android:screenOrientation="portrait" >
         </activity>
 
+        <!-- 删除鹊桥广场面 -->
+        <activity
+            android:name="com.yixianqian.ui.DeleteLoveBridgeMenu"
+            android:screenOrientation="portrait"
+            android:theme="@style/MyDialogStyle" >
+        </activity>
+
         <!-- 单条记录详情 -->
         <activity
             android:name="com.yixianqian.ui.LoveBridgeDetailActivity"

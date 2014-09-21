@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/transparent"
+    android:gravity="center_horizontal" >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="@dimen/personal_timecapsule_padding"
+        android:layout_marginRight="@dimen/personal_timecapsule_padding"
+        android:background="@android:color/transparent"
+        android:gravity="center_horizontal"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/delete"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/share_space"
+            android:background="@drawable/context_menu_cancel"
+            android:clickable="true"
+            android:gravity="center"
+            android:onClick="delete"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp"
+            android:text="@string/delete"
+            android:textColor="@color/system_female"
+            android:textSize="@dimen/day_recommend_user_font" />
+
+        <TextView
+            android:id="@+id/cancel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/share_space"
+            android:background="@drawable/context_menu_cancel"
+            android:clickable="true"
+            android:gravity="center"
+            android:onClick="cancel"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp"
+            android:text="@string/cancel"
+            android:textColor="@color/system_female"
+            android:textSize="@dimen/day_recommend_user_font" />
+    </LinearLayout>
+
+</RelativeLayout>
