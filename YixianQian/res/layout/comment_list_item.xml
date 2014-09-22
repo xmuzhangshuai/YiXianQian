@@ -23,8 +23,8 @@
 
             <ImageView
                 android:id="@+id/head_image"
-                android:layout_width="@dimen/register_height"
-                android:layout_height="@dimen/register_height"
+                android:layout_width="@dimen/login_register"
+                android:layout_height="@dimen/login_register"
                 android:src="@drawable/photoconor" />
 
             <RelativeLayout
