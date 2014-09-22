@@ -37,6 +37,7 @@ import com.yixianqian.table.LoveBridgeItemTable;
 import com.yixianqian.utils.AsyncHttpClientImageSound;
 import com.yixianqian.utils.AsyncHttpClientTool;
 import com.yixianqian.utils.ImageTools;
+import com.yixianqian.utils.LogTool;
 import com.yixianqian.utils.ToastTool;
 import com.yixianqian.utils.UserPreference;
 
@@ -64,6 +65,7 @@ public class PublishLoveBridgeActivity extends BaseActivity implements OnClickLi
 	private int minCount = 10;
 	private String photoUri;//图片地址
 	private UserPreference userPreference;
+	Dialog dialog;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -260,26 +262,57 @@ public class PublishLoveBridgeActivity extends BaseActivity implements OnClickLi
 	}
 
 	/**
-	 * 发布
+	 * 上传图片
 	 */
-	private void publish() {
+	private void uploadImage() {
 		File photoFile = null;
 		if (!TextUtils.isEmpty(photoUri)
 				&& photoUri.equals(Environment.getExternalStorageDirectory() + "/yixianqian/image/loveBridge.jpeg")) {
 			photoFile = new File(photoUri);
 		}
 
+		dialog = showProgressDialog("正在发布，请稍后...");
+		dialog.setCancelable(false);
+
 		RequestParams params = new RequestParams();
 		TextHttpResponseHandler responseHandler = new TextHttpResponseHandler("utf-8") {
-			Dialog dialog;
 
 			@Override
-			public void onStart() {
+			public void onSuccess(int statusCode, Header[] headers, String response) {
 				// TODO Auto-generated method stub
-				super.onStart();
-				dialog = showProgressDialog("正在发布，请稍后...");
-				dialog.setCancelable(false);
+				if (statusCode == 200) {
+					publish(response);
+				}
 			}
+
+			@Override
+			public void onFailure(int statusCode, Header[] headers, String errorResponse, Throwable e) {
+				// TODO Auto-generated method stub
+				ToastTool.showShort(PublishLoveBridgeActivity.this, "发布失败！");
+			}
+		};
+		params.put(LoveBridgeItemTable.N_USERID, userPreference.getU_id());
+
+		if (photoFile != null && photoFile.exists()) {
+			try {
+				params.put(LoveBridgeItemTable.N_IAMGE, photoFile);
+			} catch (FileNotFoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			AsyncHttpClientImageSound.post("lovebridgeitemimage", params, responseHandler);
+		} else {
+			publish("");
+		}
+	}
+
+	/**
+	 * 发布
+	 */
+	private void publish(String imageUrl) {
+		LogTool.e("进入发布！");
+		RequestParams params = new RequestParams();
+		TextHttpResponseHandler responseHandler = new TextHttpResponseHandler("utf-8") {
 
 			@Override
 			public void onSuccess(int statusCode, Header[] headers, String response) {
@@ -294,7 +327,8 @@ public class PublishLoveBridgeActivity extends BaseActivity implements OnClickLi
 			@Override
 			public void onFailure(int statusCode, Header[] headers, String errorResponse, Throwable e) {
 				// TODO Auto-generated method stub
-				ToastTool.showShort(PublishLoveBridgeActivity.this, "失败！");
+				ToastTool.showShort(PublishLoveBridgeActivity.this, "发布失败！");
+				LogTool.e("发布时失败！" + statusCode + "\n");
 			}
 
 			@Override
@@ -317,18 +351,8 @@ public class PublishLoveBridgeActivity extends BaseActivity implements OnClickLi
 		};
 		params.put(LoveBridgeItemTable.N_USERID, userPreference.getU_id());
 		params.put(LoveBridgeItemTable.N_CONTENT, publishEditeEditText.getText().toString().trim());
-
-		if (photoFile != null && photoFile.exists()) {
-			try {
-				params.put(LoveBridgeItemTable.N_IAMGE, photoFile);
-			} catch (FileNotFoundException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-			AsyncHttpClientImageSound.post("lovebridgeitemimage", params, responseHandler);
-		} else {
-			AsyncHttpClientTool.post("addlovebridgeitemrecord", params, responseHandler);
-		}
+		params.put(LoveBridgeItemTable.N_IAMGE, imageUrl);
+		AsyncHttpClientTool.post("addlovebridgeitemrecord", params, responseHandler);
 	}
 
 	@Override
@@ -339,7 +363,7 @@ public class PublishLoveBridgeActivity extends BaseActivity implements OnClickLi
 			giveUpPublish();
 			break;
 		case R.id.right_btn_bg:
-			publish();
+			uploadImage();
 			break;
 		case R.id.choose_image:
 			choosePhoto();
