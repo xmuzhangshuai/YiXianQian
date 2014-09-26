@@ -195,8 +195,10 @@ public class FriendPreference {
 	}
 
 	public void setU_birthday(Date u_birthday) {
-		editor.putLong(UserTable.U_BIRTHDAY, u_birthday.getTime());
-		editor.commit();
+		if (u_birthday != null) {
+			editor.putLong(UserTable.U_BIRTHDAY, u_birthday.getTime());
+			editor.commit();
+		}
 	}
 
 	//ƒÍ¡‰
