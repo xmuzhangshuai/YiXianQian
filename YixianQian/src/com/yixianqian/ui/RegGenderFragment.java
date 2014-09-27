@@ -81,6 +81,7 @@ public class RegGenderFragment extends BaseV4Fragment implements OnCheckedChange
 		// TODO Auto-generated method stub
 		topNavigation.setText("ÐÔ±ð");
 		rightImageButton.setEnabled(false);
+		rightImageButton.setVisibility(View.VISIBLE);
 		leftImageButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {

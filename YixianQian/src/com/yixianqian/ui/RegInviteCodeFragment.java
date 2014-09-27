@@ -22,7 +22,6 @@ import com.yixianqian.R;
 import com.yixianqian.base.BaseApplication;
 import com.yixianqian.base.BaseV4Fragment;
 import com.yixianqian.table.InviteCodeTable;
-import com.yixianqian.table.UserTable;
 import com.yixianqian.utils.AsyncHttpClientTool;
 import com.yixianqian.utils.CommonTools;
 import com.yixianqian.utils.LogTool;
@@ -163,7 +162,7 @@ public class RegInviteCodeFragment extends BaseV4Fragment {
 	/**
 	 * 验证邀请码
 	 */
-	private void vetifyCode(String code) {
+	private void vetifyCode(final String code) {
 		RequestParams params = new RequestParams();
 		params.put(InviteCodeTable.IC_CODE, code);
 		TextHttpResponseHandler responseHandler = new TextHttpResponseHandler() {
@@ -181,8 +180,9 @@ public class RegInviteCodeFragment extends BaseV4Fragment {
 			@Override
 			public void onSuccess(int statusCode, Header[] headers, String response) {
 				// TODO Auto-generated method stub
-				if (response.endsWith("1")) {
-					userPreference.setInvitCode(response);
+				if (response.equals("1")) {
+					userPreference.setMyInvitCode(code);
+					
 					RegGenderFragment fragment = new RegGenderFragment();
 					FragmentTransaction transaction = getFragmentManager().beginTransaction();
 					transaction.setCustomAnimations(R.anim.push_left_in, R.anim.push_left_out, R.anim.push_right_in,
@@ -193,7 +193,7 @@ public class RegInviteCodeFragment extends BaseV4Fragment {
 				} else if (response.equals("0")) {
 					codeEditText.setError("该邀请码无效，请重新输入");
 					codeEditText.requestFocus();
-				} else if (response.endsWith("-1")) {
+				} else if (response.equals("-1")) {
 					ToastTool.showLong(RegInviteCodeFragment.this.getActivity(), "服务器出现异常，请稍后再试");
 				}
 			}

@@ -41,12 +41,25 @@ public class UserPreference {
 	 * 记录我的邀请码
 	 * @return
 	 */
-	public String getInviteCode() {
+	public String getMyInviteCode() {
 		return sp.getString("invitecode", "");
 	}
 
-	public void setInvitCode(String code) {
+	public void setMyInvitCode(String code) {
 		editor.putString("invitecode", code);
+		editor.commit();
+	}
+	
+	/**
+	 * 记录我的获取的邀请码
+	 * @return
+	 */
+	public String getHostInviteCode() {
+		return sp.getString("hostinvitecode", "");
+	}
+
+	public void setHostInvitCode(String code) {
+		editor.putString("hostinvitecode", code);
 		editor.commit();
 	}
 

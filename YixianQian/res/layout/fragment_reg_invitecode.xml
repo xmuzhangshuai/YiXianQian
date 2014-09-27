@@ -33,6 +33,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
+            android:lineSpacingExtra="5dp"
             android:text="@string/invite_code"
             android:textColor="@color/dark_gray"
             android:textSize="@dimen/register_font_size" />

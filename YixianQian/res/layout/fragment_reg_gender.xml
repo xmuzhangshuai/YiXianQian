@@ -50,6 +50,7 @@
         android:background="@drawable/shape_radius"
         android:gravity="center_vertical"
         android:orientation="horizontal"
+        android:paddingRight="@dimen/personal_timecapsule_padding"
         android:paddingLeft="@dimen/personal_timecapsule_padding" >
 
         <RadioButton

@@ -40,6 +40,8 @@ import com.yixianqian.base.BaseV4Fragment;
 import com.yixianqian.config.Constants;
 import com.yixianqian.config.Constants.Config;
 import com.yixianqian.customewidget.MyAlertDialog;
+import com.yixianqian.table.InviteCodeTable;
+import com.yixianqian.table.TrackingCodeTable;
 import com.yixianqian.table.UserTable;
 import com.yixianqian.utils.AsyncHttpClientTool;
 import com.yixianqian.utils.HttpUtil;
@@ -442,6 +444,7 @@ public class RegAuthCodeFragment extends BaseV4Fragment {
 			if (result > -1) {
 				dialog.setMessage("正在登录...");
 				userPreference.setU_id(result);
+				getHostInviteCode(result);
 
 				// 调用环信sdk注册方法
 				huanxinUsername = "" + result;
@@ -466,7 +469,6 @@ public class RegAuthCodeFragment extends BaseV4Fragment {
 						userPreference.setHuanXinUserName(huanxinUsername);
 						userPreference.setHuanXinPassword(huanxinaPassword);
 						userPreference.setUserLogin(true);
-						//						userPreference.setU_password("");//清除密码
 
 						//更新环信昵称
 						if (EMChatManager.getInstance().updateCurrentUserNick(userPreference.getName())) {
@@ -493,6 +495,39 @@ public class RegAuthCodeFragment extends BaseV4Fragment {
 		protected void onCancelled() {
 			mRegisterTask = null;
 			dialog.dismiss();
+		}
+	}
+
+	/**
+	 * 获取我的验证码
+	 */
+	private void getHostInviteCode(int userID) {
+		String myInviteCode = userPreference.getMyInviteCode();
+		if (!TextUtils.isEmpty(myInviteCode) && userID > 0) {
+			RequestParams params = new RequestParams();
+			params.put(InviteCodeTable.IC_CODE, userPreference.getMyInviteCode());
+			params.put(TrackingCodeTable.TC_HOSTERID, userID);
+			TextHttpResponseHandler responseHandler = new TextHttpResponseHandler() {
+
+				@Override
+				public void onSuccess(int statusCode, Header[] headers, String response) {
+					// TODO Auto-generated method stub
+					LogTool.i("我的邀请码", "我的邀请码" + response);
+					if (response.length() == 6) {
+						userPreference.setHostInvitCode(response);
+					} else if (response.equals("-1")) {
+						LogTool.e("获取我的邀请码", "服务器出现异常" + statusCode);
+					}
+				}
+
+				@Override
+				public void onFailure(int statusCode, Header[] headers, String errorResponse, Throwable e) {
+					// TODO Auto-generated method stub
+					LogTool.e("获取我的邀请码", "服务器错误,错误代码" + statusCode + "，  原因" + errorResponse);
+				}
+
+			};
+			AsyncHttpClientTool.post("operatecode", params, responseHandler);
 		}
 	}
 }
