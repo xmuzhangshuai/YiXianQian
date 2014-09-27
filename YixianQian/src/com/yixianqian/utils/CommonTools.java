@@ -104,6 +104,16 @@ public class CommonTools {
 	}
 
 	/**
+	 * 判断邀请码格式
+	 * @return
+	 */
+	public static boolean isInviteCode(String code){
+		Pattern pattern = Pattern.compile("^[0-9a-zA-Z]{6}$");
+		Matcher matcher = pattern.matcher(code);
+		return matcher.matches();
+	}
+	
+	/**
 	 * 验证密码是否符合要求
 	 * 以字母开头，长度在6~18之间，只能包含字符、数字和下划线
 	 * @return

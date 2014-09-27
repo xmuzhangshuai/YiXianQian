@@ -35,14 +35,14 @@ public class RegisterActivity extends BaseFragmentActivity {
 		findViewById();
 		initView();
 
-		Fragment fragment = new RegGenderFragment();
+		//		Fragment fragment = new RegGenderFragment();
+		Fragment fragment = new RegInviteCodeFragment();
 		fragmentManager = getSupportFragmentManager();
 		fragmentTransaction = fragmentManager.beginTransaction();
 		fragmentTransaction.setCustomAnimations(R.anim.push_left_in, R.anim.push_left_out, R.anim.push_right_in,
 				R.anim.push_right_out);
 		fragmentTransaction.replace(R.id.fragment_container, fragment);
 		fragmentTransaction.commit();
-
 	}
 
 	@Override

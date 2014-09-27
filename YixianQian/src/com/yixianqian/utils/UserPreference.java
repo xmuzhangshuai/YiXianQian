@@ -38,6 +38,19 @@ public class UserPreference {
 	}
 
 	/**
+	 * 记录我的邀请码
+	 * @return
+	 */
+	public String getInviteCode() {
+		return sp.getString("invitecode", "");
+	}
+
+	public void setInvitCode(String code) {
+		editor.putString("invitecode", code);
+		editor.commit();
+	}
+
+	/**
 	 * 记录是否通过认证
 	 * @return
 	 */
@@ -232,8 +245,8 @@ public class UserPreference {
 	public void setU_birthday(Date u_birthday) {
 		if (u_birthday != null) {
 			editor.putLong(UserTable.U_BIRTHDAY, u_birthday.getTime());
+			editor.commit();
 		}
-		editor.commit();
 	}
 
 	//年龄

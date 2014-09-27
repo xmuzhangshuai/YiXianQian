@@ -246,7 +246,6 @@ public class RegPhoneFragment extends BaseV4Fragment {
 			public void onSuccess(int statusCode, Header[] headers, String response) {
 				// TODO Auto-generated method stub
 
-				LogTool.e("ÑéÖ¤Âë", response);
 				if (response.length() == 6) {
 					RegAuthCodeFragment fragment = new RegAuthCodeFragment();
 					Bundle bundle = new Bundle();

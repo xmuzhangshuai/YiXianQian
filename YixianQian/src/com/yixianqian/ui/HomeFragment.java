@@ -81,6 +81,8 @@ public class HomeFragment extends BaseV4Fragment {
 		conversationList = new LinkedList<Conversation>();
 		if (userPreference.getU_stateid() == 2 || userPreference.getU_stateid() == 3) {
 			conversationList.addAll(conversationDbService.conversationDao.loadAll());
+		}else {
+			conversationList.clear();
 		}
 		/**Õð¶¯·þÎñ*/
 		vib = (Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE);

@@ -8,10 +8,20 @@ public class Constants {
 	//包名
 	public static final String PACKAGENAME = "com.yixianqian";
 
-	//域名或者是IP
-	public static String DoMainName = "http://192.168.1.101/";
+	public static String testIP = "http://192.168.1.101/";
 
-	public static String ASDomain = "http://yixianqian.me";
+	
+	
+	//域名或者是IP
+	public static String AppliactionServerIP = "http://121.40.101.36/";
+	
+	public static String AppliactionServerDomain = "http://yixianqian.me";
+
+
+	public static String ImageServerIP = "http://121.40.92.222/";
+	
+	public static String ImageServerDomain = "http://yixianqian.me";
+	
 
 	public static class Config {
 		//是否处于开发模式
