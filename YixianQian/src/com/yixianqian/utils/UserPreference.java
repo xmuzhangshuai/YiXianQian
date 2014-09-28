@@ -68,7 +68,8 @@ public class UserPreference {
 	 * @return
 	 */
 	public int getVertify() {
-		return sp.getInt("vertify", Constants.VertifyState.NOTSUBMIT);
+//		return sp.getInt("vertify", Constants.VertifyState.NOTSUBMIT);
+		return Constants.VertifyState.PASSED;
 	}
 
 	public void setVertify(int vertifiState) {
