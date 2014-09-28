@@ -8,7 +8,7 @@ public class Constants {
 	//°üÃû
 	public static final String PACKAGENAME = "com.yixianqian";
 
-	public static String testIP = "http://192.168.1.101/";
+//	public static String testIP = "http://192.168.1.101/";
 
 	
 	

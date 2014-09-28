@@ -8,7 +8,7 @@ import com.loopj.android.http.RequestParams;
 import com.yixianqian.config.Constants;
 
 public class AsyncHttpClientTool {
-	private static final String BASE_URL = Constants.testIP+"YXQServer/";
+	private static final String BASE_URL = Constants.AppliactionServerIP+"YXQServer/";
 
 	private static AsyncHttpClient client = new AsyncHttpClient();
 
