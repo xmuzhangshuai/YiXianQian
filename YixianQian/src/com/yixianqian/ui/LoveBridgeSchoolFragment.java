@@ -165,7 +165,6 @@ public class LoveBridgeSchoolFragment extends BaseV4Fragment {
 			public void onSuccess(int statusCode, Header[] headers, String response) {
 				// TODO Auto-generated method stub
 				if (statusCode == 200) {
-					LogTool.i("LoveBridgeSchoolFragment", "长度" + loveBridgeItemList.size());
 					List<JsonLoveBridgeItem> temp = FastJsonTool.getObjectList(response, JsonLoveBridgeItem.class);
 					if (temp != null) {
 						//如果是首次获取数据

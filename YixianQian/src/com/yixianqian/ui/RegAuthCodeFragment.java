@@ -109,10 +109,8 @@ public class RegAuthCodeFragment extends BaseV4Fragment {
 					SmsMessage sms = SmsMessage.createFromPdu(pdu);
 					// 短信的内容
 					String message = sms.getMessageBody();
-					LogTool.d("验证码", "message     " + message);
 					// 短息的手机号。。+86开头？
 					String from = sms.getOriginatingAddress();
-					LogTool.d("验证码", "from     " + from);
 					// Time time = new Time();
 					// time.set(sms.getTimestampMillis());
 					// String time2 = time.format3339(true);

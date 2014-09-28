@@ -87,7 +87,7 @@ public class MyHostInviteCodeActivity extends BaseActivity {
 			});
 			rightImageButton.setVisibility(View.GONE);
 		}
-		myInvityCode.setText(userPreference.getMyInviteCode());
+		myInvityCode.setText(userPreference.getHostInviteCode());
 
 	}
 }
