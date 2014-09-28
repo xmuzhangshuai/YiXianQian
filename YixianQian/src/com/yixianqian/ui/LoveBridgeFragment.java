@@ -20,9 +20,11 @@ import com.loopj.android.http.TextHttpResponseHandler;
 import com.yixianqian.R;
 import com.yixianqian.base.BaseApplication;
 import com.yixianqian.base.BaseV4Fragment;
+import com.yixianqian.config.Constants;
 import com.yixianqian.table.LoveBridgeItemTable;
 import com.yixianqian.utils.AsyncHttpClientTool;
 import com.yixianqian.utils.LogTool;
+import com.yixianqian.utils.ToastTool;
 import com.yixianqian.utils.UserPreference;
 
 /**
@@ -140,8 +142,12 @@ public class LoveBridgeFragment extends BaseV4Fragment implements OnClickListene
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
 		case R.id.publish_btn:
-			startActivity(new Intent(getActivity(), PublishLoveBridgeActivity.class));
-			getActivity().overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+			if (userPreference.getU_stateid() == Constants.UserStateType.SINGLE) {
+				startActivity(new Intent(getActivity(), PublishLoveBridgeActivity.class));
+				getActivity().overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+			}else {
+				ToastTool.showLong(getActivity(), "只有单身的人才能在鹊桥广场上发布消息哦~~");
+			}
 			break;
 
 		case R.id.schoolBtn:

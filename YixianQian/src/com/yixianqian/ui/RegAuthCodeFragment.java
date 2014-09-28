@@ -446,6 +446,8 @@ public class RegAuthCodeFragment extends BaseV4Fragment {
 				userPreference.setU_id(result);
 				getHostInviteCode(result);
 
+				userPreference.setVertify(Constants.VertifyState.PASSED);
+
 				// 调用环信sdk注册方法
 				huanxinUsername = "" + result;
 				huanxinaPassword = MD5For16.GetMD5CodeToLower(userPreference.getU_password());
@@ -478,7 +480,10 @@ public class RegAuthCodeFragment extends BaseV4Fragment {
 						}
 						dialog.dismiss();
 
-						Intent intent = new Intent(getActivity(), HeadImageActivity.class);
+						//Intent intent = new Intent(getActivity(), HeadImageActivity.class);
+						Intent intent = new Intent(getActivity(), MyHostInviteCodeActivity.class);
+						intent.putExtra(MyHostInviteCodeActivity.INVITY_CODE_FLAGS,
+								MyHostInviteCodeActivity.AFTER_REGISTER);
 						startActivity(intent);
 						getActivity().overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
 						getActivity().finish();

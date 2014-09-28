@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/system_back"
+    android:orientation="vertical" >
+
+    <include
+        layout="@layout/top_navigation2"
+        android:focusable="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="@dimen/register_height"
+        android:text="我拥有的邀请码："
+        android:textColor="@color/unenable"
+        android:textSize="16dp" />
+
+    <TextView
+        android:id="@+id/invity_code"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/day_recommend_help_padding"
+        android:text="sooots"
+        android:textColor="@color/system_female"
+        android:textSize="16pt" />
+
+    <TextView
+        android:id="@+id/info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="@dimen/time_capsule20"
+        android:text="恭喜您注册成功！您获得了一次邀请特权，请谨记以上邀请码"
+        android:textColor="@color/unenable" />
+
+</LinearLayout>

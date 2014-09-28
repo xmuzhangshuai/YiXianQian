@@ -157,6 +157,8 @@ public class LoveBridgeSchoolFragment extends BaseV4Fragment {
 		RequestParams params = new RequestParams();
 		params.put("page", pageNow);
 		params.put(UserTable.U_SCHOOLID, userPreference.getU_schoolid());
+		params.put(UserTable.U_STATEID, userPreference.getU_stateid());
+		params.put(UserTable.U_GENDER, userPreference.getU_gender());
 		TextHttpResponseHandler responseHandler = new TextHttpResponseHandler("utf-8") {
 
 			@Override

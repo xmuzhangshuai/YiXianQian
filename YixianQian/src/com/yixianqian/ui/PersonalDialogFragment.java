@@ -53,6 +53,7 @@ public class PersonalDialogFragment extends DialogFragment implements OnItemClic
 
 		menuitemList.add("编辑资料");
 		menuitemList.add("我的二维码");
+		menuitemList.add("我的邀请特权");
 		menuitemList.add("设置");
 
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), R.layout.dialog_listview_item,
@@ -80,6 +81,13 @@ public class PersonalDialogFragment extends DialogFragment implements OnItemClic
 			PersonalDialogFragment.this.dismiss();
 			break;
 		case 2:
+			intent = new Intent(getActivity(), MyHostInviteCodeActivity.class);
+			intent.putExtra(MyHostInviteCodeActivity.INVITY_CODE_FLAGS, MyHostInviteCodeActivity.MY_HOST_INVITE_CODE);
+			getActivity().startActivity(intent);
+			getActivity().overridePendingTransition(R.anim.zoomin, R.anim.zoomout);
+			PersonalDialogFragment.this.dismiss();
+			break;
+		case 3:
 			intent = new Intent(getActivity(), SettingActivity.class);
 			getActivity().startActivity(intent);
 			getActivity().overridePendingTransition(R.anim.zoomin, R.anim.zoomout);

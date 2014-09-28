@@ -142,7 +142,13 @@
             android:name="com.yixianqian.ui.LoveVertifyActivity"
             android:screenOrientation="portrait" >
         </activity>
-
+        
+       <!-- 爱情验证页面 -->
+        <activity
+            android:name="com.yixianqian.ui.MyHostInviteCodeActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        
         <!-- 聊天页面 -->
         <activity
             android:name="com.yixianqian.ui.ChatActivity"
