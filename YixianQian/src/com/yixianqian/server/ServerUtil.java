@@ -337,7 +337,7 @@ public class ServerUtil {
 		if (userPreference.getU_stateid() == 4) {
 			final TodayRecommendDbService todayRecommendDbService = TodayRecommendDbService.getInstance(context);
 			todayRecommendDbService.todayRecommendDao.deleteAll();
-			sharePreferenceUtil.setTodayRecommend("");
+//			sharePreferenceUtil.setTodayRecommend("");
 
 			//如果没有推荐过
 			if (!sharePreferenceUtil.getTodayRecommend().equals(DateTimeTools.getCurrentDateForString())) {
