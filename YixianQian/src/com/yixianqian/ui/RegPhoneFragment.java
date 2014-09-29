@@ -237,6 +237,7 @@ public class RegPhoneFragment extends BaseV4Fragment {
 			public void onStart() {
 				// TODO Auto-generated method stub
 				super.onStart();
+				rightImageButton.setEnabled(false);
 				dialog.setMessage("正在验证，请稍后...");
 				dialog.setCancelable(false);
 				dialog.show();
@@ -258,6 +259,7 @@ public class RegPhoneFragment extends BaseV4Fragment {
 					transaction.addToBackStack(null);
 					transaction.commit();
 					ToastTool.showShort(RegPhoneFragment.this.getActivity(), "验证码已发送");
+					rightImageButton.setEnabled(true);
 
 				} else if (response.endsWith("-1")) {
 					ToastTool.showLong(RegPhoneFragment.this.getActivity(), "服务器出现异常，请稍后再试");

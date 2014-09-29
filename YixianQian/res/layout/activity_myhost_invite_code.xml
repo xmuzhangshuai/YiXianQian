@@ -36,7 +36,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginTop="@dimen/time_capsule20"
-        android:text="恭喜您注册成功！您获得了一次邀请特权，请谨记以上邀请码"
+        android:text="恭喜您注册成功！您获得了一次邀请特权!"
         android:textColor="@color/unenable" />
 
 </LinearLayout>
