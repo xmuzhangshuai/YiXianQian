@@ -23,9 +23,8 @@
         android:id="@+id/invity_code"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
+        android:layout_gravity="center" 
         android:layout_marginTop="@dimen/day_recommend_help_padding"
-        android:text="sooots"
         android:textColor="@color/system_female"
         android:textSize="16pt" />
 
@@ -35,8 +34,9 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
+        android:lineSpacingExtra="10dp"
         android:layout_marginTop="@dimen/time_capsule20"
-        android:text="恭喜您注册成功！您获得了一次邀请特权!"
+        android:text="恭喜您注册成功！您获得了一次邀请特权!\n此邀请码仅限在校大学生使用。感谢您的诚挚！"
         android:textColor="@color/unenable" />
 
 </LinearLayout>

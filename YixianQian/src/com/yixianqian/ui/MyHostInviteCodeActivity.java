@@ -75,7 +75,7 @@ public class MyHostInviteCodeActivity extends BaseActivity {
 				}
 			});
 		} else {
-			info.setVisibility(View.GONE);
+			info.setText("此邀请码仅限在校大学生使用。感谢您的诚挚！");
 			leftImageButton.setVisibility(View.VISIBLE);
 			leftImageButton.setOnClickListener(new OnClickListener() {
 

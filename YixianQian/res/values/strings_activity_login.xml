@@ -26,7 +26,7 @@
     <string name="city">城市</string>
     <string name="school">学校</string>
     <string name="reg_now">立即注册>></string>
-    <string name="invite_code">一线牵为了保证用户是大学生，采用的是邀请码机制。请向校园代理或者其他注册用户所以邀请码</string>
+    <string name="invite_code">一线牵为了保证用户是大学生，采用的是邀请码机制。请向校园代理或者其他注册用户索要邀请码</string>
     <string name="error_length">邀请码的长度为6位</string>
     <string name="error_invite_code">邀请码由6位小写字母或数字组成</string>
 
